@@ -1,0 +1,4 @@
+build-job:
+  stage: build
+  script:
+    - ./gradlew clean check
