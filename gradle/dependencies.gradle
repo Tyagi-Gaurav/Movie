@@ -2,7 +2,7 @@ apply plugin: 'io.spring.dependency-management'
 
 ext {
     springBootVersion = '2.4.5'
-    springVersion = '5.3.6'
+    springVersion = '5.3.7'
     cucumberVersion = '6.10.3'
     junitVersion = '5.7.1'
     junitPlatformVersion = '1.7.1'
@@ -37,6 +37,8 @@ dependencyManagement {
         dependency "org.springframework:spring-tx:${springVersion}"
         dependency "org.springframework:spring-jdbc:${springVersion}"
         dependency "org.springframework:spring-aop:${springVersion}"
+        dependency "org.springframework:spring-web:${springVersion}"
+        dependency "org.springframework:spring-core:${springVersion}"
         dependency "org.slf4j:slf4j-log4j12:$slf4jVersion"
         dependency "commons-logging:commons-logging:$commonsLoggingVersion"
 //        dependency "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"

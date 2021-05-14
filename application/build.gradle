@@ -1,9 +1,21 @@
 plugins {
-    id 'java'
+    id 'org.springframework.boot' version '2.4.5'
 }
 
 repositories {
     mavenCentral()
+}
+
+bootJar {
+    mainClass = 'com.toptal.scr.tz.Application'
+}
+
+processResources {
+    with copySpec {
+        from 'src/main/resources'
+        include '**/application*.yml'
+        include '**/*.properties'
+    }
 }
 
 dependencies {
@@ -12,7 +24,9 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-test"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework:spring-webmvc"
+    implementation "org.springframework:spring-core"
     implementation "org.apache.commons:commons-lang3"
+    implementation "org.slf4j:slf4j-log4j12"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"

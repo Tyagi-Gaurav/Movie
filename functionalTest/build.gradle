@@ -2,9 +2,16 @@ plugins {
     id 'java'
 }
 
-
 repositories {
     mavenCentral()
+}
+
+sourceSets {
+    test {
+        java {
+            outputDir = file('build/classes')
+        }
+    }
 }
 
 dependencies {
@@ -13,6 +20,7 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.springframework:spring-webmvc"
+    testImplementation "org.springframework:spring-web"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.junit.platform:junit-platform-commons"
@@ -33,6 +41,12 @@ dependencies {
     testAnnotationProcessor "org.immutables:value"
 }
 
+task remoteFunctional(type: Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+}
+
 test {
     useJUnitPlatform()
+    exclude '**/CucumberTest.class'
 }

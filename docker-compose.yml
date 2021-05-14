@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  timezone-app:
+    container_name: local.timezone-app
+    build:
+      context: application
+    ports:
+      - "8080:8080"
+    networks:
+      - overlay
+
+networks:
+  overlay:
