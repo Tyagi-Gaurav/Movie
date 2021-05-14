@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-actuator"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework:spring-webmvc"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.platform:junit-platform-commons"
+    testImplementation "org.junit.platform:junit-platform-runner"
+    testImplementation "org.junit.platform:junit-platform-suite-api"
+    testImplementation "io.cucumber:cucumber-java8"
+    testImplementation "io.cucumber:cucumber-junit"
+    testImplementation "io.cucumber:cucumber-spring"
+    testImplementation group: 'io.cucumber', name: 'cucumber-jvm', version: "$cucumberVersion", ext: 'pom'
+    testImplementation "org.assertj:assertj-core"
+    testImplementation "org.awaitility:awaitility"
+    testImplementation "org.slf4j:slf4j-log4j12"
+
+    //Immutables
+    testImplementation "org.immutables:value-annotations"
+    testImplementation "org.immutables:value"
+    testImplementation "org.immutables:builder"
+    testAnnotationProcessor "org.immutables:value"
+}
+
+test {
+    useJUnitPlatform()
+}

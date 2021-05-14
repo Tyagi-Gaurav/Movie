@@ -1,0 +1,7 @@
+spring:
+  active: local
+
+timezone-app:
+  host: ${TIMEZONE_APP_HOST:localhost}
+  port: ${TIMEZONE_APP_PORT:6060}
+

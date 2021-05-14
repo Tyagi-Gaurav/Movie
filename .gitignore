@@ -1,0 +1,10 @@
+.gradle/
+.idea/
+build/
+out/
+*.jar
+*.war
+*.ear
+*.zip
+
+Readme.MD

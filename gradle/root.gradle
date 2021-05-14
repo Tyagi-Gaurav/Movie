@@ -1,0 +1,72 @@
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+subprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    apply plugin: "java"
+    apply plugin: "idea"
+
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.11
+    group 'toptal.timezone'
+
+    apply from: "${it.rootDir}/gradle/dependencies.gradle"
+
+    project.ext {
+        springBootVersion = '2.4.5'
+    }
+
+    scmVersion {
+        tag { prefix = project.name }
+        versionIncrementer 'incrementMinor'
+        hooks {
+           pre 'fileUpdate', [file: "$projectDir/src/main/resources/version.properties", pattern: { v, p -> /buildNumber=.+/ }, replacement: { v, p -> "buildNumber=$v" }]
+            post { context ->
+                println "DEBUG: Project version was ${project.version}"
+                project.version = context.currentVersion
+                println "DEBUG: Project version is now ${project.version}"
+                //createFile("${projectDir}/src/main/resources/version.properties", "${project.version}")
+            }
+        }
+    }
+
+    project.version = System.getenv("BUILD_NAME") ? scmVersion.version : "DEV"
+
+    jar {
+        manifest {
+            attributes('Build-Time-ISO-8601': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"))
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    task buildImageDependencies(dependsOn: ["compileJava", "jar"])
+
+    project.plugins.withId("net.ltgt.apt") {
+        try {
+            // automatically apply net.ltgt.apt-idea whenever net.ltgt.apt is used
+            project.apply plugin: "net.ltgt.apt-idea"
+            // disable addAptDependencies (if you delegate build actions to Gradle)
+            project.plugins.withType(JavaPlugin) {
+                project.afterEvaluate {
+                    project.idea.module.apt.addAptDependencies = false
+                }
+            }
+        } catch (UnknownPluginException) {
+            // ignore, in case an older version of net.ltgt.apt is being used
+            // that doesn't come with net.ltgt.apt-idea.
+        }
+    }
+}
+
+task cdImage(dependsOn: ['release', 'bootjar'])

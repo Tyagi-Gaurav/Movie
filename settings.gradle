@@ -1,0 +1,4 @@
+rootProject.name = 'Timezone'
+include 'functionalTest'
+include 'application'
+
