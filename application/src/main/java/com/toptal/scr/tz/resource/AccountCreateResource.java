@@ -1,8 +1,9 @@
 package com.toptal.scr.tz.resource;
 
-import org.springframework.http.MediaType;
+import com.toptal.scr.tz.resource.domain.AccountCreateRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -10,8 +11,8 @@ public class AccountCreateResource {
 
     @PostMapping(path = "/account/create",
             consumes = {"application/vnd+account.create.v1+json"},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Void> createAccount() {
+            produces = {"application/vnd+account.create.v1+json"})
+    public ResponseEntity<Void> createAccount(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
         return ResponseEntity.noContent().build();
     }
 }

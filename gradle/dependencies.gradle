@@ -19,6 +19,7 @@ ext {
     h2DbVersion = '1.4.200'
     liquibaseVersion = '3.8.9'
     reslience4JVersion = '1.5.0'
+    jsonWebTokenVersion = '0.11.2'
 }
 
 dependencyManagement {
@@ -44,10 +45,13 @@ dependencyManagement {
 //        dependency "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
 //        dependency "io.micrometer:micrometer-core:$micrometerVersion"
 //
-//        dependency "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-//        dependency "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-//        dependency "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-//        dependency "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+        dependency "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+        dependency "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        dependency "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        dependency "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+        dependency "io.jsonwebtoken:jjwt-api:$jsonWebTokenVersion"
+        dependency "io.jsonwebtoken:jjwt-impl:$jsonWebTokenVersion"
+        dependency "io.jsonwebtoken:jjwt-jackson:$jsonWebTokenVersion"
 //        dependency "io.github.resilience4j:resilience4j-bulkhead:$reslience4JVersion"
 //        dependency "io.github.resilience4j:resilience4j-retry:$reslience4JVersion"
 //        dependency "io.github.resilience4j:resilience4j-circuitbreaker:$reslience4JVersion"
@@ -57,6 +61,7 @@ dependencyManagement {
         dependency("org.springframework.boot:spring-boot-starter-test:$springBootVersion") {
             exclude 'org.junit.vintage:junit-vintage-engine'
         }
+        dependency("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
 
         dependency "org.junit.jupiter:junit-jupiter-api:$junitVersion"
         dependency "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
@@ -80,7 +85,7 @@ dependencyManagement {
 //        dependency "com.h2database:h2:$h2DbVersion"
 //        dependency "mysql:mysql-connector-java:$mysqlVersion"
 //        dependency "javax.xml.bind:jaxb-api:$xmlBindVersion"
-//        dependency "org.liquibase:liquibase-core:$liquibaseVersion"
+        dependency "org.liquibase:liquibase-core:$liquibaseVersion"
 //        dependency "org.apache.kafka:kafka-clients:$kafkaVersion"
 //        dependency "org.springframework.kafka:spring-kafka-test:$springKafkaVersion"
 //        dependency "org.springframework.kafka:spring-kafka:$springKafkaVersion"

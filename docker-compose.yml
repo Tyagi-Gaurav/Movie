@@ -1,11 +1,22 @@
 version: "3.7"
 services:
-  timezone-app:
-    container_name: local.timezone-app
-    build:
-      context: application
+#  timezone-app:
+#    container_name: local.timezone-app
+#    build:
+#      context: application
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - overlay
+
+  db:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - "8080:8080"
+      - "27017:27017"
     networks:
       - overlay
 

@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.test.steps;
 
+import com.toptal.scr.tz.test.domain.TestLoginResponseDTO;
 import com.toptal.scr.tz.test.resource.ResponseHolder;
 import io.cucumber.java8.En;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ public class ResponseSteps implements En {
         And("^the response should be a success status response$", () -> {
             String response = responseHolder.readResponse(String.class);
             assertThat(response).isEqualTo("OK");
+        });
+
+        And("^the user login response contains an authorisation token$", () -> {
+            TestLoginResponseDTO testLoginResponseDTO = responseHolder.readResponse(TestLoginResponseDTO.class);
+            assertThat(testLoginResponseDTO.token()).isNotEmpty();
+            //TODO can we check if the token is a valid JWT token?
         });
     }
 }

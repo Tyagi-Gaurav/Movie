@@ -1,0 +1,14 @@
+package com.toptal.scr.tz.resource.domain;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.immutables.value.Value;
+
+@Value.Immutable
+@JsonSerialize
+@JsonDeserialize(builder = ImmutableLoginRequestDTO.Builder.class)
+public interface LoginRequestDTO {
+    String userName();
+
+    String password();
+}

@@ -1,3 +1,8 @@
 spring:
   active: local
 
+timezoneApp:
+  maxUserNameLength: 15 #Add Test
+  minUserNameLength: 8 #Add Test
+  maxPasswordLength: 15 #Add Test
+  minPasswordLength: 8 #Add Test
