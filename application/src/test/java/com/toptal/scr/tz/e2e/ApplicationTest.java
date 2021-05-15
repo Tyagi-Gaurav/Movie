@@ -1,5 +1,6 @@
-package com.toptal.scr.tz;
+package com.toptal.scr.tz.e2e;
 
+import com.toptal.scr.tz.Application;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

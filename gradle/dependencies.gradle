@@ -70,6 +70,7 @@ dependencyManagement {
         dependency "org.mockito:mockito-junit-jupiter:$mockitoVersion"
         dependency "org.apache.commons:commons-lang3:$commonsLang3Version"
 
+        dependency "io.cucumber:cucumber-java:$cucumberVersion"
         dependency "io.cucumber:cucumber-java8:$cucumberVersion"
         dependency "io.cucumber:cucumber-junit:$cucumberVersion"
         dependency "io.cucumber:cucumber-spring:$cucumberVersion"

@@ -1,13 +1,14 @@
 Feature: Users should be able to create an account
-#  Scenario: User should be able to create a new account
-#    Given a user intends to create a new account
-#    When the user attempts to create a new account
-#    Then a success response is returned with HTTP status code 204
-#
+  Scenario: User should be able to create a new account
+    Given a user attempts to create a new account with following details
+     | firstName | lastName | userName | password | role |
+     | bc        | def      | <random> | <random> | USER |
+    Then the response should be received with HTTP status code 204
+
 #  Scenario: User should NOT be able to create a new account when another account with same username exists
 #    Given a user intends to create a new account
 #    When the user attempts to create a new account
-#    Then a success response is returned with HTTP status code 204
+#    Then a failure response is returned with HTTP status code 400
 #
 #  Scenario: User should be able to login after creating a new account
 #    Given a user intends to create a new account

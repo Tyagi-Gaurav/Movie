@@ -12,23 +12,20 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes = StatusResource.class)
-public class StatusEndpointTest {
+@SpringBootTest(classes = AccountCreateResource.class)
+public class AccountCreateResourceTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void shouldReturnHelloWorldWithTime() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/status")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(mvcResult).isNotNull();
-        assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo("OK");
+        mockMvc.perform(post("/account/create")
+                .contentType("application/vnd+account.create.v1+json"))
+                .andExpect(status().isNoContent());
     }
 }

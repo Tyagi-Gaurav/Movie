@@ -27,6 +27,7 @@ dependencies {
     testImplementation "org.junit.platform:junit-platform-runner"
     testImplementation "org.junit.platform:junit-platform-suite-api"
     testImplementation "io.cucumber:cucumber-java8"
+    testImplementation "io.cucumber:cucumber-java"
     testImplementation "io.cucumber:cucumber-junit"
     testImplementation "io.cucumber:cucumber-spring"
     testImplementation group: 'io.cucumber', name: 'cucumber-jvm', version: "$cucumberVersion", ext: 'pom'

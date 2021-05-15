@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TimeZoneHealthCheckResource extends AbstractResource {
+public class TestHealthCheckResource extends AbstractResource {
 
     @Autowired
     private TimeZoneAppConfig timeZoneAppConfig;
