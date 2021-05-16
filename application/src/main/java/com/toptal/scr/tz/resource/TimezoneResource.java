@@ -1,6 +1,9 @@
 package com.toptal.scr.tz.resource;
 
+import com.toptal.scr.tz.resource.domain.ImmutableTimezoneDTO;
+import com.toptal.scr.tz.resource.domain.ImmutableTimezonesDTO;
 import com.toptal.scr.tz.resource.domain.TimezoneCreateRequestDTO;
+import com.toptal.scr.tz.resource.domain.TimezonesDTO;
 import com.toptal.scr.tz.resource.domain.UserProfile;
 import com.toptal.scr.tz.service.TimezoneService;
 import com.toptal.scr.tz.service.domain.ImmutableUserTimezone;
@@ -9,12 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 public class TimezoneResource {
@@ -27,9 +33,7 @@ public class TimezoneResource {
             consumes = "application/vnd.timezone.v1+json",
             produces = "application/vnd.timezone.v1+json")
     public ResponseEntity<Void> createTimezone(@RequestBody TimezoneCreateRequestDTO timezoneCreateRequestDTO,
-                                               @RequestAttribute("authorities") UserProfile userProfile) {
-
-        LOG.info("UserProfile: " + userProfile);
+                                               @RequestAttribute("userProfile") UserProfile userProfile) {
 
         UserTimezone timezone = ImmutableUserTimezone.builder()
                 .id(UUID.randomUUID())
@@ -40,5 +44,23 @@ public class TimezoneResource {
 
         timezoneService.addTimezone(userProfile.userName(), timezone);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(path = "/timezone",
+            consumes = "application/vnd.timezone.read.v1+json",
+            produces = "application/vnd.timezone.read.v1+json")
+    public ResponseEntity<TimezonesDTO> readTimezone(@RequestAttribute("userProfile") UserProfile userProfile) {
+        List<UserTimezone> timezones = timezoneService.getTimezones(userProfile.userName());
+
+        List<ImmutableTimezoneDTO> timezoneDTOList = timezones.stream().map(tz -> ImmutableTimezoneDTO.builder()
+                .city(tz.city())
+                .id(tz.id())
+                .gmtOffset(tz.gmtOffset())
+                .name(tz.name())
+                .build()).collect(Collectors.toList());
+
+        TimezonesDTO timezonesDTO = ImmutableTimezonesDTO.builder().timezones(timezoneDTOList).build();
+
+        return ResponseEntity.ok(timezonesDTO);
     }
 }

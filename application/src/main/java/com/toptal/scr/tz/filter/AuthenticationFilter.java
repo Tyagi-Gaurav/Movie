@@ -4,12 +4,10 @@ import com.toptal.scr.tz.resource.UserProfileHolder;
 import com.toptal.scr.tz.resource.domain.ImmutableUserProfile;
 import com.toptal.scr.tz.resource.domain.UserProfile;
 import com.toptal.scr.tz.service.UserService;
-import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -23,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.Function;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -46,7 +43,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		String jwtToken = null;
 		
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			LOG.info("Found auth header." + requestTokenHeader);
 			jwtToken = requestTokenHeader.substring(7);
 			JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken);
 			
@@ -89,7 +85,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 						.authority(authorities.get("authority").toString())
 						.build();
 
-				request.setAttribute("authorities", userprofile);
+				request.setAttribute("userProfile", userprofile);
 			}
 		}
 		
