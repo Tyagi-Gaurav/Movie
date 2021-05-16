@@ -9,16 +9,12 @@ ext {
     immutablesVersion = '2.8.8'
     jacksonVersion = '2.10.3'
     assertJVersion = '3.15.0'
-    jerseyVersion = '2.26'
     mockitoVersion = '2.25.0'
     testContainerVersion = '1.15.0'
     logbackVersion = '1.3.0-alpha5'
     slf4jVersion = '2.0.0-alpha1'
     commonsLang3Version = '3.12.0'
     commonsLoggingVersion = '1.2'
-    h2DbVersion = '1.4.200'
-    liquibaseVersion = '3.8.9'
-    reslience4JVersion = '1.5.0'
     jsonWebTokenVersion = '0.11.2'
 }
 
@@ -27,6 +23,10 @@ dependencyManagement {
         mavenBom "org.springframework.boot:spring-boot-dependencies:2.4.5"
     }
     dependencies {
+        dependency("org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion") {
+            exclude "org.slf4j:slf4j-api"
+        }
+
         //API
         dependency "org.immutables:value:$immutablesVersion"
         dependency "org.immutables:builder:$immutablesVersion"
@@ -52,11 +52,7 @@ dependencyManagement {
         dependency "io.jsonwebtoken:jjwt-api:$jsonWebTokenVersion"
         dependency "io.jsonwebtoken:jjwt-impl:$jsonWebTokenVersion"
         dependency "io.jsonwebtoken:jjwt-jackson:$jsonWebTokenVersion"
-//        dependency "io.github.resilience4j:resilience4j-bulkhead:$reslience4JVersion"
-//        dependency "io.github.resilience4j:resilience4j-retry:$reslience4JVersion"
-//        dependency "io.github.resilience4j:resilience4j-circuitbreaker:$reslience4JVersion"
-//        dependency "io.github.resilience4j:resilience4j-all:$reslience4JVersion"
-//
+
         //TEST
         dependency("org.springframework.boot:spring-boot-starter-test:$springBootVersion") {
             exclude 'org.junit.vintage:junit-vintage-engine'
@@ -85,11 +81,6 @@ dependencyManagement {
 //        dependency "com.h2database:h2:$h2DbVersion"
 //        dependency "mysql:mysql-connector-java:$mysqlVersion"
 //        dependency "javax.xml.bind:jaxb-api:$xmlBindVersion"
-        dependency "org.liquibase:liquibase-core:$liquibaseVersion"
-//        dependency "org.apache.kafka:kafka-clients:$kafkaVersion"
-//        dependency "org.springframework.kafka:spring-kafka-test:$springKafkaVersion"
-//        dependency "org.springframework.kafka:spring-kafka:$springKafkaVersion"
-//        dependency "org.apache.kafka:kafka_2.12:$kafkaVersion"
 //        dependency("it.ozimov:embedded-redis:$embeddedRedisVersion") {
 //            exclude "org.slf4j:slf4j-simple"
 //        }

@@ -38,6 +38,8 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-impl"
     implementation "io.jsonwebtoken:jjwt-jackson"
 
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+
     //Immutables
     implementation "org.immutables:value-annotations"
     implementation "org.immutables:value"

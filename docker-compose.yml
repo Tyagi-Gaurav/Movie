@@ -10,13 +10,10 @@ services:
 #      - overlay
 
   db:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    image: redis
+    container_name: local.redis
     ports:
-      - "27017:27017"
+      - "6379:6379"
     networks:
       - overlay
 

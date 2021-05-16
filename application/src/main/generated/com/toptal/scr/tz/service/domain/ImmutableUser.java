@@ -1,9 +1,8 @@
 package com.toptal.scr.tz.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -24,43 +23,173 @@ public final class ImmutableUser implements User {
   private final Collection<? extends GrantedAuthority> authorities;
   private final String password;
   private final String username;
+  private final UUID id;
+  private final String firstName;
+  private final String lastName;
   private final boolean isAccountNonExpired;
   private final boolean isAccountNonLocked;
   private final boolean isCredentialsNonExpired;
   private final boolean isEnabled;
-  private final UUID id;
-  private final String firstName;
-  private final String lastName;
-  private final List<String> authorityNames;
+
+  private ImmutableUser(ImmutableUser.Builder builder) {
+    this.authorities = builder.authorities;
+    this.password = builder.password;
+    this.username = builder.username;
+    this.id = builder.id;
+    this.firstName = builder.firstName;
+    this.lastName = builder.lastName;
+    if (builder.isAccountNonExpiredIsSet()) {
+      initShim.isAccountNonExpired(builder.isAccountNonExpired);
+    }
+    if (builder.isAccountNonLockedIsSet()) {
+      initShim.isAccountNonLocked(builder.isAccountNonLocked);
+    }
+    if (builder.isCredentialsNonExpiredIsSet()) {
+      initShim.isCredentialsNonExpired(builder.isCredentialsNonExpired);
+    }
+    if (builder.isEnabledIsSet()) {
+      initShim.isEnabled(builder.isEnabled);
+    }
+    this.isAccountNonExpired = initShim.isAccountNonExpired();
+    this.isAccountNonLocked = initShim.isAccountNonLocked();
+    this.isCredentialsNonExpired = initShim.isCredentialsNonExpired();
+    this.isEnabled = initShim.isEnabled();
+    this.initShim = null;
+  }
 
   private ImmutableUser(
       Collection<? extends GrantedAuthority> authorities,
       String password,
       String username,
-      boolean isAccountNonExpired,
-      boolean isAccountNonLocked,
-      boolean isCredentialsNonExpired,
-      boolean isEnabled,
       UUID id,
       String firstName,
       String lastName,
-      List<String> authorityNames) {
+      boolean isAccountNonExpired,
+      boolean isAccountNonLocked,
+      boolean isCredentialsNonExpired,
+      boolean isEnabled) {
     this.authorities = authorities;
     this.password = password;
     this.username = username;
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.isAccountNonExpired = isAccountNonExpired;
     this.isAccountNonLocked = isAccountNonLocked;
     this.isCredentialsNonExpired = isCredentialsNonExpired;
     this.isEnabled = isEnabled;
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.authorityNames = authorityNames;
+    this.initShim = null;
+  }
+
+  private static final byte STAGE_INITIALIZING = -1;
+  private static final byte STAGE_UNINITIALIZED = 0;
+  private static final byte STAGE_INITIALIZED = 1;
+  private transient volatile InitShim initShim = new InitShim();
+
+  @Generated(from = "User", generator = "Immutables")
+  private final class InitShim {
+    private byte isAccountNonExpiredBuildStage = STAGE_UNINITIALIZED;
+    private boolean isAccountNonExpired;
+
+    boolean isAccountNonExpired() {
+      if (isAccountNonExpiredBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (isAccountNonExpiredBuildStage == STAGE_UNINITIALIZED) {
+        isAccountNonExpiredBuildStage = STAGE_INITIALIZING;
+        this.isAccountNonExpired = isAccountNonExpiredInitialize();
+        isAccountNonExpiredBuildStage = STAGE_INITIALIZED;
+      }
+      return this.isAccountNonExpired;
+    }
+
+    void isAccountNonExpired(boolean isAccountNonExpired) {
+      this.isAccountNonExpired = isAccountNonExpired;
+      isAccountNonExpiredBuildStage = STAGE_INITIALIZED;
+    }
+
+    private byte isAccountNonLockedBuildStage = STAGE_UNINITIALIZED;
+    private boolean isAccountNonLocked;
+
+    boolean isAccountNonLocked() {
+      if (isAccountNonLockedBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (isAccountNonLockedBuildStage == STAGE_UNINITIALIZED) {
+        isAccountNonLockedBuildStage = STAGE_INITIALIZING;
+        this.isAccountNonLocked = isAccountNonLockedInitialize();
+        isAccountNonLockedBuildStage = STAGE_INITIALIZED;
+      }
+      return this.isAccountNonLocked;
+    }
+
+    void isAccountNonLocked(boolean isAccountNonLocked) {
+      this.isAccountNonLocked = isAccountNonLocked;
+      isAccountNonLockedBuildStage = STAGE_INITIALIZED;
+    }
+
+    private byte isCredentialsNonExpiredBuildStage = STAGE_UNINITIALIZED;
+    private boolean isCredentialsNonExpired;
+
+    boolean isCredentialsNonExpired() {
+      if (isCredentialsNonExpiredBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (isCredentialsNonExpiredBuildStage == STAGE_UNINITIALIZED) {
+        isCredentialsNonExpiredBuildStage = STAGE_INITIALIZING;
+        this.isCredentialsNonExpired = isCredentialsNonExpiredInitialize();
+        isCredentialsNonExpiredBuildStage = STAGE_INITIALIZED;
+      }
+      return this.isCredentialsNonExpired;
+    }
+
+    void isCredentialsNonExpired(boolean isCredentialsNonExpired) {
+      this.isCredentialsNonExpired = isCredentialsNonExpired;
+      isCredentialsNonExpiredBuildStage = STAGE_INITIALIZED;
+    }
+
+    private byte isEnabledBuildStage = STAGE_UNINITIALIZED;
+    private boolean isEnabled;
+
+    boolean isEnabled() {
+      if (isEnabledBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (isEnabledBuildStage == STAGE_UNINITIALIZED) {
+        isEnabledBuildStage = STAGE_INITIALIZING;
+        this.isEnabled = isEnabledInitialize();
+        isEnabledBuildStage = STAGE_INITIALIZED;
+      }
+      return this.isEnabled;
+    }
+
+    void isEnabled(boolean isEnabled) {
+      this.isEnabled = isEnabled;
+      isEnabledBuildStage = STAGE_INITIALIZED;
+    }
+
+    private String formatInitCycleMessage() {
+      List<String> attributes = new ArrayList<>();
+      if (isAccountNonExpiredBuildStage == STAGE_INITIALIZING) attributes.add("isAccountNonExpired");
+      if (isAccountNonLockedBuildStage == STAGE_INITIALIZING) attributes.add("isAccountNonLocked");
+      if (isCredentialsNonExpiredBuildStage == STAGE_INITIALIZING) attributes.add("isCredentialsNonExpired");
+      if (isEnabledBuildStage == STAGE_INITIALIZING) attributes.add("isEnabled");
+      return "Cannot build User, attribute initializers form cycle " + attributes;
+    }
+  }
+
+  private boolean isAccountNonExpiredInitialize() {
+    return User.super.isAccountNonExpired();
+  }
+
+  private boolean isAccountNonLockedInitialize() {
+    return User.super.isAccountNonLocked();
+  }
+
+  private boolean isCredentialsNonExpiredInitialize() {
+    return User.super.isCredentialsNonExpired();
+  }
+
+  private boolean isEnabledInitialize() {
+    return User.super.isEnabled();
   }
 
   /**
    * @return The value of the {@code authorities} attribute
    */
+  @JsonProperty("authorities")
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return authorities;
@@ -69,6 +198,7 @@ public final class ImmutableUser implements User {
   /**
    * @return The value of the {@code password} attribute
    */
+  @JsonProperty("password")
   @Override
   public String getPassword() {
     return password;
@@ -77,46 +207,16 @@ public final class ImmutableUser implements User {
   /**
    * @return The value of the {@code username} attribute
    */
+  @JsonProperty("username")
   @Override
   public String getUsername() {
     return username;
   }
 
   /**
-   * @return The value of the {@code isAccountNonExpired} attribute
-   */
-  @Override
-  public boolean isAccountNonExpired() {
-    return isAccountNonExpired;
-  }
-
-  /**
-   * @return The value of the {@code isAccountNonLocked} attribute
-   */
-  @Override
-  public boolean isAccountNonLocked() {
-    return isAccountNonLocked;
-  }
-
-  /**
-   * @return The value of the {@code isCredentialsNonExpired} attribute
-   */
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return isCredentialsNonExpired;
-  }
-
-  /**
-   * @return The value of the {@code isEnabled} attribute
-   */
-  @Override
-  public boolean isEnabled() {
-    return isEnabled;
-  }
-
-  /**
    * @return The value of the {@code id} attribute
    */
+  @JsonProperty("id")
   @Override
   public UUID id() {
     return id;
@@ -125,6 +225,7 @@ public final class ImmutableUser implements User {
   /**
    * @return The value of the {@code firstName} attribute
    */
+  @JsonProperty("firstName")
   @Override
   public String firstName() {
     return firstName;
@@ -133,17 +234,58 @@ public final class ImmutableUser implements User {
   /**
    * @return The value of the {@code lastName} attribute
    */
+  @JsonProperty("lastName")
   @Override
   public String lastName() {
     return lastName;
   }
 
   /**
-   * @return The value of the {@code authorityNames} attribute
+   * @return The value of the {@code isAccountNonExpired} attribute
    */
+  @JsonProperty("isAccountNonExpired")
   @Override
-  public List<String> authorityNames() {
-    return authorityNames;
+  public boolean isAccountNonExpired() {
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.isAccountNonExpired()
+        : this.isAccountNonExpired;
+  }
+
+  /**
+   * @return The value of the {@code isAccountNonLocked} attribute
+   */
+  @JsonProperty("isAccountNonLocked")
+  @Override
+  public boolean isAccountNonLocked() {
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.isAccountNonLocked()
+        : this.isAccountNonLocked;
+  }
+
+  /**
+   * @return The value of the {@code isCredentialsNonExpired} attribute
+   */
+  @JsonProperty("isCredentialsNonExpired")
+  @Override
+  public boolean isCredentialsNonExpired() {
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.isCredentialsNonExpired()
+        : this.isCredentialsNonExpired;
+  }
+
+  /**
+   * @return The value of the {@code isEnabled} attribute
+   */
+  @JsonProperty("isEnabled")
+  @Override
+  public boolean isEnabled() {
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.isEnabled()
+        : this.isEnabled;
   }
 
   /**
@@ -159,14 +301,13 @@ public final class ImmutableUser implements User {
         newValue,
         this.password,
         this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
         this.id,
         this.firstName,
         this.lastName,
-        this.authorityNames);
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled);
   }
 
   /**
@@ -182,14 +323,13 @@ public final class ImmutableUser implements User {
         this.authorities,
         newValue,
         this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
         this.id,
         this.firstName,
         this.lastName,
-        this.authorityNames);
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled);
   }
 
   /**
@@ -205,102 +345,13 @@ public final class ImmutableUser implements User {
         this.authorities,
         this.password,
         newValue,
+        this.id,
+        this.firstName,
+        this.lastName,
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.id,
-        this.firstName,
-        this.lastName,
-        this.authorityNames);
-  }
-
-  /**
-   * Copy the current immutable object by setting a value for the {@link User#isAccountNonExpired() isAccountNonExpired} attribute.
-   * A value equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for isAccountNonExpired
-   * @return A modified copy of the {@code this} object
-   */
-  public final ImmutableUser withIsAccountNonExpired(boolean value) {
-    if (this.isAccountNonExpired == value) return this;
-    return new ImmutableUser(
-        this.authorities,
-        this.password,
-        this.username,
-        value,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.id,
-        this.firstName,
-        this.lastName,
-        this.authorityNames);
-  }
-
-  /**
-   * Copy the current immutable object by setting a value for the {@link User#isAccountNonLocked() isAccountNonLocked} attribute.
-   * A value equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for isAccountNonLocked
-   * @return A modified copy of the {@code this} object
-   */
-  public final ImmutableUser withIsAccountNonLocked(boolean value) {
-    if (this.isAccountNonLocked == value) return this;
-    return new ImmutableUser(
-        this.authorities,
-        this.password,
-        this.username,
-        this.isAccountNonExpired,
-        value,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.id,
-        this.firstName,
-        this.lastName,
-        this.authorityNames);
-  }
-
-  /**
-   * Copy the current immutable object by setting a value for the {@link User#isCredentialsNonExpired() isCredentialsNonExpired} attribute.
-   * A value equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for isCredentialsNonExpired
-   * @return A modified copy of the {@code this} object
-   */
-  public final ImmutableUser withIsCredentialsNonExpired(boolean value) {
-    if (this.isCredentialsNonExpired == value) return this;
-    return new ImmutableUser(
-        this.authorities,
-        this.password,
-        this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        value,
-        this.isEnabled,
-        this.id,
-        this.firstName,
-        this.lastName,
-        this.authorityNames);
-  }
-
-  /**
-   * Copy the current immutable object by setting a value for the {@link User#isEnabled() isEnabled} attribute.
-   * A value equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for isEnabled
-   * @return A modified copy of the {@code this} object
-   */
-  public final ImmutableUser withIsEnabled(boolean value) {
-    if (this.isEnabled == value) return this;
-    return new ImmutableUser(
-        this.authorities,
-        this.password,
-        this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        value,
-        this.id,
-        this.firstName,
-        this.lastName,
-        this.authorityNames);
+        this.isEnabled);
   }
 
   /**
@@ -316,14 +367,13 @@ public final class ImmutableUser implements User {
         this.authorities,
         this.password,
         this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
         newValue,
         this.firstName,
         this.lastName,
-        this.authorityNames);
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled);
   }
 
   /**
@@ -339,14 +389,13 @@ public final class ImmutableUser implements User {
         this.authorities,
         this.password,
         this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
         this.id,
         newValue,
         this.lastName,
-        this.authorityNames);
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled);
   }
 
   /**
@@ -362,58 +411,97 @@ public final class ImmutableUser implements User {
         this.authorities,
         this.password,
         this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
         this.id,
         this.firstName,
         newValue,
-        this.authorityNames);
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled);
   }
 
   /**
-   * Copy the current immutable object with elements that replace the content of {@link User#authorityNames() authorityNames}.
-   * @param elements The elements to set
-   * @return A modified copy of {@code this} object
+   * Copy the current immutable object by setting a value for the {@link User#isAccountNonExpired() isAccountNonExpired} attribute.
+   * A value equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for isAccountNonExpired
+   * @return A modified copy of the {@code this} object
    */
-  public final ImmutableUser withAuthorityNames(String... elements) {
-    List<String> newValue = createUnmodifiableList(false, createSafeList(Arrays.asList(elements), true, false));
+  public final ImmutableUser withIsAccountNonExpired(boolean value) {
+    if (this.isAccountNonExpired == value) return this;
     return new ImmutableUser(
         this.authorities,
         this.password,
         this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
         this.id,
         this.firstName,
         this.lastName,
-        newValue);
+        value,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled);
   }
 
   /**
-   * Copy the current immutable object with elements that replace the content of {@link User#authorityNames() authorityNames}.
-   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param elements An iterable of authorityNames elements to set
-   * @return A modified copy of {@code this} object
+   * Copy the current immutable object by setting a value for the {@link User#isAccountNonLocked() isAccountNonLocked} attribute.
+   * A value equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for isAccountNonLocked
+   * @return A modified copy of the {@code this} object
    */
-  public final ImmutableUser withAuthorityNames(Iterable<String> elements) {
-    if (this.authorityNames == elements) return this;
-    List<String> newValue = createUnmodifiableList(false, createSafeList(elements, true, false));
+  public final ImmutableUser withIsAccountNonLocked(boolean value) {
+    if (this.isAccountNonLocked == value) return this;
     return new ImmutableUser(
         this.authorities,
         this.password,
         this.username,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
         this.id,
         this.firstName,
         this.lastName,
-        newValue);
+        this.isAccountNonExpired,
+        value,
+        this.isCredentialsNonExpired,
+        this.isEnabled);
+  }
+
+  /**
+   * Copy the current immutable object by setting a value for the {@link User#isCredentialsNonExpired() isCredentialsNonExpired} attribute.
+   * A value equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for isCredentialsNonExpired
+   * @return A modified copy of the {@code this} object
+   */
+  public final ImmutableUser withIsCredentialsNonExpired(boolean value) {
+    if (this.isCredentialsNonExpired == value) return this;
+    return new ImmutableUser(
+        this.authorities,
+        this.password,
+        this.username,
+        this.id,
+        this.firstName,
+        this.lastName,
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        value,
+        this.isEnabled);
+  }
+
+  /**
+   * Copy the current immutable object by setting a value for the {@link User#isEnabled() isEnabled} attribute.
+   * A value equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for isEnabled
+   * @return A modified copy of the {@code this} object
+   */
+  public final ImmutableUser withIsEnabled(boolean value) {
+    if (this.isEnabled == value) return this;
+    return new ImmutableUser(
+        this.authorities,
+        this.password,
+        this.username,
+        this.id,
+        this.firstName,
+        this.lastName,
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        value);
   }
 
   /**
@@ -431,18 +519,17 @@ public final class ImmutableUser implements User {
     return authorities.equals(another.authorities)
         && password.equals(another.password)
         && username.equals(another.username)
-        && isAccountNonExpired == another.isAccountNonExpired
-        && isAccountNonLocked == another.isAccountNonLocked
-        && isCredentialsNonExpired == another.isCredentialsNonExpired
-        && isEnabled == another.isEnabled
         && id.equals(another.id)
         && firstName.equals(another.firstName)
         && lastName.equals(another.lastName)
-        && authorityNames.equals(another.authorityNames);
+        && isAccountNonExpired == another.isAccountNonExpired
+        && isAccountNonLocked == another.isAccountNonLocked
+        && isCredentialsNonExpired == another.isCredentialsNonExpired
+        && isEnabled == another.isEnabled;
   }
 
   /**
-   * Computes a hash code from attributes: {@code authorities}, {@code password}, {@code username}, {@code isAccountNonExpired}, {@code isAccountNonLocked}, {@code isCredentialsNonExpired}, {@code isEnabled}, {@code id}, {@code firstName}, {@code lastName}, {@code authorityNames}.
+   * Computes a hash code from attributes: {@code authorities}, {@code password}, {@code username}, {@code id}, {@code firstName}, {@code lastName}, {@code isAccountNonExpired}, {@code isAccountNonLocked}, {@code isCredentialsNonExpired}, {@code isEnabled}.
    * @return hashCode value
    */
   @Override
@@ -451,14 +538,13 @@ public final class ImmutableUser implements User {
     h += (h << 5) + authorities.hashCode();
     h += (h << 5) + password.hashCode();
     h += (h << 5) + username.hashCode();
+    h += (h << 5) + id.hashCode();
+    h += (h << 5) + firstName.hashCode();
+    h += (h << 5) + lastName.hashCode();
     h += (h << 5) + Boolean.hashCode(isAccountNonExpired);
     h += (h << 5) + Boolean.hashCode(isAccountNonLocked);
     h += (h << 5) + Boolean.hashCode(isCredentialsNonExpired);
     h += (h << 5) + Boolean.hashCode(isEnabled);
-    h += (h << 5) + id.hashCode();
-    h += (h << 5) + firstName.hashCode();
-    h += (h << 5) + lastName.hashCode();
-    h += (h << 5) + authorityNames.hashCode();
     return h;
   }
 
@@ -472,14 +558,13 @@ public final class ImmutableUser implements User {
         + "authorities=" + authorities
         + ", password=" + password
         + ", username=" + username
+        + ", id=" + id
+        + ", firstName=" + firstName
+        + ", lastName=" + lastName
         + ", isAccountNonExpired=" + isAccountNonExpired
         + ", isAccountNonLocked=" + isAccountNonLocked
         + ", isCredentialsNonExpired=" + isCredentialsNonExpired
         + ", isEnabled=" + isEnabled
-        + ", id=" + id
-        + ", firstName=" + firstName
-        + ", lastName=" + lastName
-        + ", authorityNames=" + authorityNames
         + "}";
   }
 
@@ -506,14 +591,13 @@ public final class ImmutableUser implements User {
    *    .authorities(Collection&amp;lt;? extends org.springframework.security.core.GrantedAuthority&amp;gt;) // required {@link User#getAuthorities() authorities}
    *    .password(String) // required {@link User#getPassword() password}
    *    .username(String) // required {@link User#getUsername() username}
-   *    .isAccountNonExpired(boolean) // required {@link User#isAccountNonExpired() isAccountNonExpired}
-   *    .isAccountNonLocked(boolean) // required {@link User#isAccountNonLocked() isAccountNonLocked}
-   *    .isCredentialsNonExpired(boolean) // required {@link User#isCredentialsNonExpired() isCredentialsNonExpired}
-   *    .isEnabled(boolean) // required {@link User#isEnabled() isEnabled}
    *    .id(UUID) // required {@link User#id() id}
    *    .firstName(String) // required {@link User#firstName() firstName}
    *    .lastName(String) // required {@link User#lastName() lastName}
-   *    .addAuthorityNames|addAllAuthorityNames(String) // {@link User#authorityNames() authorityNames} elements
+   *    .isAccountNonExpired(boolean) // optional {@link User#isAccountNonExpired() isAccountNonExpired}
+   *    .isAccountNonLocked(boolean) // optional {@link User#isAccountNonLocked() isAccountNonLocked}
+   *    .isCredentialsNonExpired(boolean) // optional {@link User#isCredentialsNonExpired() isCredentialsNonExpired}
+   *    .isEnabled(boolean) // optional {@link User#isEnabled() isEnabled}
    *    .build();
    * </pre>
    * @return A new ImmutableUser builder
@@ -534,26 +618,26 @@ public final class ImmutableUser implements User {
     private static final long INIT_BIT_AUTHORITIES = 0x1L;
     private static final long INIT_BIT_PASSWORD = 0x2L;
     private static final long INIT_BIT_USERNAME = 0x4L;
-    private static final long INIT_BIT_IS_ACCOUNT_NON_EXPIRED = 0x8L;
-    private static final long INIT_BIT_IS_ACCOUNT_NON_LOCKED = 0x10L;
-    private static final long INIT_BIT_IS_CREDENTIALS_NON_EXPIRED = 0x20L;
-    private static final long INIT_BIT_IS_ENABLED = 0x40L;
-    private static final long INIT_BIT_ID = 0x80L;
-    private static final long INIT_BIT_FIRST_NAME = 0x100L;
-    private static final long INIT_BIT_LAST_NAME = 0x200L;
-    private long initBits = 0x3ffL;
+    private static final long INIT_BIT_ID = 0x8L;
+    private static final long INIT_BIT_FIRST_NAME = 0x10L;
+    private static final long INIT_BIT_LAST_NAME = 0x20L;
+    private static final long OPT_BIT_IS_ACCOUNT_NON_EXPIRED = 0x1L;
+    private static final long OPT_BIT_IS_ACCOUNT_NON_LOCKED = 0x2L;
+    private static final long OPT_BIT_IS_CREDENTIALS_NON_EXPIRED = 0x4L;
+    private static final long OPT_BIT_IS_ENABLED = 0x8L;
+    private long initBits = 0x3fL;
+    private long optBits;
 
     private Collection<? extends GrantedAuthority> authorities;
     private String password;
     private String username;
+    private UUID id;
+    private String firstName;
+    private String lastName;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
-    private UUID id;
-    private String firstName;
-    private String lastName;
-    private List<String> authorityNames = new ArrayList<String>();
 
     private Builder() {
     }
@@ -581,20 +665,48 @@ public final class ImmutableUser implements User {
     }
 
     private void from(Object object) {
+      long bits = 0;
       if (object instanceof User) {
         User instance = (User) object;
-        addAllAuthorityNames(instance.authorityNames());
         firstName(instance.firstName());
         lastName(instance.lastName());
+        if ((bits & 0x1L) == 0) {
+          isAccountNonExpired(instance.isAccountNonExpired());
+          bits |= 0x1L;
+        }
+        if ((bits & 0x2L) == 0) {
+          isCredentialsNonExpired(instance.isCredentialsNonExpired());
+          bits |= 0x2L;
+        }
+        if ((bits & 0x4L) == 0) {
+          isEnabled(instance.isEnabled());
+          bits |= 0x4L;
+        }
+        if ((bits & 0x8L) == 0) {
+          isAccountNonLocked(instance.isAccountNonLocked());
+          bits |= 0x8L;
+        }
         id(instance.id());
       }
       if (object instanceof UserDetails) {
         UserDetails instance = (UserDetails) object;
         password(instance.getPassword());
-        isAccountNonExpired(instance.isAccountNonExpired());
-        isCredentialsNonExpired(instance.isCredentialsNonExpired());
-        isEnabled(instance.isEnabled());
-        isAccountNonLocked(instance.isAccountNonLocked());
+        if ((bits & 0x1L) == 0) {
+          isAccountNonExpired(instance.isAccountNonExpired());
+          bits |= 0x1L;
+        }
+        if ((bits & 0x2L) == 0) {
+          isCredentialsNonExpired(instance.isCredentialsNonExpired());
+          bits |= 0x2L;
+        }
+        if ((bits & 0x4L) == 0) {
+          isEnabled(instance.isEnabled());
+          bits |= 0x4L;
+        }
+        if ((bits & 0x8L) == 0) {
+          isAccountNonLocked(instance.isAccountNonLocked());
+          bits |= 0x8L;
+        }
         authorities(instance.getAuthorities());
         username(instance.getUsername());
       }
@@ -605,6 +717,7 @@ public final class ImmutableUser implements User {
      * @param authorities The value for authorities 
      * @return {@code this} builder for use in a chained invocation
      */
+    @JsonProperty("authorities")
     public final Builder authorities(Collection<? extends GrantedAuthority> authorities) {
       this.authorities = Objects.requireNonNull(authorities, "authorities");
       initBits &= ~INIT_BIT_AUTHORITIES;
@@ -616,6 +729,7 @@ public final class ImmutableUser implements User {
      * @param password The value for password 
      * @return {@code this} builder for use in a chained invocation
      */
+    @JsonProperty("password")
     public final Builder password(String password) {
       this.password = Objects.requireNonNull(password, "password");
       initBits &= ~INIT_BIT_PASSWORD;
@@ -627,53 +741,10 @@ public final class ImmutableUser implements User {
      * @param username The value for username 
      * @return {@code this} builder for use in a chained invocation
      */
+    @JsonProperty("username")
     public final Builder username(String username) {
       this.username = Objects.requireNonNull(username, "username");
       initBits &= ~INIT_BIT_USERNAME;
-      return this;
-    }
-
-    /**
-     * Initializes the value for the {@link User#isAccountNonExpired() isAccountNonExpired} attribute.
-     * @param isAccountNonExpired The value for isAccountNonExpired 
-     * @return {@code this} builder for use in a chained invocation
-     */
-    public final Builder isAccountNonExpired(boolean isAccountNonExpired) {
-      this.isAccountNonExpired = isAccountNonExpired;
-      initBits &= ~INIT_BIT_IS_ACCOUNT_NON_EXPIRED;
-      return this;
-    }
-
-    /**
-     * Initializes the value for the {@link User#isAccountNonLocked() isAccountNonLocked} attribute.
-     * @param isAccountNonLocked The value for isAccountNonLocked 
-     * @return {@code this} builder for use in a chained invocation
-     */
-    public final Builder isAccountNonLocked(boolean isAccountNonLocked) {
-      this.isAccountNonLocked = isAccountNonLocked;
-      initBits &= ~INIT_BIT_IS_ACCOUNT_NON_LOCKED;
-      return this;
-    }
-
-    /**
-     * Initializes the value for the {@link User#isCredentialsNonExpired() isCredentialsNonExpired} attribute.
-     * @param isCredentialsNonExpired The value for isCredentialsNonExpired 
-     * @return {@code this} builder for use in a chained invocation
-     */
-    public final Builder isCredentialsNonExpired(boolean isCredentialsNonExpired) {
-      this.isCredentialsNonExpired = isCredentialsNonExpired;
-      initBits &= ~INIT_BIT_IS_CREDENTIALS_NON_EXPIRED;
-      return this;
-    }
-
-    /**
-     * Initializes the value for the {@link User#isEnabled() isEnabled} attribute.
-     * @param isEnabled The value for isEnabled 
-     * @return {@code this} builder for use in a chained invocation
-     */
-    public final Builder isEnabled(boolean isEnabled) {
-      this.isEnabled = isEnabled;
-      initBits &= ~INIT_BIT_IS_ENABLED;
       return this;
     }
 
@@ -682,6 +753,7 @@ public final class ImmutableUser implements User {
      * @param id The value for id 
      * @return {@code this} builder for use in a chained invocation
      */
+    @JsonProperty("id")
     public final Builder id(UUID id) {
       this.id = Objects.requireNonNull(id, "id");
       initBits &= ~INIT_BIT_ID;
@@ -693,6 +765,7 @@ public final class ImmutableUser implements User {
      * @param firstName The value for firstName 
      * @return {@code this} builder for use in a chained invocation
      */
+    @JsonProperty("firstName")
     public final Builder firstName(String firstName) {
       this.firstName = Objects.requireNonNull(firstName, "firstName");
       initBits &= ~INIT_BIT_FIRST_NAME;
@@ -704,6 +777,7 @@ public final class ImmutableUser implements User {
      * @param lastName The value for lastName 
      * @return {@code this} builder for use in a chained invocation
      */
+    @JsonProperty("lastName")
     public final Builder lastName(String lastName) {
       this.lastName = Objects.requireNonNull(lastName, "lastName");
       initBits &= ~INIT_BIT_LAST_NAME;
@@ -711,47 +785,54 @@ public final class ImmutableUser implements User {
     }
 
     /**
-     * Adds one element to {@link User#authorityNames() authorityNames} list.
-     * @param element A authorityNames element
+     * Initializes the value for the {@link User#isAccountNonExpired() isAccountNonExpired} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link User#isAccountNonExpired() isAccountNonExpired}.</em>
+     * @param isAccountNonExpired The value for isAccountNonExpired 
      * @return {@code this} builder for use in a chained invocation
      */
-    public final Builder addAuthorityNames(String element) {
-      this.authorityNames.add(Objects.requireNonNull(element, "authorityNames element"));
+    @JsonProperty("isAccountNonExpired")
+    public final Builder isAccountNonExpired(boolean isAccountNonExpired) {
+      this.isAccountNonExpired = isAccountNonExpired;
+      optBits |= OPT_BIT_IS_ACCOUNT_NON_EXPIRED;
       return this;
     }
 
     /**
-     * Adds elements to {@link User#authorityNames() authorityNames} list.
-     * @param elements An array of authorityNames elements
+     * Initializes the value for the {@link User#isAccountNonLocked() isAccountNonLocked} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link User#isAccountNonLocked() isAccountNonLocked}.</em>
+     * @param isAccountNonLocked The value for isAccountNonLocked 
      * @return {@code this} builder for use in a chained invocation
      */
-    public final Builder addAuthorityNames(String... elements) {
-      for (String element : elements) {
-        this.authorityNames.add(Objects.requireNonNull(element, "authorityNames element"));
-      }
+    @JsonProperty("isAccountNonLocked")
+    public final Builder isAccountNonLocked(boolean isAccountNonLocked) {
+      this.isAccountNonLocked = isAccountNonLocked;
+      optBits |= OPT_BIT_IS_ACCOUNT_NON_LOCKED;
       return this;
     }
 
-
     /**
-     * Sets or replaces all elements for {@link User#authorityNames() authorityNames} list.
-     * @param elements An iterable of authorityNames elements
+     * Initializes the value for the {@link User#isCredentialsNonExpired() isCredentialsNonExpired} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link User#isCredentialsNonExpired() isCredentialsNonExpired}.</em>
+     * @param isCredentialsNonExpired The value for isCredentialsNonExpired 
      * @return {@code this} builder for use in a chained invocation
      */
-    public final Builder authorityNames(Iterable<String> elements) {
-      this.authorityNames.clear();
-      return addAllAuthorityNames(elements);
+    @JsonProperty("isCredentialsNonExpired")
+    public final Builder isCredentialsNonExpired(boolean isCredentialsNonExpired) {
+      this.isCredentialsNonExpired = isCredentialsNonExpired;
+      optBits |= OPT_BIT_IS_CREDENTIALS_NON_EXPIRED;
+      return this;
     }
 
     /**
-     * Adds elements to {@link User#authorityNames() authorityNames} list.
-     * @param elements An iterable of authorityNames elements
+     * Initializes the value for the {@link User#isEnabled() isEnabled} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link User#isEnabled() isEnabled}.</em>
+     * @param isEnabled The value for isEnabled 
      * @return {@code this} builder for use in a chained invocation
      */
-    public final Builder addAllAuthorityNames(Iterable<String> elements) {
-      for (String element : elements) {
-        this.authorityNames.add(Objects.requireNonNull(element, "authorityNames element"));
-      }
+    @JsonProperty("isEnabled")
+    public final Builder isEnabled(boolean isEnabled) {
+      this.isEnabled = isEnabled;
+      optBits |= OPT_BIT_IS_ENABLED;
       return this;
     }
 
@@ -764,18 +845,23 @@ public final class ImmutableUser implements User {
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableUser(
-          authorities,
-          password,
-          username,
-          isAccountNonExpired,
-          isAccountNonLocked,
-          isCredentialsNonExpired,
-          isEnabled,
-          id,
-          firstName,
-          lastName,
-          createUnmodifiableList(true, authorityNames));
+      return new ImmutableUser(this);
+    }
+
+    private boolean isAccountNonExpiredIsSet() {
+      return (optBits & OPT_BIT_IS_ACCOUNT_NON_EXPIRED) != 0;
+    }
+
+    private boolean isAccountNonLockedIsSet() {
+      return (optBits & OPT_BIT_IS_ACCOUNT_NON_LOCKED) != 0;
+    }
+
+    private boolean isCredentialsNonExpiredIsSet() {
+      return (optBits & OPT_BIT_IS_CREDENTIALS_NON_EXPIRED) != 0;
+    }
+
+    private boolean isEnabledIsSet() {
+      return (optBits & OPT_BIT_IS_ENABLED) != 0;
     }
 
     private String formatRequiredAttributesMessage() {
@@ -783,47 +869,10 @@ public final class ImmutableUser implements User {
       if ((initBits & INIT_BIT_AUTHORITIES) != 0) attributes.add("authorities");
       if ((initBits & INIT_BIT_PASSWORD) != 0) attributes.add("password");
       if ((initBits & INIT_BIT_USERNAME) != 0) attributes.add("username");
-      if ((initBits & INIT_BIT_IS_ACCOUNT_NON_EXPIRED) != 0) attributes.add("isAccountNonExpired");
-      if ((initBits & INIT_BIT_IS_ACCOUNT_NON_LOCKED) != 0) attributes.add("isAccountNonLocked");
-      if ((initBits & INIT_BIT_IS_CREDENTIALS_NON_EXPIRED) != 0) attributes.add("isCredentialsNonExpired");
-      if ((initBits & INIT_BIT_IS_ENABLED) != 0) attributes.add("isEnabled");
       if ((initBits & INIT_BIT_ID) != 0) attributes.add("id");
       if ((initBits & INIT_BIT_FIRST_NAME) != 0) attributes.add("firstName");
       if ((initBits & INIT_BIT_LAST_NAME) != 0) attributes.add("lastName");
       return "Cannot build User, some of required attributes are not set " + attributes;
-    }
-  }
-
-  private static <T> List<T> createSafeList(Iterable<? extends T> iterable, boolean checkNulls, boolean skipNulls) {
-    ArrayList<T> list;
-    if (iterable instanceof Collection<?>) {
-      int size = ((Collection<?>) iterable).size();
-      if (size == 0) return Collections.emptyList();
-      list = new ArrayList<>();
-    } else {
-      list = new ArrayList<>();
-    }
-    for (T element : iterable) {
-      if (skipNulls && element == null) continue;
-      if (checkNulls) Objects.requireNonNull(element, "element");
-      list.add(element);
-    }
-    return list;
-  }
-
-  private static <T> List<T> createUnmodifiableList(boolean clone, List<T> list) {
-    switch(list.size()) {
-    case 0: return Collections.emptyList();
-    case 1: return Collections.singletonList(list.get(0));
-    default:
-      if (clone) {
-        return Collections.unmodifiableList(new ArrayList<>(list));
-      } else {
-        if (list instanceof ArrayList<?>) {
-          ((ArrayList<?>) list).trimToSize();
-        }
-        return Collections.unmodifiableList(list);
-      }
     }
   }
 }
