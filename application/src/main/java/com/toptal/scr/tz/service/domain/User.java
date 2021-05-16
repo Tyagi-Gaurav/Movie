@@ -7,9 +7,7 @@ import org.immutables.serial.Serial;
 import org.immutables.value.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Value.Immutable

@@ -1,6 +1,10 @@
 spring:
   active: local
 
+server:
+  servlet:
+    context-path: /api
+
 timezoneApp:
   maxUserNameLength: 15 #Add Test
   minUserNameLength: 8 #Add Test
