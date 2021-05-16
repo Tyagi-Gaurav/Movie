@@ -16,6 +16,7 @@ ext {
     commonsLang3Version = '3.12.0'
     commonsLoggingVersion = '1.2'
     jsonWebTokenVersion = '0.11.2'
+    guavaVersion = '30.1.1-jre'
 }
 
 dependencyManagement {
@@ -30,7 +31,9 @@ dependencyManagement {
         //API
         dependency "org.immutables:value:$immutablesVersion"
         dependency "org.immutables:builder:$immutablesVersion"
+        dependency "org.immutables:serial:$immutablesVersion"
         dependency "org.immutables:value-annotations:$immutablesVersion"
+        dependency "com.google.guava:guava:$guavaVersion"
 //        dependency "net.logstash.logback:logstash-logback-encoder:$logstashVersion"
         dependency "org.slf4j:slf4j-api:$slf4jVersion"
         dependency "org.springframework:spring-context:${springVersion}"

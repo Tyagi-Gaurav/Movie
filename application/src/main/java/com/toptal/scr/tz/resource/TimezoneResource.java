@@ -12,13 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -50,9 +53,9 @@ public class TimezoneResource {
             consumes = "application/vnd.timezone.read.v1+json",
             produces = "application/vnd.timezone.read.v1+json")
     public ResponseEntity<TimezonesDTO> readTimezone(@RequestAttribute("userProfile") UserProfile userProfile) {
-        List<UserTimezone> timezones = timezoneService.getTimezones(userProfile.userName());
+        Map<UUID, UserTimezone> timezones = timezoneService.getTimezones(userProfile.userName());
 
-        List<ImmutableTimezoneDTO> timezoneDTOList = timezones.stream().map(tz -> ImmutableTimezoneDTO.builder()
+        List<ImmutableTimezoneDTO> timezoneDTOList = timezones.values().stream().map(tz -> ImmutableTimezoneDTO.builder()
                 .city(tz.city())
                 .id(tz.id())
                 .gmtOffset(tz.gmtOffset())
@@ -62,5 +65,16 @@ public class TimezoneResource {
         TimezonesDTO timezonesDTO = ImmutableTimezonesDTO.builder().timezones(timezoneDTOList).build();
 
         return ResponseEntity.ok(timezonesDTO);
+    }
+
+    @DeleteMapping(path = "/timezone",
+            consumes = "application/vnd.timezone.delete.v1+json",
+            produces = "application/vnd.timezone.delete.v1+json")
+    public ResponseEntity<Void> deleteTimezone(@RequestAttribute("userProfile") UserProfile userProfile,
+                                               @RequestParam(name = "id") String id) {
+        timezoneService.deleteTimezone(userProfile.userName(),
+                UUID.fromString(id));
+
+        return ResponseEntity.ok().build();
     }
 }

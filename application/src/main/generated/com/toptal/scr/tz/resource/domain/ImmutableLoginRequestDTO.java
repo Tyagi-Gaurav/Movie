@@ -1,9 +1,17 @@
 package com.toptal.scr.tz.resource.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -14,7 +22,10 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "LoginRequestDTO", generator = "Immutables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
+@Immutable
+@CheckReturnValue
 public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
   private final String userName;
   private final String password;
@@ -71,7 +82,7 @@ public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     return another instanceof ImmutableLoginRequestDTO
         && equalTo((ImmutableLoginRequestDTO) another);
@@ -88,7 +99,7 @@ public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
    */
   @Override
   public int hashCode() {
-    int h = 5381;
+    @Var int h = 5381;
     h += (h << 5) + userName.hashCode();
     h += (h << 5) + password.hashCode();
     return h;
@@ -100,10 +111,11 @@ public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
    */
   @Override
   public String toString() {
-    return "LoginRequestDTO{"
-        + "userName=" + userName
-        + ", password=" + password
-        + "}";
+    return MoreObjects.toStringHelper("LoginRequestDTO")
+        .omitNullValues()
+        .add("userName", userName)
+        .add("password", password)
+        .toString();
   }
 
   /**
@@ -144,13 +156,14 @@ public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
    * but instead used immediately to create instances.</em>
    */
   @Generated(from = "LoginRequestDTO", generator = "Immutables")
+  @NotThreadSafe
   public static final class Builder {
     private static final long INIT_BIT_USER_NAME = 0x1L;
     private static final long INIT_BIT_PASSWORD = 0x2L;
     private long initBits = 0x3L;
 
-    private String userName;
-    private String password;
+    private @Nullable String userName;
+    private @Nullable String password;
 
     private Builder() {
     }
@@ -162,6 +175,7 @@ public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder from(LoginRequestDTO instance) {
       Objects.requireNonNull(instance, "instance");
       userName(instance.userName());
@@ -174,6 +188,7 @@ public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
      * @param userName The value for userName 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("userName")
     public final Builder userName(String userName) {
       this.userName = Objects.requireNonNull(userName, "userName");
@@ -186,6 +201,7 @@ public final class ImmutableLoginRequestDTO implements LoginRequestDTO {
      * @param password The value for password 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("password")
     public final Builder password(String password) {
       this.password = Objects.requireNonNull(password, "password");

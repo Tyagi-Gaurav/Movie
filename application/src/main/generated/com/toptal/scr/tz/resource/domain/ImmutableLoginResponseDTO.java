@@ -1,9 +1,17 @@
 package com.toptal.scr.tz.resource.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -14,7 +22,10 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "LoginResponseDTO", generator = "Immutables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
+@Immutable
+@CheckReturnValue
 public final class ImmutableLoginResponseDTO implements LoginResponseDTO {
   private final String token;
 
@@ -48,7 +59,7 @@ public final class ImmutableLoginResponseDTO implements LoginResponseDTO {
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     return another instanceof ImmutableLoginResponseDTO
         && equalTo((ImmutableLoginResponseDTO) another);
@@ -64,7 +75,7 @@ public final class ImmutableLoginResponseDTO implements LoginResponseDTO {
    */
   @Override
   public int hashCode() {
-    int h = 5381;
+    @Var int h = 5381;
     h += (h << 5) + token.hashCode();
     return h;
   }
@@ -75,9 +86,10 @@ public final class ImmutableLoginResponseDTO implements LoginResponseDTO {
    */
   @Override
   public String toString() {
-    return "LoginResponseDTO{"
-        + "token=" + token
-        + "}";
+    return MoreObjects.toStringHelper("LoginResponseDTO")
+        .omitNullValues()
+        .add("token", token)
+        .toString();
   }
 
   /**
@@ -117,11 +129,12 @@ public final class ImmutableLoginResponseDTO implements LoginResponseDTO {
    * but instead used immediately to create instances.</em>
    */
   @Generated(from = "LoginResponseDTO", generator = "Immutables")
+  @NotThreadSafe
   public static final class Builder {
     private static final long INIT_BIT_TOKEN = 0x1L;
     private long initBits = 0x1L;
 
-    private String token;
+    private @Nullable String token;
 
     private Builder() {
     }
@@ -133,6 +146,7 @@ public final class ImmutableLoginResponseDTO implements LoginResponseDTO {
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder from(LoginResponseDTO instance) {
       Objects.requireNonNull(instance, "instance");
       token(instance.token());
@@ -144,6 +158,7 @@ public final class ImmutableLoginResponseDTO implements LoginResponseDTO {
      * @param token The value for token 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("token")
     public final Builder token(String token) {
       this.token = Objects.requireNonNull(token, "token");

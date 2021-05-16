@@ -2,10 +2,18 @@ package com.toptal.scr.tz.service.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -16,7 +24,10 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "UserTimezone", generator = "Immutables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
+@Immutable
+@CheckReturnValue
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class ImmutableUserTimezone implements UserTimezone {
   private final UUID id;
@@ -119,7 +130,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     return another instanceof ImmutableUserTimezone
         && equalTo((ImmutableUserTimezone) another);
@@ -138,7 +149,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
    */
   @Override
   public int hashCode() {
-    int h = 5381;
+    @Var int h = 5381;
     h += (h << 5) + id.hashCode();
     h += (h << 5) + name.hashCode();
     h += (h << 5) + city.hashCode();
@@ -152,12 +163,13 @@ public final class ImmutableUserTimezone implements UserTimezone {
    */
   @Override
   public String toString() {
-    return "UserTimezone{"
-        + "id=" + id
-        + ", name=" + name
-        + ", city=" + city
-        + ", gmtOffset=" + gmtOffset
-        + "}";
+    return MoreObjects.toStringHelper("UserTimezone")
+        .omitNullValues()
+        .add("id", id)
+        .add("name", name)
+        .add("city", city)
+        .add("gmtOffset", gmtOffset)
+        .toString();
   }
 
   /**
@@ -200,6 +212,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
    * but instead used immediately to create instances.</em>
    */
   @Generated(from = "UserTimezone", generator = "Immutables")
+  @NotThreadSafe
   @JsonIgnoreProperties(ignoreUnknown = true)
   public static final class Builder {
     private static final long INIT_BIT_ID = 0x1L;
@@ -208,9 +221,9 @@ public final class ImmutableUserTimezone implements UserTimezone {
     private static final long INIT_BIT_GMT_OFFSET = 0x8L;
     private long initBits = 0xfL;
 
-    private UUID id;
-    private String name;
-    private String city;
+    private @Nullable UUID id;
+    private @Nullable String name;
+    private @Nullable String city;
     private int gmtOffset;
 
     private Builder() {
@@ -223,6 +236,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder from(UserTimezone instance) {
       Objects.requireNonNull(instance, "instance");
       id(instance.id());
@@ -237,6 +251,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
      * @param id The value for id 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("id")
     public final Builder id(UUID id) {
       this.id = Objects.requireNonNull(id, "id");
@@ -249,6 +264,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
      * @param name The value for name 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("name")
     public final Builder name(String name) {
       this.name = Objects.requireNonNull(name, "name");
@@ -261,6 +277,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
      * @param city The value for city 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("city")
     public final Builder city(String city) {
       this.city = Objects.requireNonNull(city, "city");
@@ -273,6 +290,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
      * @param gmtOffset The value for gmtOffset 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("gmtOffset")
     public final Builder gmtOffset(int gmtOffset) {
       this.gmtOffset = gmtOffset;

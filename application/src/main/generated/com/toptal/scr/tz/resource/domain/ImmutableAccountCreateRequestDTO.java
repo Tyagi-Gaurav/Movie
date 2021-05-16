@@ -1,9 +1,17 @@
 package com.toptal.scr.tz.resource.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -14,7 +22,10 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "AccountCreateRequestDTO", generator = "Immutables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
+@Immutable
+@CheckReturnValue
 public final class ImmutableAccountCreateRequestDTO
     implements AccountCreateRequestDTO {
   private final String userName;
@@ -146,7 +157,7 @@ public final class ImmutableAccountCreateRequestDTO
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     return another instanceof ImmutableAccountCreateRequestDTO
         && equalTo((ImmutableAccountCreateRequestDTO) another);
@@ -166,7 +177,7 @@ public final class ImmutableAccountCreateRequestDTO
    */
   @Override
   public int hashCode() {
-    int h = 5381;
+    @Var int h = 5381;
     h += (h << 5) + userName.hashCode();
     h += (h << 5) + password.hashCode();
     h += (h << 5) + firstName.hashCode();
@@ -181,13 +192,14 @@ public final class ImmutableAccountCreateRequestDTO
    */
   @Override
   public String toString() {
-    return "AccountCreateRequestDTO{"
-        + "userName=" + userName
-        + ", password=" + password
-        + ", firstName=" + firstName
-        + ", lastName=" + lastName
-        + ", role=" + role
-        + "}";
+    return MoreObjects.toStringHelper("AccountCreateRequestDTO")
+        .omitNullValues()
+        .add("userName", userName)
+        .add("password", password)
+        .add("firstName", firstName)
+        .add("lastName", lastName)
+        .add("role", role)
+        .toString();
   }
 
   /**
@@ -231,6 +243,7 @@ public final class ImmutableAccountCreateRequestDTO
    * but instead used immediately to create instances.</em>
    */
   @Generated(from = "AccountCreateRequestDTO", generator = "Immutables")
+  @NotThreadSafe
   public static final class Builder {
     private static final long INIT_BIT_USER_NAME = 0x1L;
     private static final long INIT_BIT_PASSWORD = 0x2L;
@@ -239,11 +252,11 @@ public final class ImmutableAccountCreateRequestDTO
     private static final long INIT_BIT_ROLE = 0x10L;
     private long initBits = 0x1fL;
 
-    private String userName;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String role;
+    private @Nullable String userName;
+    private @Nullable String password;
+    private @Nullable String firstName;
+    private @Nullable String lastName;
+    private @Nullable String role;
 
     private Builder() {
     }
@@ -255,6 +268,7 @@ public final class ImmutableAccountCreateRequestDTO
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder from(AccountCreateRequestDTO instance) {
       Objects.requireNonNull(instance, "instance");
       userName(instance.userName());
@@ -270,6 +284,7 @@ public final class ImmutableAccountCreateRequestDTO
      * @param userName The value for userName 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("userName")
     public final Builder userName(String userName) {
       this.userName = Objects.requireNonNull(userName, "userName");
@@ -282,6 +297,7 @@ public final class ImmutableAccountCreateRequestDTO
      * @param password The value for password 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("password")
     public final Builder password(String password) {
       this.password = Objects.requireNonNull(password, "password");
@@ -294,6 +310,7 @@ public final class ImmutableAccountCreateRequestDTO
      * @param firstName The value for firstName 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("firstName")
     public final Builder firstName(String firstName) {
       this.firstName = Objects.requireNonNull(firstName, "firstName");
@@ -306,6 +323,7 @@ public final class ImmutableAccountCreateRequestDTO
      * @param lastName The value for lastName 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("lastName")
     public final Builder lastName(String lastName) {
       this.lastName = Objects.requireNonNull(lastName, "lastName");
@@ -318,6 +336,7 @@ public final class ImmutableAccountCreateRequestDTO
      * @param role The value for role 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("role")
     public final Builder role(String role) {
       this.role = Objects.requireNonNull(role, "role");

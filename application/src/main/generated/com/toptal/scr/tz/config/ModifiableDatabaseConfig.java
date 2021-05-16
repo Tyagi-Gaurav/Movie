@@ -1,8 +1,13 @@
 package com.toptal.scr.tz.config;
 
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -12,7 +17,9 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "DatabaseConfig", generator = "Modifiables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated({"Modifiables.generator", "DatabaseConfig"})
+@NotThreadSafe
 public final class ModifiableDatabaseConfig implements DatabaseConfig {
   private static final long INIT_BIT_HOST = 0x1L;
   private static final long INIT_BIT_PORT = 0x2L;
@@ -57,6 +64,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    * Clears the object by setting all attributes to their initial values.
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public ModifiableDatabaseConfig clear() {
     initBits = 0x3L;
     host = null;
@@ -105,6 +113,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    * @param host The value for host
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public ModifiableDatabaseConfig setHost(String host) {
     this.host = Objects.requireNonNull(host, "host");
     initBits &= ~INIT_BIT_HOST;
@@ -116,6 +125,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    * @param port The value for port
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public ModifiableDatabaseConfig setPort(int port) {
     this.port = port;
     initBits &= ~INIT_BIT_PORT;
@@ -143,6 +153,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    * Reset an attribute to its initial value.
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public final ModifiableDatabaseConfig unsetHost() {
     initBits |= INIT_BIT_HOST;
     host = null;
@@ -153,6 +164,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    * Reset an attribute to its initial value.
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public final ModifiableDatabaseConfig unsetPort() {
     initBits |= INIT_BIT_PORT;
     port = 0;
@@ -186,7 +198,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     if (!(another instanceof ModifiableDatabaseConfig)) return false;
     ModifiableDatabaseConfig other = (ModifiableDatabaseConfig) another;
@@ -220,9 +232,9 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    */
   @Override
   public String toString() {
-    return "ModifiableDatabaseConfig{"
-        + "host="  + (hostIsSet() ? host() : "?")
-        + ", port="  + (portIsSet() ? port() : "?")
-        + "}";
+    return MoreObjects.toStringHelper("ModifiableDatabaseConfig")
+        .add("host", hostIsSet() ? host() : "?")
+        .add("port", portIsSet() ? port() : "?")
+        .toString();
   }
 }

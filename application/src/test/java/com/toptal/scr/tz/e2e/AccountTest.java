@@ -69,7 +69,7 @@ class AccountTest {
                         .lastName("def")
                         .password(RandomStringUtils.random(15))
                         .userName(RandomStringUtils.random(15))
-                        .roles(Arrays.asList("USER"))
+                        .role("USER")
                         .build();
 
         mockMvc.perform(post("/account/create")

@@ -1,8 +1,16 @@
 package com.toptal.scr.tz.resource.domain;
 
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -13,7 +21,10 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "UserProfile", generator = "Immutables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
+@Immutable
+@CheckReturnValue
 public final class ImmutableUserProfile implements UserProfile {
   private final String userName;
   private final String authority;
@@ -68,7 +79,7 @@ public final class ImmutableUserProfile implements UserProfile {
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     return another instanceof ImmutableUserProfile
         && equalTo((ImmutableUserProfile) another);
@@ -85,7 +96,7 @@ public final class ImmutableUserProfile implements UserProfile {
    */
   @Override
   public int hashCode() {
-    int h = 5381;
+    @Var int h = 5381;
     h += (h << 5) + userName.hashCode();
     h += (h << 5) + authority.hashCode();
     return h;
@@ -97,10 +108,11 @@ public final class ImmutableUserProfile implements UserProfile {
    */
   @Override
   public String toString() {
-    return "UserProfile{"
-        + "userName=" + userName
-        + ", authority=" + authority
-        + "}";
+    return MoreObjects.toStringHelper("UserProfile")
+        .omitNullValues()
+        .add("userName", userName)
+        .add("authority", authority)
+        .toString();
   }
 
   /**
@@ -141,13 +153,14 @@ public final class ImmutableUserProfile implements UserProfile {
    * but instead used immediately to create instances.</em>
    */
   @Generated(from = "UserProfile", generator = "Immutables")
+  @NotThreadSafe
   public static final class Builder {
     private static final long INIT_BIT_USER_NAME = 0x1L;
     private static final long INIT_BIT_AUTHORITY = 0x2L;
     private long initBits = 0x3L;
 
-    private String userName;
-    private String authority;
+    private @Nullable String userName;
+    private @Nullable String authority;
 
     private Builder() {
     }
@@ -159,6 +172,7 @@ public final class ImmutableUserProfile implements UserProfile {
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder from(UserProfile instance) {
       Objects.requireNonNull(instance, "instance");
       userName(instance.userName());
@@ -171,6 +185,7 @@ public final class ImmutableUserProfile implements UserProfile {
      * @param userName The value for userName 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder userName(String userName) {
       this.userName = Objects.requireNonNull(userName, "userName");
       initBits &= ~INIT_BIT_USER_NAME;
@@ -182,6 +197,7 @@ public final class ImmutableUserProfile implements UserProfile {
      * @param authority The value for authority 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder authority(String authority) {
       this.authority = Objects.requireNonNull(authority, "authority");
       initBits &= ~INIT_BIT_AUTHORITY;

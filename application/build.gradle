@@ -44,6 +44,8 @@ dependencies {
     implementation "org.immutables:value-annotations"
     implementation "org.immutables:value"
     implementation "org.immutables:builder"
+    implementation "org.immutables:serial"
+    implementation "com.google.guava:guava"
     annotationProcessor "org.immutables:value"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api"

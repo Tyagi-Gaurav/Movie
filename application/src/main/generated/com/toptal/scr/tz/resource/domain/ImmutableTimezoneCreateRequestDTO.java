@@ -1,9 +1,17 @@
 package com.toptal.scr.tz.resource.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -14,7 +22,10 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "TimezoneCreateRequestDTO", generator = "Immutables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
+@Immutable
+@CheckReturnValue
 public final class ImmutableTimezoneCreateRequestDTO
     implements TimezoneCreateRequestDTO {
   private final String name;
@@ -94,7 +105,7 @@ public final class ImmutableTimezoneCreateRequestDTO
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     return another instanceof ImmutableTimezoneCreateRequestDTO
         && equalTo((ImmutableTimezoneCreateRequestDTO) another);
@@ -112,7 +123,7 @@ public final class ImmutableTimezoneCreateRequestDTO
    */
   @Override
   public int hashCode() {
-    int h = 5381;
+    @Var int h = 5381;
     h += (h << 5) + name.hashCode();
     h += (h << 5) + city.hashCode();
     h += (h << 5) + gmtOffset;
@@ -125,11 +136,12 @@ public final class ImmutableTimezoneCreateRequestDTO
    */
   @Override
   public String toString() {
-    return "TimezoneCreateRequestDTO{"
-        + "name=" + name
-        + ", city=" + city
-        + ", gmtOffset=" + gmtOffset
-        + "}";
+    return MoreObjects.toStringHelper("TimezoneCreateRequestDTO")
+        .omitNullValues()
+        .add("name", name)
+        .add("city", city)
+        .add("gmtOffset", gmtOffset)
+        .toString();
   }
 
   /**
@@ -171,14 +183,15 @@ public final class ImmutableTimezoneCreateRequestDTO
    * but instead used immediately to create instances.</em>
    */
   @Generated(from = "TimezoneCreateRequestDTO", generator = "Immutables")
+  @NotThreadSafe
   public static final class Builder {
     private static final long INIT_BIT_NAME = 0x1L;
     private static final long INIT_BIT_CITY = 0x2L;
     private static final long INIT_BIT_GMT_OFFSET = 0x4L;
     private long initBits = 0x7L;
 
-    private String name;
-    private String city;
+    private @Nullable String name;
+    private @Nullable String city;
     private int gmtOffset;
 
     private Builder() {
@@ -191,6 +204,7 @@ public final class ImmutableTimezoneCreateRequestDTO
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     public final Builder from(TimezoneCreateRequestDTO instance) {
       Objects.requireNonNull(instance, "instance");
       name(instance.name());
@@ -204,6 +218,7 @@ public final class ImmutableTimezoneCreateRequestDTO
      * @param name The value for name 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("name")
     public final Builder name(String name) {
       this.name = Objects.requireNonNull(name, "name");
@@ -216,6 +231,7 @@ public final class ImmutableTimezoneCreateRequestDTO
      * @param city The value for city 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("city")
     public final Builder city(String city) {
       this.city = Objects.requireNonNull(city, "city");
@@ -228,6 +244,7 @@ public final class ImmutableTimezoneCreateRequestDTO
      * @param gmtOffset The value for gmtOffset 
      * @return {@code this} builder for use in a chained invocation
      */
+    @CanIgnoreReturnValue 
     @JsonProperty("gmtOffset")
     public final Builder gmtOffset(int gmtOffset) {
       this.gmtOffset = gmtOffset;
