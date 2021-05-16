@@ -44,4 +44,15 @@ public class TimezoneServiceImpl implements TimezoneService {
         userService.add(ImmutableUser.builder().from(userFromDatabase)
                 .userTimeZones(uuidUserTimezoneMap).build());
     }
+
+    @Override
+    public void updateTimezone(String userName, UserTimezone timezone) {
+        User userFromDatabase = userService.loadUserByUsername(userName);
+
+        HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
+        uuidUserTimezoneMap.put(timezone.id(), timezone);
+
+        userService.add(ImmutableUser.builder().from(userFromDatabase)
+                .userTimeZones(uuidUserTimezoneMap).build());
+    }
 }

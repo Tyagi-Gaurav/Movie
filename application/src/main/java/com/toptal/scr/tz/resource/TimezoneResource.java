@@ -3,6 +3,7 @@ package com.toptal.scr.tz.resource;
 import com.toptal.scr.tz.resource.domain.ImmutableTimezoneDTO;
 import com.toptal.scr.tz.resource.domain.ImmutableTimezonesDTO;
 import com.toptal.scr.tz.resource.domain.TimezoneCreateRequestDTO;
+import com.toptal.scr.tz.resource.domain.TimezoneUpdateRequestDTO;
 import com.toptal.scr.tz.resource.domain.TimezonesDTO;
 import com.toptal.scr.tz.resource.domain.UserProfile;
 import com.toptal.scr.tz.service.TimezoneService;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,6 +76,25 @@ public class TimezoneResource {
                                                @RequestParam(name = "id") String id) {
         timezoneService.deleteTimezone(userProfile.userName(),
                 UUID.fromString(id));
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/timezone",
+            consumes = "application/vnd.timezone.update.v1+json",
+            produces = "application/vnd.timezone.update.v1+json")
+    public ResponseEntity<Void> updateTimezone(@RequestBody TimezoneUpdateRequestDTO timezoneUpdateRequestDTO,
+                                               @RequestAttribute("userProfile") UserProfile userProfile) {
+
+        UserTimezone timezone = ImmutableUserTimezone.builder()
+                .id(timezoneUpdateRequestDTO.id())
+                .city(timezoneUpdateRequestDTO.city())
+                .name(timezoneUpdateRequestDTO.name())
+                .gmtOffset(timezoneUpdateRequestDTO.gmtOffset())
+                .build();
+
+        timezoneService.updateTimezone(userProfile.userName(),
+                timezone);
 
         return ResponseEntity.ok().build();
     }

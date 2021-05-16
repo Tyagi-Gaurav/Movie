@@ -11,5 +11,7 @@ public interface TimezoneService {
     Map<UUID, UserTimezone> getTimezones(String user);
 
     void deleteTimezone(String user, UUID timezoneId);
+
+    void updateTimezone(String userName, UserTimezone timezone);
 }
 
