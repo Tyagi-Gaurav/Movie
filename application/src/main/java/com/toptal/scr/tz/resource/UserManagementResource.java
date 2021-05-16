@@ -1,6 +1,7 @@
 package com.toptal.scr.tz.resource;
 
 import com.toptal.scr.tz.resource.domain.AccountCreateRequestDTO;
+import com.toptal.scr.tz.resource.domain.AccountUpdateRequestDTO;
 import com.toptal.scr.tz.resource.domain.ImmutableUserDetailsResponse;
 import com.toptal.scr.tz.resource.domain.ImmutableUserListResponseDTO;
 import com.toptal.scr.tz.resource.domain.UserListResponseDTO;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,23 +88,23 @@ public class UserManagementResource {
         return ResponseEntity.ok().build();
     }
 
-//    @PutMapping(path = "/user/{userId}/timezone",
-//            consumes = "application/vnd.timezone.update.v1+json",
-//            produces = "application/vnd.timezone.update.v1+json")
-//    public ResponseEntity<Void> updateTimezone(@PathVariable("userId") UUID userId,
-//                                               @RequestBody TimezoneUpdateRequestDTO timezoneUpdateRequestDTO,
-//                                               @RequestAttribute("userProfile") UserProfile userProfile) {
-//
-//        UserTimezone timezone = ImmutableUserTimezone.builder()
-//                .id(timezoneUpdateRequestDTO.id())
-//                .city(timezoneUpdateRequestDTO.city())
-//                .name(timezoneUpdateRequestDTO.name())
-//                .gmtOffset(timezoneUpdateRequestDTO.gmtOffset())
-//                .build();
-//
-//        timezoneService.updateTimezone(userProfile.userName(),
-//                timezone);
-//
-//        return ResponseEntity.ok().build();
-//    }
+    @PutMapping(path = "/user/{userId}/manage",
+            consumes = "application/vnd.user.update.v1+json",
+            produces = "application/vnd.user.update.v1+json")
+    public ResponseEntity<Void> updateTimezone(@PathVariable("userId") UUID userId,
+                                               @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
+
+        User user = ImmutableUser.builder()
+                .id(userId)
+                .username(accountUpdateRequestDTO.userName())
+                .password(passwordEncoder.encode(accountUpdateRequestDTO.password()))
+                .firstName(accountUpdateRequestDTO.firstName())
+                .lastName(accountUpdateRequestDTO.lastName())
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority(accountUpdateRequestDTO.role())))
+                .build();
+
+        userService.update(user);
+
+        return ResponseEntity.ok().build();
+    }
 }

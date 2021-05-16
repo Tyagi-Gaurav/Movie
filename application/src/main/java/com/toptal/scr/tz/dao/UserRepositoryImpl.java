@@ -51,4 +51,9 @@ public class UserRepositoryImpl implements UserRepository {
     public void delete(UUID userId) {
         redisTemplate.opsForHash().delete("user", userId);
     }
+
+    @Override
+    public void update(User user) {
+        redisTemplate.opsForHash().put("user", user.id(), user);
+    }
 }
