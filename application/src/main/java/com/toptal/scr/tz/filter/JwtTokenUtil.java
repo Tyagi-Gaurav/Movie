@@ -12,6 +12,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class JwtTokenUtil {
@@ -52,7 +53,7 @@ public class JwtTokenUtil {
 
     public static String generateToken(User user) {
         Map<String, Object> claims = addClaims(user);
-        return doGenerateToken(claims, user.getUsername());
+        return doGenerateToken(claims, user.getUsername(), user.id());
     }
 
     private static Map<String, Object> addClaims(User user) {
@@ -61,10 +62,11 @@ public class JwtTokenUtil {
         return claims;
     }
 
-    private static String doGenerateToken(Map<String, Object> claims, String subject) {
+    private static String doGenerateToken(Map<String, Object> claims, String subject, UUID id) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
+                .setId(id.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(signingKey)
@@ -74,5 +76,9 @@ public class JwtTokenUtil {
     public Boolean validateToken(UserDetails userDetails) {
         final String username = getUsernameFromToken();
         return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired());
+    }
+
+    public String getUserIdFromToken() {
+        return getClaimFromToken(Claims::getId);
     }
 }

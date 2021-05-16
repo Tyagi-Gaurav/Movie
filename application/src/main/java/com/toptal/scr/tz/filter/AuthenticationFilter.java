@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -40,7 +40,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 		final String requestTokenHeader = request.getHeader("Authorization");
 
-		String username = null;
+		String userId = null;
 		String jwtToken = null;
 		
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
@@ -48,8 +48,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken);
 			
 			try {
-				username = jwtTokenUtil.getUsernameFromToken();
-				validateToken(jwtTokenUtil, username, chain, request, response);
+				LOG.info("Looking for user Id in token");
+				userId = jwtTokenUtil.getUserIdFromToken();
+				LOG.info("User Id from token: " + userId);
+				validateToken(jwtTokenUtil, userId, chain, request, response);
 			} catch (IllegalArgumentException e) {
 				LOG.error("Unable to get JWT Token", e);
 			}
@@ -59,13 +61,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	}
 	
 	
-	private void validateToken(JwtTokenUtil jwtTokenUtil, String username, FilterChain chain, HttpServletRequest request, 
+	private void validateToken(JwtTokenUtil jwtTokenUtil, String userId, FilterChain chain, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			User userDetails = userService.loadUserByUsername(username);
+		if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			LOG.info("Looking for user Details with userId: " + userId);
+			User userDetails = userService.findUserBy(UUID.fromString(userId));
+			LOG.info("Found user: " + userDetails.getUsername());
 
 			if (jwtTokenUtil.validateToken(userDetails)) {
+				LOG.info("Token validated for user " + userId);
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				
@@ -82,7 +87,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				LinkedHashMap authorities = (LinkedHashMap) authoritiesObjects.get(0);
 
 				UserProfile userprofile = ImmutableUserProfile.builder()
-						.userName(username)
 						.id(userDetails.id())
 						.authority(authorities.get("authority").toString())
 						.build();

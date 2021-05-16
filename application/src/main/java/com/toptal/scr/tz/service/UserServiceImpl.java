@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,11 +18,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User loadUserByUsername(String userName) {
-        return userRepository.findUserBy(userName);
-    }
-
-    @Override
     public void add(User user) {
         userRepository.add(user);
     }
@@ -29,5 +25,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         return userRepository.getAllUsers();
+    }
+
+    @Override
+    public void deleteUser(UUID userId) {
+        userRepository.delete(userId);
+    }
+
+    @Override
+    public User loadUserByUsername(String userName) {
+        return userRepository.findUserBy(userName);
+    }
+
+    @Override
+    public User findUserBy(UUID userId) {
+        return userRepository.findUserBy(userId);
     }
 }

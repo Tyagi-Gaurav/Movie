@@ -8,12 +8,12 @@ import java.util.UUID;
 
 public interface TimezoneService {
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    void addTimezone(String userName, UserTimezone userTimezone);
+    void addTimezone(UUID userId, UserTimezone userTimezone);
 
-    Map<UUID, UserTimezone> getTimezones(String userName);
+    Map<UUID, UserTimezone> getTimezones(UUID userId);
 
-    void deleteTimezone(String userName, UUID timezoneId);
+    void deleteTimezone(UUID userId, UUID timezoneId);
 
-    void updateTimezone(String userName, UserTimezone timezone);
+    void updateTimezone(UUID userId, UserTimezone timezone);
 }
 

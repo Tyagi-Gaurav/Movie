@@ -51,7 +51,7 @@ public class TimezoneResource {
                 .gmtOffset(timezoneCreateRequestDTO.gmtOffset())
                 .build();
 
-        timezoneService.addTimezone(userProfile.userName(), timezone);
+        timezoneService.addTimezone(userProfile.id(), timezone);
         return ResponseEntity.noContent().build();
     }
 
@@ -60,7 +60,7 @@ public class TimezoneResource {
             produces = "application/vnd.timezone.read.v1+json")
     public ResponseEntity<TimezonesDTO> readTimezone(@PathVariable("userId") UUID userId,
                                                      @RequestAttribute("userProfile") UserProfile userProfile) {
-        Map<UUID, UserTimezone> timezones = timezoneService.getTimezones(userProfile.userName());
+        Map<UUID, UserTimezone> timezones = timezoneService.getTimezones(userProfile.id());
 
         List<ImmutableTimezoneDTO> timezoneDTOList = timezones.values().stream().map(tz -> ImmutableTimezoneDTO.builder()
                 .city(tz.city())
@@ -80,7 +80,7 @@ public class TimezoneResource {
     public ResponseEntity<Void> deleteTimezone(@PathVariable("userId") UUID userId,
                                                @RequestAttribute("userProfile") UserProfile userProfile,
                                                @RequestParam(name = "id") String id) {
-        timezoneService.deleteTimezone(userProfile.userName(),
+        timezoneService.deleteTimezone(userProfile.id(),
                 UUID.fromString(id));
 
         return ResponseEntity.ok().build();
@@ -100,7 +100,7 @@ public class TimezoneResource {
                 .gmtOffset(timezoneUpdateRequestDTO.gmtOffset())
                 .build();
 
-        timezoneService.updateTimezone(userProfile.userName(),
+        timezoneService.updateTimezone(userProfile.id(),
                 timezone);
 
         return ResponseEntity.ok().build();

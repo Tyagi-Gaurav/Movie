@@ -17,8 +17,8 @@ public class TimezoneServiceImpl implements TimezoneService {
     private UserService userService;
 
     @Override
-    public void addTimezone(String user, UserTimezone userTimezone) {
-        User userFromDatabase = userService.loadUserByUsername(user);
+    public void addTimezone(UUID userId, UserTimezone userTimezone) {
+        User userFromDatabase = userService.findUserBy(userId);
         HashMap<UUID, UserTimezone> uuidUserTimezoneHashMap =
                 userFromDatabase.userTimeZones();
 
@@ -29,25 +29,25 @@ public class TimezoneServiceImpl implements TimezoneService {
     }
 
     @Override
-    public Map<UUID, UserTimezone> getTimezones(String user) {
-        User userFromDatabase = userService.loadUserByUsername(user);
+    public Map<UUID, UserTimezone> getTimezones(UUID userId) {
+        User userFromDatabase = userService.findUserBy(userId);
         return userFromDatabase.userTimeZones();
     }
 
     @Override
-    public void deleteTimezone(String user, UUID id) {
-        User userFromDatabase = userService.loadUserByUsername(user);
+    public void deleteTimezone(UUID userId, UUID timezoneId) {
+        User userFromDatabase = userService.findUserBy(userId);
 
         HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
-        uuidUserTimezoneMap.remove(id);
+        uuidUserTimezoneMap.remove(timezoneId);
 
         userService.add(ImmutableUser.builder().from(userFromDatabase)
                 .userTimeZones(uuidUserTimezoneMap).build());
     }
 
     @Override
-    public void updateTimezone(String userName, UserTimezone timezone) {
-        User userFromDatabase = userService.loadUserByUsername(userName);
+    public void updateTimezone(UUID userId, UserTimezone timezone) {
+        User userFromDatabase = userService.findUserBy(userId);
 
         HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
         uuidUserTimezoneMap.put(timezone.id(), timezone);

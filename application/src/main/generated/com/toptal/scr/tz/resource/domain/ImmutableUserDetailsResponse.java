@@ -7,6 +7,7 @@ import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,16 +33,19 @@ public final class ImmutableUserDetailsResponse
   private final String firstName;
   private final String lastName;
   private final String role;
+  private final UUID id;
 
   private ImmutableUserDetailsResponse(
       String userName,
       String firstName,
       String lastName,
-      String role) {
+      String role,
+      UUID id) {
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.role = role;
+    this.id = id;
   }
 
   /**
@@ -81,6 +85,15 @@ public final class ImmutableUserDetailsResponse
   }
 
   /**
+   * @return The value of the {@code id} attribute
+   */
+  @JsonProperty("id")
+  @Override
+  public UUID id() {
+    return id;
+  }
+
+  /**
    * Copy the current immutable object by setting a value for the {@link UserDetailsResponse#userName() userName} attribute.
    * An equals check used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for userName
@@ -89,7 +102,7 @@ public final class ImmutableUserDetailsResponse
   public final ImmutableUserDetailsResponse withUserName(String value) {
     String newValue = Objects.requireNonNull(value, "userName");
     if (this.userName.equals(newValue)) return this;
-    return new ImmutableUserDetailsResponse(newValue, this.firstName, this.lastName, this.role);
+    return new ImmutableUserDetailsResponse(newValue, this.firstName, this.lastName, this.role, this.id);
   }
 
   /**
@@ -101,7 +114,7 @@ public final class ImmutableUserDetailsResponse
   public final ImmutableUserDetailsResponse withFirstName(String value) {
     String newValue = Objects.requireNonNull(value, "firstName");
     if (this.firstName.equals(newValue)) return this;
-    return new ImmutableUserDetailsResponse(this.userName, newValue, this.lastName, this.role);
+    return new ImmutableUserDetailsResponse(this.userName, newValue, this.lastName, this.role, this.id);
   }
 
   /**
@@ -113,7 +126,7 @@ public final class ImmutableUserDetailsResponse
   public final ImmutableUserDetailsResponse withLastName(String value) {
     String newValue = Objects.requireNonNull(value, "lastName");
     if (this.lastName.equals(newValue)) return this;
-    return new ImmutableUserDetailsResponse(this.userName, this.firstName, newValue, this.role);
+    return new ImmutableUserDetailsResponse(this.userName, this.firstName, newValue, this.role, this.id);
   }
 
   /**
@@ -125,7 +138,19 @@ public final class ImmutableUserDetailsResponse
   public final ImmutableUserDetailsResponse withRole(String value) {
     String newValue = Objects.requireNonNull(value, "role");
     if (this.role.equals(newValue)) return this;
-    return new ImmutableUserDetailsResponse(this.userName, this.firstName, this.lastName, newValue);
+    return new ImmutableUserDetailsResponse(this.userName, this.firstName, this.lastName, newValue, this.id);
+  }
+
+  /**
+   * Copy the current immutable object by setting a value for the {@link UserDetailsResponse#id() id} attribute.
+   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for id
+   * @return A modified copy of the {@code this} object
+   */
+  public final ImmutableUserDetailsResponse withId(UUID value) {
+    if (this.id == value) return this;
+    UUID newValue = Objects.requireNonNull(value, "id");
+    return new ImmutableUserDetailsResponse(this.userName, this.firstName, this.lastName, this.role, newValue);
   }
 
   /**
@@ -143,11 +168,12 @@ public final class ImmutableUserDetailsResponse
     return userName.equals(another.userName)
         && firstName.equals(another.firstName)
         && lastName.equals(another.lastName)
-        && role.equals(another.role);
+        && role.equals(another.role)
+        && id.equals(another.id);
   }
 
   /**
-   * Computes a hash code from attributes: {@code userName}, {@code firstName}, {@code lastName}, {@code role}.
+   * Computes a hash code from attributes: {@code userName}, {@code firstName}, {@code lastName}, {@code role}, {@code id}.
    * @return hashCode value
    */
   @Override
@@ -157,6 +183,7 @@ public final class ImmutableUserDetailsResponse
     h += (h << 5) + firstName.hashCode();
     h += (h << 5) + lastName.hashCode();
     h += (h << 5) + role.hashCode();
+    h += (h << 5) + id.hashCode();
     return h;
   }
 
@@ -172,6 +199,7 @@ public final class ImmutableUserDetailsResponse
         .add("firstName", firstName)
         .add("lastName", lastName)
         .add("role", role)
+        .add("id", id)
         .toString();
   }
 
@@ -199,6 +227,7 @@ public final class ImmutableUserDetailsResponse
    *    .firstName(String) // required {@link UserDetailsResponse#firstName() firstName}
    *    .lastName(String) // required {@link UserDetailsResponse#lastName() lastName}
    *    .role(String) // required {@link UserDetailsResponse#role() role}
+   *    .id(UUID) // required {@link UserDetailsResponse#id() id}
    *    .build();
    * </pre>
    * @return A new ImmutableUserDetailsResponse builder
@@ -221,12 +250,14 @@ public final class ImmutableUserDetailsResponse
     private static final long INIT_BIT_FIRST_NAME = 0x2L;
     private static final long INIT_BIT_LAST_NAME = 0x4L;
     private static final long INIT_BIT_ROLE = 0x8L;
-    private long initBits = 0xfL;
+    private static final long INIT_BIT_ID = 0x10L;
+    private long initBits = 0x1fL;
 
     private @Nullable String userName;
     private @Nullable String firstName;
     private @Nullable String lastName;
     private @Nullable String role;
+    private @Nullable UUID id;
 
     private Builder() {
     }
@@ -245,6 +276,7 @@ public final class ImmutableUserDetailsResponse
       firstName(instance.firstName());
       lastName(instance.lastName());
       role(instance.role());
+      id(instance.id());
       return this;
     }
 
@@ -301,6 +333,19 @@ public final class ImmutableUserDetailsResponse
     }
 
     /**
+     * Initializes the value for the {@link UserDetailsResponse#id() id} attribute.
+     * @param id The value for id 
+     * @return {@code this} builder for use in a chained invocation
+     */
+    @CanIgnoreReturnValue 
+    @JsonProperty("id")
+    public final Builder id(UUID id) {
+      this.id = Objects.requireNonNull(id, "id");
+      initBits &= ~INIT_BIT_ID;
+      return this;
+    }
+
+    /**
      * Builds a new {@link ImmutableUserDetailsResponse ImmutableUserDetailsResponse}.
      * @return An immutable instance of UserDetailsResponse
      * @throws java.lang.IllegalStateException if any required attributes are missing
@@ -309,7 +354,7 @@ public final class ImmutableUserDetailsResponse
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableUserDetailsResponse(userName, firstName, lastName, role);
+      return new ImmutableUserDetailsResponse(userName, firstName, lastName, role, id);
     }
 
     private String formatRequiredAttributesMessage() {
@@ -318,6 +363,7 @@ public final class ImmutableUserDetailsResponse
       if ((initBits & INIT_BIT_FIRST_NAME) != 0) attributes.add("firstName");
       if ((initBits & INIT_BIT_LAST_NAME) != 0) attributes.add("lastName");
       if ((initBits & INIT_BIT_ROLE) != 0) attributes.add("role");
+      if ((initBits & INIT_BIT_ID) != 0) attributes.add("id");
       return "Cannot build UserDetailsResponse, some of required attributes are not set " + attributes;
     }
   }

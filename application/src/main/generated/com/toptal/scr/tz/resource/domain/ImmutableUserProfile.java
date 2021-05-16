@@ -28,12 +28,10 @@ import org.immutables.value.Generated;
 @CheckReturnValue
 public final class ImmutableUserProfile implements UserProfile {
   private final UUID id;
-  private final String userName;
   private final String authority;
 
-  private ImmutableUserProfile(UUID id, String userName, String authority) {
+  private ImmutableUserProfile(UUID id, String authority) {
     this.id = id;
-    this.userName = userName;
     this.authority = authority;
   }
 
@@ -43,14 +41,6 @@ public final class ImmutableUserProfile implements UserProfile {
   @Override
   public UUID id() {
     return id;
-  }
-
-  /**
-   * @return The value of the {@code userName} attribute
-   */
-  @Override
-  public String userName() {
-    return userName;
   }
 
   /**
@@ -70,19 +60,7 @@ public final class ImmutableUserProfile implements UserProfile {
   public final ImmutableUserProfile withId(UUID value) {
     if (this.id == value) return this;
     UUID newValue = Objects.requireNonNull(value, "id");
-    return new ImmutableUserProfile(newValue, this.userName, this.authority);
-  }
-
-  /**
-   * Copy the current immutable object by setting a value for the {@link UserProfile#userName() userName} attribute.
-   * An equals check used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for userName
-   * @return A modified copy of the {@code this} object
-   */
-  public final ImmutableUserProfile withUserName(String value) {
-    String newValue = Objects.requireNonNull(value, "userName");
-    if (this.userName.equals(newValue)) return this;
-    return new ImmutableUserProfile(this.id, newValue, this.authority);
+    return new ImmutableUserProfile(newValue, this.authority);
   }
 
   /**
@@ -94,7 +72,7 @@ public final class ImmutableUserProfile implements UserProfile {
   public final ImmutableUserProfile withAuthority(String value) {
     String newValue = Objects.requireNonNull(value, "authority");
     if (this.authority.equals(newValue)) return this;
-    return new ImmutableUserProfile(this.id, this.userName, newValue);
+    return new ImmutableUserProfile(this.id, newValue);
   }
 
   /**
@@ -110,19 +88,17 @@ public final class ImmutableUserProfile implements UserProfile {
 
   private boolean equalTo(ImmutableUserProfile another) {
     return id.equals(another.id)
-        && userName.equals(another.userName)
         && authority.equals(another.authority);
   }
 
   /**
-   * Computes a hash code from attributes: {@code id}, {@code userName}, {@code authority}.
+   * Computes a hash code from attributes: {@code id}, {@code authority}.
    * @return hashCode value
    */
   @Override
   public int hashCode() {
     @Var int h = 5381;
     h += (h << 5) + id.hashCode();
-    h += (h << 5) + userName.hashCode();
     h += (h << 5) + authority.hashCode();
     return h;
   }
@@ -136,7 +112,6 @@ public final class ImmutableUserProfile implements UserProfile {
     return MoreObjects.toStringHelper("UserProfile")
         .omitNullValues()
         .add("id", id)
-        .add("userName", userName)
         .add("authority", authority)
         .toString();
   }
@@ -162,7 +137,6 @@ public final class ImmutableUserProfile implements UserProfile {
    * <pre>
    * ImmutableUserProfile.builder()
    *    .id(UUID) // required {@link UserProfile#id() id}
-   *    .userName(String) // required {@link UserProfile#userName() userName}
    *    .authority(String) // required {@link UserProfile#authority() authority}
    *    .build();
    * </pre>
@@ -183,12 +157,10 @@ public final class ImmutableUserProfile implements UserProfile {
   @NotThreadSafe
   public static final class Builder {
     private static final long INIT_BIT_ID = 0x1L;
-    private static final long INIT_BIT_USER_NAME = 0x2L;
-    private static final long INIT_BIT_AUTHORITY = 0x4L;
-    private long initBits = 0x7L;
+    private static final long INIT_BIT_AUTHORITY = 0x2L;
+    private long initBits = 0x3L;
 
     private @Nullable UUID id;
-    private @Nullable String userName;
     private @Nullable String authority;
 
     private Builder() {
@@ -205,7 +177,6 @@ public final class ImmutableUserProfile implements UserProfile {
     public final Builder from(UserProfile instance) {
       Objects.requireNonNull(instance, "instance");
       id(instance.id());
-      userName(instance.userName());
       authority(instance.authority());
       return this;
     }
@@ -219,18 +190,6 @@ public final class ImmutableUserProfile implements UserProfile {
     public final Builder id(UUID id) {
       this.id = Objects.requireNonNull(id, "id");
       initBits &= ~INIT_BIT_ID;
-      return this;
-    }
-
-    /**
-     * Initializes the value for the {@link UserProfile#userName() userName} attribute.
-     * @param userName The value for userName 
-     * @return {@code this} builder for use in a chained invocation
-     */
-    @CanIgnoreReturnValue 
-    public final Builder userName(String userName) {
-      this.userName = Objects.requireNonNull(userName, "userName");
-      initBits &= ~INIT_BIT_USER_NAME;
       return this;
     }
 
@@ -255,13 +214,12 @@ public final class ImmutableUserProfile implements UserProfile {
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableUserProfile(id, userName, authority);
+      return new ImmutableUserProfile(id, authority);
     }
 
     private String formatRequiredAttributesMessage() {
       List<String> attributes = new ArrayList<>();
       if ((initBits & INIT_BIT_ID) != 0) attributes.add("id");
-      if ((initBits & INIT_BIT_USER_NAME) != 0) attributes.add("userName");
       if ((initBits & INIT_BIT_AUTHORITY) != 0) attributes.add("authority");
       return "Cannot build UserProfile, some of required attributes are not set " + attributes;
     }

@@ -8,7 +8,5 @@ import java.util.UUID;
 public interface UserProfile {
     UUID id();
 
-    String userName();
-
     String authority();
 }

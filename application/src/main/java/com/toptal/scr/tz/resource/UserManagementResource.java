@@ -4,6 +4,7 @@ import com.toptal.scr.tz.resource.domain.AccountCreateRequestDTO;
 import com.toptal.scr.tz.resource.domain.ImmutableUserDetailsResponse;
 import com.toptal.scr.tz.resource.domain.ImmutableUserListResponseDTO;
 import com.toptal.scr.tz.resource.domain.UserListResponseDTO;
+import com.toptal.scr.tz.resource.domain.UserProfile;
 import com.toptal.scr.tz.service.UserService;
 import com.toptal.scr.tz.service.domain.ImmutableUser;
 import com.toptal.scr.tz.service.domain.User;
@@ -13,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -63,23 +67,25 @@ public class UserManagementResource {
                 .lastName(user.lastName())
                 .role(user.getRole())
                 .userName(user.getUsername())
+                .id(user.id())
                 .build()));
 
         return ResponseEntity.ok(builder.build());
     }
 
-//    @DeleteMapping(path = "/user/{userId}/timezone",
-//            consumes = "application/vnd.timezone.delete.v1+json",
-//            produces = "application/vnd.timezone.delete.v1+json")
-//    public ResponseEntity<Void> deleteTimezone(@PathVariable("userId") UUID userId,
-//                                               @RequestAttribute("userProfile") UserProfile userProfile,
-//                                               @RequestParam(name = "id") String id) {
-//        timezoneService.deleteTimezone(userProfile.userName(),
-//                UUID.fromString(id));
-//
-//        return ResponseEntity.ok().build();
-//    }
-//
+    @DeleteMapping(path = "/user/{userId}/manage",
+            consumes = "application/vnd.user.delete.v1+json",
+            produces = "application/vnd.user.delete.v1+json")
+    public ResponseEntity<Void> deleteTimezone(@PathVariable("userId") UUID userId,
+                                               @RequestAttribute("userProfile") UserProfile userProfile) {
+
+        if (!userProfile.id().equals(userId)) {
+            userService.deleteUser(userId);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
 //    @PutMapping(path = "/user/{userId}/timezone",
 //            consumes = "application/vnd.timezone.update.v1+json",
 //            produces = "application/vnd.timezone.update.v1+json")

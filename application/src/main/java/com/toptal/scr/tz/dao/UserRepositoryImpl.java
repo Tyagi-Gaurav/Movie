@@ -2,8 +2,6 @@ package com.toptal.scr.tz.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toptal.scr.tz.service.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,11 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -24,14 +22,21 @@ public class UserRepositoryImpl implements UserRepository {
     private ObjectMapper objectMapper;
 
     @Override
-    public User findUserBy(String userName) {
-        Optional<Object> optional = Optional.ofNullable(redisTemplate.opsForHash().get("user", userName));
+    public User findUserBy(UUID userId) {
+        Optional<Object> optional = Optional.ofNullable(redisTemplate.opsForHash().get("user", userId));
         return (User) optional.orElse(null);
     }
 
     @Override
+    public User findUserBy(String userName) {
+        Optional<Object> userToUserId = Optional.ofNullable(redisTemplate.opsForHash().get("userToUserId", userName));
+        return userToUserId.map(userId -> findUserBy((UUID)userId)).orElse(null);
+    }
+
+    @Override
     public void add(User user) {
-        redisTemplate.opsForHash().put("user", user.getUsername(), user);
+        redisTemplate.opsForHash().put("user", user.id(), user);
+        redisTemplate.opsForHash().put("userToUserId", user.getUsername(), user.id());
     }
 
     @Override
@@ -40,5 +45,10 @@ public class UserRepositoryImpl implements UserRepository {
         return userEntries.values()
                 .stream().map(entry -> (User)entry)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void delete(UUID userId) {
+        redisTemplate.opsForHash().delete("user", userId);
     }
 }
