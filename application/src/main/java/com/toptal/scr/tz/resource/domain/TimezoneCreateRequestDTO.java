@@ -6,15 +6,11 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonSerialize
-@JsonDeserialize(builder = ImmutableAccountCreateRequestDTO.Builder.class)
-public interface AccountCreateRequestDTO {
-    String userName();
+@JsonDeserialize(builder = ImmutableTimezoneCreateRequestDTO.Builder.class)
+public interface TimezoneCreateRequestDTO {
+    String name();
 
-    String password();
+    String city();
 
-    String firstName();
-
-    String lastName();
-
-    String role();
+    int gmtOffset();
 }

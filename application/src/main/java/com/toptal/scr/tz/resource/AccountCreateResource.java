@@ -4,6 +4,8 @@ import com.toptal.scr.tz.resource.domain.AccountCreateRequestDTO;
 import com.toptal.scr.tz.service.UserService;
 import com.toptal.scr.tz.service.domain.ImmutableUser;
 import com.toptal.scr.tz.service.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,11 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 public class AccountCreateResource {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AccountCreateResource.class);
 
     @Autowired
     private UserService userService;
@@ -34,8 +38,10 @@ public class AccountCreateResource {
                 .password(passwordEncoder.encode(accountCreateRequestDTO.password()))
                 .firstName(accountCreateRequestDTO.firstName())
                 .lastName(accountCreateRequestDTO.lastName())
-                .authorities(accountCreateRequestDTO.roles()
-                        .stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())).build();
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())))
+                .build();
+
+        LOG.info("Adding User: " + user);
 
         userService.add(user);
         return ResponseEntity.noContent().build();

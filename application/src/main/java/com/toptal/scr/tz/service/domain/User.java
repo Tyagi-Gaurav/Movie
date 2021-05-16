@@ -1,14 +1,18 @@
 package com.toptal.scr.tz.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Value.Immutable
 @JsonSerialize
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(builder = ImmutableUser.Builder.class)
 public interface User extends UserDetails {
     UUID id();
@@ -29,5 +33,8 @@ public interface User extends UserDetails {
     @Value.Default
     default boolean isEnabled() {return true;}
 
-    //List<UserTimeZones>
+    @Value.Default
+    default List<UserTimezone> userTimeZones() {
+        return Collections.emptyList();
+    }
 }

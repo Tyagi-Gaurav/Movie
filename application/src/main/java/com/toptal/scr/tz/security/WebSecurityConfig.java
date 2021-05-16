@@ -1,6 +1,6 @@
 package com.toptal.scr.tz.security;
 
-import com.toptal.scr.tz.filter.JwtRequestFilter;
+import com.toptal.scr.tz.filter.AuthenticationFilter;
 import com.toptal.scr.tz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +27,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserService jwtUserDetailsService;
 
 	@Autowired
-	private JwtRequestFilter jwtRequestFilter;
+	private AuthenticationFilter authenticationFilter;
 
-	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
@@ -53,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
 			.csrf().disable()
-			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.authorizeRequests()
 			.antMatchers("/login").permitAll()
 			.antMatchers("/account/create").permitAll()

@@ -2,9 +2,6 @@ package com.toptal.scr.tz.resource.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.immutables.value.Generated;
@@ -24,19 +21,19 @@ public final class ImmutableAccountCreateRequestDTO
   private final String password;
   private final String firstName;
   private final String lastName;
-  private final List<String> roles;
+  private final String role;
 
   private ImmutableAccountCreateRequestDTO(
       String userName,
       String password,
       String firstName,
       String lastName,
-      List<String> roles) {
+      String role) {
     this.userName = userName;
     this.password = password;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.roles = roles;
+    this.role = role;
   }
 
   /**
@@ -76,12 +73,12 @@ public final class ImmutableAccountCreateRequestDTO
   }
 
   /**
-   * @return The value of the {@code roles} attribute
+   * @return The value of the {@code role} attribute
    */
-  @JsonProperty("roles")
+  @JsonProperty("role")
   @Override
-  public List<String> roles() {
-    return roles;
+  public String role() {
+    return role;
   }
 
   /**
@@ -93,7 +90,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withUserName(String value) {
     String newValue = Objects.requireNonNull(value, "userName");
     if (this.userName.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(newValue, this.password, this.firstName, this.lastName, this.roles);
+    return new ImmutableAccountCreateRequestDTO(newValue, this.password, this.firstName, this.lastName, this.role);
   }
 
   /**
@@ -105,7 +102,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withPassword(String value) {
     String newValue = Objects.requireNonNull(value, "password");
     if (this.password.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(this.userName, newValue, this.firstName, this.lastName, this.roles);
+    return new ImmutableAccountCreateRequestDTO(this.userName, newValue, this.firstName, this.lastName, this.role);
   }
 
   /**
@@ -117,7 +114,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withFirstName(String value) {
     String newValue = Objects.requireNonNull(value, "firstName");
     if (this.firstName.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, newValue, this.lastName, this.roles);
+    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, newValue, this.lastName, this.role);
   }
 
   /**
@@ -129,28 +126,18 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withLastName(String value) {
     String newValue = Objects.requireNonNull(value, "lastName");
     if (this.lastName.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, newValue, this.roles);
+    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, newValue, this.role);
   }
 
   /**
-   * Copy the current immutable object with elements that replace the content of {@link AccountCreateRequestDTO#roles() roles}.
-   * @param elements The elements to set
-   * @return A modified copy of {@code this} object
+   * Copy the current immutable object by setting a value for the {@link AccountCreateRequestDTO#role() role} attribute.
+   * An equals check used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for role
+   * @return A modified copy of the {@code this} object
    */
-  public final ImmutableAccountCreateRequestDTO withRoles(String... elements) {
-    List<String> newValue = createUnmodifiableList(false, createSafeList(Arrays.asList(elements), true, false));
-    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, this.lastName, newValue);
-  }
-
-  /**
-   * Copy the current immutable object with elements that replace the content of {@link AccountCreateRequestDTO#roles() roles}.
-   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param elements An iterable of roles elements to set
-   * @return A modified copy of {@code this} object
-   */
-  public final ImmutableAccountCreateRequestDTO withRoles(Iterable<String> elements) {
-    if (this.roles == elements) return this;
-    List<String> newValue = createUnmodifiableList(false, createSafeList(elements, true, false));
+  public final ImmutableAccountCreateRequestDTO withRole(String value) {
+    String newValue = Objects.requireNonNull(value, "role");
+    if (this.role.equals(newValue)) return this;
     return new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, this.lastName, newValue);
   }
 
@@ -170,11 +157,11 @@ public final class ImmutableAccountCreateRequestDTO
         && password.equals(another.password)
         && firstName.equals(another.firstName)
         && lastName.equals(another.lastName)
-        && roles.equals(another.roles);
+        && role.equals(another.role);
   }
 
   /**
-   * Computes a hash code from attributes: {@code userName}, {@code password}, {@code firstName}, {@code lastName}, {@code roles}.
+   * Computes a hash code from attributes: {@code userName}, {@code password}, {@code firstName}, {@code lastName}, {@code role}.
    * @return hashCode value
    */
   @Override
@@ -184,7 +171,7 @@ public final class ImmutableAccountCreateRequestDTO
     h += (h << 5) + password.hashCode();
     h += (h << 5) + firstName.hashCode();
     h += (h << 5) + lastName.hashCode();
-    h += (h << 5) + roles.hashCode();
+    h += (h << 5) + role.hashCode();
     return h;
   }
 
@@ -199,7 +186,7 @@ public final class ImmutableAccountCreateRequestDTO
         + ", password=" + password
         + ", firstName=" + firstName
         + ", lastName=" + lastName
-        + ", roles=" + roles
+        + ", role=" + role
         + "}";
   }
 
@@ -227,7 +214,7 @@ public final class ImmutableAccountCreateRequestDTO
    *    .password(String) // required {@link AccountCreateRequestDTO#password() password}
    *    .firstName(String) // required {@link AccountCreateRequestDTO#firstName() firstName}
    *    .lastName(String) // required {@link AccountCreateRequestDTO#lastName() lastName}
-   *    .addRoles|addAllRoles(String) // {@link AccountCreateRequestDTO#roles() roles} elements
+   *    .role(String) // required {@link AccountCreateRequestDTO#role() role}
    *    .build();
    * </pre>
    * @return A new ImmutableAccountCreateRequestDTO builder
@@ -249,13 +236,14 @@ public final class ImmutableAccountCreateRequestDTO
     private static final long INIT_BIT_PASSWORD = 0x2L;
     private static final long INIT_BIT_FIRST_NAME = 0x4L;
     private static final long INIT_BIT_LAST_NAME = 0x8L;
-    private long initBits = 0xfL;
+    private static final long INIT_BIT_ROLE = 0x10L;
+    private long initBits = 0x1fL;
 
     private String userName;
     private String password;
     private String firstName;
     private String lastName;
-    private List<String> roles = new ArrayList<String>();
+    private String role;
 
     private Builder() {
     }
@@ -264,7 +252,6 @@ public final class ImmutableAccountCreateRequestDTO
      * Fill a builder with attribute values from the provided {@code AccountCreateRequestDTO} instance.
      * Regular attribute values will be replaced with those from the given instance.
      * Absent optional values will not replace present values.
-     * Collection elements and entries will be added, not replaced.
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
@@ -274,7 +261,7 @@ public final class ImmutableAccountCreateRequestDTO
       password(instance.password());
       firstName(instance.firstName());
       lastName(instance.lastName());
-      addAllRoles(instance.roles());
+      role(instance.role());
       return this;
     }
 
@@ -327,48 +314,14 @@ public final class ImmutableAccountCreateRequestDTO
     }
 
     /**
-     * Adds one element to {@link AccountCreateRequestDTO#roles() roles} list.
-     * @param element A roles element
+     * Initializes the value for the {@link AccountCreateRequestDTO#role() role} attribute.
+     * @param role The value for role 
      * @return {@code this} builder for use in a chained invocation
      */
-    public final Builder addRoles(String element) {
-      this.roles.add(Objects.requireNonNull(element, "roles element"));
-      return this;
-    }
-
-    /**
-     * Adds elements to {@link AccountCreateRequestDTO#roles() roles} list.
-     * @param elements An array of roles elements
-     * @return {@code this} builder for use in a chained invocation
-     */
-    public final Builder addRoles(String... elements) {
-      for (String element : elements) {
-        this.roles.add(Objects.requireNonNull(element, "roles element"));
-      }
-      return this;
-    }
-
-
-    /**
-     * Sets or replaces all elements for {@link AccountCreateRequestDTO#roles() roles} list.
-     * @param elements An iterable of roles elements
-     * @return {@code this} builder for use in a chained invocation
-     */
-    @JsonProperty("roles")
-    public final Builder roles(Iterable<String> elements) {
-      this.roles.clear();
-      return addAllRoles(elements);
-    }
-
-    /**
-     * Adds elements to {@link AccountCreateRequestDTO#roles() roles} list.
-     * @param elements An iterable of roles elements
-     * @return {@code this} builder for use in a chained invocation
-     */
-    public final Builder addAllRoles(Iterable<String> elements) {
-      for (String element : elements) {
-        this.roles.add(Objects.requireNonNull(element, "roles element"));
-      }
+    @JsonProperty("role")
+    public final Builder role(String role) {
+      this.role = Objects.requireNonNull(role, "role");
+      initBits &= ~INIT_BIT_ROLE;
       return this;
     }
 
@@ -381,7 +334,7 @@ public final class ImmutableAccountCreateRequestDTO
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableAccountCreateRequestDTO(userName, password, firstName, lastName, createUnmodifiableList(true, roles));
+      return new ImmutableAccountCreateRequestDTO(userName, password, firstName, lastName, role);
     }
 
     private String formatRequiredAttributesMessage() {
@@ -390,40 +343,8 @@ public final class ImmutableAccountCreateRequestDTO
       if ((initBits & INIT_BIT_PASSWORD) != 0) attributes.add("password");
       if ((initBits & INIT_BIT_FIRST_NAME) != 0) attributes.add("firstName");
       if ((initBits & INIT_BIT_LAST_NAME) != 0) attributes.add("lastName");
+      if ((initBits & INIT_BIT_ROLE) != 0) attributes.add("role");
       return "Cannot build AccountCreateRequestDTO, some of required attributes are not set " + attributes;
-    }
-  }
-
-  private static <T> List<T> createSafeList(Iterable<? extends T> iterable, boolean checkNulls, boolean skipNulls) {
-    ArrayList<T> list;
-    if (iterable instanceof Collection<?>) {
-      int size = ((Collection<?>) iterable).size();
-      if (size == 0) return Collections.emptyList();
-      list = new ArrayList<>();
-    } else {
-      list = new ArrayList<>();
-    }
-    for (T element : iterable) {
-      if (skipNulls && element == null) continue;
-      if (checkNulls) Objects.requireNonNull(element, "element");
-      list.add(element);
-    }
-    return list;
-  }
-
-  private static <T> List<T> createUnmodifiableList(boolean clone, List<T> list) {
-    switch(list.size()) {
-    case 0: return Collections.emptyList();
-    case 1: return Collections.singletonList(list.get(0));
-    default:
-      if (clone) {
-        return Collections.unmodifiableList(new ArrayList<>(list));
-      } else {
-        if (list instanceof ArrayList<?>) {
-          ((ArrayList<?>) list).trimToSize();
-        }
-        return Collections.unmodifiableList(list);
-      }
     }
   }
 }

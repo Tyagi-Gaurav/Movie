@@ -22,14 +22,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findUserBy(String userName) {
-        LOG.info("Finding userName {}", userName);
         Optional<Object> optional = Optional.ofNullable(redisTemplate.opsForValue().get(userName));
         return (User) optional.orElse(null);
     }
 
     @Override
     public void add(User user) {
-        LOG.info("Storing userName {}", user.getUsername());
         redisTemplate.opsForValue().set(user.getUsername(), user);
     }
 }

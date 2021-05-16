@@ -1,8 +1,11 @@
 package com.toptal.scr.tz.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -19,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Generated(from = "User", generator = "Immutables")
 @SuppressWarnings({"all"})
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ImmutableUser implements User {
   private final Collection<? extends GrantedAuthority> authorities;
   private final String password;
@@ -30,6 +34,7 @@ public final class ImmutableUser implements User {
   private final boolean isAccountNonLocked;
   private final boolean isCredentialsNonExpired;
   private final boolean isEnabled;
+  private final List<UserTimezone> userTimeZones;
 
   private ImmutableUser(ImmutableUser.Builder builder) {
     this.authorities = builder.authorities;
@@ -50,10 +55,14 @@ public final class ImmutableUser implements User {
     if (builder.isEnabledIsSet()) {
       initShim.isEnabled(builder.isEnabled);
     }
+    if (builder.userTimeZonesIsSet()) {
+      initShim.userTimeZones(createUnmodifiableList(true, builder.userTimeZones));
+    }
     this.isAccountNonExpired = initShim.isAccountNonExpired();
     this.isAccountNonLocked = initShim.isAccountNonLocked();
     this.isCredentialsNonExpired = initShim.isCredentialsNonExpired();
     this.isEnabled = initShim.isEnabled();
+    this.userTimeZones = initShim.userTimeZones();
     this.initShim = null;
   }
 
@@ -67,7 +76,8 @@ public final class ImmutableUser implements User {
       boolean isAccountNonExpired,
       boolean isAccountNonLocked,
       boolean isCredentialsNonExpired,
-      boolean isEnabled) {
+      boolean isEnabled,
+      List<UserTimezone> userTimeZones) {
     this.authorities = authorities;
     this.password = password;
     this.username = username;
@@ -78,6 +88,7 @@ public final class ImmutableUser implements User {
     this.isAccountNonLocked = isAccountNonLocked;
     this.isCredentialsNonExpired = isCredentialsNonExpired;
     this.isEnabled = isEnabled;
+    this.userTimeZones = userTimeZones;
     this.initShim = null;
   }
 
@@ -160,12 +171,31 @@ public final class ImmutableUser implements User {
       isEnabledBuildStage = STAGE_INITIALIZED;
     }
 
+    private byte userTimeZonesBuildStage = STAGE_UNINITIALIZED;
+    private List<UserTimezone> userTimeZones;
+
+    List<UserTimezone> userTimeZones() {
+      if (userTimeZonesBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (userTimeZonesBuildStage == STAGE_UNINITIALIZED) {
+        userTimeZonesBuildStage = STAGE_INITIALIZING;
+        this.userTimeZones = createUnmodifiableList(false, createSafeList(userTimeZonesInitialize(), true, false));
+        userTimeZonesBuildStage = STAGE_INITIALIZED;
+      }
+      return this.userTimeZones;
+    }
+
+    void userTimeZones(List<UserTimezone> userTimeZones) {
+      this.userTimeZones = userTimeZones;
+      userTimeZonesBuildStage = STAGE_INITIALIZED;
+    }
+
     private String formatInitCycleMessage() {
       List<String> attributes = new ArrayList<>();
       if (isAccountNonExpiredBuildStage == STAGE_INITIALIZING) attributes.add("isAccountNonExpired");
       if (isAccountNonLockedBuildStage == STAGE_INITIALIZING) attributes.add("isAccountNonLocked");
       if (isCredentialsNonExpiredBuildStage == STAGE_INITIALIZING) attributes.add("isCredentialsNonExpired");
       if (isEnabledBuildStage == STAGE_INITIALIZING) attributes.add("isEnabled");
+      if (userTimeZonesBuildStage == STAGE_INITIALIZING) attributes.add("userTimeZones");
       return "Cannot build User, attribute initializers form cycle " + attributes;
     }
   }
@@ -184,6 +214,10 @@ public final class ImmutableUser implements User {
 
   private boolean isEnabledInitialize() {
     return User.super.isEnabled();
+  }
+
+  private List<UserTimezone> userTimeZonesInitialize() {
+    return User.super.userTimeZones();
   }
 
   /**
@@ -289,6 +323,18 @@ public final class ImmutableUser implements User {
   }
 
   /**
+   * @return The value of the {@code userTimeZones} attribute
+   */
+  @JsonProperty("userTimeZones")
+  @Override
+  public List<UserTimezone> userTimeZones() {
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.userTimeZones()
+        : this.userTimeZones;
+  }
+
+  /**
    * Copy the current immutable object by setting a value for the {@link User#getAuthorities() authorities} attribute.
    * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for authorities
@@ -307,7 +353,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -329,7 +376,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -351,7 +399,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -373,7 +422,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -395,7 +445,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -417,7 +468,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -438,7 +490,8 @@ public final class ImmutableUser implements User {
         value,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -459,7 +512,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         value,
         this.isCredentialsNonExpired,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -480,7 +534,8 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         value,
-        this.isEnabled);
+        this.isEnabled,
+        this.userTimeZones);
   }
 
   /**
@@ -501,7 +556,52 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        value);
+        value,
+        this.userTimeZones);
+  }
+
+  /**
+   * Copy the current immutable object with elements that replace the content of {@link User#userTimeZones() userTimeZones}.
+   * @param elements The elements to set
+   * @return A modified copy of {@code this} object
+   */
+  public final ImmutableUser withUserTimeZones(UserTimezone... elements) {
+    List<UserTimezone> newValue = createUnmodifiableList(false, createSafeList(Arrays.asList(elements), true, false));
+    return new ImmutableUser(
+        this.authorities,
+        this.password,
+        this.username,
+        this.id,
+        this.firstName,
+        this.lastName,
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled,
+        newValue);
+  }
+
+  /**
+   * Copy the current immutable object with elements that replace the content of {@link User#userTimeZones() userTimeZones}.
+   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param elements An iterable of userTimeZones elements to set
+   * @return A modified copy of {@code this} object
+   */
+  public final ImmutableUser withUserTimeZones(Iterable<? extends UserTimezone> elements) {
+    if (this.userTimeZones == elements) return this;
+    List<UserTimezone> newValue = createUnmodifiableList(false, createSafeList(elements, true, false));
+    return new ImmutableUser(
+        this.authorities,
+        this.password,
+        this.username,
+        this.id,
+        this.firstName,
+        this.lastName,
+        this.isAccountNonExpired,
+        this.isAccountNonLocked,
+        this.isCredentialsNonExpired,
+        this.isEnabled,
+        newValue);
   }
 
   /**
@@ -525,11 +625,12 @@ public final class ImmutableUser implements User {
         && isAccountNonExpired == another.isAccountNonExpired
         && isAccountNonLocked == another.isAccountNonLocked
         && isCredentialsNonExpired == another.isCredentialsNonExpired
-        && isEnabled == another.isEnabled;
+        && isEnabled == another.isEnabled
+        && userTimeZones.equals(another.userTimeZones);
   }
 
   /**
-   * Computes a hash code from attributes: {@code authorities}, {@code password}, {@code username}, {@code id}, {@code firstName}, {@code lastName}, {@code isAccountNonExpired}, {@code isAccountNonLocked}, {@code isCredentialsNonExpired}, {@code isEnabled}.
+   * Computes a hash code from attributes: {@code authorities}, {@code password}, {@code username}, {@code id}, {@code firstName}, {@code lastName}, {@code isAccountNonExpired}, {@code isAccountNonLocked}, {@code isCredentialsNonExpired}, {@code isEnabled}, {@code userTimeZones}.
    * @return hashCode value
    */
   @Override
@@ -545,6 +646,7 @@ public final class ImmutableUser implements User {
     h += (h << 5) + Boolean.hashCode(isAccountNonLocked);
     h += (h << 5) + Boolean.hashCode(isCredentialsNonExpired);
     h += (h << 5) + Boolean.hashCode(isEnabled);
+    h += (h << 5) + userTimeZones.hashCode();
     return h;
   }
 
@@ -565,6 +667,7 @@ public final class ImmutableUser implements User {
         + ", isAccountNonLocked=" + isAccountNonLocked
         + ", isCredentialsNonExpired=" + isCredentialsNonExpired
         + ", isEnabled=" + isEnabled
+        + ", userTimeZones=" + userTimeZones
         + "}";
   }
 
@@ -598,6 +701,7 @@ public final class ImmutableUser implements User {
    *    .isAccountNonLocked(boolean) // optional {@link User#isAccountNonLocked() isAccountNonLocked}
    *    .isCredentialsNonExpired(boolean) // optional {@link User#isCredentialsNonExpired() isCredentialsNonExpired}
    *    .isEnabled(boolean) // optional {@link User#isEnabled() isEnabled}
+   *    .addUserTimeZones|addAllUserTimeZones(com.toptal.scr.tz.service.domain.UserTimezone) // {@link User#userTimeZones() userTimeZones} elements
    *    .build();
    * </pre>
    * @return A new ImmutableUser builder
@@ -614,6 +718,7 @@ public final class ImmutableUser implements User {
    * but instead used immediately to create instances.</em>
    */
   @Generated(from = "User", generator = "Immutables")
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public static final class Builder {
     private static final long INIT_BIT_AUTHORITIES = 0x1L;
     private static final long INIT_BIT_PASSWORD = 0x2L;
@@ -625,6 +730,7 @@ public final class ImmutableUser implements User {
     private static final long OPT_BIT_IS_ACCOUNT_NON_LOCKED = 0x2L;
     private static final long OPT_BIT_IS_CREDENTIALS_NON_EXPIRED = 0x4L;
     private static final long OPT_BIT_IS_ENABLED = 0x8L;
+    private static final long OPT_BIT_USER_TIME_ZONES = 0x10L;
     private long initBits = 0x3fL;
     private long optBits;
 
@@ -638,6 +744,7 @@ public final class ImmutableUser implements User {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
+    private List<UserTimezone> userTimeZones = new ArrayList<UserTimezone>();
 
     private Builder() {
     }
@@ -682,6 +789,7 @@ public final class ImmutableUser implements User {
           isEnabled(instance.isEnabled());
           bits |= 0x4L;
         }
+        addAllUserTimeZones(instance.userTimeZones());
         if ((bits & 0x8L) == 0) {
           isAccountNonLocked(instance.isAccountNonLocked());
           bits |= 0x8L;
@@ -837,6 +945,55 @@ public final class ImmutableUser implements User {
     }
 
     /**
+     * Adds one element to {@link User#userTimeZones() userTimeZones} list.
+     * @param element A userTimeZones element
+     * @return {@code this} builder for use in a chained invocation
+     */
+    public final Builder addUserTimeZones(UserTimezone element) {
+      this.userTimeZones.add(Objects.requireNonNull(element, "userTimeZones element"));
+      optBits |= OPT_BIT_USER_TIME_ZONES;
+      return this;
+    }
+
+    /**
+     * Adds elements to {@link User#userTimeZones() userTimeZones} list.
+     * @param elements An array of userTimeZones elements
+     * @return {@code this} builder for use in a chained invocation
+     */
+    public final Builder addUserTimeZones(UserTimezone... elements) {
+      for (UserTimezone element : elements) {
+        this.userTimeZones.add(Objects.requireNonNull(element, "userTimeZones element"));
+      }
+      optBits |= OPT_BIT_USER_TIME_ZONES;
+      return this;
+    }
+
+
+    /**
+     * Sets or replaces all elements for {@link User#userTimeZones() userTimeZones} list.
+     * @param elements An iterable of userTimeZones elements
+     * @return {@code this} builder for use in a chained invocation
+     */
+    @JsonProperty("userTimeZones")
+    public final Builder userTimeZones(Iterable<? extends UserTimezone> elements) {
+      this.userTimeZones.clear();
+      return addAllUserTimeZones(elements);
+    }
+
+    /**
+     * Adds elements to {@link User#userTimeZones() userTimeZones} list.
+     * @param elements An iterable of userTimeZones elements
+     * @return {@code this} builder for use in a chained invocation
+     */
+    public final Builder addAllUserTimeZones(Iterable<? extends UserTimezone> elements) {
+      for (UserTimezone element : elements) {
+        this.userTimeZones.add(Objects.requireNonNull(element, "userTimeZones element"));
+      }
+      optBits |= OPT_BIT_USER_TIME_ZONES;
+      return this;
+    }
+
+    /**
      * Builds a new {@link ImmutableUser ImmutableUser}.
      * @return An immutable instance of User
      * @throws java.lang.IllegalStateException if any required attributes are missing
@@ -864,6 +1021,10 @@ public final class ImmutableUser implements User {
       return (optBits & OPT_BIT_IS_ENABLED) != 0;
     }
 
+    private boolean userTimeZonesIsSet() {
+      return (optBits & OPT_BIT_USER_TIME_ZONES) != 0;
+    }
+
     private String formatRequiredAttributesMessage() {
       List<String> attributes = new ArrayList<>();
       if ((initBits & INIT_BIT_AUTHORITIES) != 0) attributes.add("authorities");
@@ -873,6 +1034,39 @@ public final class ImmutableUser implements User {
       if ((initBits & INIT_BIT_FIRST_NAME) != 0) attributes.add("firstName");
       if ((initBits & INIT_BIT_LAST_NAME) != 0) attributes.add("lastName");
       return "Cannot build User, some of required attributes are not set " + attributes;
+    }
+  }
+
+  private static <T> List<T> createSafeList(Iterable<? extends T> iterable, boolean checkNulls, boolean skipNulls) {
+    ArrayList<T> list;
+    if (iterable instanceof Collection<?>) {
+      int size = ((Collection<?>) iterable).size();
+      if (size == 0) return Collections.emptyList();
+      list = new ArrayList<>();
+    } else {
+      list = new ArrayList<>();
+    }
+    for (T element : iterable) {
+      if (skipNulls && element == null) continue;
+      if (checkNulls) Objects.requireNonNull(element, "element");
+      list.add(element);
+    }
+    return list;
+  }
+
+  private static <T> List<T> createUnmodifiableList(boolean clone, List<T> list) {
+    switch(list.size()) {
+    case 0: return Collections.emptyList();
+    case 1: return Collections.singletonList(list.get(0));
+    default:
+      if (clone) {
+        return Collections.unmodifiableList(new ArrayList<>(list));
+      } else {
+        if (list instanceof ArrayList<?>) {
+          ((ArrayList<?>) list).trimToSize();
+        }
+        return Collections.unmodifiableList(list);
+      }
     }
   }
 }

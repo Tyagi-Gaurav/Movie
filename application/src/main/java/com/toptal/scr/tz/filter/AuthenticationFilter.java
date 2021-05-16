@@ -1,10 +1,15 @@
 package com.toptal.scr.tz.filter;
 
+import com.toptal.scr.tz.resource.UserProfileHolder;
+import com.toptal.scr.tz.resource.domain.ImmutableUserProfile;
+import com.toptal.scr.tz.resource.domain.UserProfile;
 import com.toptal.scr.tz.service.UserService;
+import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -16,16 +21,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.function.Function;
 
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class AuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private UserService userService;
 
-	private static final Logger LOG = LoggerFactory.getLogger(JwtRequestFilter.class);
+	@Autowired
+	private UserProfileHolder userProfileHolder;
 
-	
+	private static final Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
@@ -36,7 +46,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		String jwtToken = null;
 		
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			LOG.info("Found auth header.");
+			LOG.info("Found auth header." + requestTokenHeader);
 			jwtToken = requestTokenHeader.substring(7);
 			JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken);
 			
@@ -69,6 +79,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				// that the current user is authenticated. So it passes the
 				// Spring Security Configurations successfully.
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+				List<Object> authoritiesObjects = (List<Object>) jwtTokenUtil.getClaimFromToken(claims -> claims.get("Authorities"));
+
+				LinkedHashMap authorities = (LinkedHashMap) authoritiesObjects.get(0);
+
+				UserProfile userprofile = ImmutableUserProfile.builder()
+						.userName(username)
+						.authority(authorities.get("authority").toString())
+						.build();
+
+				request.setAttribute("authorities", userprofile);
 			}
 		}
 		
