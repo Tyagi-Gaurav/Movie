@@ -38,4 +38,8 @@ public interface User extends UserDetails {
     default HashMap<UUID, UserTimezone> userTimeZones() {
         return new HashMap<>();
     }
+
+    default String getRole() {
+        return getAuthorities().stream().map(auth -> auth.getAuthority()).findFirst().orElseGet(() -> "");
+    }
 }

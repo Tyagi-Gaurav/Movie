@@ -4,6 +4,7 @@ import com.toptal.scr.tz.resource.UserProfileHolder;
 import com.toptal.scr.tz.resource.domain.ImmutableUserProfile;
 import com.toptal.scr.tz.resource.domain.UserProfile;
 import com.toptal.scr.tz.service.UserService;
+import com.toptal.scr.tz.service.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			HttpServletResponse response) throws ServletException, IOException {
 		
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = userService.loadUserByUsername(username);
+			User userDetails = userService.loadUserByUsername(username);
 
 			if (jwtTokenUtil.validateToken(userDetails)) {
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -82,6 +83,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 				UserProfile userprofile = ImmutableUserProfile.builder()
 						.userName(username)
+						.id(userDetails.id())
 						.authority(authorities.get("authority").toString())
 						.build();
 

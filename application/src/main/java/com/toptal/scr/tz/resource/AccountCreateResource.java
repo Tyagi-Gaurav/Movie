@@ -28,7 +28,7 @@ public class AccountCreateResource {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping(path = "/account/create",
+    @PostMapping(path = "/user/account/create",
             consumes = {"application/vnd+account.create.v1+json"},
             produces = {"application/vnd+account.create.v1+json"})
     public ResponseEntity<Void> createAccount(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
@@ -44,6 +44,7 @@ public class AccountCreateResource {
         LOG.info("Adding User: " + user);
 
         userService.add(user);
+
         return ResponseEntity.noContent().build();
     }
 }

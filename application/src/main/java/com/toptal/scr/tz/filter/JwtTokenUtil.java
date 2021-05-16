@@ -73,6 +73,6 @@ public class JwtTokenUtil {
 
     public Boolean validateToken(UserDetails userDetails) {
         final String username = getUsernameFromToken();
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired());
+        return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired());
     }
 }

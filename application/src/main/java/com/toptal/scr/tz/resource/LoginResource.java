@@ -25,7 +25,7 @@ public class LoginResource {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping(path = "/login",
+    @PostMapping(path = "/user/login",
             consumes = "application/vnd.login.v1+json",
             produces = "application/vnd.login.v1+json")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) throws Exception {
@@ -34,6 +34,7 @@ public class LoginResource {
             final String token = JwtTokenUtil.generateToken(user);
             ImmutableLoginResponseDTO response = ImmutableLoginResponseDTO.builder()
                     .token(token)
+                    .id(user.id())
                     .build();
 
             return ResponseEntity.ok(response);
