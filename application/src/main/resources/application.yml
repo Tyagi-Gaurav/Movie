@@ -5,12 +5,6 @@ server:
   servlet:
     context-path: /api
 
-validation:
-  maxUserNameLength: 15 #Add Test
-  minUserNameLength: 8 #Add Test
-  maxPasswordLength: 15 #Add Test
-  minPasswordLength: 8 #Add Test
-
 auth:
   tokenDuration: ${TOKEN_DURATION:6h}
   secret: ${SECRET:19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676}

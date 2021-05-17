@@ -28,12 +28,6 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties("validation")
-    public ValidationConfig validationConfig() {
-        return ModifiableValidationConfig.create();
-    }
-
-    @Bean
     @Qualifier("signingKey")
     public Key signingKey(AuthConfig authConfig) {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(authConfig.secret());

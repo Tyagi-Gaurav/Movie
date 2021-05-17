@@ -101,7 +101,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withUserName(String value) {
     String newValue = Objects.requireNonNull(value, "userName");
     if (this.userName.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(newValue, this.password, this.firstName, this.lastName, this.role);
+    return validate(new ImmutableAccountCreateRequestDTO(newValue, this.password, this.firstName, this.lastName, this.role));
   }
 
   /**
@@ -113,7 +113,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withPassword(String value) {
     String newValue = Objects.requireNonNull(value, "password");
     if (this.password.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(this.userName, newValue, this.firstName, this.lastName, this.role);
+    return validate(new ImmutableAccountCreateRequestDTO(this.userName, newValue, this.firstName, this.lastName, this.role));
   }
 
   /**
@@ -125,7 +125,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withFirstName(String value) {
     String newValue = Objects.requireNonNull(value, "firstName");
     if (this.firstName.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, newValue, this.lastName, this.role);
+    return validate(new ImmutableAccountCreateRequestDTO(this.userName, this.password, newValue, this.lastName, this.role));
   }
 
   /**
@@ -137,7 +137,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withLastName(String value) {
     String newValue = Objects.requireNonNull(value, "lastName");
     if (this.lastName.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, newValue, this.role);
+    return validate(new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, newValue, this.role));
   }
 
   /**
@@ -149,7 +149,7 @@ public final class ImmutableAccountCreateRequestDTO
   public final ImmutableAccountCreateRequestDTO withRole(String value) {
     String newValue = Objects.requireNonNull(value, "role");
     if (this.role.equals(newValue)) return this;
-    return new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, this.lastName, newValue);
+    return validate(new ImmutableAccountCreateRequestDTO(this.userName, this.password, this.firstName, this.lastName, newValue));
   }
 
   /**
@@ -200,6 +200,11 @@ public final class ImmutableAccountCreateRequestDTO
         .add("lastName", lastName)
         .add("role", role)
         .toString();
+  }
+
+  private static ImmutableAccountCreateRequestDTO validate(ImmutableAccountCreateRequestDTO instance) {
+    instance.check();
+    return instance;
   }
 
   /**
@@ -353,7 +358,7 @@ public final class ImmutableAccountCreateRequestDTO
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableAccountCreateRequestDTO(userName, password, firstName, lastName, role);
+      return ImmutableAccountCreateRequestDTO.validate(new ImmutableAccountCreateRequestDTO(userName, password, firstName, lastName, role));
     }
 
     private String formatRequiredAttributesMessage() {

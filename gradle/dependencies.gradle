@@ -17,6 +17,7 @@ ext {
     commonsLoggingVersion = '1.2'
     jsonWebTokenVersion = '0.11.2'
     guavaVersion = '30.1.1-jre'
+    validationApiVersion = '2.0.1.Final'
 }
 
 dependencyManagement {
@@ -29,12 +30,12 @@ dependencyManagement {
         }
 
         //API
+        dependency "javax.validation:validation-api:$validationApiVersion"
         dependency "org.immutables:value:$immutablesVersion"
         dependency "org.immutables:builder:$immutablesVersion"
         dependency "org.immutables:serial:$immutablesVersion"
         dependency "org.immutables:value-annotations:$immutablesVersion"
         dependency "com.google.guava:guava:$guavaVersion"
-//        dependency "net.logstash.logback:logstash-logback-encoder:$logstashVersion"
         dependency "org.slf4j:slf4j-api:$slf4jVersion"
         dependency "org.springframework:spring-context:${springVersion}"
         dependency "org.springframework:spring-webmvc:${springVersion}"
@@ -67,9 +68,6 @@ dependencyManagement {
         dependency "org.junit.platform:junit-platform-commons:$junitPlatformVersion"
         dependency "org.junit.platform:junit-platform-runner:$junitPlatformVersion"
         dependency "org.junit.platform:junit-platform-suite-api:$junitPlatformVersion"
-//        dependency "org.testcontainers:junit-jupiter:$testContainerVersion"
-//        dependency "org.testcontainers:kafka:$testContainerVersion"
-//
         dependency "org.mockito:mockito-core:$mockitoVersion"
         dependency "org.mockito:mockito-junit-jupiter:$mockitoVersion"
         dependency "org.apache.commons:commons-lang3:$commonsLang3Version"
@@ -79,13 +77,5 @@ dependencyManagement {
         dependency "io.cucumber:cucumber-junit:$cucumberVersion"
         dependency "io.cucumber:cucumber-spring:$cucumberVersion"
         dependency "org.assertj:assertj-core:$assertJVersion"
-//        dependency "org.awaitility:awaitility:$awaitilityVersion"
-//        dependency "com.mchange:c3p0:$c3p0Version"
-//        dependency "com.h2database:h2:$h2DbVersion"
-//        dependency "mysql:mysql-connector-java:$mysqlVersion"
-//        dependency "javax.xml.bind:jaxb-api:$xmlBindVersion"
-//        dependency("it.ozimov:embedded-redis:$embeddedRedisVersion") {
-//            exclude "org.slf4j:slf4j-simple"
-//        }
     }
 }
