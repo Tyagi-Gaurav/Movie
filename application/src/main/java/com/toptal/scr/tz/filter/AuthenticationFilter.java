@@ -63,7 +63,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			LOG.info("Looking for user Details with userId: " + userId);
 			User userDetails = userService.findUserBy(UUID.fromString(userId));
-			LOG.info("Found user: " + userDetails.getUsername());
 
 			if (jwtTokenUtil.validateToken(userDetails)) {
 				LOG.info("Token validated for user " + userId);

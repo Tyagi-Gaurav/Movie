@@ -41,8 +41,6 @@ public class AccountCreateResource {
                 .authorities(Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())))
                 .build();
 
-        LOG.info("Adding User: " + user);
-
         userService.add(user);
 
         return ResponseEntity.noContent().build();
