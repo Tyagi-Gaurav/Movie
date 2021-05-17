@@ -48,7 +48,7 @@ public class LoginResource {
         User user = null;
 
         try {
-            LOG.info("Authenticating user");
+            LOG.info("Authenticating user: {}, {}", request.userName(), request.password());
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
             user = (User)auth.getPrincipal();
         } catch (DisabledException e) {

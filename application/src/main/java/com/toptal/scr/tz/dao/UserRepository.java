@@ -10,8 +10,6 @@ public interface UserRepository {
 
     User findUserBy(String userName);
 
-    void add(User user);
-
     List<User> getAllUsers();
 
     void delete(UUID userId);

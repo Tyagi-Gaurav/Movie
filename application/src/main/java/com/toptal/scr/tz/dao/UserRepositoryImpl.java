@@ -2,6 +2,8 @@ package com.toptal.scr.tz.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toptal.scr.tz.service.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -30,13 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findUserBy(String userName) {
         Optional<Object> userToUserId = Optional.ofNullable(redisTemplate.opsForHash().get("userToUserId", userName));
-        return userToUserId.map(userId -> findUserBy((UUID)userId)).orElse(null);
-    }
-
-    @Override
-    public void add(User user) {
-        redisTemplate.opsForHash().put("user", user.id(), user);
-        redisTemplate.opsForHash().put("userToUserId", user.getUsername(), user.id());
+        return userToUserId.map(userId -> findUserBy((UUID)userId)).orElseThrow(IllegalStateException::new);
     }
 
     @Override
@@ -55,5 +53,6 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void update(User user) {
         redisTemplate.opsForHash().put("user", user.id(), user);
+        redisTemplate.opsForHash().put("userToUserId", user.getUsername(), user.id());
     }
 }

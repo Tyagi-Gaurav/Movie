@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/user/login").permitAll()
 			.antMatchers("/user/account/create").permitAll()
 			.antMatchers("/user/manage").hasAuthority("ADMIN")
+			.regexMatchers("/user/timezone\\?userId=.+").hasAuthority("ADMIN")
 			.anyRequest().authenticated().and()
 			.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

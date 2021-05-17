@@ -1,6 +1,5 @@
 package com.toptal.scr.tz.filter;
 
-import com.toptal.scr.tz.resource.UserProfileHolder;
 import com.toptal.scr.tz.resource.domain.ImmutableUserProfile;
 import com.toptal.scr.tz.resource.domain.UserProfile;
 import com.toptal.scr.tz.service.UserService;
@@ -28,9 +27,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private UserProfileHolder userProfileHolder;
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
 
@@ -85,12 +81,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				List<Object> authoritiesObjects = (List<Object>) jwtTokenUtil.getClaimFromToken(claims -> claims.get("Authorities"));
 
 				LinkedHashMap authorities = (LinkedHashMap) authoritiesObjects.get(0);
-
+				String authority = authorities.get("authority").toString();
 				UserProfile userprofile = ImmutableUserProfile.builder()
 						.id(userDetails.id())
-						.authority(authorities.get("authority").toString())
+						.authority(authority)
 						.build();
-				LOG.info("Set role for user.");
+				LOG.info("Set authority for user." + authority);
 
 				request.setAttribute("userProfile", userprofile);
 			}
