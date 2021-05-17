@@ -1,6 +1,5 @@
 package com.toptal.scr.tz.dao;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toptal.scr.tz.service.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +20,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Override
     public User findUserBy(UUID userId) {
