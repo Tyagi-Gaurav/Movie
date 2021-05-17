@@ -3,12 +3,10 @@ package com.toptal.scr.tz.filter;
 import com.toptal.scr.tz.service.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,15 +14,12 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class JwtTokenUtil {
-    private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; //TODO Load from Config
-    private static final String SECRET = "19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676"; //TODO Load from config
-    private static final byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET);
-    private static final Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+    private final Key signingKey;
+    private String token;
 
-    private String token = null;
-
-    public JwtTokenUtil(String jwtToken) {
+    public JwtTokenUtil(String jwtToken, Key signingKey) {
         this.token = jwtToken;
+        this.signingKey = signingKey;
     }
 
     public String getUsernameFromToken() {
@@ -51,9 +46,9 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    public static String generateToken(User user) {
+    public static String generateToken(User user, Duration tokenDuration, Key signingKey) {
         Map<String, Object> claims = addClaims(user);
-        return doGenerateToken(claims, user.getUsername(), user.id());
+        return doGenerateToken(claims, user.getUsername(), user.id(), tokenDuration, signingKey);
     }
 
     private static Map<String, Object> addClaims(User user) {
@@ -62,13 +57,15 @@ public class JwtTokenUtil {
         return claims;
     }
 
-    private static String doGenerateToken(Map<String, Object> claims, String subject, UUID id) {
+    private static String doGenerateToken(Map<String, Object> claims, String subject, UUID id,
+                                          Duration tokenDuration,
+                                          Key signingKey) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setId(id.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenDuration.toMillis()))
                 .signWith(signingKey)
                 .compact();
     }

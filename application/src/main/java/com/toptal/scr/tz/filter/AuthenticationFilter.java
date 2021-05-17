@@ -7,6 +7,7 @@ import com.toptal.scr.tz.service.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Key;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +29,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	@Qualifier("signingKey")
+	private Key signingKey;
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
 
@@ -41,7 +47,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
-			JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken);
+			JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken, signingKey);
 			
 			try {
 				LOG.info("Looking for user Id in token");

@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.resource;
 
+import com.toptal.scr.tz.config.AuthConfig;
 import com.toptal.scr.tz.filter.JwtTokenUtil;
 import com.toptal.scr.tz.resource.domain.ImmutableLoginResponseDTO;
 import com.toptal.scr.tz.resource.domain.LoginRequestDTO;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Key;
+
 @RestController
 public class LoginResource {
     private static final Logger LOG = LoggerFactory.getLogger(LoginResource.class);
@@ -25,13 +28,19 @@ public class LoginResource {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private AuthConfig authConfig;
+
+    @Autowired
+    private Key signingKey;
+
     @PostMapping(path = "/user/login",
             consumes = "application/vnd.login.v1+json",
             produces = "application/vnd.login.v1+json")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) throws Exception {
         try {
             User user = authenticate(loginRequestDTO);
-            final String token = JwtTokenUtil.generateToken(user);
+            final String token = JwtTokenUtil.generateToken(user, authConfig.tokenDuration(), signingKey);
             ImmutableLoginResponseDTO response = ImmutableLoginResponseDTO.builder()
                     .token(token)
                     .id(user.id())
