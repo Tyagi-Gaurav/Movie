@@ -74,7 +74,7 @@ public final class ImmutableTimezoneCreateRequestDTO
   public final ImmutableTimezoneCreateRequestDTO withName(String value) {
     String newValue = Objects.requireNonNull(value, "name");
     if (this.name.equals(newValue)) return this;
-    return new ImmutableTimezoneCreateRequestDTO(newValue, this.city, this.gmtOffset);
+    return validate(new ImmutableTimezoneCreateRequestDTO(newValue, this.city, this.gmtOffset));
   }
 
   /**
@@ -86,7 +86,7 @@ public final class ImmutableTimezoneCreateRequestDTO
   public final ImmutableTimezoneCreateRequestDTO withCity(String value) {
     String newValue = Objects.requireNonNull(value, "city");
     if (this.city.equals(newValue)) return this;
-    return new ImmutableTimezoneCreateRequestDTO(this.name, newValue, this.gmtOffset);
+    return validate(new ImmutableTimezoneCreateRequestDTO(this.name, newValue, this.gmtOffset));
   }
 
   /**
@@ -97,7 +97,7 @@ public final class ImmutableTimezoneCreateRequestDTO
    */
   public final ImmutableTimezoneCreateRequestDTO withGmtOffset(int value) {
     if (this.gmtOffset == value) return this;
-    return new ImmutableTimezoneCreateRequestDTO(this.name, this.city, value);
+    return validate(new ImmutableTimezoneCreateRequestDTO(this.name, this.city, value));
   }
 
   /**
@@ -142,6 +142,11 @@ public final class ImmutableTimezoneCreateRequestDTO
         .add("city", city)
         .add("gmtOffset", gmtOffset)
         .toString();
+  }
+
+  private static ImmutableTimezoneCreateRequestDTO validate(ImmutableTimezoneCreateRequestDTO instance) {
+    instance.check();
+    return instance;
   }
 
   /**
@@ -261,7 +266,7 @@ public final class ImmutableTimezoneCreateRequestDTO
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableTimezoneCreateRequestDTO(name, city, gmtOffset);
+      return ImmutableTimezoneCreateRequestDTO.validate(new ImmutableTimezoneCreateRequestDTO(name, city, gmtOffset));
     }
 
     private String formatRequiredAttributesMessage() {
