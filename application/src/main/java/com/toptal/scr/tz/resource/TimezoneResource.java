@@ -13,10 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -36,12 +34,10 @@ public class TimezoneResource {
     @Autowired
     private TimezoneService timezoneService;
 
-    @PostMapping(path = "/user/{userId}/timezone",
+    @PostMapping(path = "/user/timezone",
             consumes = "application/vnd.timezone.add.v1+json",
             produces = "application/vnd.timezone.add.v1+json")
-    @PreAuthorize("hasRole('ADMIN')")// or (hasRole('User' and #userId.equals(userProfile.id)))")
-    public ResponseEntity<Void> createTimezone(@PathVariable("userId") UUID userId,
-                                               @RequestBody TimezoneCreateRequestDTO timezoneCreateRequestDTO,
+    public ResponseEntity<Void> createTimezone(@RequestBody TimezoneCreateRequestDTO timezoneCreateRequestDTO,
                                                @RequestAttribute("userProfile") UserProfile userProfile) {
 
         UserTimezone timezone = ImmutableUserTimezone.builder()
@@ -55,11 +51,11 @@ public class TimezoneResource {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(path = "/user/{userId}/timezones",
+    @GetMapping(path = "/user/timezones",
             consumes = "application/vnd.timezone.read.v1+json",
             produces = "application/vnd.timezone.read.v1+json")
-    public ResponseEntity<TimezonesDTO> readTimezone(@PathVariable("userId") UUID userId,
-                                                     @RequestAttribute("userProfile") UserProfile userProfile) {
+    public ResponseEntity<TimezonesDTO> readTimezone(@RequestAttribute("userProfile") UserProfile userProfile) {
+
         Map<UUID, UserTimezone> timezones = timezoneService.getTimezones(userProfile.id());
 
         List<ImmutableTimezoneDTO> timezoneDTOList = timezones.values().stream().map(tz -> ImmutableTimezoneDTO.builder()
@@ -70,15 +66,13 @@ public class TimezoneResource {
                 .build()).collect(Collectors.toList());
 
         TimezonesDTO timezonesDTO = ImmutableTimezonesDTO.builder().timezones(timezoneDTOList).build();
-
         return ResponseEntity.ok(timezonesDTO);
     }
 
-    @DeleteMapping(path = "/user/{userId}/timezone",
+    @DeleteMapping(path = "/user/timezone",
             consumes = "application/vnd.timezone.delete.v1+json",
             produces = "application/vnd.timezone.delete.v1+json")
-    public ResponseEntity<Void> deleteTimezone(@PathVariable("userId") UUID userId,
-                                               @RequestAttribute("userProfile") UserProfile userProfile,
+    public ResponseEntity<Void> deleteTimezone(@RequestAttribute("userProfile") UserProfile userProfile,
                                                @RequestParam(name = "id") String id) {
         timezoneService.deleteTimezone(userProfile.id(),
                 UUID.fromString(id));
@@ -86,11 +80,10 @@ public class TimezoneResource {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(path = "/user/{userId}/timezone",
+    @PutMapping(path = "/user/timezone",
             consumes = "application/vnd.timezone.update.v1+json",
             produces = "application/vnd.timezone.update.v1+json")
-    public ResponseEntity<Void> updateTimezone(@PathVariable("userId") UUID userId,
-                                               @RequestBody TimezoneUpdateRequestDTO timezoneUpdateRequestDTO,
+    public ResponseEntity<Void> updateTimezone(@RequestBody TimezoneUpdateRequestDTO timezoneUpdateRequestDTO,
                                                @RequestAttribute("userProfile") UserProfile userProfile) {
 
         UserTimezone timezone = ImmutableUserTimezone.builder()
@@ -100,8 +93,7 @@ public class TimezoneResource {
                 .gmtOffset(timezoneUpdateRequestDTO.gmtOffset())
                 .build();
 
-        timezoneService.updateTimezone(userProfile.id(),
-                timezone);
+        timezoneService.updateTimezone(userProfile.id(), timezone);
 
         return ResponseEntity.ok().build();
     }

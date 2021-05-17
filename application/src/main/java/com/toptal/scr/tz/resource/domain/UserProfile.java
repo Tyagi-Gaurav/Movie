@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.resource.domain;
 
+import com.toptal.scr.tz.service.domain.Role;
 import org.immutables.value.Value;
 
 import java.util.UUID;
@@ -9,4 +10,12 @@ public interface UserProfile {
     UUID id();
 
     String authority();
+
+    default boolean isAdmin() {
+        return Role.ADMIN.toString().equals(authority());
+    }
+
+    default boolean isUser() {
+        return Role.USER.toString().equals(authority());
+    }
 }

@@ -90,6 +90,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 						.id(userDetails.id())
 						.authority(authorities.get("authority").toString())
 						.build();
+				LOG.info("Set role for user.");
 
 				request.setAttribute("userProfile", userprofile);
 			}
