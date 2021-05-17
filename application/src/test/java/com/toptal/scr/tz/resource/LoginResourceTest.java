@@ -2,6 +2,7 @@ package com.toptal.scr.tz.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toptal.scr.tz.config.AuthConfig;
+import com.toptal.scr.tz.exception.ApplicationAuthenticationExceptionHandler;
 import com.toptal.scr.tz.resource.domain.ImmutableLoginRequestDTO;
 import com.toptal.scr.tz.resource.domain.LoginRequestDTO;
 import com.toptal.scr.tz.resource.domain.LoginResponseDTO;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +26,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -45,9 +47,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(LoginResourceTest.TestLoginResourceConfiguration.class)
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
-@SpringBootTest(classes = LoginResource.class)
+@SpringBootTest(classes = {LoginResource.class, ApplicationAuthenticationExceptionHandler.class})
 @EnableWebMvc
 @ActiveProfiles("LoginResourceTest")
 public class LoginResourceTest {
@@ -115,7 +117,42 @@ public class LoginResourceTest {
         assertThat(valueFromToken.getPrincipal()).isEqualTo(loginRequestDTO.userName());
     }
 
-    //Exception Handling tests when user could not be authenticated.
+    @Test
+    void shouldThrowExceptionWhenInvalidLogin() throws Exception {
+        String content = TestUtils.asJsonString(loginRequestDTO);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(DisabledException.class);
+
+        //when
+        mockMvc.perform(post("/user/login")
+                .content(content)
+                .contentType("application/vnd.login.v1+json"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    //TODO
+    @Test
+    void shouldThrowValidationExceptionWhenUserNameIsMoreThanMaxLength() {
+
+    }
+
+    //TODO
+    @Test
+    void shouldThrowValidationExceptionWhenUserNameIsLessThanMinLength() {
+
+    }
+
+    //TODO
+    @Test
+    void shouldThrowValidationExceptionWhenPasswordIsMoreThanMaxLength() {
+
+    }
+
+    //TODO
+    @Test
+    void shouldThrowValidationExceptionWhenPasswordIsLessThanMinLength() {
+
+    }
 
     @TestConfiguration
     public static class TestLoginResourceConfiguration {
