@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.authorizeRequests()
 			.antMatchers("/user/login").permitAll()
+			.antMatchers("/status").permitAll()
 			.antMatchers("/user/account/create").permitAll()
 			.antMatchers("/user/manage").hasAuthority("ADMIN")
 			.regexMatchers("/user/timezone\\?userId=.+").hasAuthority("ADMIN")
