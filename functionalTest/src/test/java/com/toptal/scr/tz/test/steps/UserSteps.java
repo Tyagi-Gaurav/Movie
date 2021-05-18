@@ -8,6 +8,7 @@ import com.toptal.scr.tz.test.domain.TestLoginRequestDTO;
 import com.toptal.scr.tz.test.resource.ResponseHolder;
 import com.toptal.scr.tz.test.resource.TestAccountCreateResource;
 import com.toptal.scr.tz.test.resource.TestLoginResource;
+import com.toptal.scr.tz.test.resource.TestUserManagementResource;
 import io.cucumber.java8.En;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UserSteps implements En {
 
     @Autowired
     private TestLoginResource testLoginResource;
+
+    @Autowired
+    private TestUserManagementResource userManagementResource;
 
     @Autowired
     private ScenarioContext scenarioContext;
@@ -79,6 +83,24 @@ public class UserSteps implements En {
         });
         And("^the regular user attempts to login again$", () -> {
             loginUsing(scenarioContext.getUserCredentialsRequest());
+        });
+
+        When("the authenticated admin user creates another user with user name {string} and role {string}",
+                (String userName, String role) -> {
+                    TestAccountCreateRequestDTO testAccountCreateRequestDTO = ImmutableTestAccountCreateRequestDTO.builder()
+                            .userName(get(userName, 6))
+                            .password(RandomStringUtils.randomAlphabetic(6))
+                            .role(role)
+                            .firstName(RandomStringUtils.randomAlphabetic(6))
+                            .lastName(RandomStringUtils.randomAlphabetic(6))
+                            .build();
+
+                    scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
+                    userManagementResource.create(testAccountCreateRequestDTO);
+                });
+
+        When("^the authenticated admin user deletes the previously created regular user$", () -> {
+            userManagementResource.delete(scenarioContext.getRegularUserId());
         });
     }
 
