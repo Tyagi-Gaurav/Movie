@@ -24,7 +24,6 @@ public class ResponseSteps implements En {
         And("^the user login response contains an authorisation token$", () -> {
             TestLoginResponseDTO testLoginResponseDTO = responseHolder.readResponse(TestLoginResponseDTO.class);
             assertThat(testLoginResponseDTO.token()).isNotEmpty();
-            //TODO can we check if the token is a valid JWT token?
         });
     }
 }

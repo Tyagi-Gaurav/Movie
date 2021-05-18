@@ -43,5 +43,14 @@ public class UserSteps implements En {
                     .build();
             testLoginResource.create(testLoginRequestDTO);
         });
+
+        When("^the user attempts to login using random password$", () -> {
+            TestAccountCreateRequestDTO userCredentialsRequest = scenarioContext.getUserCredentialsRequest();
+            TestLoginRequestDTO testLoginRequestDTO = ImmutableTestLoginRequestDTO.builder()
+                    .userName(userCredentialsRequest.userName())
+                    .password(RandomStringUtils.randomAlphabetic(6))
+                    .build();
+            testLoginResource.create(testLoginRequestDTO);
+        });
     }
 }
