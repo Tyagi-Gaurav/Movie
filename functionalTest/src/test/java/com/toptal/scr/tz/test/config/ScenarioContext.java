@@ -6,13 +6,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScenarioContext {
 
-    private TestAccountCreateRequestDTO testAccountCreateRequestDTO;
+    private TestAccountCreateRequestDTO userCredentialsRequest;
+    private TestAccountCreateRequestDTO adminCredentialsRequest;
 
-    public void setUserCredentialsRequest(TestAccountCreateRequestDTO testAccountCreateRequestDTO) {
-        this.testAccountCreateRequestDTO = testAccountCreateRequestDTO;
+    private String regularUserId;
+
+
+    public void storeCredentialsRequest(TestAccountCreateRequestDTO testAccountCreateRequestDTO) {
+        if (testAccountCreateRequestDTO.role().equals("USER")) {
+            this.userCredentialsRequest = testAccountCreateRequestDTO;
+        } else {
+            this.adminCredentialsRequest = testAccountCreateRequestDTO;
+        }
     }
 
     public TestAccountCreateRequestDTO getUserCredentialsRequest() {
-        return testAccountCreateRequestDTO;
+        return userCredentialsRequest;
+    }
+
+    public TestAccountCreateRequestDTO getAdminCredentialsRequest() {
+        return adminCredentialsRequest;
+    }
+
+    public void setUserIdForRegularUser(String userId) {
+        this.regularUserId = userId;
+    }
+
+    public String getRegularUserId() {
+        return regularUserId;
+    }
+
+    public TestAccountCreateRequestDTO getCredentials(String role) {
+        if (role.equals("USER")) {
+            return this.userCredentialsRequest;
+        } else {
+            return this.adminCredentialsRequest;
+        }
     }
 }

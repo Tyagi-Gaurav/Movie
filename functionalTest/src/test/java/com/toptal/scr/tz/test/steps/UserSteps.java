@@ -36,12 +36,12 @@ public class UserSteps implements En {
                             .password(get(testAccountCreateRequestDTO.password(), 6))
                             .build();
 
-                    scenarioContext.setUserCredentialsRequest(testAccountCreateRequestDTO);
+                    scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
                     testAccountCreateResource.create(testAccountCreateRequestDTO);
                 });
 
         When("^the user attempts to login using the new credentials$", () -> {
-            loginUsingContext();
+            loginUsing(scenarioContext.getUserCredentialsRequest());
         });
 
         When("^the user attempts to login using random password$", () -> {
@@ -63,16 +63,26 @@ public class UserSteps implements En {
                             .lastName(RandomStringUtils.randomAlphabetic(6))
                             .build();
 
-                    scenarioContext.setUserCredentialsRequest(testAccountCreateRequestDTO);
+                    scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
                     testAccountCreateResource.create(testAccountCreateRequestDTO);
 
-                    loginUsingContext();
+                    loginUsing(scenarioContext.getCredentials(role));
                     assertThat(responseHolder.getResponseCode()).isEqualTo(200);
                 });
+
+        And("^the admin user attempts to login again$", () -> {
+            loginUsing(scenarioContext.getAdminCredentialsRequest());
+        });
+
+        And("^the userId for the user is recorded$", () -> {
+            scenarioContext.setUserIdForRegularUser(responseHolder.getUserId());
+        });
+        And("^the regular user attempts to login again$", () -> {
+            loginUsing(scenarioContext.getUserCredentialsRequest());
+        });
     }
 
-    private void loginUsingContext() {
-        TestAccountCreateRequestDTO userCredentialsRequest = scenarioContext.getUserCredentialsRequest();
+    private void loginUsing(TestAccountCreateRequestDTO userCredentialsRequest) {
         TestLoginRequestDTO testLoginRequestDTO = ImmutableTestLoginRequestDTO.builder()
                 .userName(userCredentialsRequest.userName())
                 .password(userCredentialsRequest.password())

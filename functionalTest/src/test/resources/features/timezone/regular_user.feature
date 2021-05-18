@@ -63,28 +63,3 @@ Feature: Logged in users should be able to access timezone records
       | Africa     | Mauritius | 2         |
       | Asia/India | Bangalore | 7         |
       | America    | New York  | -5        |
-
-
-#  This test should be creating users by admin and storing their password.
-#  Then login through A, create timezone.
-#  Then login through B, create timezone.
-#  Then read timezone with userId= Option and it should not be able to read it.
-
-#  Scenario: Authenticated user should be able to read the timezone records for only self
-#    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
-#    And the authenticated user attempts to create a new timezone
-#      | name       | city      | gmtOffset |
-#      | Africa     | Mauritius | 2         |
-#      | Asia/India | Delhi     | 5         |
-#      | America    | New York  | -5        |
-#    And a user creates a new account with name 'user2' and performs a login
-#    And the authenticated user intends to create a new timezone
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | a            | b            | 2             |
-#    Then a success response is returned with HTTP status code 204
-#    And the authenticated user intends to read the timezones
-#    When the authenticated user attempts to read the timezones
-#    Then a success response is returned with HTTP status code 200
-#    And the response contains the following timezones
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | a            | b            | 2             |

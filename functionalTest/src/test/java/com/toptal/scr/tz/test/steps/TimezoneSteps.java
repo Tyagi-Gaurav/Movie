@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.test.steps;
 
+import com.toptal.scr.tz.test.config.ScenarioContext;
 import com.toptal.scr.tz.test.domain.ImmutableTestTimezoneUpdateRequestDTO;
 import com.toptal.scr.tz.test.domain.TestTimezoneCreateRequestDTO;
 import com.toptal.scr.tz.test.domain.TestTimezoneDTO;
@@ -13,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TimezoneSteps implements En {
 
@@ -22,6 +24,9 @@ public class TimezoneSteps implements En {
 
     @Autowired
     private ResponseHolder responseHolder;
+
+    @Autowired
+    private ScenarioContext scenarioContext;
 
     public TimezoneSteps() {
         And("the authenticated user attempts to create a new timezone",
@@ -69,6 +74,26 @@ public class TimezoneSteps implements En {
 
                     testTimezoneResource.updateTimezone(updateRequestDTO);
                 });
+        When("^the authenticated admin user attempts to read the timezones for user$", () -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            testTimezoneResource.readTimezones(regularUserId);
+        });
+
+        When("^the authenticated admin user attempts to delete all the timezones for user$", () -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            testTimezoneResource.readTimezones(regularUserId);
+            TestTimezonesDTO testTimezonesDTO = responseHolder.readResponse(TestTimezonesDTO.class);
+            List<TestTimezoneDTO> timezones = testTimezonesDTO.timezones();
+
+            timezones.forEach(tz -> testTimezoneResource.deleteTimezone(tz.id(), regularUserId));
+        });
+
+        And("^the timezone read response should be empty$", () -> {
+            TestTimezonesDTO testTimezonesDTO = responseHolder.readResponse(TestTimezonesDTO.class);
+            List<TestTimezoneDTO> timezones = testTimezonesDTO.timezones();
+
+            assertThat(timezones).isEmpty();
+        });
     }
 
 

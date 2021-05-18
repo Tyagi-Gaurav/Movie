@@ -20,6 +20,7 @@ public class ResponseHolder {
     private List<ResponseEntity> previousResponses = new ArrayList<>();
     private ObjectMapper objectMapper = new ObjectMapper();
     private String token;
+    private String userId;
 
     public void setResponse(ResponseEntity entity) {
         previousResponses.add(0, entity);
@@ -72,5 +73,13 @@ public class ResponseHolder {
 
     public String getToken() {
         return token;
+    }
+
+    public void storeUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

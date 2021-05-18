@@ -59,4 +59,25 @@ public class TestTimezoneResource extends AbstractResource {
         HttpEntity<TestTimezoneUpdateRequestDTO> requestObject = new HttpEntity<>(updateRequestDTO, headers);
         responseHolder.setResponse(this.put(fullUrl, requestObject, String.class));
     }
+
+    public void readTimezones(String userId) {
+        String fullUrl = String.format("%s?userId=%s", getFullUrl(timeZoneAppConfig.host().trim(),
+                "/api/user/timezone", timeZoneAppConfig.port()), userId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.read.v1+json");
+        headers.setBearerAuth(responseHolder.getToken());
+        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(headers);
+        responseHolder.setResponse(this.get(fullUrl, requestObject, String.class));
+    }
+
+    public void deleteTimezone(UUID timezoneId, String regularUserId) {
+        String fullUrl = String.format("%s?id=%s&userId=%s", getFullUrl(timeZoneAppConfig.host().trim(),
+                "/api/user/timezone", timeZoneAppConfig.port()), timezoneId.toString(), regularUserId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.delete.v1+json");
+        headers.setBearerAuth(responseHolder.getToken());
+        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(headers);
+
+        responseHolder.setResponse(this.delete(fullUrl, requestObject, String.class));
+    }
 }

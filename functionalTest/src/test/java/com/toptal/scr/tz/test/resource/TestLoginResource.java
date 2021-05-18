@@ -28,6 +28,7 @@ public class TestLoginResource extends AbstractResource {
         if (responseHolder.getResponseCode() == 200) {
             TestLoginResponseDTO testLoginResponseDTO = responseHolder.readResponse(TestLoginResponseDTO.class);
             responseHolder.storeUserToken(testLoginResponseDTO.token());
+            responseHolder.storeUserId(testLoginResponseDTO.id());
         }
     }
 }
