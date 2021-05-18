@@ -59,7 +59,7 @@ public class LoginResource {
             return (User)auth.getPrincipal();
         } catch (AuthenticationException e) {
             LOG.error(e.getMessage(), e);
-            throw new ApplicationAuthenticationException(e);
+            throw new ApplicationAuthenticationException("Authentication failed", e);
         }
     }
 }

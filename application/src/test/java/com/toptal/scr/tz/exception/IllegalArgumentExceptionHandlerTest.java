@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,9 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
-@SpringBootTest(classes = {ApplicationAuthenticationExceptionHandlerTest.TestApplicationAuthenticationResource.class,
-        ApplicationAuthenticationExceptionHandler.class})
-class ApplicationAuthenticationExceptionHandlerTest {
+@SpringBootTest(classes = {IllegalArgumentExceptionHandlerTest.TestIllegalArgumentResource.class,
+        IllegalArgumentExceptionHandler.class})
+@ActiveProfiles("IllegalArgumentExceptionHandlerTest")
+class IllegalArgumentExceptionHandlerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -53,24 +56,25 @@ class ApplicationAuthenticationExceptionHandlerTest {
     }
 
     @Test
-    void shouldHandleAuthenticationException() throws Exception {
+    void shouldHandleIllegalArgumentException() throws Exception {
         MvcResult mvcResult = mvc.perform(get("/exception/throw")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
         ErrorResponse testErrorResponse = TestUtils.readFromString(response.getContentAsString(), ErrorResponse.class);
-        assertThat(testErrorResponse.message()).isEqualTo("Authentication failed");
+        assertThat(testErrorResponse.message()).isEqualTo("Illegal Argument Exception");
     }
 
     @ControllerAdvice
     @RestController
-    static class TestApplicationAuthenticationResource {
+    @Profile("IllegalArgumentExceptionHandlerTest")
+    static class TestIllegalArgumentResource {
         @GetMapping("/exception/throw")
         public void getException() {
-            throw new ApplicationAuthenticationException("Authentication failed");
+            throw new IllegalArgumentException("Illegal Argument Exception");
         }
     }
 }

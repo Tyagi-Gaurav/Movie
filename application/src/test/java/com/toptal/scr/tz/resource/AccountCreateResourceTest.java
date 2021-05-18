@@ -46,7 +46,7 @@ public class AccountCreateResourceTest {
     @BeforeEach
     void setUp() {
         requestDTO = ImmutableAccountCreateRequestDTO.builder()
-                .role("user")
+                .role("USER")
                 .userName(RandomStringUtils.randomAlphabetic(10))
                 .password(RandomStringUtils.randomAlphabetic(10))
                 .firstName("x")

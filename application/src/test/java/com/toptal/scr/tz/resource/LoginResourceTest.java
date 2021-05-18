@@ -3,6 +3,7 @@ package com.toptal.scr.tz.resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toptal.scr.tz.config.AuthConfig;
 import com.toptal.scr.tz.exception.ApplicationAuthenticationExceptionHandler;
+import com.toptal.scr.tz.exception.ErrorResponseHelper;
 import com.toptal.scr.tz.resource.domain.ImmutableLoginRequestDTO;
 import com.toptal.scr.tz.resource.domain.LoginRequestDTO;
 import com.toptal.scr.tz.resource.domain.LoginResponseDTO;
@@ -69,6 +70,9 @@ public class LoginResourceTest {
     private Key signingKey;
 
     @MockBean
+    private ErrorResponseHelper errorResponseHelper;
+
+    @MockBean
     private Authentication authentication;
     private User user;
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -115,43 +119,6 @@ public class LoginResourceTest {
         UsernamePasswordAuthenticationToken valueFromToken = argCaptor.getValue();
         assertThat(valueFromToken.getCredentials()).isEqualTo(loginRequestDTO.password());
         assertThat(valueFromToken.getPrincipal()).isEqualTo(loginRequestDTO.userName());
-    }
-
-    @Test
-    void shouldThrowExceptionWhenInvalidLogin() throws Exception {
-        String content = TestUtils.asJsonString(loginRequestDTO);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(DisabledException.class);
-
-        //when
-        mockMvc.perform(post("/user/login")
-                .content(content)
-                .contentType("application/vnd.login.v1+json"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    //TODO
-    @Test
-    void shouldThrowValidationExceptionWhenUserNameIsMoreThanMaxLength() {
-
-    }
-
-    //TODO
-    @Test
-    void shouldThrowValidationExceptionWhenUserNameIsLessThanMinLength() {
-
-    }
-
-    //TODO
-    @Test
-    void shouldThrowValidationExceptionWhenPasswordIsMoreThanMaxLength() {
-
-    }
-
-    //TODO
-    @Test
-    void shouldThrowValidationExceptionWhenPasswordIsLessThanMinLength() {
-
     }
 
     @TestConfiguration

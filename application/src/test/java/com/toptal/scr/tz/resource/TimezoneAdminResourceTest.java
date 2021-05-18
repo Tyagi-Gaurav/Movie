@@ -48,8 +48,8 @@ class TimezoneAdminResourceTest {
     void shouldAllowAdminToCreateTimeZones() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
         String content = TestUtils.asJsonString(ImmutableTimezoneCreateRequestDTO.builder()
-                .city(randomAlphabetic(5))
-                .name(randomAlphabetic(5))
+                .city(randomAlphabetic(6))
+                .name(randomAlphabetic(6))
                 .gmtOffset(1).build());
 
         UserProfile userProfile = ImmutableUserProfile.builder()

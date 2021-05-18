@@ -62,7 +62,7 @@ class UserManagementResourceTest {
     @Test
     void shouldAllowAdminToCreateUser() throws Exception {
         AccountCreateRequestDTO requestDTO = ImmutableAccountCreateRequestDTO.builder()
-                .role("user")
+                .role("USER")
                 .userName(RandomStringUtils.randomAlphabetic(10))
                 .password(RandomStringUtils.randomAlphabetic(10))
                 .firstName("x")
