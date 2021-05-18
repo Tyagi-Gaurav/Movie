@@ -25,8 +25,8 @@ public interface AccountCreateRequestDTO {
 
     @Value.Check
     default void check() {
-        Preconditions.checkArgument(password().length() >= 6 && password().length() <= 15, "Password length should be between 6 & 15.");
         Preconditions.checkArgument(isAlphanumeric(password()), "Password should be alphanumeric.");
+        Preconditions.checkArgument(password().length() >= 6 && password().length() <= 15, "Password length should be between 6 & 15.");
         Preconditions.checkArgument(userName().length() >= 4 && userName().length() <= 20, "UserName length should be between 4 and 20.");
         Preconditions.checkArgument(EnumUtils.isValidEnum(Role.class, role()), "Role can either be one of ('USER', 'ADMIN').");
     }

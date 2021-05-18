@@ -18,9 +18,9 @@ public class TestLoginResource extends AbstractResource {
 
     public void create(TestLoginRequestDTO testLoginRequestDTO) {
         String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/login", timeZoneAppConfig.port());
+                "/api/user/login", timeZoneAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd+login.v1+json");
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.login.v1+json");
         HttpEntity<TestLoginRequestDTO> request = new HttpEntity<>(testLoginRequestDTO, headers);
         responseHolder.setResponse(this.post(fullUrl, request, String.class));
     }

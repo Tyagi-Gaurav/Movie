@@ -17,9 +17,11 @@ import org.immutables.value.Generated;
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
 public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO {
   private final String token;
+  private final String id;
 
-  private ImmutableTestLoginResponseDTO(String token) {
+  private ImmutableTestLoginResponseDTO(String token, String id) {
     this.token = token;
+    this.id = id;
   }
 
   /**
@@ -32,6 +34,15 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
   }
 
   /**
+   * @return The value of the {@code id} attribute
+   */
+  @JsonProperty("id")
+  @Override
+  public String id() {
+    return id;
+  }
+
+  /**
    * Copy the current immutable object by setting a value for the {@link TestLoginResponseDTO#token() token} attribute.
    * An equals check used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for token
@@ -40,7 +51,19 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
   public final ImmutableTestLoginResponseDTO withToken(String value) {
     String newValue = Objects.requireNonNull(value, "token");
     if (this.token.equals(newValue)) return this;
-    return new ImmutableTestLoginResponseDTO(newValue);
+    return new ImmutableTestLoginResponseDTO(newValue, this.id);
+  }
+
+  /**
+   * Copy the current immutable object by setting a value for the {@link TestLoginResponseDTO#id() id} attribute.
+   * An equals check used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for id
+   * @return A modified copy of the {@code this} object
+   */
+  public final ImmutableTestLoginResponseDTO withId(String value) {
+    String newValue = Objects.requireNonNull(value, "id");
+    if (this.id.equals(newValue)) return this;
+    return new ImmutableTestLoginResponseDTO(this.token, newValue);
   }
 
   /**
@@ -55,17 +78,19 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
   }
 
   private boolean equalTo(ImmutableTestLoginResponseDTO another) {
-    return token.equals(another.token);
+    return token.equals(another.token)
+        && id.equals(another.id);
   }
 
   /**
-   * Computes a hash code from attributes: {@code token}.
+   * Computes a hash code from attributes: {@code token}, {@code id}.
    * @return hashCode value
    */
   @Override
   public int hashCode() {
     int h = 5381;
     h += (h << 5) + token.hashCode();
+    h += (h << 5) + id.hashCode();
     return h;
   }
 
@@ -77,6 +102,7 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
   public String toString() {
     return "TestLoginResponseDTO{"
         + "token=" + token
+        + ", id=" + id
         + "}";
   }
 
@@ -101,6 +127,7 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
    * <pre>
    * ImmutableTestLoginResponseDTO.builder()
    *    .token(String) // required {@link TestLoginResponseDTO#token() token}
+   *    .id(String) // required {@link TestLoginResponseDTO#id() id}
    *    .build();
    * </pre>
    * @return A new ImmutableTestLoginResponseDTO builder
@@ -119,9 +146,11 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
   @Generated(from = "TestLoginResponseDTO", generator = "Immutables")
   public static final class Builder {
     private static final long INIT_BIT_TOKEN = 0x1L;
-    private long initBits = 0x1L;
+    private static final long INIT_BIT_ID = 0x2L;
+    private long initBits = 0x3L;
 
     private String token;
+    private String id;
 
     private Builder() {
     }
@@ -136,6 +165,7 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
     public final Builder from(TestLoginResponseDTO instance) {
       Objects.requireNonNull(instance, "instance");
       token(instance.token());
+      id(instance.id());
       return this;
     }
 
@@ -152,6 +182,18 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
     }
 
     /**
+     * Initializes the value for the {@link TestLoginResponseDTO#id() id} attribute.
+     * @param id The value for id 
+     * @return {@code this} builder for use in a chained invocation
+     */
+    @JsonProperty("id")
+    public final Builder id(String id) {
+      this.id = Objects.requireNonNull(id, "id");
+      initBits &= ~INIT_BIT_ID;
+      return this;
+    }
+
+    /**
      * Builds a new {@link ImmutableTestLoginResponseDTO ImmutableTestLoginResponseDTO}.
      * @return An immutable instance of TestLoginResponseDTO
      * @throws java.lang.IllegalStateException if any required attributes are missing
@@ -160,12 +202,13 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableTestLoginResponseDTO(token);
+      return new ImmutableTestLoginResponseDTO(token, id);
     }
 
     private String formatRequiredAttributesMessage() {
       List<String> attributes = new ArrayList<>();
       if ((initBits & INIT_BIT_TOKEN) != 0) attributes.add("token");
+      if ((initBits & INIT_BIT_ID) != 0) attributes.add("id");
       return "Cannot build TestLoginResponseDTO, some of required attributes are not set " + attributes;
     }
   }

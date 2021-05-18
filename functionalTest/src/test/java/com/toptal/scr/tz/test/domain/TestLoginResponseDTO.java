@@ -9,4 +9,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = ImmutableTestLoginResponseDTO.Builder.class)
 public interface TestLoginResponseDTO {
     String token();
+
+    String id();
 }

@@ -24,10 +24,10 @@ public class UserSteps implements En {
     public UserSteps() {
         Given("^a user attempts to create a new account with following details$",
                 (TestAccountCreateRequestDTO testAccountCreateRequestDTO) -> {
-                    if ("random>".equals(testAccountCreateRequestDTO.userName())) {
+                    if ("<random>".equals(testAccountCreateRequestDTO.userName())) {
                         testAccountCreateRequestDTO = ImmutableTestAccountCreateRequestDTO.builder().from(testAccountCreateRequestDTO)
-                                .userName(RandomStringUtils.random(6))
-                                .password(RandomStringUtils.random(6))
+                                .userName(RandomStringUtils.randomAlphabetic(6))
+                                .password(RandomStringUtils.randomAlphabetic(6))
                                 .build();
                     }
 

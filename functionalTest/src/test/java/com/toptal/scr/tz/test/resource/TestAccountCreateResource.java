@@ -18,7 +18,7 @@ public class TestAccountCreateResource extends AbstractResource {
 
     public void create(TestAccountCreateRequestDTO accountCreateRequestDTO) {
         String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/account/create", timeZoneAppConfig.port());
+                "/api/user/account/create", timeZoneAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd+account.create.v1+json");
         HttpEntity<TestAccountCreateRequestDTO> request = new HttpEntity<>(accountCreateRequestDTO, headers);
