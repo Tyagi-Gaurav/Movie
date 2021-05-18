@@ -94,6 +94,39 @@ public class TimezoneSteps implements En {
 
             assertThat(timezones).isEmpty();
         });
+
+        And("^the authenticated user attempts to create a new timezone for the regular user$", (DataTable dataTable) -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            List<TestTimezoneCreateRequestDTO> testTimezoneCreateRequestDTO = dataTable.asList(TestTimezoneCreateRequestDTO.class);
+            testTimezoneCreateRequestDTO.forEach(timezoneCreateRequestDTO ->
+                    testTimezoneResource.create(timezoneCreateRequestDTO, regularUserId));
+        });
+
+        And("^the authenticated user attempts to read the timezones for the previous user$", () -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            testTimezoneResource.readTimezones(regularUserId);
+        });
+        When("^the admin user attempts to update the timezone with name: '(.*)' to$",
+                (String name, TestTimezoneCreateRequestDTO testTimezoneCreateRequestDTO) -> {
+                    String regularUserId = scenarioContext.getRegularUserId();
+                    testTimezoneResource.readTimezones(regularUserId);
+                    TestTimezonesDTO testTimezonesDTO = responseHolder.readResponse(TestTimezonesDTO.class);
+                    List<TestTimezoneDTO> timezones = testTimezonesDTO.timezones();
+
+                    UUID uuid = timezones.stream()
+                            .filter(tz -> name.equals(tz.name()))
+                            .findFirst().map(TestTimezoneDTO::id).orElseThrow(IllegalStateException::new);
+
+                    TestTimezoneUpdateRequestDTO updateRequestDTO =
+                            ImmutableTestTimezoneUpdateRequestDTO.builder()
+                                    .city(testTimezoneCreateRequestDTO.city())
+                                    .gmtOffset(testTimezoneCreateRequestDTO.gmtOffset())
+                                    .name(testTimezoneCreateRequestDTO.name())
+                                    .id(uuid)
+                                    .build();
+
+                    testTimezoneResource.updateTimezone(updateRequestDTO, regularUserId);
+                });
     }
 
 
