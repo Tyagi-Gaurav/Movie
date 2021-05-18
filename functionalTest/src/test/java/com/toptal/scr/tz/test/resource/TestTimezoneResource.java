@@ -1,12 +1,14 @@
 package com.toptal.scr.tz.test.resource;
 
 import com.toptal.scr.tz.test.config.TimeZoneAppConfig;
-import com.toptal.scr.tz.test.domain.TestAccountCreateRequestDTO;
 import com.toptal.scr.tz.test.domain.TestTimezoneCreateRequestDTO;
+import com.toptal.scr.tz.test.domain.TestTimezoneUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class TestTimezoneResource extends AbstractResource {
@@ -22,9 +24,39 @@ public class TestTimezoneResource extends AbstractResource {
                 "/api/user/timezone", timeZoneAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.add.v1+json");
-        System.out.println(responseHolder.getToken());
         headers.setBearerAuth(responseHolder.getToken());
-        HttpEntity<TestTimezoneCreateRequestDTO> request = new HttpEntity<>(timezoneCreateRequestDTO, headers);
-        responseHolder.setResponse(this.post(fullUrl, request, String.class));
+        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(timezoneCreateRequestDTO, headers);
+        responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
+    }
+
+    public void readTimezones() {
+        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
+                "/api/user/timezone", timeZoneAppConfig.port());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.read.v1+json");
+        headers.setBearerAuth(responseHolder.getToken());
+        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(headers);
+        responseHolder.setResponse(this.get(fullUrl, requestObject, String.class));
+    }
+
+    public void deleteTimezone(UUID uuid) {
+        String fullUrl = String.format("%s?id=%s", getFullUrl(timeZoneAppConfig.host().trim(),
+                "/api/user/timezone", timeZoneAppConfig.port()), uuid.toString());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.delete.v1+json");
+        headers.setBearerAuth(responseHolder.getToken());
+        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(headers);
+
+        responseHolder.setResponse(this.delete(fullUrl, requestObject, String.class));
+    }
+
+    public void updateTimezone(TestTimezoneUpdateRequestDTO updateRequestDTO) {
+        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
+                "/api/user/timezone", timeZoneAppConfig.port());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.update.v1+json");
+        headers.setBearerAuth(responseHolder.getToken());
+        HttpEntity<TestTimezoneUpdateRequestDTO> requestObject = new HttpEntity<>(updateRequestDTO, headers);
+        responseHolder.setResponse(this.put(fullUrl, requestObject, String.class));
     }
 }

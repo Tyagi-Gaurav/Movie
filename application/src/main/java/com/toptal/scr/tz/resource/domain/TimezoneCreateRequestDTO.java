@@ -24,6 +24,6 @@ public interface TimezoneCreateRequestDTO {
     default void check() {
         Preconditions.checkArgument(name().length() >= 6 && name().length() <= 20, "Name length should be between 6 & 20.");
         Preconditions.checkArgument(city().length() >= 4 && city().length() <= 20, "City length should be between 4 and 20.");
-        Preconditions.checkArgument(gmtOffset() <= 12 && gmtOffset() >= 1, "GMT Offset should be between -12 & +12.");
+        Preconditions.checkArgument(gmtOffset() <= 12 && gmtOffset() >= -12, "GMT Offset should be between -12 & +12.");
     }
 }

@@ -14,53 +14,69 @@ Feature: Logged in users should be able to access timezone records
       | Africa | Mauritius | 2         |
     Then the response should be received with HTTP status code 204
 
-#  Scenario: Authenticated user should be able to read the timezone records
-#    Given a user creates a new account with name <random> and performs a login
-#    And the authenticated user intends to create a new timezone
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | x            | y            | 1             |
-#    And the user attempts to create a new timezone
-#    Then a success response is returned with HTTP status code 204
-#    And the authenticated user intends to create a new timezone
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | a            | b            | 2             |
-#    And the user attempts to create a new timezone
-#    Then a success response is returned with HTTP status code 204
-#    And the authenticated user intends to read the timezones
-#    When the authenticated user attempts to read the timezones
-#    Then a success response is returned with HTTP status code 200
-#    And the response contains the following timezones
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | a            | b            | 2             |
-#      | x            | y            | 1             |
-#
-#  Scenario: Authenticated user should be able to delete the timezone records
-#    Given a user creates a new account with name <random> and performs a login
-#    And the authenticated user intends to create a new timezone
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | x            | y            | 1             |
-#    And the user attempts to create a new timezone
-#    Then a success response is returned with HTTP status code 204
-#    And the authenticated user intends to create a new timezone
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | a            | b            | 2             |
-#    And the user intends to delete the timezone
-#    And the user attempts to delete the timezone
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | a            | b            | 2             |
-#    Then a success response is returned with HTTP status code 204
-#    And the authenticated user intends to read the timezones
-#    When the authenticated user attempts to read the timezones
-#    Then a success response is returned with HTTP status code 200
-#    And the response contains the following timezones
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | x            | y            | 1             |
-#
+  Scenario: Authenticated user should be able to read the timezone records
+    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+    And the authenticated user attempts to create a new timezone
+      | name       | city      | gmtOffset |
+      | Africa     | Mauritius | 2         |
+      | Asia/India | Delhi     | 5         |
+      | America    | New York  | -5        |
+    When the authenticated user attempts to read the timezones
+    Then the response should be received with HTTP status code 200
+    And the timezone read response contains the following timezones
+      | name       | city      | gmtOffset |
+      | Africa     | Mauritius | 2         |
+      | Asia/India | Delhi     | 5         |
+      | America    | New York  | -5        |
+
+  Scenario: Authenticated user should be able to delete the timezone records
+    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+    And the authenticated user attempts to create a new timezone
+      | name       | city      | gmtOffset |
+      | Africa     | Mauritius | 2         |
+      | Asia/India | Delhi     | 5         |
+      | America    | New York  | -5        |
+    When the user attempts to delete the timezone with name: 'Asia/India' , city: 'Delhi' and gmtOffset: '5'
+    Then the response should be received with HTTP status code 200
+    And the authenticated user attempts to read the timezones
+    Then the response should be received with HTTP status code 200
+    And the timezone read response contains the following timezones
+      | name    | city      | gmtOffset |
+      | Africa  | Mauritius | 2         |
+      | America | New York  | -5        |
+
+  Scenario: Authenticated user should be able to update the timezone records
+    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+    And the authenticated user attempts to create a new timezone
+      | name       | city      | gmtOffset |
+      | Africa     | Mauritius | 2         |
+      | Asia/India | Delhi     | 5         |
+      | America    | New York  | -5        |
+    When the user attempts to update the timezone with name: 'Asia/India' to
+      | name       | city      | gmtOffset |
+      | Asia/India | Bangalore | 7         |
+    Then the response should be received with HTTP status code 200
+    And the authenticated user attempts to read the timezones
+    Then the response should be received with HTTP status code 200
+    And the timezone read response contains the following timezones
+      | name       | city      | gmtOffset |
+      | Africa     | Mauritius | 2         |
+      | Asia/India | Bangalore | 7         |
+      | America    | New York  | -5        |
+
+
+#  This test should be creating users by admin and storing their password.
+#  Then login through A, create timezone.
+#  Then login through B, create timezone.
+#  Then read timezone with userId= Option and it should not be able to read it.
+
 #  Scenario: Authenticated user should be able to read the timezone records for only self
-#    Given a user creates a new account with name 'user1' and performs a login
-#    And the authenticated user intends to create a new timezone
-#      | timezoneName | timezoneCity | GMTDifference |
-#      | x            | y            | 1             |
+#    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+#    And the authenticated user attempts to create a new timezone
+#      | name       | city      | gmtOffset |
+#      | Africa     | Mauritius | 2         |
+#      | Asia/India | Delhi     | 5         |
+#      | America    | New York  | -5        |
 #    And a user creates a new account with name 'user2' and performs a login
 #    And the authenticated user intends to create a new timezone
 #      | timezoneName | timezoneCity | GMTDifference |

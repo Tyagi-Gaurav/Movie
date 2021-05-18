@@ -2,6 +2,8 @@ package com.toptal.scr.tz.test.resource;
 
 import com.toptal.scr.tz.test.config.TimeZoneAppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +18,6 @@ public class TestHealthCheckResource extends AbstractResource {
     public void invokeStatus() {
         String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
                 "/api/status", timeZoneAppConfig.port());
-        responseHolder.setResponse(this.get(fullUrl, String.class));
+        responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 }

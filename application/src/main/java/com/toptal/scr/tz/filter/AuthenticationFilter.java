@@ -50,9 +50,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken, signingKey);
 			
 			try {
-				LOG.info("Looking for user Id in token");
 				userId = jwtTokenUtil.getUserIdFromToken();
-				LOG.info("User Id from token: " + userId);
+				LOG.info("Fetched UserId from token: " + userId);
 				validateToken(jwtTokenUtil, userId, chain, request, response);
 			} catch (IllegalArgumentException e) {
 				LOG.error("Unable to get JWT Token", e);
@@ -67,11 +66,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			HttpServletResponse response) throws ServletException, IOException {
 		
 		if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			LOG.info("Looking for user Details with userId: " + userId);
+			LOG.info("Fetch user from repository: {}", userId);
 			User userDetails = userService.findUserBy(UUID.fromString(userId));
 
 			if (jwtTokenUtil.validateToken(userDetails)) {
-				LOG.info("Token validated for user " + userId);
+				LOG.info("Token validated for user {}", userId);
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				
@@ -91,9 +90,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 						.id(userDetails.id())
 						.authority(authority)
 						.build();
-				LOG.info("Set authority for user." + authority);
-
 				request.setAttribute("userProfile", userprofile);
+
+				LOG.info("User authenticated with role: {}", authority);
 			}
 		}
 		

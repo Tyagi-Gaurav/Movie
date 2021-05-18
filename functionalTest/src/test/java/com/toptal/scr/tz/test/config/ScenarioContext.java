@@ -12,7 +12,6 @@ public class ScenarioContext {
         this.testAccountCreateRequestDTO = testAccountCreateRequestDTO;
     }
 
-
     public TestAccountCreateRequestDTO getUserCredentialsRequest() {
         return testAccountCreateRequestDTO;
     }
