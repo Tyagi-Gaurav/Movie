@@ -19,6 +19,7 @@ public class ResponseHolder {
 
     private List<ResponseEntity> previousResponses = new ArrayList<>();
     private ObjectMapper objectMapper = new ObjectMapper();
+    private String token;
 
     public void setResponse(ResponseEntity entity) {
         previousResponses.add(0, entity);
@@ -63,5 +64,13 @@ public class ResponseHolder {
     @PreDestroy
     public void clearResponses() {
         previousResponses.clear();
+    }
+
+    public void storeUserToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

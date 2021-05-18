@@ -6,15 +6,14 @@ Feature: Logged in users should be able to access timezone records
 #      | x            | y            | 1             |
 #    When the user attempts to create a new timezone
 #    Then a failure response is returned with HTTP status code 403
-#
-#  Scenario: Authenticated user should be able to create a new timezone
-#    Given a user creates a new account with name <random> and performs a login
-#    And the authenticated user intends to create a new timezone
-#    | timezoneName | timezoneCity | GMTDifference |
-#    | x            | y            | 1             |
-#    When the user attempts to create a new timezone
-#    Then a success response is returned with HTTP status code 204
-#
+
+  Scenario: Authenticated user should be able to create a new timezone
+    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+    And the authenticated user attempts to create a new timezone
+      | name   | city      | gmtOffset |
+      | Africa | Mauritius | 2         |
+    Then the response should be received with HTTP status code 204
+
 #  Scenario: Authenticated user should be able to read the timezone records
 #    Given a user creates a new account with name <random> and performs a login
 #    And the authenticated user intends to create a new timezone

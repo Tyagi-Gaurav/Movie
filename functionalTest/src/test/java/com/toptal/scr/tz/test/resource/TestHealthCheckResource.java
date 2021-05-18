@@ -15,7 +15,7 @@ public class TestHealthCheckResource extends AbstractResource {
 
     public void invokeStatus() {
         String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/status", timeZoneAppConfig.port());
+                "/api/status", timeZoneAppConfig.port());
         responseHolder.setResponse(this.get(fullUrl, String.class));
     }
 }
