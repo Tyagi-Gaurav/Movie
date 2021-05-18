@@ -1,6 +1,5 @@
 package com.toptal.scr.tz.exception;
 
-
 import com.toptal.scr.tz.resource.domain.ErrorResponse;
 import com.toptal.scr.tz.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
-@SpringBootTest(classes = {ApplicationAuthenticationExceptionHandlerTest.TestApplicationAuthenticationResource.class,
-        ApplicationAuthenticationExceptionHandler.class})
-@ActiveProfiles("ApplicationAuthenticationExceptionHandlerTest")
-class ApplicationAuthenticationExceptionHandlerTest {
+@SpringBootTest(classes = {SystemExceptionHandlerTest.TestRuntimeExceptionSource.class,
+        SystemExceptionHandler.class})
+@ActiveProfiles("ExceptionHandlerTest")
+class SystemExceptionHandlerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -56,25 +55,43 @@ class ApplicationAuthenticationExceptionHandlerTest {
     }
 
     @Test
-    void shouldHandleAuthenticationException() throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/exception/throw")
+    void shouldHandleRuntimeException() throws Exception {
+        MvcResult mvcResult = mvc.perform(get("/runtime/exception/throw")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
         ErrorResponse testErrorResponse = TestUtils.readFromString(response.getContentAsString(), ErrorResponse.class);
-        assertThat(testErrorResponse.message()).isEqualTo("Authentication failed");
+        assertThat(testErrorResponse.message()).isEqualTo("Unexpected error occurred");
+    }
+
+    @Test
+    void shouldHandleException() throws Exception {
+        MvcResult mvcResult = mvc.perform(get("/exception/throw")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        ErrorResponse testErrorResponse = TestUtils.readFromString(response.getContentAsString(), ErrorResponse.class);
+        assertThat(testErrorResponse.message()).isEqualTo("Unexpected error occurred");
     }
 
     @ControllerAdvice
     @RestController
-    @Profile("ApplicationAuthenticationExceptionHandlerTest")
-    static class TestApplicationAuthenticationResource {
+    @Profile("ExceptionHandlerTest")
+    static class TestRuntimeExceptionSource {
+        @GetMapping("/runtime/exception/throw")
+        public void getRuntimeException() {
+            throw new RuntimeException();
+        }
+
         @GetMapping("/exception/throw")
-        public void getException() {
-            throw new ApplicationAuthenticationException("Authentication failed");
+        public void getException() throws Exception {
+            throw new Exception();
         }
     }
 }
