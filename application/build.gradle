@@ -44,6 +44,7 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api"
     implementation "io.jsonwebtoken:jjwt-impl"
     implementation "io.jsonwebtoken:jjwt-jackson"
+    implementation "it.ozimov:embedded-redis"
 
     //Immutables
     implementation "org.immutables:value-annotations"

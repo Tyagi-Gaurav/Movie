@@ -5,7 +5,6 @@ import com.toptal.scr.tz.filter.LoggingInterceptor;
 import com.toptal.scr.tz.filter.MetricsInterceptor;
 import com.toptal.scr.tz.filter.RequestIdInterceptor;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,6 +14,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import redis.embedded.RedisServer;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -75,5 +75,10 @@ public class ApplicationConfiguration implements WebMvcConfigurer  {
         template.setConnectionFactory(lettuceConnectionFactory);
         template.setEnableTransactionSupport(true);
         return template;
+    }
+
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    public RedisServer redisServer(DatabaseConfig databaseConfig) {
+        return new RedisServer(databaseConfig.port());
     }
 }

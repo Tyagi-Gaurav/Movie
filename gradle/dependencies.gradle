@@ -19,6 +19,7 @@ ext {
     guavaVersion = '30.1.1-jre'
     validationApiVersion = '2.0.1.Final'
     metricsInterceptor = '1.7.0'
+    embeddedRedisVersion = '0.7.3'
 }
 
 dependencyManagement {
@@ -77,5 +78,8 @@ dependencyManagement {
         dependency "io.cucumber:cucumber-junit:$cucumberVersion"
         dependency "io.cucumber:cucumber-spring:$cucumberVersion"
         dependency "org.assertj:assertj-core:$assertJVersion"
+        dependency("it.ozimov:embedded-redis:$embeddedRedisVersion") {
+            exclude "org.slf4j:slf4j-simple"
+        }
     }
 }
