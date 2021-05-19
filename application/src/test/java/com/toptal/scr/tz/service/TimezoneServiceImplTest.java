@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.service;
 
+import com.toptal.scr.tz.service.domain.ImmutableUserTimezone;
 import com.toptal.scr.tz.service.domain.User;
 import com.toptal.scr.tz.service.domain.UserTimezone;
 import com.toptal.scr.tz.util.TestBuilders;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -100,6 +102,43 @@ class TimezoneServiceImplTest {
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).contains(Map.entry(userTimezone.id(), userTimezone));
+        assertThat(actualParameter.userTimeZones()).isEmpty();
+    }
+
+    @Test
+    void shouldUpdateOnlyTimezoneNameForAUser() {
+        //given
+        UUID userId = UUID.randomUUID();
+        UUID timezoneId = UUID.randomUUID();
+        UserTimezone timezoneToUpdate = TestBuilders.aUserTimezone();
+        HashMap<UUID, UserTimezone> timezoneMap = new HashMap<>();
+
+        timezoneMap.put(timezoneId, timezoneToUpdate);
+        User user = TestBuilders.aUserWithTimezones(timezoneMap);
+
+        when(userService.findUserBy(userId)).thenReturn(user);
+        String newTimezoneName = "newName";
+        UserTimezone expectedTimezone = ImmutableUserTimezone.builder()
+                .name(newTimezoneName)
+                .id(timezoneId)
+                .city(timezoneToUpdate.city())
+                .gmtOffset(timezoneToUpdate.gmtOffset())
+                .build();
+
+        //when
+        UserTimezone updatedTimezone = ImmutableUserTimezone.builder()
+                .name(newTimezoneName)
+                .city("")
+                .gmtOffset(-100)
+                .id(timezoneId)
+                .build();
+        timezoneService.updateTimezone(userId, updatedTimezone);
+
+        //then
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userService).update(userArgumentCaptor.capture());
+
+        User actualParameter = userArgumentCaptor.getValue();
+        assertThat(actualParameter.userTimeZones()).contains(Map.entry(timezoneId, expectedTimezone));
     }
 }

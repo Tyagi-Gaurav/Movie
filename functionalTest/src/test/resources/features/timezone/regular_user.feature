@@ -56,3 +56,20 @@ Feature: Logged in users should be able to access timezone records
       | Africa     | Mauritius | 2         |
       | Asia/India | Bangalore | 7         |
       | America    | New York  | -5        |
+
+  Scenario: Authenticated user should be able to update single fields for the timezone records
+    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+    And the authenticated user attempts to create a new timezone
+      | name       | city      | gmtOffset |
+      | Africa     | Mauritius | 2         |
+      | Asia/India | Delhi     | 5         |
+      | America    | New York  | -5        |
+    When the user attempts to update the timezone with name: 'Asia/India' to 'Asia/Bangladesh'
+    Then the response should be received with HTTP status code 200
+    And the authenticated user attempts to read the timezones
+    Then the response should be received with HTTP status code 200
+    And the timezone read response contains the following timezones
+      | name            | city      | gmtOffset |
+      | Africa          | Mauritius | 2         |
+      | Asia/Bangladesh | Delhi     | 5         |
+      | America         | New York  | -5        |

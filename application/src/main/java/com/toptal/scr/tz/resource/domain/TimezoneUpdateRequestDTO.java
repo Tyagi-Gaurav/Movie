@@ -12,9 +12,18 @@ import java.util.UUID;
 public interface TimezoneUpdateRequestDTO {
     UUID id();
 
-    String name();
+    @Value.Default
+    default String name() {
+        return "";
+    }
 
-    String city();
+    @Value.Default
+    default String city() {
+        return "";
+    }
 
-    int gmtOffset();
+    @Value.Default
+    default int gmtOffset() {
+        return -100;
+    }
 }

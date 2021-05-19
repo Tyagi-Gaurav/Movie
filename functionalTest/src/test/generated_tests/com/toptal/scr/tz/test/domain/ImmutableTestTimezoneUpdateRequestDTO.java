@@ -23,11 +23,111 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
   private final String city;
   private final int gmtOffset;
 
+  private ImmutableTestTimezoneUpdateRequestDTO(ImmutableTestTimezoneUpdateRequestDTO.Builder builder) {
+    this.id = builder.id;
+    if (builder.name != null) {
+      initShim.name(builder.name);
+    }
+    if (builder.city != null) {
+      initShim.city(builder.city);
+    }
+    if (builder.gmtOffsetIsSet()) {
+      initShim.gmtOffset(builder.gmtOffset);
+    }
+    this.name = initShim.name();
+    this.city = initShim.city();
+    this.gmtOffset = initShim.gmtOffset();
+    this.initShim = null;
+  }
+
   private ImmutableTestTimezoneUpdateRequestDTO(UUID id, String name, String city, int gmtOffset) {
     this.id = id;
     this.name = name;
     this.city = city;
     this.gmtOffset = gmtOffset;
+    this.initShim = null;
+  }
+
+  private static final byte STAGE_INITIALIZING = -1;
+  private static final byte STAGE_UNINITIALIZED = 0;
+  private static final byte STAGE_INITIALIZED = 1;
+  private transient volatile InitShim initShim = new InitShim();
+
+  @Generated(from = "TestTimezoneUpdateRequestDTO", generator = "Immutables")
+  private final class InitShim {
+    private byte nameBuildStage = STAGE_UNINITIALIZED;
+    private String name;
+
+    String name() {
+      if (nameBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (nameBuildStage == STAGE_UNINITIALIZED) {
+        nameBuildStage = STAGE_INITIALIZING;
+        this.name = Objects.requireNonNull(nameInitialize(), "name");
+        nameBuildStage = STAGE_INITIALIZED;
+      }
+      return this.name;
+    }
+
+    void name(String name) {
+      this.name = name;
+      nameBuildStage = STAGE_INITIALIZED;
+    }
+
+    private byte cityBuildStage = STAGE_UNINITIALIZED;
+    private String city;
+
+    String city() {
+      if (cityBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (cityBuildStage == STAGE_UNINITIALIZED) {
+        cityBuildStage = STAGE_INITIALIZING;
+        this.city = Objects.requireNonNull(cityInitialize(), "city");
+        cityBuildStage = STAGE_INITIALIZED;
+      }
+      return this.city;
+    }
+
+    void city(String city) {
+      this.city = city;
+      cityBuildStage = STAGE_INITIALIZED;
+    }
+
+    private byte gmtOffsetBuildStage = STAGE_UNINITIALIZED;
+    private int gmtOffset;
+
+    int gmtOffset() {
+      if (gmtOffsetBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (gmtOffsetBuildStage == STAGE_UNINITIALIZED) {
+        gmtOffsetBuildStage = STAGE_INITIALIZING;
+        this.gmtOffset = gmtOffsetInitialize();
+        gmtOffsetBuildStage = STAGE_INITIALIZED;
+      }
+      return this.gmtOffset;
+    }
+
+    void gmtOffset(int gmtOffset) {
+      this.gmtOffset = gmtOffset;
+      gmtOffsetBuildStage = STAGE_INITIALIZED;
+    }
+
+    private String formatInitCycleMessage() {
+      List<String> attributes = new ArrayList<>();
+      if (nameBuildStage == STAGE_INITIALIZING) attributes.add("name");
+      if (cityBuildStage == STAGE_INITIALIZING) attributes.add("city");
+      if (gmtOffsetBuildStage == STAGE_INITIALIZING) attributes.add("gmtOffset");
+      return "Cannot build TestTimezoneUpdateRequestDTO, attribute initializers form cycle " + attributes;
+    }
+  }
+
+  private String nameInitialize() {
+    return TestTimezoneUpdateRequestDTO.super.name();
+  }
+
+  private String cityInitialize() {
+    return TestTimezoneUpdateRequestDTO.super.city();
+  }
+
+  private int gmtOffsetInitialize() {
+    return TestTimezoneUpdateRequestDTO.super.gmtOffset();
   }
 
   /**
@@ -45,7 +145,10 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
   @JsonProperty("name")
   @Override
   public String name() {
-    return name;
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.name()
+        : this.name;
   }
 
   /**
@@ -54,7 +157,10 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
   @JsonProperty("city")
   @Override
   public String city() {
-    return city;
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.city()
+        : this.city;
   }
 
   /**
@@ -63,7 +169,10 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
   @JsonProperty("gmtOffset")
   @Override
   public int gmtOffset() {
-    return gmtOffset;
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.gmtOffset()
+        : this.gmtOffset;
   }
 
   /**
@@ -180,9 +289,9 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
    * <pre>
    * ImmutableTestTimezoneUpdateRequestDTO.builder()
    *    .id(UUID) // required {@link TestTimezoneUpdateRequestDTO#id() id}
-   *    .name(String) // required {@link TestTimezoneUpdateRequestDTO#name() name}
-   *    .city(String) // required {@link TestTimezoneUpdateRequestDTO#city() city}
-   *    .gmtOffset(int) // required {@link TestTimezoneUpdateRequestDTO#gmtOffset() gmtOffset}
+   *    .name(String) // optional {@link TestTimezoneUpdateRequestDTO#name() name}
+   *    .city(String) // optional {@link TestTimezoneUpdateRequestDTO#city() city}
+   *    .gmtOffset(int) // optional {@link TestTimezoneUpdateRequestDTO#gmtOffset() gmtOffset}
    *    .build();
    * </pre>
    * @return A new ImmutableTestTimezoneUpdateRequestDTO builder
@@ -201,10 +310,9 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
   @Generated(from = "TestTimezoneUpdateRequestDTO", generator = "Immutables")
   public static final class Builder {
     private static final long INIT_BIT_ID = 0x1L;
-    private static final long INIT_BIT_NAME = 0x2L;
-    private static final long INIT_BIT_CITY = 0x4L;
-    private static final long INIT_BIT_GMT_OFFSET = 0x8L;
-    private long initBits = 0xfL;
+    private static final long OPT_BIT_GMT_OFFSET = 0x1L;
+    private long initBits = 0x1L;
+    private long optBits;
 
     private UUID id;
     private String name;
@@ -244,37 +352,38 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
 
     /**
      * Initializes the value for the {@link TestTimezoneUpdateRequestDTO#name() name} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link TestTimezoneUpdateRequestDTO#name() name}.</em>
      * @param name The value for name 
      * @return {@code this} builder for use in a chained invocation
      */
     @JsonProperty("name")
     public final Builder name(String name) {
       this.name = Objects.requireNonNull(name, "name");
-      initBits &= ~INIT_BIT_NAME;
       return this;
     }
 
     /**
      * Initializes the value for the {@link TestTimezoneUpdateRequestDTO#city() city} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link TestTimezoneUpdateRequestDTO#city() city}.</em>
      * @param city The value for city 
      * @return {@code this} builder for use in a chained invocation
      */
     @JsonProperty("city")
     public final Builder city(String city) {
       this.city = Objects.requireNonNull(city, "city");
-      initBits &= ~INIT_BIT_CITY;
       return this;
     }
 
     /**
      * Initializes the value for the {@link TestTimezoneUpdateRequestDTO#gmtOffset() gmtOffset} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link TestTimezoneUpdateRequestDTO#gmtOffset() gmtOffset}.</em>
      * @param gmtOffset The value for gmtOffset 
      * @return {@code this} builder for use in a chained invocation
      */
     @JsonProperty("gmtOffset")
     public final Builder gmtOffset(int gmtOffset) {
       this.gmtOffset = gmtOffset;
-      initBits &= ~INIT_BIT_GMT_OFFSET;
+      optBits |= OPT_BIT_GMT_OFFSET;
       return this;
     }
 
@@ -287,15 +396,16 @@ public final class ImmutableTestTimezoneUpdateRequestDTO
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableTestTimezoneUpdateRequestDTO(id, name, city, gmtOffset);
+      return new ImmutableTestTimezoneUpdateRequestDTO(this);
+    }
+
+    private boolean gmtOffsetIsSet() {
+      return (optBits & OPT_BIT_GMT_OFFSET) != 0;
     }
 
     private String formatRequiredAttributesMessage() {
       List<String> attributes = new ArrayList<>();
       if ((initBits & INIT_BIT_ID) != 0) attributes.add("id");
-      if ((initBits & INIT_BIT_NAME) != 0) attributes.add("name");
-      if ((initBits & INIT_BIT_CITY) != 0) attributes.add("city");
-      if ((initBits & INIT_BIT_GMT_OFFSET) != 0) attributes.add("gmtOffset");
       return "Cannot build TestTimezoneUpdateRequestDTO, some of required attributes are not set " + attributes;
     }
   }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,6 +75,26 @@ public class TimezoneSteps implements En {
 
                     testTimezoneResource.updateTimezone(updateRequestDTO);
                 });
+
+        When("^the user attempts to update the timezone with name: '(.*)' to '(.*)'$",
+                (String fromTimezoneName, String toTimezoneName) -> {
+                    testTimezoneResource.readTimezones();
+                    TestTimezonesDTO testTimezonesDTO = responseHolder.readResponse(TestTimezonesDTO.class);
+                    List<TestTimezoneDTO> timezones = testTimezonesDTO.timezones();
+
+                    TestTimezoneDTO testTimezoneDTO = timezones.stream()
+                            .filter(tz -> fromTimezoneName.equals(tz.name()))
+                            .findFirst().orElseThrow(IllegalStateException::new);
+
+                    TestTimezoneUpdateRequestDTO updateRequestDTO =
+                            ImmutableTestTimezoneUpdateRequestDTO.builder()
+                                    .name(toTimezoneName)
+                                    .id(testTimezoneDTO.id())
+                                    .build();
+
+                    testTimezoneResource.updateTimezone(updateRequestDTO);
+        });
+
         When("^the authenticated admin user attempts to read the timezones for user$", () -> {
             String regularUserId = scenarioContext.getRegularUserId();
             testTimezoneResource.readTimezones(regularUserId);
@@ -127,6 +148,7 @@ public class TimezoneSteps implements En {
 
                     testTimezoneResource.updateTimezone(updateRequestDTO, regularUserId);
                 });
+
     }
 
 
