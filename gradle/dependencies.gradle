@@ -18,6 +18,7 @@ ext {
     jsonWebTokenVersion = '0.11.2'
     guavaVersion = '30.1.1-jre'
     validationApiVersion = '2.0.1.Final'
+    metricsInterceptor = '1.7.0'
 }
 
 dependencyManagement {
@@ -46,9 +47,8 @@ dependencyManagement {
         dependency "org.springframework:spring-core:${springVersion}"
         dependency "org.slf4j:slf4j-log4j12:$slf4jVersion"
         dependency "commons-logging:commons-logging:$commonsLoggingVersion"
-//        dependency "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
-//        dependency "io.micrometer:micrometer-core:$micrometerVersion"
-//
+        dependency "io.micrometer:micrometer-core:$metricsInterceptor"
+
         dependency "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
         dependency "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
         dependency "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"

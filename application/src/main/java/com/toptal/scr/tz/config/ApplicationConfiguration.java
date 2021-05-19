@@ -2,6 +2,7 @@ package com.toptal.scr.tz.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toptal.scr.tz.filter.LoggingInterceptor;
+import com.toptal.scr.tz.filter.MetricsInterceptor;
 import com.toptal.scr.tz.filter.RequestIdInterceptor;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,14 @@ public class ApplicationConfiguration implements WebMvcConfigurer  {
     @Autowired
     private RequestIdInterceptor requestIdInterceptor;
 
+    @Autowired
+    private MetricsInterceptor metricsInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loggingInterceptor);
         registry.addInterceptor(requestIdInterceptor);
+        registry.addInterceptor(loggingInterceptor);
+        registry.addInterceptor(metricsInterceptor);
     }
 
     @Bean

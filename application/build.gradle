@@ -45,6 +45,7 @@ dependencies {
     implementation "org.immutables:builder"
     implementation "org.immutables:serial"
     implementation "com.google.guava:guava"
+    implementation "io.micrometer:micrometer-core"
     annotationProcessor "org.immutables:value"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api"

@@ -5,6 +5,18 @@ server:
   servlet:
     context-path: /api
 
+management:
+  server.port: 8081
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /
+      exposure.include: info, status, health, ready, mappings
+      path-mapping:
+        health: healthcheck
+
 auth:
   tokenDuration: ${TOKEN_DURATION:6h}
   secret: ${SECRET:19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676}

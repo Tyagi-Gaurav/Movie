@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @Component
 public class DuplicateRecordExceptionHandler {
-
     public static final Logger LOG = LoggerFactory.getLogger(DuplicateRecordExceptionHandler.class);
 
     @Autowired
     private ErrorResponseHelper errorResponseHelper;
 
     @ExceptionHandler(value = {DuplicateRecordException.class})
-    public ResponseEntity<String> handle(DuplicateRecordException duplicateRecordException) {
-        return errorResponseHelper.errorResponse(403, duplicateRecordException.getMessage());
+    public ResponseEntity<String> handle(DuplicateRecordException exception) {
+        LOG.error(exception.getMessage(), exception);
+        return errorResponseHelper.errorResponse(403, exception.getMessage());
     }
 }
