@@ -7,6 +7,17 @@ Feature: Logged in users should be able to access timezone records
       | Africa | Mauritius | 2         |
     Then the response should be received with HTTP status code 204
 
+  Scenario: Authenticated user should NOT be able to create a duplicate timezones
+    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+    And the authenticated user attempts to create a new timezone
+      | name   | city      | gmtOffset |
+      | Africa | Mauritius | 2         |
+    Then the response should be received with HTTP status code 204
+    And the authenticated user attempts to create a new timezone
+      | name   | city      | gmtOffset |
+      | Africa | Mauritius | 2         |
+    Then the response should be received with HTTP status code 403
+
   Scenario: Authenticated user should be able to read the timezone records
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new timezone

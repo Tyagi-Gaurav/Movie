@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.service;
 
+import com.toptal.scr.tz.exception.DuplicateRecordException;
 import com.toptal.scr.tz.service.domain.ImmutableUser;
 import com.toptal.scr.tz.service.domain.ImmutableUserTimezone;
 import com.toptal.scr.tz.service.domain.User;
@@ -24,6 +25,15 @@ public class TimezoneServiceImpl implements TimezoneService {
         User userFromDatabase = userService.findUserBy(userId);
         HashMap<UUID, UserTimezone> uuidUserTimezoneHashMap =
                 userFromDatabase.userTimeZones();
+
+        boolean alreadyExists = uuidUserTimezoneHashMap.values()
+                .stream().anyMatch(tz -> tz.city().equalsIgnoreCase(userTimezone.city()) &&
+                        tz.name().equalsIgnoreCase(userTimezone.name()) &&
+                        tz.gmtOffset() == userTimezone.gmtOffset());
+
+        if (alreadyExists) {
+            throw new DuplicateRecordException("Timezone already exists");
+        }
 
         uuidUserTimezoneHashMap.put(userTimezone.id(), userTimezone);
 

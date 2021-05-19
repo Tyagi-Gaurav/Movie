@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.service;
 
+import com.toptal.scr.tz.exception.DuplicateRecordException;
 import com.toptal.scr.tz.service.domain.ImmutableUserTimezone;
 import com.toptal.scr.tz.service.domain.User;
 import com.toptal.scr.tz.service.domain.UserTimezone;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +50,24 @@ class TimezoneServiceImplTest {
 
         User actualParameter = userArgumentCaptor.getValue();
         assertThat(actualParameter.userTimeZones()).contains(Map.entry(userTimezone.id(), userTimezone));
+    }
+
+    @Test
+    void shouldNotAllowAddingDuplicateTimezoneWithAllValuesSame() {
+        //given
+        UUID userId = UUID.randomUUID();
+        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        User user = TestBuilders.aUser();
+
+        when(userService.findUserBy(userId)).thenReturn(user);
+        timezoneService.addTimezone(userId, userTimezone);
+
+        //when
+        Throwable throwable = catchThrowable(() -> timezoneService.addTimezone(userId, userTimezone));
+
+        //then
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(DuplicateRecordException.class);
     }
 
     @Test
