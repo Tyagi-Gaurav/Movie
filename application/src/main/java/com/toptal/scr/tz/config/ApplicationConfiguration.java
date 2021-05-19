@@ -5,6 +5,7 @@ import com.toptal.scr.tz.filter.LoggingInterceptor;
 import com.toptal.scr.tz.filter.MetricsInterceptor;
 import com.toptal.scr.tz.filter.RequestIdInterceptor;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;

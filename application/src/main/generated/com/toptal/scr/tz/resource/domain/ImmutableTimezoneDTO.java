@@ -31,7 +31,7 @@ public final class ImmutableTimezoneDTO implements TimezoneDTO {
   private final UUID id;
   private final String name;
   private final String city;
-  private final String gmtOffset;
+  private final int gmtOffset;
 
   private ImmutableTimezoneDTO(UUID id, String name, String city, int gmtOffset) {
     this.id = id;

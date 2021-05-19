@@ -14,7 +14,7 @@ public class EndpointHistogram {
     @Autowired
     public EndpointHistogram(MeterRegistry meterRegistry) {
         //1ms to 10 seconds
-        histogram = Timer.builder("infra_request_latency")
+        histogram = Timer.builder("request_latency")
                 .publishPercentiles(0.5, 0.95, 0.99)
                 .register(meterRegistry);
     }

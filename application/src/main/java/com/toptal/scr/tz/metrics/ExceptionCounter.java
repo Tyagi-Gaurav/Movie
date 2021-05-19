@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ExceptionCounter {
-    private final Counter exceptionCount;
+    private static final String STATUS_TAG = "status";
 
     @Autowired
-    public ExceptionCounter(MeterRegistry meterRegistry) {
-        exceptionCount = Counter.builder("infraExceptionCount")
-                .register(meterRegistry);
-    }
+    private MeterRegistry meterRegistry;
 
-    public void increment() {
+    public void increment(int status) {
+        Counter exceptionCount = Counter.builder("exceptionCount")
+                .tags(STATUS_TAG, String.valueOf(status))
+                .register(meterRegistry);
         exceptionCount.increment();
     }
 }
