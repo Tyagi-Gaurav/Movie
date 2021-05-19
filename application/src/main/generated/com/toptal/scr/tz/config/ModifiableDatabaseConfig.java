@@ -2,6 +2,7 @@ package com.toptal.scr.tz.config;
 
 import com.google.common.base.MoreObjects;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,10 +24,12 @@ import org.immutables.value.Generated;
 public final class ModifiableDatabaseConfig implements DatabaseConfig {
   private static final long INIT_BIT_HOST = 0x1L;
   private static final long INIT_BIT_PORT = 0x2L;
-  private long initBits = 0x3L;
+  private static final long INIT_BIT_DUPLICATE_INTERVAL = 0x4L;
+  private long initBits = 0x7L;
 
   private String host;
   private int port;
+  private Duration duplicateInterval;
 
   private ModifiableDatabaseConfig() {}
 
@@ -61,14 +64,26 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   }
 
   /**
+   * @return value of {@code duplicateInterval} attribute
+   */
+  @Override
+  public final Duration duplicateInterval() {
+    if (!duplicateIntervalIsSet()) {
+      checkRequiredAttributes();
+    }
+    return duplicateInterval;
+  }
+
+  /**
    * Clears the object by setting all attributes to their initial values.
    * @return {@code this} for use in a chained invocation
    */
   @CanIgnoreReturnValue
   public ModifiableDatabaseConfig clear() {
-    initBits = 0x3L;
+    initBits = 0x7L;
     host = null;
     port = 0;
+    duplicateInterval = null;
     return this;
   }
 
@@ -87,6 +102,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     }
     setHost(instance.host());
     setPort(instance.port());
+    setDuplicateInterval(instance.duplicateInterval());
     return this;
   }
 
@@ -104,6 +120,9 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     }
     if (instance.portIsSet()) {
       setPort(instance.port());
+    }
+    if (instance.duplicateIntervalIsSet()) {
+      setDuplicateInterval(instance.duplicateInterval());
     }
     return this;
   }
@@ -133,6 +152,18 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   }
 
   /**
+   * Assigns a value to the {@code duplicateInterval} attribute.
+   * @param duplicateInterval The value for duplicateInterval
+   * @return {@code this} for use in a chained invocation
+   */
+  @CanIgnoreReturnValue
+  public ModifiableDatabaseConfig setDuplicateInterval(Duration duplicateInterval) {
+    this.duplicateInterval = Objects.requireNonNull(duplicateInterval, "duplicateInterval");
+    initBits &= ~INIT_BIT_DUPLICATE_INTERVAL;
+    return this;
+  }
+
+  /**
    * Returns {@code true} if the required attribute {@code host} is set.
    * @return {@code true} if set
    */
@@ -146,6 +177,14 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    */
   public final boolean portIsSet() {
     return (initBits & INIT_BIT_PORT) == 0;
+  }
+
+  /**
+   * Returns {@code true} if the required attribute {@code duplicateInterval} is set.
+   * @return {@code true} if set
+   */
+  public final boolean duplicateIntervalIsSet() {
+    return (initBits & INIT_BIT_DUPLICATE_INTERVAL) == 0;
   }
 
 
@@ -172,6 +211,17 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   }
 
   /**
+   * Reset an attribute to its initial value.
+   * @return {@code this} for use in a chained invocation
+   */
+  @CanIgnoreReturnValue
+  public final ModifiableDatabaseConfig unsetDuplicateInterval() {
+    initBits |= INIT_BIT_DUPLICATE_INTERVAL;
+    duplicateInterval = null;
+    return this;
+  }
+
+  /**
    * Returns {@code true} if all required attributes are set, indicating that the object is initialized.
    * @return {@code true} if set
    */
@@ -189,6 +239,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     List<String> attributes = new ArrayList<>();
     if (!hostIsSet()) attributes.add("host");
     if (!portIsSet()) attributes.add("port");
+    if (!duplicateIntervalIsSet()) attributes.add("duplicateInterval");
     return "DatabaseConfig is not initialized, some of the required attributes are not set " + attributes;
   }
 
@@ -210,11 +261,12 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
 
   private boolean equalTo(ModifiableDatabaseConfig another) {
     return host.equals(another.host)
-        && port == another.port;
+        && port == another.port
+        && duplicateInterval.equals(another.duplicateInterval);
   }
 
   /**
-   * Computes a hash code from attributes: {@code host}, {@code port}.
+   * Computes a hash code from attributes: {@code host}, {@code port}, {@code duplicateInterval}.
    * @return hashCode value
    */
   @Override
@@ -222,6 +274,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     int h = 5381;
     h += (h << 5) + host.hashCode();
     h += (h << 5) + port;
+    h += (h << 5) + duplicateInterval.hashCode();
     return h;
   }
 
@@ -235,6 +288,7 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     return MoreObjects.toStringHelper("ModifiableDatabaseConfig")
         .add("host", hostIsSet() ? host() : "?")
         .add("port", portIsSet() ? port() : "?")
+        .add("duplicateInterval", duplicateIntervalIsSet() ? duplicateInterval() : "?")
         .toString();
   }
 }

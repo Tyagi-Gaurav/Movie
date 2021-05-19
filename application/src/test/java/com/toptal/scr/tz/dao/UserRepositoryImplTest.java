@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.dao;
 
+import com.toptal.scr.tz.config.DatabaseConfig;
 import com.toptal.scr.tz.service.domain.User;
 import com.toptal.scr.tz.util.TestBuilders;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,9 +33,17 @@ class UserRepositoryImplTest {
     @MockBean
     private HashOperations hashOperations;
 
+    @MockBean
+    private ValueOperations valueOperations;
+
+    @MockBean
+    private DatabaseConfig databaseConfig;
+
     @BeforeEach
     void setUp() {
         when(redisTemplate.opsForHash()).thenReturn(hashOperations);
+        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+        when(databaseConfig.duplicateInterval()).thenReturn(Duration.ofMillis(10));
     }
 
     @Test

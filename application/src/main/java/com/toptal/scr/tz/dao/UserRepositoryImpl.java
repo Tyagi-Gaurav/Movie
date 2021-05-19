@@ -1,12 +1,12 @@
 package com.toptal.scr.tz.dao;
 
+import com.toptal.scr.tz.config.DatabaseConfig;
 import com.toptal.scr.tz.service.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,10 +16,11 @@ import java.util.stream.Collectors;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserRepositoryImpl.class);
-
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private DatabaseConfig databaseConfig;
 
     @Override
     public User findUserBy(UUID userId) {
@@ -48,7 +49,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User user) {
-        redisTemplate.opsForHash().put("user", user.id(), user);
-        redisTemplate.opsForHash().put("userToUserId", user.getUsername(), user.id());
+        String key = String.format("%s-%s", user.id(), user.getUsername());
+        if (redisTemplate.opsForValue().get(key) == null) {
+            redisTemplate.opsForValue().set(key, user, databaseConfig.duplicateInterval());
+            redisTemplate.opsForHash().put("user", user.id(), user);
+            redisTemplate.opsForHash().put("userToUserId", user.getUsername(), user.id());
+        }
+
     }
 }
