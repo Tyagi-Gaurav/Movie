@@ -1,6 +1,7 @@
 package com.toptal.scr.tz.service;
 
 import com.toptal.scr.tz.dao.UserRepository;
+import com.toptal.scr.tz.exception.DuplicateRecordException;
 import com.toptal.scr.tz.service.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void add(User user) {
+        try {
+            userRepository.findUserBy(user.getUsername());
+            throw new DuplicateRecordException("User already exists.");
+        } catch (IllegalStateException e) {
+           //User Not found. Carry on.
+        }
+
         userRepository.update(user);
     }
 

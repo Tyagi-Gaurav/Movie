@@ -42,7 +42,7 @@ class TimezoneServiceImplTest {
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService).add(userArgumentCaptor.capture());
+        verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
         assertThat(actualParameter.userTimeZones()).contains(Map.entry(userTimezone.id(), userTimezone));
@@ -77,7 +77,7 @@ class TimezoneServiceImplTest {
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService).add(userArgumentCaptor.capture());
+        verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
         assertThat(actualParameter.userTimeZones()).doesNotContain(Map.entry(userTimezone.id(), userTimezone));
@@ -97,7 +97,7 @@ class TimezoneServiceImplTest {
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService).add(userArgumentCaptor.capture());
+        verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
         assertThat(actualParameter.userTimeZones()).contains(Map.entry(userTimezone.id(), userTimezone));

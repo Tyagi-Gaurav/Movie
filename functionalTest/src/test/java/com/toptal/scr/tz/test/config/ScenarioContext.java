@@ -8,9 +8,17 @@ public class ScenarioContext {
 
     private TestAccountCreateRequestDTO userCredentialsRequest;
     private TestAccountCreateRequestDTO adminCredentialsRequest;
-
     private String regularUserId;
+    private String lastUserName;
 
+
+    public String getLastUserName() {
+        return lastUserName;
+    }
+
+    public void setLastUserName(String lastUserName) {
+        this.lastUserName = lastUserName;
+    }
 
     public void storeCredentialsRequest(TestAccountCreateRequestDTO testAccountCreateRequestDTO) {
         if (testAccountCreateRequestDTO.role().equals("USER")) {

@@ -24,7 +24,7 @@ public class TimezoneServiceImpl implements TimezoneService {
 
         uuidUserTimezoneHashMap.put(userTimezone.id(), userTimezone);
 
-        userService.add(ImmutableUser.builder().from(userFromDatabase)
+        userService.update(ImmutableUser.builder().from(userFromDatabase)
                 .userTimeZones(uuidUserTimezoneHashMap).build());
     }
 
@@ -41,7 +41,7 @@ public class TimezoneServiceImpl implements TimezoneService {
         HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
         uuidUserTimezoneMap.remove(timezoneId);
 
-        userService.add(ImmutableUser.builder().from(userFromDatabase)
+        userService.update(ImmutableUser.builder().from(userFromDatabase)
                 .userTimeZones(uuidUserTimezoneMap).build());
     }
 
@@ -52,7 +52,7 @@ public class TimezoneServiceImpl implements TimezoneService {
         HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
         uuidUserTimezoneMap.put(timezone.id(), timezone);
 
-        userService.add(ImmutableUser.builder().from(userFromDatabase)
+        userService.update(ImmutableUser.builder().from(userFromDatabase)
                 .userTimeZones(uuidUserTimezoneMap).build());
     }
 }

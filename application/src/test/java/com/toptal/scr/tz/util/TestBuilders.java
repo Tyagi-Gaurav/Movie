@@ -25,6 +25,17 @@ public class TestBuilders {
                 .build();
     }
 
+    public static User aUserWithUserName(String userName) {
+        return ImmutableUser.builder()
+                .id(UUID.randomUUID())
+                .password(randomAlphabetic(10))
+                .username(userName)
+                .lastName(randomAlphabetic(10))
+                .firstName(randomAlphabetic(10))
+                .authorities(Collections.singleton(new SimpleGrantedAuthority("USER")))
+                .build();
+    }
+
     public static User aUserWithTimezones() {
         UserTimezone userTimezone = aUserTimezone();
         HashMap<UUID, UserTimezone> userTimezoneHashMap = new HashMap<>();

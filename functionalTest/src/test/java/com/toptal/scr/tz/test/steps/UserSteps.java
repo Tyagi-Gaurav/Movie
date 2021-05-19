@@ -35,8 +35,14 @@ public class UserSteps implements En {
     public UserSteps() {
         Given("^a user attempts to create a new account with following details$",
                 (TestAccountCreateRequestDTO testAccountCreateRequestDTO) -> {
+                    String userNameValue = testAccountCreateRequestDTO.userName();
+
+                    if ("<captured>".equals(userNameValue)) {
+                        userNameValue = scenarioContext.getLastUserName();
+                    }
+
                     testAccountCreateRequestDTO = ImmutableTestAccountCreateRequestDTO.builder().from(testAccountCreateRequestDTO)
-                            .userName(get(testAccountCreateRequestDTO.userName(), 6))
+                            .userName(get(userNameValue, 6))
                             .password(get(testAccountCreateRequestDTO.password(), 6))
                             .build();
 
@@ -102,6 +108,12 @@ public class UserSteps implements En {
         When("^the authenticated admin user deletes the previously created regular user$", () -> {
             userManagementResource.delete(scenarioContext.getRegularUserId());
         });
+
+        And("^the userName is captured$", () -> {
+            scenarioContext.setLastUserName(scenarioContext.getUserCredentialsRequest().userName());
+        });
+
+
     }
 
     private void loginUsing(TestAccountCreateRequestDTO userCredentialsRequest) {
