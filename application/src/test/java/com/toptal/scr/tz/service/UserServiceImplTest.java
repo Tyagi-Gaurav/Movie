@@ -26,6 +26,7 @@ class UserServiceImplTest {
     @Test
     void shouldAddUser() {
         User user = TestBuilders.aUser();
+        when(repository.findUserBy(user.getUsername())).thenThrow(IllegalStateException.class);
 
         //when
         userService.add(user);
