@@ -62,6 +62,11 @@ dependencies {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+
+    jacoco {
+        excludes = ['com/toptal/scr/tz/Application.class',
+                     'com/toptal/scr/tz/Grace**']
+    }
 }
 
 jacocoTestReport {

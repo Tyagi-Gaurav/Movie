@@ -8,9 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExceptionCounter {
     private static final String STATUS_TAG = "status";
+    private final MeterRegistry meterRegistry;
 
     @Autowired
-    private MeterRegistry meterRegistry;
+    public ExceptionCounter(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+    }
 
     public void increment(int status) {
         Counter exceptionCount = Counter.builder("exceptionCount")

@@ -148,6 +148,10 @@ public class TimezoneSteps implements En {
 
                     testTimezoneResource.updateTimezone(updateRequestDTO, regularUserId);
                 });
+        And("^the authenticated user attempts to create a new timezone without passing auth header$",
+                (TestTimezoneCreateRequestDTO testTimezoneCreateRequestDTO) -> {
+            testTimezoneResource.createWithoutToken(testTimezoneCreateRequestDTO);
+        });
 
     }
 

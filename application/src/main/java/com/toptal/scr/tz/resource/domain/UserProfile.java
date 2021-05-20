@@ -11,10 +11,6 @@ public interface UserProfile {
 
     String authority();
 
-    default boolean isAdmin() {
-        return Role.ADMIN.toString().equals(authority());
-    }
-
     default boolean isUser() {
         return Role.USER.toString().equals(authority());
     }

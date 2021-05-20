@@ -1,5 +1,12 @@
 Feature: Logged in users should be able to access timezone records
 
+  Scenario: User should NOT be able to create a new timezone without proper auth header
+    Given a user creates a new account and performs login with user name '<random>' and role 'USER'
+    And the authenticated user attempts to create a new timezone without passing auth header
+      | name   | city      | gmtOffset |
+      | Africa | Mauritius | 2         |
+    Then the response should be received with HTTP status code 401
+
   Scenario: Authenticated user should be able to create a new timezone
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new timezone

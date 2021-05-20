@@ -29,6 +29,15 @@ public class TestTimezoneResource extends AbstractResource {
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
     }
 
+    public void createWithoutToken(TestTimezoneCreateRequestDTO testTimezoneCreateRequestDTO) {
+        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
+                "/api/user/timezone", timeZoneAppConfig.port());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.add.v1+json");
+        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(testTimezoneCreateRequestDTO, headers);
+        responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
+    }
+
     public void readTimezones() {
         String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
                 "/api/user/timezone", timeZoneAppConfig.port());

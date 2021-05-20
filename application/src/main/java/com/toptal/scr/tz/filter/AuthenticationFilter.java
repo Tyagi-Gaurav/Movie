@@ -47,8 +47,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
-			JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken, signingKey);
-			
+			JwtTokenUtil jwtTokenUtil = getJwtTokenUtil(jwtToken);
+
 			try {
 				userId = jwtTokenUtil.getUserIdFromToken();
 				LOG.info("Fetched UserId from token: " + userId);
@@ -60,8 +60,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			chain.doFilter(request, response);
 		}
 	}
-	
-	
+
+	protected JwtTokenUtil getJwtTokenUtil(String jwtToken) {
+		JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken, signingKey);
+		return jwtTokenUtil;
+	}
+
 	private void validateToken(JwtTokenUtil jwtTokenUtil, String userId, FilterChain chain, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
