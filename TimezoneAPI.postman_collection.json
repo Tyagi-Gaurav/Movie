@@ -1,0 +1,527 @@
+{
+	"info": {
+		"_postman_id": "22105042-a3e9-4ab1-a825-7f93fbdf9df2",
+		"name": "TimezoneAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Account Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd+account.create.v1+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\" : \"user\",\n    \"password\" : \"user123\",\n    \"firstName\" : \"Test First Name\",\n    \"lastName\" : \"Test Last Name\",\n    \"role\" : \"USER\"\n}"
+				},
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/account/create",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"account",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.login.v1+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\" : \"user\", \n    \"password\" : \"user123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/login",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add TimeZone",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.timezone.add.v1+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"Asia/India\",\n    \"city\" : \"Saharanpur\",\n    \"gmtOffset\" : 550\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/timezone",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"timezone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read Timezone",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.timezone.read.v1+json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/vnd.timezone.read.v1+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/timezone",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"timezone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Timezone",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.timezone.delete.v1+json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/vnd.timezone.delete.v1+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/{{timezone_user_id}}/timezone?id=96ccbbb3-b2f9-427f-a11b-4d54be3aa7f5",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"{{timezone_user_id}}",
+						"timezone"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "96ccbbb3-b2f9-427f-a11b-4d54be3aa7f5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Timezone",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.timezone.update.v1+json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/vnd.timezone.update.v1+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"d1135be0-05e1-47e2-84f9-719e32a5516d\",\n    \"name\": \"Africa/Abidjan\",\n    \"city\": \"Abidjan 2\",\n    \"gmtOffset\": 8\n}"
+				},
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/{{timezone_user_id}}/timezone",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"{{timezone_user_id}}",
+						"timezone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Add Account",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.user.add.v1+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\" : \"abc_admin_created\",\n    \"password\" : \"def\",\n    \"firstName\" : \"Test First Name\",\n    \"lastName\" : \"Test Last Name\",\n    \"role\" : \"USER\"\n}"
+				},
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"manage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Read Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.user.read.v1+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"manage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Delete Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.user.delete.v1+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage?userId=10e122bf-4b9e-41de-9a52-694e93d71af9",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"manage"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "10e122bf-4b9e-41de-9a52-694e93d71af9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Update User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admin_access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{{{access_token}}}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.user.update.v1+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"abc_admin_created_2\",\n    \"password\" : \"def\",\n    \"firstName\": \"Test abc_admin_name\",\n    \"lastName\": \"Test Last Name\",\n    \"role\": \"USER\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage?userId=3b1f66f3-3128-464f-8af6-15214fddeb98",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"api",
+						"user",
+						"manage"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "3b1f66f3-3128-464f-8af6-15214fddeb98"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{timezone_host}}:{{timezone_port}}/status",
+					"protocol": "http",
+					"host": [
+						"{{timezone_host}}"
+					],
+					"port": "{{timezone_port}}",
+					"path": [
+						"status"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "access_token"
+		}
+	]
+}
