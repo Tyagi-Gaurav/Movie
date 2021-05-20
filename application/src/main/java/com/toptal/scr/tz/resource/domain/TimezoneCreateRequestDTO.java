@@ -3,12 +3,7 @@ package com.toptal.scr.tz.resource.domain;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
-import com.toptal.scr.tz.service.domain.Role;
-import org.apache.commons.lang3.EnumUtils;
 import org.immutables.value.Value;
-
-import static org.apache.commons.lang3.StringUtils.isAlpha;
-import static org.apache.commons.lang3.StringUtils.isAlphanumeric;
 
 @Value.Immutable
 @JsonSerialize
