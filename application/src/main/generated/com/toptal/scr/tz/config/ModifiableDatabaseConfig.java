@@ -25,11 +25,15 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   private static final long INIT_BIT_HOST = 0x1L;
   private static final long INIT_BIT_PORT = 0x2L;
   private static final long INIT_BIT_DUPLICATE_INTERVAL = 0x4L;
-  private long initBits = 0x7L;
+  private static final long INIT_BIT_CONNECTION_TIMEOUT = 0x8L;
+  private static final long INIT_BIT_COMMAND_TIMEOUT = 0x10L;
+  private long initBits = 0x1fL;
 
   private String host;
   private int port;
   private Duration duplicateInterval;
+  private Duration connectionTimeout;
+  private Duration commandTimeout;
 
   private ModifiableDatabaseConfig() {}
 
@@ -75,15 +79,39 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   }
 
   /**
+   * @return value of {@code connectionTimeout} attribute
+   */
+  @Override
+  public final Duration connectionTimeout() {
+    if (!connectionTimeoutIsSet()) {
+      checkRequiredAttributes();
+    }
+    return connectionTimeout;
+  }
+
+  /**
+   * @return value of {@code commandTimeout} attribute
+   */
+  @Override
+  public final Duration commandTimeout() {
+    if (!commandTimeoutIsSet()) {
+      checkRequiredAttributes();
+    }
+    return commandTimeout;
+  }
+
+  /**
    * Clears the object by setting all attributes to their initial values.
    * @return {@code this} for use in a chained invocation
    */
   @CanIgnoreReturnValue
   public ModifiableDatabaseConfig clear() {
-    initBits = 0x7L;
+    initBits = 0x1fL;
     host = null;
     port = 0;
     duplicateInterval = null;
+    connectionTimeout = null;
+    commandTimeout = null;
     return this;
   }
 
@@ -103,6 +131,8 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     setHost(instance.host());
     setPort(instance.port());
     setDuplicateInterval(instance.duplicateInterval());
+    setConnectionTimeout(instance.connectionTimeout());
+    setCommandTimeout(instance.commandTimeout());
     return this;
   }
 
@@ -123,6 +153,12 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     }
     if (instance.duplicateIntervalIsSet()) {
       setDuplicateInterval(instance.duplicateInterval());
+    }
+    if (instance.connectionTimeoutIsSet()) {
+      setConnectionTimeout(instance.connectionTimeout());
+    }
+    if (instance.commandTimeoutIsSet()) {
+      setCommandTimeout(instance.commandTimeout());
     }
     return this;
   }
@@ -164,6 +200,30 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   }
 
   /**
+   * Assigns a value to the {@code connectionTimeout} attribute.
+   * @param connectionTimeout The value for connectionTimeout
+   * @return {@code this} for use in a chained invocation
+   */
+  @CanIgnoreReturnValue
+  public ModifiableDatabaseConfig setConnectionTimeout(Duration connectionTimeout) {
+    this.connectionTimeout = Objects.requireNonNull(connectionTimeout, "connectionTimeout");
+    initBits &= ~INIT_BIT_CONNECTION_TIMEOUT;
+    return this;
+  }
+
+  /**
+   * Assigns a value to the {@code commandTimeout} attribute.
+   * @param commandTimeout The value for commandTimeout
+   * @return {@code this} for use in a chained invocation
+   */
+  @CanIgnoreReturnValue
+  public ModifiableDatabaseConfig setCommandTimeout(Duration commandTimeout) {
+    this.commandTimeout = Objects.requireNonNull(commandTimeout, "commandTimeout");
+    initBits &= ~INIT_BIT_COMMAND_TIMEOUT;
+    return this;
+  }
+
+  /**
    * Returns {@code true} if the required attribute {@code host} is set.
    * @return {@code true} if set
    */
@@ -185,6 +245,22 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
    */
   public final boolean duplicateIntervalIsSet() {
     return (initBits & INIT_BIT_DUPLICATE_INTERVAL) == 0;
+  }
+
+  /**
+   * Returns {@code true} if the required attribute {@code connectionTimeout} is set.
+   * @return {@code true} if set
+   */
+  public final boolean connectionTimeoutIsSet() {
+    return (initBits & INIT_BIT_CONNECTION_TIMEOUT) == 0;
+  }
+
+  /**
+   * Returns {@code true} if the required attribute {@code commandTimeout} is set.
+   * @return {@code true} if set
+   */
+  public final boolean commandTimeoutIsSet() {
+    return (initBits & INIT_BIT_COMMAND_TIMEOUT) == 0;
   }
 
 
@@ -222,6 +298,28 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   }
 
   /**
+   * Reset an attribute to its initial value.
+   * @return {@code this} for use in a chained invocation
+   */
+  @CanIgnoreReturnValue
+  public final ModifiableDatabaseConfig unsetConnectionTimeout() {
+    initBits |= INIT_BIT_CONNECTION_TIMEOUT;
+    connectionTimeout = null;
+    return this;
+  }
+
+  /**
+   * Reset an attribute to its initial value.
+   * @return {@code this} for use in a chained invocation
+   */
+  @CanIgnoreReturnValue
+  public final ModifiableDatabaseConfig unsetCommandTimeout() {
+    initBits |= INIT_BIT_COMMAND_TIMEOUT;
+    commandTimeout = null;
+    return this;
+  }
+
+  /**
    * Returns {@code true} if all required attributes are set, indicating that the object is initialized.
    * @return {@code true} if set
    */
@@ -240,6 +338,8 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     if (!hostIsSet()) attributes.add("host");
     if (!portIsSet()) attributes.add("port");
     if (!duplicateIntervalIsSet()) attributes.add("duplicateInterval");
+    if (!connectionTimeoutIsSet()) attributes.add("connectionTimeout");
+    if (!commandTimeoutIsSet()) attributes.add("commandTimeout");
     return "DatabaseConfig is not initialized, some of the required attributes are not set " + attributes;
   }
 
@@ -262,11 +362,13 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
   private boolean equalTo(ModifiableDatabaseConfig another) {
     return host.equals(another.host)
         && port == another.port
-        && duplicateInterval.equals(another.duplicateInterval);
+        && duplicateInterval.equals(another.duplicateInterval)
+        && connectionTimeout.equals(another.connectionTimeout)
+        && commandTimeout.equals(another.commandTimeout);
   }
 
   /**
-   * Computes a hash code from attributes: {@code host}, {@code port}, {@code duplicateInterval}.
+   * Computes a hash code from attributes: {@code host}, {@code port}, {@code duplicateInterval}, {@code connectionTimeout}, {@code commandTimeout}.
    * @return hashCode value
    */
   @Override
@@ -275,6 +377,8 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
     h += (h << 5) + host.hashCode();
     h += (h << 5) + port;
     h += (h << 5) + duplicateInterval.hashCode();
+    h += (h << 5) + connectionTimeout.hashCode();
+    h += (h << 5) + commandTimeout.hashCode();
     return h;
   }
 
@@ -289,6 +393,8 @@ public final class ModifiableDatabaseConfig implements DatabaseConfig {
         .add("host", hostIsSet() ? host() : "?")
         .add("port", portIsSet() ? port() : "?")
         .add("duplicateInterval", duplicateIntervalIsSet() ? duplicateInterval() : "?")
+        .add("connectionTimeout", connectionTimeoutIsSet() ? connectionTimeout() : "?")
+        .add("commandTimeout", commandTimeoutIsSet() ? commandTimeout() : "?")
         .toString();
   }
 }

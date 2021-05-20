@@ -11,4 +11,8 @@ public interface DatabaseConfig {
     int port();
 
     Duration duplicateInterval();
+
+    Duration connectionTimeout();
+
+    Duration commandTimeout();
 }

@@ -24,3 +24,5 @@ database:
   host: ${REDIS_HOST:localhost}
   port: ${REDIS_PORT:6379}
   duplicateInterval: ${DUPLICATE_INTERVAL:10ms}
+  connectionTimeout: ${CONNECTION_TIMEOUT:10s}
+  commandTimeout: ${COMMAND_TIMEOUT:500ms}
