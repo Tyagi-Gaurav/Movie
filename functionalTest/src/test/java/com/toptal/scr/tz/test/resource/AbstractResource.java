@@ -1,16 +1,13 @@
 package com.toptal.scr.tz.test.resource;
 
-import com.toptal.scr.tz.test.domain.TestTimezoneUpdateRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,11 +34,7 @@ public class AbstractResource {
         try {
             return restTemplate.exchange(fullUrl, HttpMethod.GET, requestObject, responseType);
         } catch (Exception e) {
-            LOG.error("Error Occurred while invoking: " + fullUrl, e);
-            RestClientResponseException exception = (RestClientResponseException) e;
-            return ResponseEntity.status(exception.getRawStatusCode())
-                    .headers(exception.getResponseHeaders())
-                    .body(exception.getResponseBodyAsString());
+            return handleError(fullUrl, e);
         }
     }
 
@@ -49,11 +42,7 @@ public class AbstractResource {
         try {
             return restTemplate.exchange(fullUrl, HttpMethod.DELETE, requestObject, responseType);
         } catch (Exception e) {
-            LOG.error("Error Occurred while invoking: " + fullUrl, e);
-            RestClientResponseException exception = (RestClientResponseException) e;
-            return ResponseEntity.status(exception.getRawStatusCode())
-                    .headers(exception.getResponseHeaders())
-                    .body(exception.getResponseBodyAsString());
+            return handleError(fullUrl, e);
         }
     }
 
@@ -61,19 +50,7 @@ public class AbstractResource {
         try {
             return restTemplate.postForEntity(fullUrl, request, responseType);
         } catch (Exception e) {
-            LOG.error("Error Occurred while invoking: " + fullUrl, e);
-            if (e instanceof RestClientException) {
-                RestClientResponseException exception = (RestClientResponseException) e;
-                return ResponseEntity.status(exception.getRawStatusCode())
-                        .headers(exception.getResponseHeaders())
-                        .body(exception.getResponseBodyAsString());
-            } else if (e instanceof HttpMessageConversionException) {
-                HttpMessageConversionException exception = (HttpMessageConversionException) e;
-                exception.printStackTrace();
-                throw new RuntimeException(exception);
-            } else {
-                throw new RuntimeException(e);
-            }
+            return handleError(fullUrl, e);
         }
     }
 
@@ -81,19 +58,23 @@ public class AbstractResource {
         try {
             return restTemplate.exchange(fullUrl, HttpMethod.PUT, requestObject, responseType);
         } catch (Exception e) {
-            LOG.error("Error Occurred while invoking: " + fullUrl, e);
-            if (e instanceof RestClientException) {
-                RestClientResponseException exception = (RestClientResponseException) e;
-                return ResponseEntity.status(exception.getRawStatusCode())
-                        .headers(exception.getResponseHeaders())
-                        .body(exception.getResponseBodyAsString());
-            } else if (e instanceof HttpMessageConversionException) {
-                HttpMessageConversionException exception = (HttpMessageConversionException) e;
-                exception.printStackTrace();
-                throw new RuntimeException(exception);
-            } else {
-                throw new RuntimeException(e);
-            }
+            return handleError(fullUrl, e);
+        }
+    }
+
+    private ResponseEntity handleError(String fullUrl, Exception e) {
+        LOG.error("Error Occurred while invoking: " + fullUrl, e);
+        if (e instanceof RestClientResponseException) {
+            RestClientResponseException exception = (RestClientResponseException) e;
+            return ResponseEntity.status(exception.getRawStatusCode())
+                    .headers(exception.getResponseHeaders())
+                    .body(exception.getResponseBodyAsString());
+        } else if (e instanceof HttpMessageConversionException) {
+            HttpMessageConversionException exception = (HttpMessageConversionException) e;
+            exception.printStackTrace();
+            throw new RuntimeException(exception);
+        } else {
+            throw new RuntimeException(e);
         }
     }
 }

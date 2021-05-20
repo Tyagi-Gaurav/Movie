@@ -12,6 +12,8 @@ services:
       - "DATABASE_HOST=local.database"
       - "DATABASE_PORT=6379"
       - "SPRING_PROFILES_ACTIVE=prod"
+      - "SERVER_PORT=8080"
+      - "SERVER_MGT_PORT=8081"
     networks:
       - overlay
 
