@@ -49,8 +49,8 @@ public class AccountCreateResourceTest {
                 .role("USER")
                 .userName(RandomStringUtils.randomAlphabetic(10))
                 .password(RandomStringUtils.randomAlphabetic(10))
-                .firstName("x")
-                .lastName("b")
+                .firstName("xsdfdsf")
+                .lastName("bsdafdsf")
                 .build();
 
         when(passwordEncoder.encode(anyString())).thenReturn(String.valueOf(AdditionalAnswers.returnsFirstArg()));

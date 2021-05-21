@@ -65,8 +65,8 @@ class UserManagementResourceTest {
                 .role("USER")
                 .userName(RandomStringUtils.randomAlphabetic(10))
                 .password(RandomStringUtils.randomAlphabetic(10))
-                .firstName("x")
-                .lastName("b")
+                .firstName("sdfsdfx")
+                .lastName("bsdfsdf")
                 .build();
         String content = TestUtils.asJsonString(requestDTO);
 

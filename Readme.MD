@@ -146,7 +146,7 @@ For non-standalone mode, it just needs docker host and docker compose installati
 | :-------------      | :----------:      | :----------:|
 |  SERVER_PORT        | 8080        | Default HTTP port for the application. |
 | SERVER_MGT_PORT     | 8081      | Default management port for the application. |
-| TOKEN_DURATION     | 6 hours      | The default duration of a valid JWT token. Upon expiry, the user will have to relogin. | 
+| TOKEN_DURATION     | 1 hour      | The default duration of a valid JWT token. Upon expiry, the user will have to re-login. | 
 | SECRET     |       19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676 | The default secret for creating security tokens | 
 | DATABASE_HOST     | localhost      | The host for database |
 | DATABASE_PORT     | 6379      | The port for database |
@@ -169,8 +169,8 @@ Use this to create a new regular user or admin user account.
 | :-------------      | :----------:      | :----------:|
 | userName | String | User name that will be used for login. Should be between 4 & 20 characters. |
 | password | String | Password that will be used for login. Can be alphanumeric between 6 & 15 characters. |
-| firstName | String | Users first name |
-| lastName | String | Users last name |
+| firstName | String | Users first name. Should be between 3 & 30 characters. | 
+| lastName | String | Users last name. Should be between 3 & 30 characters. |
 | role | String | Can be either `USER` or `ADMIN` |
 
 | Headers | Value |
@@ -182,6 +182,7 @@ Use this to create a new regular user or admin user account.
 | HTTP Status code | 204 | On successful account creation |
 
 **Sample Request**
+
 ```
 {
     "userName" : "admin",
@@ -194,7 +195,7 @@ Use this to create a new regular user or admin user account.
 
 #### Login
 
-Used to gain access to the application 
+Used to gain access to the application
 
 | Method     | URL     | 
 | :-------------      | :----------:      |
@@ -216,6 +217,7 @@ Used to gain access to the application
 | Body Attribute `id` | String | User's ID |
 
 **Sample Request**
+
 ```
 {
     "userName" : "admin", 
@@ -224,6 +226,7 @@ Used to gain access to the application
 ```
 
 **Sample Response**
+
 ```
 {
     "token": "eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwic3ViIjoidXNlcjEiLCJqdGkiOiI0NDU3NzkzYy0yYmM4LTQxNTItYWY0ZC1iNTljMGUwNTk3OGUiLCJpYXQiOjE2MjE0NTkxOTcsImV4cCI6MTYyMTQ4MDc5N30.PFFKY9H1oaFngeMazwSvPMcjCOx4oUEqezRg0xyrvgk",
@@ -253,8 +256,10 @@ To add new timezone(s).
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
 | HTTP Status code | 204 | On successful timezone creation |
+| HTTP Status code | 401 | If the user is not authenticated |
 
 **Sample Request**
+
 ```
 {
     "name" : "America/USzfzsfs",
@@ -272,7 +277,7 @@ This endpoint can be used by admin to create timezones for a specific user.
 | POST | /api/user/timezone |
 
 | Query Parameter | Value Type | Description |
-| :-------------      | :----------:      | | :----------:      |
+| :-------------      | :----------:      | :----------:      |
 | userId | UUID | User ID for which the timezone must be created |
 
 | Attribute | Type | Description |
@@ -289,8 +294,11 @@ This endpoint can be used by admin to create timezones for a specific user.
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
 | HTTP Status code | 204 | On successful timezone creation |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
 
 **Sample Request**
+
 ```
 {
     "name" : "America/USzfzsfs",
@@ -313,7 +321,52 @@ To read timezones created by the user
 | Accept | `application/vnd.timezone.read.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful read of timezone |
+| HTTP Status code | 401 | If the user is not authenticated |
+
 **Sample Response**
+
+```
+{
+    "timezones": [
+        {
+            "id": "9caeab84-eeed-4a9d-a964-4d1f7d4d8a7e",
+            "name": "America/USzfzsfs",
+            "city": "Newyork",
+            "gmtOffset": -12
+        }
+    ]
+}
+```
+
+#### Admin Read Timezone
+
+To read timezones created by the user
+
+| Method     | URL     | 
+| :-------------      | :----------:      |
+| GET | /api/user/timezone | 
+
+| Query Parameter | Value Type | Description |
+| :-------------      | :----------:      | :----------:      |
+| userId | UUID | User ID for which the timezone must be created |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.read.v1+json` | 
+| Accept | `application/vnd.timezone.read.v1+json` | 
+| Authorization | `Bearer <Token From login response>` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful read of timezone |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
+
+**Sample Response**
+
 ```
 {
     "timezones": [
@@ -329,32 +382,227 @@ To read timezones created by the user
 
 #### Update Timezone
 
-To update timezones for the user
+To update timezones for the user.
 
 | Method     | URL     | 
 | :-------------      | :----------:      |
+| PUT | /api/user/timezone |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.update.v1+json` | 
+| Accept | `application/vnd.timezone.update.v1+json` | 
+| Authorization | `Bearer <Token From login response>` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful update of timezone |
+| HTTP Status code | 401 | If the user is not authenticated |
+
+**Sample Request**
+
+```
+{
+    "id": "c48f3735-021b-4c20-9b7f-30cf4202fb7d",
+    "city": "Boston"
+}
+```
+
+Any of the timezone fields could be changed, except for the `id` field as it uniquely identifies the timezone.
+
+#### Admin Update Timezone
+
+To update timezones for the user or for a specific user.
+
+| Method     | URL     | 
+| :-------------      | :----------:      |
+| PUT | /api/user/timezone |
+
+| Query Parameter | Value Type | Description |
+| :-------------      | :----------:      | :----------:      |
+| userId | UUID | User ID for which the timezone must be updated |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.update.v1+json` | 
+| Accept | `application/vnd.timezone.update.v1+json` | 
+| Authorization | `Bearer <Token From login response>` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful update of timezone |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
+
+**Sample Request**
+
+```
+{
+    "id": "c48f3735-021b-4c20-9b7f-30cf4202fb7d",
+    "city": "Boston"
+}
+```
+
+Any of the timezone fields could be changed, except for the `id` field as it uniquely identifies the timezone.
 
 #### Delete Timezone
 
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+To delete timezones for the user
+
+| Method     | URL     | 
+| :-------------      | :----------:      | 
+| DELETE | /api/user/timezone | 
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.delete.v1+json` | 
+| Accept | `application/vnd.timezone.delete.v1+json` | 
+| Authorization | `Bearer <Token From login response>` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful delete of timezone |
+| HTTP Status code | 401 | If the user is not authenticated |
+
+#### Admin Delete Timezone
+
+To delete timezones for the user or for a specific user
+
+| Method     | URL     | 
+| :-------------      | :----------:      | 
+| DELETE | /api/user/timezone | 
+
+| Query Parameter | Value Type | Description |
+| :-------------      | :----------:      | :----------:      |
+| userId | UUID | User ID for which the timezone must be deleted |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.delete.v1+json` |
+| Accept | `application/vnd.timezone.delete.v1+json` |
+| Authorization | `Bearer <Token From login response>` |
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful delete of timezone |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
 
 #### Create User
 
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+| Method     | URL     | 
+| :-------------      | :----------:      | 
+| POST | /api/user/manage |
 
-#### Delete User
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.user.add.v1+json` |
+| Authorization | `Bearer <Token From login response>` |
 
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 204 | On successful user creation |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
+
+**Sample Request**
+
+```
+{
+    "userName" : "abc_admin_created",
+    "password" : "password",
+    "firstName" : "Test First Name",
+    "lastName" : "Test Last Name",
+    "role" : "USER"
+}
+```
 
 #### Read Users
 
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+| Method     | URL     |
+| :-------------      | :------------- |
+| GET | /api/user/manage |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.user.read.v1+json` |
+| Authorization | `Bearer <Token From login response>` |
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful read. |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
+
+**Sample Response**
+
+```
+{
+    "userDetails": [
+        {
+            "userName": "user",
+            "firstName": "Test First Name",
+            "lastName": "Test Last Name",
+            "role": "USER",
+            "id": "f56bda96-2834-4cd3-95a4-70811a4c94e8"
+        },
+        {
+            "userName": "admin",
+            "firstName": "Test First Name",
+            "lastName": "Test Last Name",
+            "role": "ADMIN",
+            "id": "ab402491-09d6-48d2-8c4d-34a7b70f14a4"
+        }
+    ]
+}
+```
+
+#### Delete User
+
+| Method     | URL     | 
+| :-------------      | :----------:      | 
+| DELETE | /api/user/manage | 
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.user.delete.v1+json` |
+| Authorization | `Bearer <Token From login response>` |
+
+| Query Parameter | Value Type | Description |
+| :-------------      | :----------:      | :----------:      |
+| userId | UUID | User ID which must be deleted |
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful delete. |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
 
 #### Update User
 
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+| Method     | URL     | 
+| :-------------      | :----------:      | 
+| PUT | /api/user/manage |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.user.update.v1+json` |
+| Authorization | `Bearer <Token From login response>` |
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful update. |
+| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 403 | If the user is not authorised |
+
+**Sample Request**
+
+```
+{
+    "userName": "user",
+    "password" : "user123",
+    "firstName": "Test abc_admin_name",
+    "lastName": "Test Last Name",
+    "role": "USER"
+}
+```
