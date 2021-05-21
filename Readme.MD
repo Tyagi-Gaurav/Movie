@@ -14,11 +14,16 @@ A REST API that shows time in different timezones
 
 ### Design & Implementation
 
-The API has been designed using <a link="https://docs.oracle.com/en/java/javase/11/docs/api/index.html">Java 11</a>
-and <a link="https://spring.io/projects/spring-boot">Spring Boot</a>.
-<a link="https://redislabs.com/">Redis</a> is used for storage of timezones. It can either be used in embedded manner in
-standalone mode or as a separate entity when running using docker. The backend storage is accessed via a set of
-interfaces. It can easily be swapped out for anything else without affecting rest of the application.
+The API has been designed using [Java 11](https://docs.oracle.com/en/java/javase/11/docs/api/index.html)
+and [Spring Boot](https://spring.io/projects/spring-boot). [Redis](https://redislabs.com/) is used for storage of
+timezones. It can either be used in embedded manner in standalone mode or as a separate entity when running using
+docker. The backend storage is accessed via a set of interfaces. It can easily be swapped out for anything else without
+affecting rest of the application.
+
+#### Application Security
+
+To access the application, users need a valid `userId` and `password` to login. Once they login, they would be provided
+a security token ([JWT](https://jwt.io/))
 
 ### Testing
 
@@ -41,16 +46,15 @@ There are two categories of tests available to execute.
       ./gradlew remoteFunctional
       ```
 
-A code coverage plugin <a link="https://www.jacoco.org/jacoco/">Jacoco</a> has been added to the project in order to
-keep the test coverage in check. This plugin would automatically run whenever the unit tests are executed. The plugin
-generates an HTML report that can be found at the following path.
+A code coverage plugin [Jacoco](https://www.jacoco.org/jacoco/") has been added to the project in order to keep the test
+coverage in check. This plugin would automatically run whenever the unit tests are executed. The plugin generates an
+HTML report that can be found at the following path.
 
 ```
 application/build/jacocoHtml/index.html
 ```
 
-In order to run <a link="https://www.jacoco.org/jacoco/">Jacoco</a> separately, it can be triggered using the following
-command.
+In order to run [Jacoco](https://www.jacoco.org/jacoco/") separately, it can be triggered using the following command.
 
 ```
 ./gradlew application:jacocoTestReport
@@ -73,11 +77,11 @@ where it could run inside a docker container.
 ./gradlew clean build bootRun 
 ```
 
-* To start the application in non-standalone mode, a <a link="https://docs.docker.com/compose/">docker-compose</a> file
-  has been provided that contains configuration for two containers. The first container is for the application, while
-  the other is for database (<a link="https://redislabs.com/">Redis</a>). Docker compose can be started using the
-  following command, however as a prerequisite it will require installation of Docker and Docker Compose on the host.
-  Refer the website of <a link="https://docs.docker.com/">docker</a> for details.
+* To start the application in non-standalone mode, a [Docker Compose](https://docs.docker.com/compose/") file has been
+  provided that contains configuration for two containers. The first container is for the application, while the other
+  is for database ([Redis](https://redislabs.com/)). Docker compose can be started using the following command, however
+  as a prerequisite it will require installation of Docker and Docker Compose on the host. Refer the website
+  of [docker](https://docs.docker.com) for details.
 
 ```
 docker-compose up -d --build
@@ -101,7 +105,7 @@ serve its users, it would return an HTTP status code of 200 with a text of "OK" 
 
 #### Logging
 
-The application employs <a link="http://www.slf4j.org/">SLF4J</a> api for logging. The properties for that can be found
+The application employs [SLF4J](http://www.slf4j.org/) api for logging. The properties for that can be found
 under `application/src/main/resources`. The default logging level has been set to `INFO`.
 
 #### Request-ID
@@ -124,10 +128,15 @@ other functional metrics provided in the application. The following metrics are 
 - `request_count` is a counter to record request counts for a given HTTP method and path.
 - `exceptionCount` ia a counter to provide the number of exceptions occurred by HTTP status code.
 
+The metrics endpoint can be accessed via the management port of the application. When running the app locally the URL
+would be `http://localhost:8081/actuator/metrics`. This would return a list of metric names.
+
+To get details on an individual metric, we could use `http://localhost:8081/actuator/metrics/<metricName>`.
+
 ### Execution Environment
 
-The application runs on <a link="https://docs.oracle.com/en/java/javase/11/docs/api/index.html">Java 11</a> which means
-that for application in standalone mode, it would need a Java installation. The application does not do that by itself.
+The application runs on [Java 11](https://docs.oracle.com/en/java/javase/11/docs/api/index.html) which means that for
+application in standalone mode, it would need a Java installation. The application does not do that by itself.
 
 For non-standalone mode, it just needs docker host and docker compose installations mentioned above.
 
@@ -135,74 +144,217 @@ For non-standalone mode, it just needs docker host and docker compose installati
 
 | Config Variable     | Default Value     | Description | 
 | :-------------      | :----------:      | :----------:|
-|  SERVER_PORT        | 8080        | |
-| SERVER_MGT_PORT     | 8081      | |
-| TOKEN_DURATION     | 6 hours      | | 
-| SECRET     |       19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676 |
-| DATABASE_HOST     | localhost      | |
-| DATABASE_PORT     | 6379      | |
-| DUPLICATE_INTERVAL     | 10s      |  |
-| CONNECTION_TIMEOUT     | 10s      |  |
-| COMMAND_TIMEOUT     | 500ms      |  |
+|  SERVER_PORT        | 8080        | Default HTTP port for the application. |
+| SERVER_MGT_PORT     | 8081      | Default management port for the application. |
+| TOKEN_DURATION     | 6 hours      | The default duration of a valid JWT token. Upon expiry, the user will have to relogin. | 
+| SECRET     |       19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676 | The default secret for creating security tokens | 
+| DATABASE_HOST     | localhost      | The host for database |
+| DATABASE_PORT     | 6379      | The port for database |
+| DUPLICATE_INTERVAL     | 10s      | The default interval within which if a user sends a duplicate request, that would be rejected. |
+| CONNECTION_TIMEOUT     | 10s      | Connection timeout for the database. |
+| COMMAND_TIMEOUT     | 500ms      | The default query timeout for all database queries. |
+| GracefulShutdownWaitSeconds     | 20 seconds      | The time application waits to terminate after receiving a SIGTERM signal. |
 
 ### Endpoints
 
 #### Create User
 
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+Use this to create a new regular user or admin user account.
+
+| Method     | URL     | 
+| :-------------      | :----------:      |
+| POST | /api/user/account/create |
 
 | Attribute | Type | Description |
 | :-------------      | :----------:      | :----------:|
+| userName | String | User name that will be used for login. Should be between 4 & 20 characters. |
+| password | String | Password that will be used for login. Can be alphanumeric between 6 & 15 characters. |
+| firstName | String | Users first name |
+| lastName | String | Users last name |
+| role | String | Can be either `USER` or `ADMIN` |
+
+| Headers | Value |
+| :-------------      | :----------:      | 
+| Content-Type | `application/vnd+account.create.v1+json` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 204 | On successful account creation |
+
+**Sample Request**
+```
+{
+    "userName" : "admin",
+    "password" : "admin123",
+    "firstName" : "Test First Name",
+    "lastName" : "Test Last Name",
+    "role" : "ADMIN"
+}
+```
 
 #### Login
-| Method     | URL     | Query Parameters |
+
+Used to gain access to the application 
+
+| Method     | URL     | 
+| :-------------      | :----------:      |
+| POST | /api/user/login |
+
+| Attribute | Type | Description |
 | :-------------      | :----------:      | :----------:|
+| userName | String | User name that will be used for login. Should be between 4 & 20 characters. |
+| password | String | Password that will be used for login. Can be alphanumeric between 6 & 15 characters. |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.login.v1+json` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 200 | On successful login |
+| Body Attribute `token` | String | Token to be used for subsequent API calls |
+| Body Attribute `id` | String | User's ID |
+
+**Sample Request**
+```
+{
+    "userName" : "admin", 
+    "password" : "user123"
+}
+```
+
+**Sample Response**
+```
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwic3ViIjoidXNlcjEiLCJqdGkiOiI0NDU3NzkzYy0yYmM4LTQxNTItYWY0ZC1iNTljMGUwNTk3OGUiLCJpYXQiOjE2MjE0NTkxOTcsImV4cCI6MTYyMTQ4MDc5N30.PFFKY9H1oaFngeMazwSvPMcjCOx4oUEqezRg0xyrvgk",
+    "id": "4457793c-2bc8-4152-af4d-b59c0e05978e"
+}
+```
 
 #### Add Timezone
-| Method     | URL     | Query Parameters |
+
+To add new timezone(s).
+
+| Method     | URL     | 
+| :-------------      | :----------:      | 
+| POST | /api/user/timezone | 
+
+| Attribute | Type | Description |
 | :-------------      | :----------:      | :----------:|
+| name | String | Timezone Name |
+| city | String | Timezone City |
+| gmtOffset | integer | Offset to GMT. Valid values must be between `-12` to `+12` (Both Inclusive) |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.add.v1+json` | 
+| Authorization | `Bearer <Token From login response>` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 204 | On successful timezone creation |
+
+**Sample Request**
+```
+{
+    "name" : "America/USzfzsfs",
+    "city" : "Newyork",
+    "gmtOffset" : -12
+}
+```
 
 #### Admin Add Timezone
-| Method     | URL     | Query Parameters |
+
+This endpoint can be used by admin to create timezones for a specific user.
+
+| Method     | URL     | 
+| :-------------      | :----------:      | 
+| POST | /api/user/timezone |
+
+| Query Parameter | Value Type | Description |
+| :-------------      | :----------:      | | :----------:      |
+| userId | UUID | User ID for which the timezone must be created |
+
+| Attribute | Type | Description |
 | :-------------      | :----------:      | :----------:|
+| name | String | Timezone Name |
+| city | String | Timezone City |
+| gmtOffset | integer | Offset to GMT. Valid values must be between `-12` to `+12` (Both Inclusive) |
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.add.v1+json` | 
+| Authorization | `Bearer <Token From login response>` | 
+
+| Response Type | Value/Value Type | Description |
+| :------------- | :-------------      | :-------------      |
+| HTTP Status code | 204 | On successful timezone creation |
+
+**Sample Request**
+```
+{
+    "name" : "America/USzfzsfs",
+    "city" : "Newyork",
+    "gmtOffset" : -12
+}
+```
 
 #### Read Timezone
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
 
-#### Admin Read Timezone
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+To read timezones created by the user
+
+| Method     | URL     | 
+| :-------------      | :----------:      |
+| GET | /api/user/timezone | 
+
+| Headers | Value |
+| :-------------      | :----------:      |
+| Content-Type | `application/vnd.timezone.read.v1+json` | 
+| Accept | `application/vnd.timezone.read.v1+json` | 
+| Authorization | `Bearer <Token From login response>` | 
+
+**Sample Response**
+```
+{
+    "timezones": [
+        {
+            "id": "9caeab84-eeed-4a9d-a964-4d1f7d4d8a7e",
+            "name": "America/USzfzsfs",
+            "city": "Newyork",
+            "gmtOffset": -12
+        }
+    ]
+}
+```
 
 #### Update Timezone
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
 
-#### Admin Update Timezone
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
+To update timezones for the user
+
+| Method     | URL     | 
+| :-------------      | :----------:      |
 
 #### Delete Timezone
-| Method     | URL     | Query Parameters |
-| :-------------      | :----------:      | :----------:|
 
-#### Admin Delete Timezone
 | Method     | URL     | Query Parameters |
 | :-------------      | :----------:      | :----------:|
 
 #### Create User
+
 | Method     | URL     | Query Parameters |
 | :-------------      | :----------:      | :----------:|
 
 #### Delete User
+
 | Method     | URL     | Query Parameters |
 | :-------------      | :----------:      | :----------:|
 
 #### Read Users
+
 | Method     | URL     | Query Parameters |
 | :-------------      | :----------:      | :----------:|
 
 #### Update User
+
 | Method     | URL     | Query Parameters |
 | :-------------      | :----------:      | :----------:|
