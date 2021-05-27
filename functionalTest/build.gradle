@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 repositories {
@@ -51,4 +51,8 @@ task remoteFunctional(type: Test) {
 test {
     useJUnitPlatform()
     exclude '**/CucumberTest.class'
+}
+
+jar {
+    dependsOn compileTestJava
 }

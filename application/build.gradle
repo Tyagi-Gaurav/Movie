@@ -22,6 +22,8 @@ processResources {
         include '**/application*.yml'
         include '**/*.properties'
     }
+
+    duplicatesStrategy = "include"
 }
 
 dependencies {
@@ -76,8 +78,4 @@ jacocoTestReport {
         csv.enabled false
         html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
     }
-}
-
-jacocoTestReport {
-
 }
