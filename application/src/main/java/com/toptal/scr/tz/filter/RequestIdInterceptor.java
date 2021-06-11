@@ -1,5 +1,6 @@
 package com.toptal.scr.tz.filter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,7 +22,7 @@ public class RequestIdInterceptor implements HandlerInterceptor {
         }
 
         MDC.put("requestId", requestId);
-        response.setHeader("requestId", requestId);
+        response.setHeader("requestId", StringUtils.chomp(requestId));
 
         return true;
     }

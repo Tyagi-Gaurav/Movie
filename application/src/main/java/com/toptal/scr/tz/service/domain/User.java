@@ -16,6 +16,8 @@ import java.util.UUID;
 @JsonDeserialize(builder = ImmutableUser.Builder.class)
 @Serial.Structural
 public interface User extends UserDetails {
+    int serialVersionUID = 1;
+
     UUID id();
 
     String firstName();

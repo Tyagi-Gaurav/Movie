@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.5.1'
     id 'jacoco'
+    id 'com.github.spotbugs' version '4.0.0'
 }
 
 repositories {
@@ -36,6 +37,7 @@ dependencies {
     implementation "org.springframework:spring-webmvc"
     implementation "org.springframework:spring-core"
     implementation "org.apache.commons:commons-lang3"
+    implementation "org.apache.commons:commons-text"
     implementation "org.slf4j:slf4j-log4j12"
 
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
@@ -59,6 +61,7 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
 }
 
 test {
@@ -77,5 +80,21 @@ jacocoTestReport {
         xml.enabled false
         csv.enabled false
         html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
+    }
+}
+
+spotbugs {
+    toolVersion = '4.2.3'
+    ignoreFailures = true
+    excludeFilter = file("gradle/spotbugs/exclusions.xml")
+}
+
+spotbugsMain {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
     }
 }

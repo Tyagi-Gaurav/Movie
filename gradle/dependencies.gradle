@@ -14,6 +14,7 @@ ext {
     logbackVersion = '1.3.0-alpha5'
     slf4jVersion = '2.0.0-alpha1'
     commonsLang3Version = '3.12.0'
+    commonsTextVersion = '1.9'
     commonsLoggingVersion = '1.2'
     jsonWebTokenVersion = '0.11.2'
     guavaVersion = '30.1.1-jre'
@@ -72,6 +73,7 @@ dependencyManagement {
         dependency "org.mockito:mockito-core:$mockitoVersion"
         dependency "org.mockito:mockito-junit-jupiter:$mockitoVersion"
         dependency "org.apache.commons:commons-lang3:$commonsLang3Version"
+        dependency "org.apache.commons:commons-text:$commonsTextVersion"
 
         dependency "io.cucumber:cucumber-java:$cucumberVersion"
         dependency "io.cucumber:cucumber-java8:$cucumberVersion"

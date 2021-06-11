@@ -1,0 +1,8 @@
+<FindBugsFilter>
+    <Match>
+        <Or>
+            <Class name="~.*\.Immutable.*" />
+            <Class name="~.*\.Modifiable.*" />
+        </Or>
+    </Match>
+</FindBugsFilter>
