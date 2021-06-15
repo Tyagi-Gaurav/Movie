@@ -3,6 +3,7 @@
         <Or>
             <Class name="~.*\.Immutable.*" />
             <Class name="~.*\.Modifiable.*" />
+            <Class name="~.*\.WebSecurityConfig.*" />
         </Or>
     </Match>
 </FindBugsFilter>

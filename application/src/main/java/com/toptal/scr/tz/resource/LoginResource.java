@@ -39,6 +39,7 @@ public class LoginResource {
             produces = "application/vnd.login.v1+json")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) throws Exception {
         try {
+            LOG.info("Login user request");
             User user = authenticate(loginRequestDTO);
             final String token = JwtTokenUtil.generateToken(user, authConfig.tokenDuration(), signingKey);
             ImmutableLoginResponseDTO response = ImmutableLoginResponseDTO.builder()
@@ -48,7 +49,7 @@ public class LoginResource {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
             throw e;
         }
     }
