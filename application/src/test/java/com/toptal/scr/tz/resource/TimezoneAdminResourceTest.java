@@ -118,7 +118,7 @@ class TimezoneAdminResourceTest {
         UUID timezoneId = UUID.randomUUID();
 
         //when
-        MvcResult mvcResult = mockMvc.perform(delete("/user/timezone")
+        mockMvc.perform(delete("/user/timezone")
                 .requestAttr("userProfile", userProfile)
                 .param("id", timezoneId.toString())
                 .param("userId", requestedUserId.toString())

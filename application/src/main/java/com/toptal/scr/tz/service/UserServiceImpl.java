@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.findUserBy(user.getUsername());
             throw new DuplicateRecordException("User already exists.");
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException ignored) {
            //User Not found. Carry on.
         }
 

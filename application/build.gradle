@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.1'
     id 'jacoco'
     id 'com.github.spotbugs' version '4.7.1'
+    id 'pmd'
 }
 
 repositories {
@@ -85,7 +86,7 @@ jacocoTestReport {
 
 spotbugs {
     toolVersion = '4.2.3'
-    ignoreFailures = true
+    ignoreFailures = false
     excludeFilter = file("gradle/spotbugs/exclusions.xml")
 }
 
@@ -97,4 +98,11 @@ spotbugsMain {
             stylesheet = 'fancy-hist.xsl'
         }
     }
+}
+
+pmd {
+    consoleOutput = true
+    toolVersion = "6.21.0"
+    rulesMinimumPriority = 2
+    ruleSets = ["category/java/errorprone.xml"]
 }

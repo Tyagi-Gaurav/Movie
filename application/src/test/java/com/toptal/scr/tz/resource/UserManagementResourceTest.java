@@ -116,7 +116,7 @@ class UserManagementResourceTest {
                 .build();
 
         //when
-        MvcResult mvcResult = mockMvc.perform(delete("/user/manage")
+        mockMvc.perform(delete("/user/manage")
                 .requestAttr("userProfile", userProfile)
                 .param("userId", userIdToDelete.toString())
                 .contentType("application/vnd.user.delete.v1+json"))
@@ -136,7 +136,7 @@ class UserManagementResourceTest {
                 .build();
 
         //when
-        MvcResult mvcResult = mockMvc.perform(delete("/user/manage")
+        mockMvc.perform(delete("/user/manage")
                 .requestAttr("userProfile", userProfile)
                 .param("userId", userIdToDelete.toString())
                 .contentType("application/vnd.user.delete.v1+json"))

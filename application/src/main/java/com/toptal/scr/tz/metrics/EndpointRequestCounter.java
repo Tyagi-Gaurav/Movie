@@ -12,7 +12,7 @@ public class EndpointRequestCounter {
     private static final String INFRA_REQUEST_COUNT = "request_count";;
 
     @Autowired
-    MeterRegistry meterRegistry;
+    private MeterRegistry meterRegistry;
 
     public void increment(String method, String path) {
         Counter requestCount = Counter.builder(INFRA_REQUEST_COUNT)

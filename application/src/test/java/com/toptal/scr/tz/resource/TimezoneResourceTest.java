@@ -111,7 +111,7 @@ class TimezoneResourceTest {
         UUID timezoneId = UUID.randomUUID();
 
         //when
-        MvcResult mvcResult = mockMvc.perform(delete("/user/timezone")
+        mockMvc.perform(delete("/user/timezone")
                 .requestAttr("userProfile", userProfile)
                 .param("id", timezoneId.toString())
                 .contentType("application/vnd.timezone.delete.v1+json"))

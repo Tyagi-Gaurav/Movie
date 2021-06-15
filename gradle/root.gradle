@@ -65,6 +65,7 @@ subprojects {
             // that doesn't come with net.ltgt.apt-idea.
         }
     }
+
 }
 
 task cdImage(dependsOn: ['release', 'bootjar'])
