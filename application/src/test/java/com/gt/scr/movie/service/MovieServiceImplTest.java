@@ -23,11 +23,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest(classes = TimezoneServiceImpl.class)
-class TimezoneServiceImplTest {
+@SpringBootTest(classes = MovieServiceImpl.class)
+class MovieServiceImplTest {
 
     @Autowired
-    private TimezoneService timezoneService;
+    private MovieService movieService;
 
     @MockBean
     private UserService userService;
@@ -42,7 +42,7 @@ class TimezoneServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        timezoneService.addTimezone(userId, userTimezone);
+        movieService.addMovieRating(userId, userTimezone);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -60,10 +60,10 @@ class TimezoneServiceImplTest {
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
-        timezoneService.addTimezone(userId, userTimezone);
+        movieService.addMovieRating(userId, userTimezone);
 
         //when
-        Throwable throwable = catchThrowable(() -> timezoneService.addTimezone(userId, userTimezone));
+        Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, userTimezone));
 
         //then
         assertThat(throwable).isNotNull();
@@ -79,7 +79,7 @@ class TimezoneServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        Map<UUID, UserTimezone> timezones = timezoneService.getTimezones(userId);
+        Map<UUID, UserTimezone> timezones = movieService.getMovieRating(userId);
 
         //then
         assertThat(timezones).isEqualTo(user.userTimeZones());
@@ -95,7 +95,7 @@ class TimezoneServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        timezoneService.deleteTimezone(userId, userTimezone.id());
+        movieService.deleteMovieRating(userId, userTimezone.id());
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -115,7 +115,7 @@ class TimezoneServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        timezoneService.updateTimezone(userId, userTimezone);
+        movieService.updateMovieRating(userId, userTimezone);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -152,7 +152,7 @@ class TimezoneServiceImplTest {
                 .gmtOffset(-100)
                 .id(timezoneId)
                 .build();
-        timezoneService.updateTimezone(userId, updatedTimezone);
+        movieService.updateMovieRating(userId, updatedTimezone);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);

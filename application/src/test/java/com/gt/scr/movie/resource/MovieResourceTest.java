@@ -3,13 +3,13 @@ package com.gt.scr.movie.resource;
 import com.gt.scr.movie.resource.domain.ImmutableTimezoneCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableTimezoneUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
-import com.gt.scr.movie.util.TestUtils;
 import com.gt.scr.movie.resource.domain.TimezoneDTO;
 import com.gt.scr.movie.resource.domain.TimezonesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
-import com.gt.scr.movie.service.TimezoneService;
+import com.gt.scr.movie.service.MovieService;
+import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
 import com.gt.scr.movie.service.domain.UserTimezone;
+import com.gt.scr.movie.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +37,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
 @EnableWebMvc
-@SpringBootTest(classes = TimezoneResource.class)
-class TimezoneResourceTest {
+@SpringBootTest(classes = MovieResource.class)
+class MovieResourceTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private TimezoneService timezoneService;
+    private MovieService movieService;
 
     @Test
     void shouldAllowUserToCreateTimeZones() throws Exception {
@@ -64,7 +64,7 @@ class TimezoneResourceTest {
                 .contentType("application/vnd.timezone.add.v1+json"))
                 .andExpect(status().isNoContent());
 
-        verify(timezoneService).addTimezone(eq(userProfile.id()), any(UserTimezone.class));
+        verify(movieService).addMovieRating(eq(userProfile.id()), any(UserTimezone.class));
     }
 
     @Test
@@ -82,7 +82,7 @@ class TimezoneResourceTest {
                 .build();
         timezoneMap.put(userProfile.id(), expectedReturnObject);
 
-        when(timezoneService.getTimezones(id)).thenReturn(timezoneMap);
+        when(movieService.getMovieRating(id)).thenReturn(timezoneMap);
 
         //when
         MvcResult mvcResult = mockMvc.perform(get("/user/timezone")
@@ -91,7 +91,7 @@ class TimezoneResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(timezoneService).getTimezones(eq(userProfile.id()));
+        verify(movieService).getMovieRating(eq(userProfile.id()));
         TimezonesDTO timezonesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
                 TimezonesDTO.class);
 
@@ -118,7 +118,7 @@ class TimezoneResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(timezoneService).deleteTimezone(userProfile.id(), timezoneId);
+        verify(movieService).deleteMovieRating(userProfile.id(), timezoneId);
     }
 
     @Test
@@ -141,7 +141,7 @@ class TimezoneResourceTest {
                 .contentType("application/vnd.timezone.update.v1+json"))
                 .andExpect(status().isOk());
 
-        verify(timezoneService).updateTimezone(eq(userProfile.id()), any(UserTimezone.class));
+        verify(movieService).updateMovieRating(eq(userProfile.id()), any(UserTimezone.class));
     }
 
 

@@ -15,13 +15,13 @@ import java.util.UUID;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
-public class TimezoneServiceImpl implements TimezoneService {
+public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private UserService userService;
 
     @Override
-    public void addTimezone(UUID userId, UserTimezone userTimezone) {
+    public void addMovieRating(UUID userId, UserTimezone userTimezone) {
         User userFromDatabase = userService.findUserBy(userId);
         HashMap<UUID, UserTimezone> uuidUserTimezoneHashMap =
                 userFromDatabase.userTimeZones();
@@ -42,13 +42,13 @@ public class TimezoneServiceImpl implements TimezoneService {
     }
 
     @Override
-    public Map<UUID, UserTimezone> getTimezones(UUID userId) {
+    public Map<UUID, UserTimezone> getMovieRating(UUID userId) {
         User userFromDatabase = userService.findUserBy(userId);
         return userFromDatabase.userTimeZones();
     }
 
     @Override
-    public void deleteTimezone(UUID userId, UUID timezoneId) {
+    public void deleteMovieRating(UUID userId, UUID timezoneId) {
         User userFromDatabase = userService.findUserBy(userId);
 
         HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
@@ -59,7 +59,7 @@ public class TimezoneServiceImpl implements TimezoneService {
     }
 
     @Override
-    public void updateTimezone(UUID userId, UserTimezone timezone) {
+    public void updateMovieRating(UUID userId, UserTimezone timezone) {
         User userFromDatabase = userService.findUserBy(userId);
 
         HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();

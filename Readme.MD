@@ -8,8 +8,8 @@ A REST API that allows users to update movie ratings
 * All API calls must be authenticated.
 * When logged in, a user can see, edit and delete movie ratings that they entered.
 * There are two roles with different permission levels: 
-  ** A regular user that can only access their own records.
-  ** An admin that can CRUD all users and all user records.
+  * A regular user that can only access their own records.
+  * An admin that can CRUD all users and all user records.
 * When a movie is entered, each entry has a Name, Rating of the movie, year of production.
 * The API must be able to return data in the JSON format.
 
