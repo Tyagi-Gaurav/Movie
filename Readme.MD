@@ -1,15 +1,16 @@
-## Timezone API
+## Movie Rating API
 
 ### Functionality
 
-A REST API that shows time in different timezones
+A REST API that allows users to update movie ratings
 
 * API Users must be able to create an account and log in.
 * All API calls must be authenticated.
-* When logged in, a user can see, edit and delete timezones he entered.
-* Implement 2 roles with different permission levels: a regular user would only be able to CRUD on their owned records,
-  and an admin would be able to CRUD all users and all user records.
-* When a timezone is entered, each entry has a Name, Name of the city in timezone, the difference to GMT time.
+* When logged in, a user can see, edit and delete movie ratings that they entered.
+* There are two roles with different permission levels: 
+  ** A regular user that can only access their own records.
+  ** An admin that can CRUD all users and all user records.
+* When a movie is entered, each entry has a Name, Rating of the movie, year of production.
 * The API must be able to return data in the JSON format.
 
 ### Design & Implementation

@@ -1,4 +1,4 @@
-rootProject.name = 'Timezone'
+rootProject.name = 'Movie'
 include 'functionalTest'
 include 'application'
 
