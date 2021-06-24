@@ -1,11 +1,14 @@
 package com.gt.scr.movie.util;
 
+import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
+import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.service.domain.UserTimezone;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
@@ -48,6 +51,15 @@ public class TestBuilders {
                 .name(randomAlphabetic(10))
                 .city(randomAlphabetic(10))
                 .gmtOffset(-10)
+                .id(UUID.randomUUID())
+                .build();
+    }
+
+    public static Movie aUserMovie() {
+        return ImmutableMovie.builder()
+                .name(randomAlphabetic(10))
+                .yearProduced(2010)
+                .rating(BigDecimal.valueOf(10))
                 .id(UUID.randomUUID())
                 .build();
     }

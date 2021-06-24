@@ -2,12 +2,14 @@ package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.ImmutableTimezoneDTO;
 import com.gt.scr.movie.resource.domain.ImmutableTimezonesDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.TimezoneUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.TimezonesDTO;
-import com.gt.scr.movie.resource.domain.TimezoneCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
+import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
+import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.UserTimezone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,19 +38,19 @@ public class MovieResource {
     @Autowired
     private MovieService movieService;
 
-    @PostMapping(consumes = "application/vnd.timezone.add.v1+json",
-            produces = "application/vnd.timezone.add.v1+json")
-    public ResponseEntity<Void> createMovieRating(@RequestBody TimezoneCreateRequestDTO timezoneCreateRequestDTO,
+    @PostMapping(consumes = "application/vnd.movie.add.v1+json",
+            produces = "application/vnd.movie.add.v1+json")
+    public ResponseEntity<Void> createMovieRating(@RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
                                                   @RequestAttribute("userProfile") UserProfile userProfile,
                                                   @RequestParam(value = "userId", required = false) String userId) {
-        UserTimezone timezone = ImmutableUserTimezone.builder()
+        Movie movie = ImmutableMovie.builder()
                 .id(UUID.randomUUID())
-                .city(timezoneCreateRequestDTO.city())
-                .name(timezoneCreateRequestDTO.name())
-                .gmtOffset(timezoneCreateRequestDTO.gmtOffset())
+                .name(movieCreateRequestDTO.name())
+                .rating(movieCreateRequestDTO.rating())
+                .yearProduced(movieCreateRequestDTO.yearProduced())
                 .build();
 
-        movieService.addMovieRating(determineUserId(userId, userProfile.id()), timezone);
+        movieService.addMovieRating(determineUserId(userId, userProfile.id()), movie);
         return ResponseEntity.noContent().build();
     }
 

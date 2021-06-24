@@ -3,6 +3,7 @@ package com.gt.scr.movie.service;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
+import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.service.domain.UserTimezone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +22,24 @@ public class MovieServiceImpl implements MovieService {
     private UserService userService;
 
     @Override
-    public void addMovieRating(UUID userId, UserTimezone userTimezone) {
+    public void addMovieRating(UUID userId, Movie movie) {
         User userFromDatabase = userService.findUserBy(userId);
-        HashMap<UUID, UserTimezone> uuidUserTimezoneHashMap =
-                userFromDatabase.userTimeZones();
+        HashMap<UUID, Movie> uuidUserMoviesHashMap =
+                userFromDatabase.userMovies();
 
-        boolean alreadyExists = uuidUserTimezoneHashMap.values()
-                .stream().anyMatch(tz -> tz.city().equalsIgnoreCase(userTimezone.city()) &&
-                        tz.name().equalsIgnoreCase(userTimezone.name()) &&
-                        tz.gmtOffset() == userTimezone.gmtOffset());
+        boolean alreadyExists = uuidUserMoviesHashMap.values()
+                .stream().anyMatch(tz ->
+                        tz.name().equalsIgnoreCase(movie.name()) &&
+                        tz.yearProduced() == movie.yearProduced());
 
         if (alreadyExists) {
-            throw new DuplicateRecordException("Timezone already exists");
+            throw new DuplicateRecordException("Movie already exists");
         }
 
-        uuidUserTimezoneHashMap.put(userTimezone.id(), userTimezone);
+        uuidUserMoviesHashMap.put(movie.id(), movie);
 
         userService.update(ImmutableUser.builder().from(userFromDatabase)
-                .userTimeZones(uuidUserTimezoneHashMap).build());
+                .userMovies(uuidUserMoviesHashMap).build());
     }
 
     @Override

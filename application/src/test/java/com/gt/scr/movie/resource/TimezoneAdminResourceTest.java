@@ -1,6 +1,6 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.movie.resource.domain.ImmutableTimezoneCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.ImmutableMovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableTimezoneUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
 import com.gt.scr.movie.resource.domain.TimezoneDTO;
@@ -8,6 +8,7 @@ import com.gt.scr.movie.resource.domain.TimezonesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
+import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.UserTimezone;
 import com.gt.scr.movie.util.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -47,10 +49,11 @@ class TimezoneAdminResourceTest {
     @Test
     void shouldAllowAdminToCreateTimeZones() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
-        String content = TestUtils.asJsonString(ImmutableTimezoneCreateRequestDTO.builder()
-                .city(randomAlphabetic(6))
+        String content = TestUtils.asJsonString(ImmutableMovieCreateRequestDTO.builder()
                 .name(randomAlphabetic(6))
-                .gmtOffset(1).build());
+                .rating(BigDecimal.valueOf(10))
+                .yearProduced(2010)
+                .build());
 
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
@@ -62,12 +65,12 @@ class TimezoneAdminResourceTest {
                 .content(content)
                 .param("userId", requestedUserId.toString())
                 .requestAttr("userProfile", userProfile)
-                .contentType("application/vnd.timezone.add.v1+json"))
+                .contentType("application/vnd.movie.add.v1+json"))
                 .andExpect(status().isNoContent());
 
-        verify(movieService).addMovieRating(eq(requestedUserId), any(UserTimezone.class));
+        verify(movieService).addMovieRating(eq(requestedUserId), any(Movie.class));
         verify(movieService, times(0)).addMovieRating(eq(userProfile.id()),
-                any(UserTimezone.class));
+                any(Movie.class));
     }
 
     @Test

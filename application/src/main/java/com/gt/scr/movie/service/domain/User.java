@@ -41,6 +41,11 @@ public interface User extends UserDetails {
         return new HashMap<>();
     }
 
+    @Value.Default
+    default HashMap<UUID, Movie> userMovies() {
+        return new HashMap<>();
+    }
+
     default String getRole() {
         return getAuthorities().stream().map(auth -> auth.getAuthority()).findFirst().orElseGet(() -> "");
     }

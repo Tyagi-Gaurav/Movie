@@ -1,10 +1,11 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
-import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.exception.DuplicateRecordException;
+import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
+import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.service.domain.UserTimezone;
+import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,34 +37,34 @@ class MovieServiceImplTest {
     void shouldAddTimezone() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aUserMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.addMovieRating(userId, userTimezone);
+        movieService.addMovieRating(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).contains(Map.entry(userTimezone.id(), userTimezone));
+        assertThat(actualParameter.userMovies()).contains(Map.entry(movie.id(), movie));
     }
 
     @Test
     void shouldNotAllowAddingDuplicateTimezoneWithAllValuesSame() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aUserMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
-        movieService.addMovieRating(userId, userTimezone);
+        movieService.addMovieRating(userId, movie);
 
         //when
-        Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, userTimezone));
+        Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, movie));
 
         //then
         assertThat(throwable).isNotNull();
