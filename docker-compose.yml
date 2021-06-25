@@ -1,7 +1,7 @@
 version: "3.7"
 services:
-  timezone-app:
-    container_name: local.timezone-app
+  movie-app:
+    container_name: local.movie-app
     depends_on:
       - db
     build:

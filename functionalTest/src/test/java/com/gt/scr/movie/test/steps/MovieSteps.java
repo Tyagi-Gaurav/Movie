@@ -3,13 +3,9 @@ package com.gt.scr.movie.test.steps;
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.ImmutableTestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.ImmutableTestMovieUpdateRequestDTO;
-import com.gt.scr.movie.test.domain.ImmutableTestTimezoneUpdateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieDTO;
 import com.gt.scr.movie.test.domain.TestMoviesDTO;
-import com.gt.scr.movie.test.domain.TestTimezoneDTO;
-import com.gt.scr.movie.test.domain.TestTimezoneUpdateRequestDTO;
-import com.gt.scr.movie.test.domain.TestTimezonesDTO;
 import com.gt.scr.movie.test.resource.ResponseHolder;
 import com.gt.scr.movie.test.resource.TestMovieResource;
 import io.cucumber.datatable.DataTable;
@@ -44,6 +40,11 @@ public class MovieSteps implements En {
 
         When("^the authenticated user attempts to read the movies", () -> {
             testMovieResource.readMovies();
+        });
+
+        And("^the authenticated user attempts to read the movies for the previous user$", () -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            testMovieResource.readMovies(regularUserId);
         });
 
         And("^the authenticated user attempts to create a new movie without passing auth header$",
@@ -121,6 +122,57 @@ public class MovieSteps implements En {
                                     .build();
 
                     testMovieResource.updateMovie(updateRequestDTO);
+                });
+
+        When("^the authenticated admin user attempts to read the movies for user$", () -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            testMovieResource.readMovies(regularUserId);
+        });
+
+        When("^the authenticated admin user attempts to delete all the movies for user$", () -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            testMovieResource.readMovies(regularUserId);
+            var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
+            var timezones = testMoviesDTO.movies();
+
+            timezones.forEach(mv -> testMovieResource.deleteMovie(mv.id(), regularUserId));
+        });
+
+        And("^the movie read response should be empty$", () -> {
+            TestMoviesDTO testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
+            List<TestMovieDTO> movies = testMoviesDTO.movies();
+
+            assertThat(movies).isEmpty();
+        });
+
+        And("^the authenticated user attempts to create a new movie for the regular user$", (DataTable dataTable) -> {
+            String regularUserId = scenarioContext.getRegularUserId();
+            List<TestMovieCreateRequestDTO> testMovieCreateRequestDTO = dataTable.asList(TestMovieCreateRequestDTO.class);
+            testMovieCreateRequestDTO.forEach(movieCreateRequestDTO ->
+                    testMovieResource.create(movieCreateRequestDTO, regularUserId));
+        });
+
+        When("^the admin user attempts to update the movie with name: '(.*)' to$",
+                (String name, TestMovieCreateRequestDTO testMovieCreateRequestDTO) -> {
+                    String regularUserId = scenarioContext.getRegularUserId();
+                    testMovieResource.readMovies(regularUserId);
+                    var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
+                    var movies = testMoviesDTO.movies();
+
+                    UUID uuid = movies.stream()
+                            .filter(mv -> name.equals(mv.name()))
+                            .findFirst()
+                            .map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
+
+                    var updateRequestDTO =
+                            ImmutableTestMovieUpdateRequestDTO.builder()
+                                    .name(testMovieCreateRequestDTO.name())
+                                    .yearProduced(testMovieCreateRequestDTO.yearProduced())
+                                    .rating(testMovieCreateRequestDTO.rating())
+                                    .id(uuid)
+                                    .build();
+
+                    testMovieResource.updateMovie(updateRequestDTO, regularUserId);
                 });
     }
 }

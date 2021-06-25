@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Value.Immutable
 @JsonSerialize
-@JsonDeserialize(builder = ImmutableTestTimezoneUpdateRequestDTO.Builder.class)
+@JsonDeserialize(builder = ImmutableTestMovieUpdateRequestDTO.Builder.class)
 public interface TestMovieUpdateRequestDTO {
     UUID id();
 
