@@ -60,7 +60,7 @@ class MovieAdminResourceTest {
                 .build();
 
         //when
-        mockMvc.perform(post("/user/timezone")
+        mockMvc.perform(post("/user/movie")
                 .content(content)
                 .param("userId", requestedUserId.toString())
                 .requestAttr("userProfile", userProfile)
@@ -93,7 +93,7 @@ class MovieAdminResourceTest {
         when(movieService.getMovieRating(requestedUserId)).thenReturn(movieMap);
 
         //when
-        MvcResult mvcResult = mockMvc.perform(get("/user/timezone")
+        MvcResult mvcResult = mockMvc.perform(get("/user/movie")
                 .requestAttr("userProfile", userProfile)
                 .param("userId", requestedUserId.toString())
                 .contentType("application/vnd.movie.read.v1+json"))
@@ -122,7 +122,7 @@ class MovieAdminResourceTest {
         UUID movieId = UUID.randomUUID();
 
         //when
-        mockMvc.perform(delete("/user/timezone")
+        mockMvc.perform(delete("/user/movie")
                 .requestAttr("userProfile", userProfile)
                 .param("id", movieId.toString())
                 .param("userId", requestedUserId.toString())
@@ -149,7 +149,7 @@ class MovieAdminResourceTest {
                 .build();
 
         //when
-        mockMvc.perform(put("/user/timezone")
+        mockMvc.perform(put("/user/movie")
                 .content(content)
                 .param("userId", requestedUserId.toString())
                 .requestAttr("userProfile", userProfile)

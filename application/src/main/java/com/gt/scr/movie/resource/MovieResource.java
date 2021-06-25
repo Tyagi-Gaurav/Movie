@@ -28,7 +28,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/user/timezone")
+@RequestMapping("/user/movie")
 public class MovieResource {
     @Autowired
     private MovieService movieService;
