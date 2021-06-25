@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "22105042-a3e9-4ab1-a825-7f93fbdf9df2",
-		"name": "TimezoneAPI",
+		"name": "MovieAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -18,15 +18,15 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\" : \"user\",\n    \"password\" : \"user123\",\n    \"firstName\" : \"Test First Name\",\n    \"lastName\" : \"Test Last Name\",\n    \"role\" : \"USER\"\n}"
+					"raw": "{\n    \"userName\" : \"admin\",\n    \"password\" : \"admin123\",\n    \"firstName\" : \"Test First Name\",\n    \"lastName\" : \"Test Last Name\",\n    \"role\" : \"ADMIN\"\n}"
 				},
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/account/create",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/account/create",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
@@ -55,7 +55,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\" : \"user\", \n    \"password\" : \"user123\"\n}",
+					"raw": "{\n    \"userName\" : \"admin\", \n    \"password\" : \"admin123\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -63,12 +63,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/login",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/login",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
@@ -79,7 +79,7 @@
 			"response": []
 		},
 		{
-			"name": "Add TimeZone",
+			"name": "Add Movie",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -100,13 +100,18 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"value": "application/vnd.timezone.add.v1+json",
+						"value": "application/vnd.movie.add.v1+json",
+						"type": "text"
+					},
+					{
+						"key": "X-Request-ID",
+						"value": "dd764599-929d-4339-96cc-ac92ecbf6306",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\" : \"Asia/India\",\n    \"city\" : \"Saharanpur\",\n    \"gmtOffset\" : 550\n}",
+					"raw": "{\n    \"name\" : \"Second Blood\",\n    \"rating\" : 7.19,\n    \"yearProduced\" : 2005\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -114,23 +119,23 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/timezone",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/movie",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
-						"timezone"
+						"movie"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Read Timezone",
+			"name": "Read Movie",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"accept": true
@@ -141,13 +146,13 @@
 					"type": "bearer",
 					"bearer": [
 						{
-							"key": "password",
-							"value": "{{{{access_token}}}}",
+							"key": "token",
+							"value": "{{access_token}}",
 							"type": "string"
 						},
 						{
-							"key": "token",
-							"value": "{{access_token}}",
+							"key": "password",
+							"value": "{{{{access_token}}}}",
 							"type": "string"
 						}
 					]
@@ -156,45 +161,45 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"value": "application/vnd.timezone.read.v1+json",
+						"value": "application/vnd.movie.read.v1+json",
 						"type": "text"
 					},
 					{
 						"key": "Accept",
-						"value": "application/vnd.timezone.read.v1+json",
+						"value": "application/vnd.movie.read.v1+json",
 						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/timezone",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/movie",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
-						"timezone"
+						"movie"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete Timezone",
+			"name": "Delete Movie",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
-							"key": "password",
-							"value": "{{{{access_token}}}}",
+							"key": "token",
+							"value": "{{access_token}}",
 							"type": "string"
 						},
 						{
-							"key": "token",
-							"value": "{{access_token}}",
+							"key": "password",
+							"value": "{{{{access_token}}}}",
 							"type": "string"
 						}
 					]
@@ -203,32 +208,31 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"value": "application/vnd.timezone.delete.v1+json",
+						"value": "application/vnd.movie.delete.v1+json",
 						"type": "text"
 					},
 					{
 						"key": "Accept",
-						"value": "application/vnd.timezone.delete.v1+json",
+						"value": "application/vnd.movie.delete.v1+json",
 						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/{{timezone_user_id}}/timezone?id=96ccbbb3-b2f9-427f-a11b-4d54be3aa7f5",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/movie?id=b8b4e034-393f-4488-8e32-b04826ead4ea",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
-						"{{timezone_user_id}}",
-						"timezone"
+						"movie"
 					],
 					"query": [
 						{
 							"key": "id",
-							"value": "96ccbbb3-b2f9-427f-a11b-4d54be3aa7f5"
+							"value": "b8b4e034-393f-4488-8e32-b04826ead4ea"
 						}
 					]
 				}
@@ -236,7 +240,7 @@
 			"response": []
 		},
 		{
-			"name": "Edit Timezone",
+			"name": "Edit Movie",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -257,31 +261,30 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"value": "application/vnd.timezone.update.v1+json",
+						"value": "application/vnd.movie.update.v1+json",
 						"type": "text"
 					},
 					{
 						"key": "Accept",
-						"value": "application/vnd.timezone.update.v1+json",
+						"value": "application/vnd.movie.update.v1+json",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"d1135be0-05e1-47e2-84f9-719e32a5516d\",\n    \"name\": \"Africa/Abidjan\",\n    \"city\": \"Abidjan 2\",\n    \"gmtOffset\": 8\n}"
+					"raw": "{\n    \"id\": \"5a39e12c-b8f2-40b2-8a0a-1ad8fac13656\",\n    \"name\": \"Third Blood\"\n}"
 				},
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/{{timezone_user_id}}/timezone",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/movie",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
-						"{{timezone_user_id}}",
-						"timezone"
+						"movie"
 					]
 				}
 			},
@@ -315,15 +318,15 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\" : \"abc_admin_created\",\n    \"password\" : \"def\",\n    \"firstName\" : \"Test First Name\",\n    \"lastName\" : \"Test Last Name\",\n    \"role\" : \"USER\"\n}"
+					"raw": "{\n    \"userName\" : \"abc_admin_created\",\n    \"password\" : \"password\",\n    \"firstName\" : \"Test First Name\",\n    \"lastName\" : \"Test Last Name\",\n    \"role\" : \"USER\"\n}"
 				},
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/manage",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
@@ -360,12 +363,12 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/manage",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
@@ -402,12 +405,12 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage?userId=10e122bf-4b9e-41de-9a52-694e93d71af9",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/manage?userId=ac4666c1-2fb4-4508-829e-c0626bd1e24a",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
@@ -416,7 +419,7 @@
 					"query": [
 						{
 							"key": "userId",
-							"value": "10e122bf-4b9e-41de-9a52-694e93d71af9"
+							"value": "ac4666c1-2fb4-4508-829e-c0626bd1e24a"
 						}
 					]
 				}
@@ -451,7 +454,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\": \"abc_admin_created_2\",\n    \"password\" : \"def\",\n    \"firstName\": \"Test abc_admin_name\",\n    \"lastName\": \"Test Last Name\",\n    \"role\": \"USER\"\n}",
+					"raw": "{\n    \"userName\": \"bhagatsingh\",\n    \"password\" : \"abc123\",\n    \"firstName\": \"Test abc_admin_name\",\n    \"lastName\": \"Test Last Name\",\n    \"role\": \"USER\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -459,12 +462,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/api/user/manage?userId=3b1f66f3-3128-464f-8af6-15214fddeb98",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/user/manage?userId=28fb408b-b8b2-4ed3-bbdc-9580c3980001",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
 						"api",
 						"user",
@@ -473,7 +476,7 @@
 					"query": [
 						{
 							"key": "userId",
-							"value": "3b1f66f3-3128-464f-8af6-15214fddeb98"
+							"value": "28fb408b-b8b2-4ed3-bbdc-9580c3980001"
 						}
 					]
 				}
@@ -504,13 +507,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{timezone_host}}:{{timezone_port}}/status",
+					"raw": "http://{{movie_host}}:{{movie_port}}/api/status",
 					"protocol": "http",
 					"host": [
-						"{{timezone_host}}"
+						"{{movie_host}}"
 					],
-					"port": "{{timezone_port}}",
+					"port": "{{movie_port}}",
 					"path": [
+						"api",
 						"status"
 					]
 				}
