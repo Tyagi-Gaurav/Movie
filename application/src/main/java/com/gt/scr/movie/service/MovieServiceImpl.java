@@ -8,6 +8,7 @@ import com.gt.scr.movie.service.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -66,7 +67,7 @@ public class MovieServiceImpl implements MovieService {
 
         uuidUserMovieMap.computeIfPresent(movie.id(), (uuid, mv) -> ImmutableMovie.builder()
                 .name(isNotBlank(movie.name()) ? movie.name() : mv.name())
-                .rating(movie.rating() != null ? movie.rating() : mv.rating())
+                .rating(!BigDecimal.ZERO.equals(movie.rating()) ? movie.rating() : mv.rating())
                 .yearProduced(movie.yearProduced() != 0 ? movie.yearProduced() : mv.yearProduced())
                 .id(movie.id())
                 .build());

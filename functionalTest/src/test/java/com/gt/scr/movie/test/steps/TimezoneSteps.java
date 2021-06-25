@@ -3,11 +3,12 @@ package com.gt.scr.movie.test.steps;
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.ImmutableTestTimezoneUpdateRequestDTO;
 import com.gt.scr.movie.test.domain.TestTimezoneCreateRequestDTO;
-import com.gt.scr.movie.test.resource.ResponseHolder;
-import com.gt.scr.movie.test.resource.TestTimezoneResource;
 import com.gt.scr.movie.test.domain.TestTimezoneDTO;
 import com.gt.scr.movie.test.domain.TestTimezoneUpdateRequestDTO;
 import com.gt.scr.movie.test.domain.TestTimezonesDTO;
+import com.gt.scr.movie.test.resource.ResponseHolder;
+import com.gt.scr.movie.test.resource.TestMovieResource;
+import com.gt.scr.movie.test.resource.TestTimezoneResource;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java8.En;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,8 +152,5 @@ public class TimezoneSteps implements En {
                 (TestTimezoneCreateRequestDTO testTimezoneCreateRequestDTO) -> {
             testTimezoneResource.createWithoutToken(testTimezoneCreateRequestDTO);
         });
-
     }
-
-
 }

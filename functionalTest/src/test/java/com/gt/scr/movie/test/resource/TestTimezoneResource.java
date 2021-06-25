@@ -1,6 +1,6 @@
 package com.gt.scr.movie.test.resource;
 
-import com.gt.scr.movie.test.config.TimeZoneAppConfig;
+import com.gt.scr.movie.test.config.MovieAppConfig;
 import com.gt.scr.movie.test.domain.TestTimezoneCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestTimezoneUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +14,14 @@ import java.util.UUID;
 public class TestTimezoneResource extends AbstractResource {
 
     @Autowired
-    private TimeZoneAppConfig timeZoneAppConfig;
+    private MovieAppConfig movieAppConfig;
 
     @Autowired
     private ResponseHolder responseHolder;
 
     public void create(TestTimezoneCreateRequestDTO timezoneCreateRequestDTO) {
-        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port());
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -30,8 +30,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void createWithoutToken(TestTimezoneCreateRequestDTO testTimezoneCreateRequestDTO) {
-        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port());
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.add.v1+json");
         HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(testTimezoneCreateRequestDTO, headers);
@@ -39,8 +39,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void readTimezones() {
-        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port());
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.read.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -49,8 +49,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void deleteTimezone(UUID uuid) {
-        String fullUrl = String.format("%s?id=%s", getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port()), uuid.toString());
+        String fullUrl = String.format("%s?id=%s", getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port()), uuid.toString());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -60,8 +60,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void updateTimezone(TestTimezoneUpdateRequestDTO updateRequestDTO) {
-        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port());
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.update.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -70,8 +70,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void readTimezones(String userId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port()), userId);
+        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port()), userId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.read.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -80,8 +80,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void deleteTimezone(UUID timezoneId, String regularUserId) {
-        String fullUrl = String.format("%s?id=%s&userId=%s", getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port()), timezoneId.toString(), regularUserId);
+        String fullUrl = String.format("%s?id=%s&userId=%s", getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port()), timezoneId.toString(), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -91,8 +91,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void create(TestTimezoneCreateRequestDTO timezoneCreateRequestDTO, String regularUserId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port()), regularUserId);
+        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port()), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -101,8 +101,8 @@ public class TestTimezoneResource extends AbstractResource {
     }
 
     public void updateTimezone(TestTimezoneUpdateRequestDTO updateRequestDTO, String regularUserId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/timezone", timeZoneAppConfig.port()), regularUserId);
+        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/timezone", movieAppConfig.port()), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.update.v1+json");
         headers.setBearerAuth(responseHolder.getToken());

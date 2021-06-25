@@ -1,6 +1,6 @@
 package com.gt.scr.movie.test.resource;
 
-import com.gt.scr.movie.test.config.TimeZoneAppConfig;
+import com.gt.scr.movie.test.config.MovieAppConfig;
 import com.gt.scr.movie.test.domain.TestLoginRequestDTO;
 import com.gt.scr.movie.test.domain.TestLoginResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 public class TestLoginResource extends AbstractResource {
 
     @Autowired
-    private TimeZoneAppConfig timeZoneAppConfig;
+    private MovieAppConfig movieAppConfig;
 
     @Autowired
     private ResponseHolder responseHolder;
 
     public void create(TestLoginRequestDTO testLoginRequestDTO) {
-        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/login", timeZoneAppConfig.port());
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/login", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.login.v1+json");
         HttpEntity<TestLoginRequestDTO> request = new HttpEntity<>(testLoginRequestDTO, headers);
