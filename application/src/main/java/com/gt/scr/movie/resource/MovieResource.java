@@ -1,8 +1,12 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.movie.resource.domain.ImmutableMovieDTO;
+import com.gt.scr.movie.resource.domain.ImmutableMoviesDTO;
 import com.gt.scr.movie.resource.domain.ImmutableTimezoneDTO;
 import com.gt.scr.movie.resource.domain.ImmutableTimezonesDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieDTO;
+import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.TimezoneUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.TimezonesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
@@ -54,22 +58,22 @@ public class MovieResource {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(consumes = "application/vnd.timezone.read.v1+json",
-            produces = "application/vnd.timezone.read.v1+json")
-    public ResponseEntity<TimezonesDTO> getMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
+    @GetMapping(consumes = "application/vnd.movie.read.v1+json",
+            produces = "application/vnd.movie.read.v1+json")
+    public ResponseEntity<MoviesDTO> getMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
                                                        @RequestParam(value = "userId", required = false) String userId) {
 
-        Map<UUID, UserTimezone> timezones = movieService.getMovieRating(determineUserId(userId, userProfile.id()));
+        Map<UUID, Movie> movies = movieService.getMovieRating(determineUserId(userId, userProfile.id()));
 
-        List<ImmutableTimezoneDTO> timezoneDTOList = timezones.values().stream().map(tz -> ImmutableTimezoneDTO.builder()
-                .city(tz.city())
-                .id(tz.id())
-                .gmtOffset(tz.gmtOffset())
-                .name(tz.name())
+        List<MovieDTO> movieDTOs = movies.values().stream().map(mv -> ImmutableMovieDTO.builder()
+                .id(mv.id())
+                .name(mv.name())
+                .rating(mv.rating())
+                .yearProduced(mv.yearProduced())
                 .build()).collect(Collectors.toList());
 
-        TimezonesDTO timezonesDTO = ImmutableTimezonesDTO.builder().timezones(timezoneDTOList).build();
-        return ResponseEntity.ok(timezonesDTO);
+        MoviesDTO moviesDTO = ImmutableMoviesDTO.builder().movies(movieDTOs).build();
+        return ResponseEntity.ok(moviesDTO);
     }
 
     @DeleteMapping(consumes = "application/vnd.timezone.delete.v1+json",

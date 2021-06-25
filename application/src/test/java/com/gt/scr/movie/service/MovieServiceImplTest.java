@@ -50,7 +50,7 @@ class MovieServiceImplTest {
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userMovies()).contains(Map.entry(movie.id(), movie));
+        assertThat(actualParameter.movies()).contains(Map.entry(movie.id(), movie));
     }
 
     @Test
@@ -80,10 +80,10 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        Map<UUID, UserTimezone> timezones = movieService.getMovieRating(userId);
+        Map<UUID, Movie> movies = movieService.getMovieRating(userId);
 
         //then
-        assertThat(timezones).isEqualTo(user.userTimeZones());
+        assertThat(movies).isEqualTo(user.movies());
     }
 
     @Test

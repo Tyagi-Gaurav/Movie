@@ -25,7 +25,7 @@ public class MovieServiceImpl implements MovieService {
     public void addMovieRating(UUID userId, Movie movie) {
         User userFromDatabase = userService.findUserBy(userId);
         HashMap<UUID, Movie> uuidUserMoviesHashMap =
-                userFromDatabase.userMovies();
+                userFromDatabase.movies();
 
         boolean alreadyExists = uuidUserMoviesHashMap.values()
                 .stream().anyMatch(tz ->
@@ -39,13 +39,13 @@ public class MovieServiceImpl implements MovieService {
         uuidUserMoviesHashMap.put(movie.id(), movie);
 
         userService.update(ImmutableUser.builder().from(userFromDatabase)
-                .userMovies(uuidUserMoviesHashMap).build());
+                .movies(uuidUserMoviesHashMap).build());
     }
 
     @Override
-    public Map<UUID, UserTimezone> getMovieRating(UUID userId) {
+    public Map<UUID, Movie> getMovieRating(UUID userId) {
         User userFromDatabase = userService.findUserBy(userId);
-        return userFromDatabase.userTimeZones();
+        return userFromDatabase.movies();
     }
 
     @Override

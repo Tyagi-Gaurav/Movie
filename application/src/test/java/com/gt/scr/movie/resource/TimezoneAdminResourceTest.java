@@ -3,11 +3,11 @@ package com.gt.scr.movie.resource;
 import com.gt.scr.movie.resource.domain.ImmutableMovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableTimezoneUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
-import com.gt.scr.movie.resource.domain.TimezoneDTO;
-import com.gt.scr.movie.resource.domain.TimezonesDTO;
+import com.gt.scr.movie.resource.domain.MovieDTO;
+import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
+import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.UserTimezone;
 import com.gt.scr.movie.util.TestUtils;
@@ -82,33 +82,35 @@ class TimezoneAdminResourceTest {
                 .authority("ADMIN")
                 .build();
 
-        Map<UUID, UserTimezone> timezoneMap = new HashMap<>();
-        ImmutableUserTimezone expectedReturnObject = ImmutableUserTimezone.builder()
+        Map<UUID, Movie> movieMap = new HashMap<>();
+        Movie expectedReturnObject = ImmutableMovie.builder()
                 .id(usersOwnId)
-                .gmtOffset(1).name(randomAlphabetic(5)).city(randomAlphabetic(5))
+                .name(randomAlphabetic(5))
+                .rating(BigDecimal.ONE)
+                .yearProduced(2010)
                 .build();
-        timezoneMap.put(userProfile.id(), expectedReturnObject);
+        movieMap.put(userProfile.id(), expectedReturnObject);
 
-        when(movieService.getMovieRating(requestedUserId)).thenReturn(timezoneMap);
+        when(movieService.getMovieRating(requestedUserId)).thenReturn(movieMap);
 
         //when
         MvcResult mvcResult = mockMvc.perform(get("/user/timezone")
                 .requestAttr("userProfile", userProfile)
                 .param("userId", requestedUserId.toString())
-                .contentType("application/vnd.timezone.read.v1+json"))
+                .contentType("application/vnd.movie.read.v1+json"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         verify(movieService).getMovieRating(requestedUserId);
         verify(movieService, times(0)).getMovieRating(usersOwnId);
-        TimezonesDTO timezonesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
-                TimezonesDTO.class);
+        MoviesDTO moviesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
+                MoviesDTO.class);
 
-        assertThat(timezonesDTO.timezones()).hasSize(1);
-        TimezoneDTO actual = timezonesDTO.timezones().get(0);
-        assertThat(actual.city()).isEqualTo(expectedReturnObject.city());
+        assertThat(moviesDTO.movies()).hasSize(1);
+        MovieDTO actual = moviesDTO.movies().get(0);
         assertThat(actual.name()).isEqualTo(expectedReturnObject.name());
-        assertThat(actual.gmtOffset()).isEqualTo(expectedReturnObject.gmtOffset());
+        assertThat(actual.rating()).isEqualTo(expectedReturnObject.rating());
+        assertThat(actual.yearProduced()).isEqualTo(expectedReturnObject.yearProduced());
     }
 
     @Test

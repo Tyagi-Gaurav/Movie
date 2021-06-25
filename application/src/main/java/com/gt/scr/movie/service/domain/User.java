@@ -42,7 +42,7 @@ public interface User extends UserDetails {
     }
 
     @Value.Default
-    default HashMap<UUID, Movie> userMovies() {
+    default HashMap<UUID, Movie> movies() {
         return new HashMap<>();
     }
 

@@ -11,7 +11,7 @@ public interface MovieService {
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     void addMovieRating(UUID userId, Movie movie);
 
-    Map<UUID, UserTimezone> getMovieRating(UUID userId);
+    Map<UUID, Movie> getMovieRating(UUID userId);
 
     void deleteMovieRating(UUID userId, UUID timezoneId);
 
