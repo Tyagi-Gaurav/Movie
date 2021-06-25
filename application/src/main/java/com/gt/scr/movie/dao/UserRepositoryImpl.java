@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @Autowired
     private DatabaseConfig databaseConfig;
@@ -37,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> getAllUsers() {
         Map<Object, Object> userEntries = redisTemplate.opsForHash().entries("user");
         return userEntries.values()
-                .stream().map(entry -> (User)entry)
+                .stream().map(User.class::cast)
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User user) {
-        String key = String.format("%s-%s", user.id(), user.getUsername());
+        var key = String.format("%s-%s", user.id(), user.getUsername());
         if (redisTemplate.opsForValue().get(key) == null) {
             redisTemplate.opsForValue().set(key, user, databaseConfig.duplicateInterval());
             redisTemplate.opsForHash().put("user", user.id(), user);

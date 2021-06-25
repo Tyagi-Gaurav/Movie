@@ -47,11 +47,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
-			JwtTokenUtil jwtTokenUtil = getJwtTokenUtil(jwtToken);
+			var jwtTokenUtil = getJwtTokenUtil(jwtToken);
 
 			try {
 				userId = jwtTokenUtil.getUserIdFromToken();
-				LOG.info("Fetched UserId from token: " + userId);
+				LOG.info("Fetched UserId from token {}", userId);
 				validateToken(jwtTokenUtil, userId, chain, request, response);
 			} catch (IllegalArgumentException e) {
 				LOG.error("Unable to get JWT Token", e);
@@ -62,8 +62,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	protected JwtTokenUtil getJwtTokenUtil(String jwtToken) {
-		JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(jwtToken, signingKey);
-		return jwtTokenUtil;
+		return new JwtTokenUtil(jwtToken, signingKey);
 	}
 
 	private void validateToken(JwtTokenUtil jwtTokenUtil, String userId, FilterChain chain, HttpServletRequest request,
@@ -71,11 +70,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 		if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			LOG.info("Fetch user from repository: {}", userId);
-			User userDetails = userService.findUserBy(UUID.fromString(userId));
+			var userDetails = userService.findUserBy(UUID.fromString(userId));
 
-			if (jwtTokenUtil.validateToken(userDetails)) {
+			if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(userDetails))) {
 				LOG.info("Token validated for user {}", userId);
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+				var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				
 				usernamePasswordAuthenticationToken
@@ -90,7 +89,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 				LinkedHashMap authorities = (LinkedHashMap) authoritiesObjects.get(0);
 				String authority = authorities.get("authority").toString();
-				UserProfile userprofile = ImmutableUserProfile.builder()
+				var userprofile = ImmutableUserProfile.builder()
 						.id(userDetails.id())
 						.authority(authority)
 						.build();

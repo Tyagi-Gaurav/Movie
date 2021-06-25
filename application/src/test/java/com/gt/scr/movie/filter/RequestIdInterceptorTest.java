@@ -40,7 +40,7 @@ class RequestIdInterceptorTest {
         verify(httpServletResponse).setHeader(eq("requestId"), uuidArgumentCaptor.capture());
 
         String value = uuidArgumentCaptor.getValue();
-        assertThat(UUID.fromString(value).toString()).isEqualTo(value);
+        assertThat(UUID.fromString(value).toString()).hasToString(value);
     }
 
     @Test

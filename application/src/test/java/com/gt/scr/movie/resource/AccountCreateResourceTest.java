@@ -1,10 +1,10 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.movie.resource.domain.ImmutableAccountCreateRequestDTO;
-import com.gt.scr.movie.util.TestUtils;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.ImmutableAccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.movie.util.TestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @SpringBootTest(classes = AccountCreateResource.class)
 @EnableWebMvc
-public class AccountCreateResourceTest {
+class AccountCreateResourceTest {
     @Autowired
     private MockMvc mockMvc;
 

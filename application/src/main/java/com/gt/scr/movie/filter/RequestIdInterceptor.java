@@ -12,17 +12,20 @@ import java.util.UUID;
 @Component
 public class RequestIdInterceptor implements HandlerInterceptor {
 
+    private static final String REQUEST_ID = "requestId";
+
     @Override
     public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response, Object handler) {
-        String requestId = request.getHeader("requestId");
+                             HttpServletResponse response,
+                             Object handler) {
+        String requestId = request.getHeader(REQUEST_ID);
 
         if (requestId == null) {
             requestId = UUID.randomUUID().toString();
         }
 
-        MDC.put("requestId", requestId);
-        response.setHeader("requestId", StringUtils.chomp(requestId));
+        MDC.put(REQUEST_ID, requestId);
+        response.setHeader(REQUEST_ID, StringUtils.chomp(requestId));
 
         return true;
     }

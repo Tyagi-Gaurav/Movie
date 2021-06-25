@@ -19,7 +19,7 @@ public class ErrorResponseHelper {
 
     public ResponseEntity<String> errorResponse(int statusCode, String message) {
         try {
-            String responseBody = objectMapper.writeValueAsString(ImmutableErrorResponse.builder()
+            var responseBody = objectMapper.writeValueAsString(ImmutableErrorResponse.builder()
                     .message(message)
                     .build());
 

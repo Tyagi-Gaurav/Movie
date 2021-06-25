@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.serial.Serial;
 import org.immutables.value.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.HashMap;
@@ -42,6 +43,6 @@ public interface User extends UserDetails {
     }
 
     default String getRole() {
-        return getAuthorities().stream().map(auth -> auth.getAuthority()).findFirst().orElseGet(() -> "");
+        return getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElseGet(() -> "");
     }
 }

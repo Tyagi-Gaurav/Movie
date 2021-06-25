@@ -1,15 +1,15 @@
 package com.gt.scr.movie.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gt.scr.movie.resource.domain.ImmutableLoginRequestDTO;
-import com.gt.scr.movie.util.TestBuilders;
-import com.gt.scr.movie.util.TestUtils;
 import com.gt.scr.movie.config.AuthConfig;
 import com.gt.scr.movie.exception.ApplicationAuthenticationExceptionHandler;
 import com.gt.scr.movie.exception.ErrorResponseHelper;
+import com.gt.scr.movie.resource.domain.ImmutableLoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.movie.util.TestBuilders;
+import com.gt.scr.movie.util.TestUtils;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {LoginResource.class, ApplicationAuthenticationExceptionHandler.class})
 @EnableWebMvc
 @ActiveProfiles("LoginResourceTest")
-public class LoginResourceTest {
+class LoginResourceTest {
 
     @Autowired
     private MockMvc mockMvc;

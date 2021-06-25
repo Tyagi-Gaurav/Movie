@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
 @SpringBootTest(classes = StatusResource.class)
-public class StatusResourceTest {
+class StatusResourceTest {
     @Autowired
     private MockMvc mockMvc;
 

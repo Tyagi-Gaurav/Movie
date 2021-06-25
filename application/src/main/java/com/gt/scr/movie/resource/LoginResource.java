@@ -37,10 +37,10 @@ public class LoginResource {
     @PostMapping(path = "/user/login",
             consumes = "application/vnd.login.v1+json",
             produces = "application/vnd.login.v1+json")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) throws Exception {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         try {
             LOG.info("Login user request");
-            User user = authenticate(loginRequestDTO);
+            var user = authenticate(loginRequestDTO);
             final String token = JwtTokenUtil.generateToken(user, authConfig.tokenDuration(), signingKey);
             ImmutableLoginResponseDTO response = ImmutableLoginResponseDTO.builder()
                     .token(token)
@@ -56,7 +56,8 @@ public class LoginResource {
 
     private User authenticate(LoginRequestDTO request) {
         try {
-            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
+            var auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
             return (User)auth.getPrincipal();
         } catch (AuthenticationException e) {
             LOG.error(e.getMessage(), e);
