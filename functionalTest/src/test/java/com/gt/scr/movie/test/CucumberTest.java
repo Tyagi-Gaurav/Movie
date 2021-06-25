@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "classpath:features",
         plugin = {"pretty", "json:target/cucumber-report.json"},
-        glue = {"com.toptal.scr.tz.test.steps"},
+        glue = {"com.gt.scr.movie.test.steps"},
         monochrome = true
 )
 public class CucumberTest { }

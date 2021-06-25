@@ -8,7 +8,7 @@ import java.util.List;
 
 @Value.Immutable
 @JsonSerialize
-@JsonDeserialize(builder = ImmutableTimezonesDTO.Builder.class)
-public interface TimezonesDTO {
-    List<TimezoneDTO> timezones();
+@JsonDeserialize(builder = ImmutableMoviesDTO.Builder.class)
+public interface MoviesDTO {
+    List<MovieDTO> movies();
 }

@@ -1,15 +1,15 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.movie.resource.domain.ImmutableTimezoneCreateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableTimezoneUpdateRequestDTO;
+import com.gt.scr.movie.resource.domain.ImmutableMovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.ImmutableMovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
-import com.gt.scr.movie.util.TestUtils;
-import com.gt.scr.movie.resource.domain.TimezoneDTO;
-import com.gt.scr.movie.resource.domain.TimezonesDTO;
+import com.gt.scr.movie.resource.domain.MovieDTO;
+import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
-import com.gt.scr.movie.service.TimezoneService;
-import com.gt.scr.movie.service.domain.UserTimezone;
+import com.gt.scr.movie.service.MovieService;
+import com.gt.scr.movie.service.domain.ImmutableMovie;
+import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.movie.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -37,20 +38,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
 @EnableWebMvc
-@SpringBootTest(classes = TimezoneResource.class)
-class TimezoneResourceTest {
+@SpringBootTest(classes = MovieResource.class)
+class MovieResourceTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private TimezoneService timezoneService;
+    private MovieService movieService;
 
     @Test
-    void shouldAllowUserToCreateTimeZones() throws Exception {
-        String content = TestUtils.asJsonString(ImmutableTimezoneCreateRequestDTO.builder()
-                .city(randomAlphabetic(6))
+    void shouldAllowUserToCreateMovie() throws Exception {
+        String content = TestUtils.asJsonString(ImmutableMovieCreateRequestDTO.builder()
                 .name(randomAlphabetic(6))
-                .gmtOffset(1).build());
+                .rating(BigDecimal.ONE)
+                .yearProduced(2010).build());
 
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
@@ -58,76 +59,79 @@ class TimezoneResourceTest {
                 .build();
 
         //when
-        mockMvc.perform(post("/user/timezone")
+        mockMvc.perform(post("/user/movie")
                 .content(content)
                 .requestAttr("userProfile", userProfile)
-                .contentType("application/vnd.timezone.add.v1+json"))
+                .contentType("application/vnd.movie.add.v1+json"))
                 .andExpect(status().isNoContent());
 
-        verify(timezoneService).addTimezone(eq(userProfile.id()), any(UserTimezone.class));
+        verify(movieService).addMovieRating(eq(userProfile.id()), any(Movie.class));
     }
 
     @Test
-    void shouldAllowUserToReadTimeZones() throws Exception {
+    void shouldAllowUserToReadMovies() throws Exception {
         UUID id = UUID.randomUUID();
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(id)
                 .authority("USER")
                 .build();
 
-        Map<UUID, UserTimezone> timezoneMap = new HashMap<>();
-        ImmutableUserTimezone expectedReturnObject = ImmutableUserTimezone.builder()
+        Map<UUID, Movie> moviesMap = new HashMap<>();
+        Movie expectedReturnObject = ImmutableMovie.builder()
                 .id(id)
-                .gmtOffset(1).name(randomAlphabetic(5)).city(randomAlphabetic(5))
-                .build();
-        timezoneMap.put(userProfile.id(), expectedReturnObject);
-
-        when(timezoneService.getTimezones(id)).thenReturn(timezoneMap);
-
-        //when
-        MvcResult mvcResult = mockMvc.perform(get("/user/timezone")
-                .requestAttr("userProfile", userProfile)
-                .contentType("application/vnd.timezone.read.v1+json"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        verify(timezoneService).getTimezones(eq(userProfile.id()));
-        TimezonesDTO timezonesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
-                TimezonesDTO.class);
-
-        assertThat(timezonesDTO.timezones()).hasSize(1);
-        TimezoneDTO actual = timezonesDTO.timezones().get(0);
-        assertThat(actual.city()).isEqualTo(expectedReturnObject.city());
-        assertThat(actual.name()).isEqualTo(expectedReturnObject.name());
-        assertThat(actual.gmtOffset()).isEqualTo(expectedReturnObject.gmtOffset());
-    }
-
-    @Test
-    void shouldAllowUserToDeleteTimeZones() throws Exception {
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("USER")
-                .build();
-        UUID timezoneId = UUID.randomUUID();
-
-        //when
-        mockMvc.perform(delete("/user/timezone")
-                .requestAttr("userProfile", userProfile)
-                .param("id", timezoneId.toString())
-                .contentType("application/vnd.timezone.delete.v1+json"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        verify(timezoneService).deleteTimezone(userProfile.id(), timezoneId);
-    }
-
-    @Test
-    void shouldAllowUserToUpdateTimeZones() throws Exception {
-        String content = TestUtils.asJsonString(ImmutableTimezoneUpdateRequestDTO.builder()
-                .id(UUID.randomUUID())
-                .city(randomAlphabetic(5))
                 .name(randomAlphabetic(5))
-                .gmtOffset(1).build());
+                .yearProduced(2010)
+                .rating(BigDecimal.ONE)
+                .build();
+        moviesMap.put(userProfile.id(), expectedReturnObject);
+
+        when(movieService.getMovieRating(id)).thenReturn(moviesMap);
+
+        //when
+        MvcResult mvcResult = mockMvc.perform(get("/user/movie")
+                .requestAttr("userProfile", userProfile)
+                .contentType("application/vnd.movie.read.v1+json"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        verify(movieService).getMovieRating(eq(userProfile.id()));
+        MoviesDTO moviesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
+                MoviesDTO.class);
+
+        assertThat(moviesDTO.movies()).hasSize(1);
+        MovieDTO actual = moviesDTO.movies().get(0);
+        assertThat(actual.name()).isEqualTo(expectedReturnObject.name());
+        assertThat(actual.rating()).isEqualTo(expectedReturnObject.rating());
+        assertThat(actual.yearProduced()).isEqualTo(expectedReturnObject.yearProduced());
+    }
+
+    @Test
+    void shouldAllowUserToDeleteMovies() throws Exception {
+        UserProfile userProfile = ImmutableUserProfile.builder()
+                .id(UUID.randomUUID())
+                .authority("USER")
+                .build();
+        UUID movieId = UUID.randomUUID();
+
+        //when
+        mockMvc.perform(delete("/user/movie")
+                .requestAttr("userProfile", userProfile)
+                .param("id", movieId.toString())
+                .contentType("application/vnd.movie.delete.v1+json"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        verify(movieService).deleteMovieRating(userProfile.id(), movieId);
+    }
+
+    @Test
+    void shouldAllowUserToUpdateMovies() throws Exception {
+        String content = TestUtils.asJsonString(ImmutableMovieUpdateRequestDTO.builder()
+                .id(UUID.randomUUID())
+                .name(randomAlphabetic(5))
+                .rating(BigDecimal.ZERO)
+                .yearProduced(2010)
+                .build());
 
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
@@ -135,13 +139,13 @@ class TimezoneResourceTest {
                 .build();
 
         //when
-        mockMvc.perform(put("/user/timezone")
+        mockMvc.perform(put("/user/movie")
                 .content(content)
                 .requestAttr("userProfile", userProfile)
-                .contentType("application/vnd.timezone.update.v1+json"))
+                .contentType("application/vnd.movie.update.v1+json"))
                 .andExpect(status().isOk());
 
-        verify(timezoneService).updateTimezone(eq(userProfile.id()), any(UserTimezone.class));
+        verify(movieService).updateMovieRating(eq(userProfile.id()), any(Movie.class));
     }
 
 

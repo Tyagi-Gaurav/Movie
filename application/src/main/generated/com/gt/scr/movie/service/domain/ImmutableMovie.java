@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Var;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,29 +18,29 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
- * Immutable implementation of {@link UserTimezone}.
+ * Immutable implementation of {@link Movie}.
  * <p>
  * Use the builder to create immutable instances:
- * {@code ImmutableUserTimezone.builder()}.
+ * {@code ImmutableMovie.builder()}.
  */
-@Generated(from = "UserTimezone", generator = "Immutables")
+@Generated(from = "Movie", generator = "Immutables")
 @SuppressWarnings({"all"})
 @ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated("org.immutables.processor.ProxyProcessor")
 @Immutable
 @CheckReturnValue
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ImmutableUserTimezone implements UserTimezone {
+public final class ImmutableMovie implements Movie {
   private final UUID id;
   private final String name;
-  private final String city;
-  private final int gmtOffset;
+  private final int yearProduced;
+  private final BigDecimal rating;
 
-  private ImmutableUserTimezone(UUID id, String name, String city, int gmtOffset) {
+  private ImmutableMovie(UUID id, String name, int yearProduced, BigDecimal rating) {
     this.id = id;
     this.name = name;
-    this.city = city;
-    this.gmtOffset = gmtOffset;
+    this.yearProduced = yearProduced;
+    this.rating = rating;
   }
 
   /**
@@ -61,90 +62,90 @@ public final class ImmutableUserTimezone implements UserTimezone {
   }
 
   /**
-   * @return The value of the {@code city} attribute
+   * @return The value of the {@code yearProduced} attribute
    */
-  @JsonProperty("city")
+  @JsonProperty("yearProduced")
   @Override
-  public String city() {
-    return city;
+  public int yearProduced() {
+    return yearProduced;
   }
 
   /**
-   * @return The value of the {@code gmtOffset} attribute
+   * @return The value of the {@code rating} attribute
    */
-  @JsonProperty("gmtOffset")
+  @JsonProperty("rating")
   @Override
-  public int gmtOffset() {
-    return gmtOffset;
+  public BigDecimal rating() {
+    return rating;
   }
 
   /**
-   * Copy the current immutable object by setting a value for the {@link UserTimezone#id() id} attribute.
+   * Copy the current immutable object by setting a value for the {@link Movie#id() id} attribute.
    * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for id
    * @return A modified copy of the {@code this} object
    */
-  public final ImmutableUserTimezone withId(UUID value) {
+  public final ImmutableMovie withId(UUID value) {
     if (this.id == value) return this;
     UUID newValue = Objects.requireNonNull(value, "id");
-    return new ImmutableUserTimezone(newValue, this.name, this.city, this.gmtOffset);
+    return new ImmutableMovie(newValue, this.name, this.yearProduced, this.rating);
   }
 
   /**
-   * Copy the current immutable object by setting a value for the {@link UserTimezone#name() name} attribute.
+   * Copy the current immutable object by setting a value for the {@link Movie#name() name} attribute.
    * An equals check used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for name
    * @return A modified copy of the {@code this} object
    */
-  public final ImmutableUserTimezone withName(String value) {
+  public final ImmutableMovie withName(String value) {
     String newValue = Objects.requireNonNull(value, "name");
     if (this.name.equals(newValue)) return this;
-    return new ImmutableUserTimezone(this.id, newValue, this.city, this.gmtOffset);
+    return new ImmutableMovie(this.id, newValue, this.yearProduced, this.rating);
   }
 
   /**
-   * Copy the current immutable object by setting a value for the {@link UserTimezone#city() city} attribute.
-   * An equals check used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for city
-   * @return A modified copy of the {@code this} object
-   */
-  public final ImmutableUserTimezone withCity(String value) {
-    String newValue = Objects.requireNonNull(value, "city");
-    if (this.city.equals(newValue)) return this;
-    return new ImmutableUserTimezone(this.id, this.name, newValue, this.gmtOffset);
-  }
-
-  /**
-   * Copy the current immutable object by setting a value for the {@link UserTimezone#gmtOffset() gmtOffset} attribute.
+   * Copy the current immutable object by setting a value for the {@link Movie#yearProduced() yearProduced} attribute.
    * A value equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for gmtOffset
+   * @param value A new value for yearProduced
    * @return A modified copy of the {@code this} object
    */
-  public final ImmutableUserTimezone withGmtOffset(int value) {
-    if (this.gmtOffset == value) return this;
-    return new ImmutableUserTimezone(this.id, this.name, this.city, value);
+  public final ImmutableMovie withYearProduced(int value) {
+    if (this.yearProduced == value) return this;
+    return new ImmutableMovie(this.id, this.name, value, this.rating);
   }
 
   /**
-   * This instance is equal to all instances of {@code ImmutableUserTimezone} that have equal attribute values.
+   * Copy the current immutable object by setting a value for the {@link Movie#rating() rating} attribute.
+   * An equals check used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for rating
+   * @return A modified copy of the {@code this} object
+   */
+  public final ImmutableMovie withRating(BigDecimal value) {
+    BigDecimal newValue = Objects.requireNonNull(value, "rating");
+    if (this.rating.equals(newValue)) return this;
+    return new ImmutableMovie(this.id, this.name, this.yearProduced, newValue);
+  }
+
+  /**
+   * This instance is equal to all instances of {@code ImmutableMovie} that have equal attribute values.
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
   public boolean equals(@Nullable Object another) {
     if (this == another) return true;
-    return another instanceof ImmutableUserTimezone
-        && equalTo((ImmutableUserTimezone) another);
+    return another instanceof ImmutableMovie
+        && equalTo((ImmutableMovie) another);
   }
 
-  private boolean equalTo(ImmutableUserTimezone another) {
+  private boolean equalTo(ImmutableMovie another) {
     return id.equals(another.id)
         && name.equals(another.name)
-        && city.equals(another.city)
-        && gmtOffset == another.gmtOffset;
+        && yearProduced == another.yearProduced
+        && rating.equals(another.rating);
   }
 
   /**
-   * Computes a hash code from attributes: {@code id}, {@code name}, {@code city}, {@code gmtOffset}.
+   * Computes a hash code from attributes: {@code id}, {@code name}, {@code yearProduced}, {@code rating}.
    * @return hashCode value
    */
   @Override
@@ -152,102 +153,102 @@ public final class ImmutableUserTimezone implements UserTimezone {
     @Var int h = 5381;
     h += (h << 5) + id.hashCode();
     h += (h << 5) + name.hashCode();
-    h += (h << 5) + city.hashCode();
-    h += (h << 5) + gmtOffset;
+    h += (h << 5) + yearProduced;
+    h += (h << 5) + rating.hashCode();
     return h;
   }
 
   /**
-   * Prints the immutable value {@code UserTimezone} with attribute values.
+   * Prints the immutable value {@code Movie} with attribute values.
    * @return A string representation of the value
    */
   @Override
   public String toString() {
-    return MoreObjects.toStringHelper("UserTimezone")
+    return MoreObjects.toStringHelper("Movie")
         .omitNullValues()
         .add("id", id)
         .add("name", name)
-        .add("city", city)
-        .add("gmtOffset", gmtOffset)
+        .add("yearProduced", yearProduced)
+        .add("rating", rating)
         .toString();
   }
 
   /**
-   * Creates an immutable copy of a {@link UserTimezone} value.
+   * Creates an immutable copy of a {@link Movie} value.
    * Uses accessors to get values to initialize the new immutable instance.
    * If an instance is already immutable, it is returned as is.
    * @param instance The instance to copy
-   * @return A copied immutable UserTimezone instance
+   * @return A copied immutable Movie instance
    */
-  public static ImmutableUserTimezone copyOf(UserTimezone instance) {
-    if (instance instanceof ImmutableUserTimezone) {
-      return (ImmutableUserTimezone) instance;
+  public static ImmutableMovie copyOf(Movie instance) {
+    if (instance instanceof ImmutableMovie) {
+      return (ImmutableMovie) instance;
     }
-    return ImmutableUserTimezone.builder()
+    return ImmutableMovie.builder()
         .from(instance)
         .build();
   }
 
   /**
-   * Creates a builder for {@link ImmutableUserTimezone ImmutableUserTimezone}.
+   * Creates a builder for {@link ImmutableMovie ImmutableMovie}.
    * <pre>
-   * ImmutableUserTimezone.builder()
-   *    .id(UUID) // required {@link UserTimezone#id() id}
-   *    .name(String) // required {@link UserTimezone#name() name}
-   *    .city(String) // required {@link UserTimezone#city() city}
-   *    .gmtOffset(int) // required {@link UserTimezone#gmtOffset() gmtOffset}
+   * ImmutableMovie.builder()
+   *    .id(UUID) // required {@link Movie#id() id}
+   *    .name(String) // required {@link Movie#name() name}
+   *    .yearProduced(int) // required {@link Movie#yearProduced() yearProduced}
+   *    .rating(java.math.BigDecimal) // required {@link Movie#rating() rating}
    *    .build();
    * </pre>
-   * @return A new ImmutableUserTimezone builder
+   * @return A new ImmutableMovie builder
    */
-  public static ImmutableUserTimezone.Builder builder() {
-    return new ImmutableUserTimezone.Builder();
+  public static ImmutableMovie.Builder builder() {
+    return new ImmutableMovie.Builder();
   }
 
   /**
-   * Builds instances of type {@link ImmutableUserTimezone ImmutableUserTimezone}.
+   * Builds instances of type {@link ImmutableMovie ImmutableMovie}.
    * Initialize attributes and then invoke the {@link #build()} method to create an
    * immutable instance.
    * <p><em>{@code Builder} is not thread-safe and generally should not be stored in a field or collection,
    * but instead used immediately to create instances.</em>
    */
-  @Generated(from = "UserTimezone", generator = "Immutables")
+  @Generated(from = "Movie", generator = "Immutables")
   @NotThreadSafe
   @JsonIgnoreProperties(ignoreUnknown = true)
   public static final class Builder {
     private static final long INIT_BIT_ID = 0x1L;
     private static final long INIT_BIT_NAME = 0x2L;
-    private static final long INIT_BIT_CITY = 0x4L;
-    private static final long INIT_BIT_GMT_OFFSET = 0x8L;
+    private static final long INIT_BIT_YEAR_PRODUCED = 0x4L;
+    private static final long INIT_BIT_RATING = 0x8L;
     private long initBits = 0xfL;
 
     private @Nullable UUID id;
     private @Nullable String name;
-    private @Nullable String city;
-    private int gmtOffset;
+    private int yearProduced;
+    private @Nullable BigDecimal rating;
 
     private Builder() {
     }
 
     /**
-     * Fill a builder with attribute values from the provided {@code UserTimezone} instance.
+     * Fill a builder with attribute values from the provided {@code Movie} instance.
      * Regular attribute values will be replaced with those from the given instance.
      * Absent optional values will not replace present values.
      * @param instance The instance from which to copy values
      * @return {@code this} builder for use in a chained invocation
      */
     @CanIgnoreReturnValue 
-    public final Builder from(UserTimezone instance) {
+    public final Builder from(Movie instance) {
       Objects.requireNonNull(instance, "instance");
       id(instance.id());
       name(instance.name());
-      city(instance.city());
-      gmtOffset(instance.gmtOffset());
+      yearProduced(instance.yearProduced());
+      rating(instance.rating());
       return this;
     }
 
     /**
-     * Initializes the value for the {@link UserTimezone#id() id} attribute.
+     * Initializes the value for the {@link Movie#id() id} attribute.
      * @param id The value for id 
      * @return {@code this} builder for use in a chained invocation
      */
@@ -260,7 +261,7 @@ public final class ImmutableUserTimezone implements UserTimezone {
     }
 
     /**
-     * Initializes the value for the {@link UserTimezone#name() name} attribute.
+     * Initializes the value for the {@link Movie#name() name} attribute.
      * @param name The value for name 
      * @return {@code this} builder for use in a chained invocation
      */
@@ -273,50 +274,50 @@ public final class ImmutableUserTimezone implements UserTimezone {
     }
 
     /**
-     * Initializes the value for the {@link UserTimezone#city() city} attribute.
-     * @param city The value for city 
+     * Initializes the value for the {@link Movie#yearProduced() yearProduced} attribute.
+     * @param yearProduced The value for yearProduced 
      * @return {@code this} builder for use in a chained invocation
      */
     @CanIgnoreReturnValue 
-    @JsonProperty("city")
-    public final Builder city(String city) {
-      this.city = Objects.requireNonNull(city, "city");
-      initBits &= ~INIT_BIT_CITY;
+    @JsonProperty("yearProduced")
+    public final Builder yearProduced(int yearProduced) {
+      this.yearProduced = yearProduced;
+      initBits &= ~INIT_BIT_YEAR_PRODUCED;
       return this;
     }
 
     /**
-     * Initializes the value for the {@link UserTimezone#gmtOffset() gmtOffset} attribute.
-     * @param gmtOffset The value for gmtOffset 
+     * Initializes the value for the {@link Movie#rating() rating} attribute.
+     * @param rating The value for rating 
      * @return {@code this} builder for use in a chained invocation
      */
     @CanIgnoreReturnValue 
-    @JsonProperty("gmtOffset")
-    public final Builder gmtOffset(int gmtOffset) {
-      this.gmtOffset = gmtOffset;
-      initBits &= ~INIT_BIT_GMT_OFFSET;
+    @JsonProperty("rating")
+    public final Builder rating(BigDecimal rating) {
+      this.rating = Objects.requireNonNull(rating, "rating");
+      initBits &= ~INIT_BIT_RATING;
       return this;
     }
 
     /**
-     * Builds a new {@link ImmutableUserTimezone ImmutableUserTimezone}.
-     * @return An immutable instance of UserTimezone
+     * Builds a new {@link ImmutableMovie ImmutableMovie}.
+     * @return An immutable instance of Movie
      * @throws java.lang.IllegalStateException if any required attributes are missing
      */
-    public ImmutableUserTimezone build() {
+    public ImmutableMovie build() {
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableUserTimezone(id, name, city, gmtOffset);
+      return new ImmutableMovie(id, name, yearProduced, rating);
     }
 
     private String formatRequiredAttributesMessage() {
       List<String> attributes = new ArrayList<>();
       if ((initBits & INIT_BIT_ID) != 0) attributes.add("id");
       if ((initBits & INIT_BIT_NAME) != 0) attributes.add("name");
-      if ((initBits & INIT_BIT_CITY) != 0) attributes.add("city");
-      if ((initBits & INIT_BIT_GMT_OFFSET) != 0) attributes.add("gmtOffset");
-      return "Cannot build UserTimezone, some of required attributes are not set " + attributes;
+      if ((initBits & INIT_BIT_YEAR_PRODUCED) != 0) attributes.add("yearProduced");
+      if ((initBits & INIT_BIT_RATING) != 0) attributes.add("rating");
+      return "Cannot build Movie, some of required attributes are not set " + attributes;
     }
   }
 }

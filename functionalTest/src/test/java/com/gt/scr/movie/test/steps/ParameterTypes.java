@@ -1,7 +1,7 @@
 package com.gt.scr.movie.test.steps;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gt.scr.movie.test.domain.TestTimezoneDTO;
+import com.gt.scr.movie.test.domain.TestMovieDTO;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.DefaultDataTableCellTransformer;
@@ -22,7 +22,7 @@ public class ParameterTypes {
     }
 
     @DataTableType
-    private List<TestTimezoneDTO> convert(DataTable dataTable) {
-        return dataTable.asList(TestTimezoneDTO.class);
+    private List<TestMovieDTO> convert(DataTable dataTable) {
+        return dataTable.asList(TestMovieDTO.class);
     }
 }

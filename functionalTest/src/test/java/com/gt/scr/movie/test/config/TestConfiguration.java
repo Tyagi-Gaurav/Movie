@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableConfigurationProperties
-@ComponentScan(basePackages = "com.toptal.scr.tz.test")
+@ComponentScan(basePackages = "com.gt.scr.movie.test")
 public class TestConfiguration {
 
     @Bean
@@ -21,8 +21,8 @@ public class TestConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties("timezone-app")
-    public TimeZoneAppConfig timeZoneAppConfig() {
-        return ModifiableTimeZoneAppConfig.create();
+    @ConfigurationProperties("movie-app")
+    public MovieAppConfig movieAppConfig() {
+        return ModifiableMovieAppConfig.create();
     }
 }

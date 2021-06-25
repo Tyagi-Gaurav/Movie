@@ -1,4 +1,6 @@
-## Movie Rating API
+[![Java CI with Gradle](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/gradle.yml/badge.svg)](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/gradle.yml)
+
+## Movie API
 
 ### Functionality
 
@@ -7,9 +9,9 @@ A REST API that allows users to update movie ratings
 * API Users must be able to create an account and log in.
 * All API calls must be authenticated.
 * When logged in, a user can see, edit and delete movie ratings that they entered.
-* There are two roles with different permission levels: 
-  ** A regular user that can only access their own records.
-  ** An admin that can CRUD all users and all user records.
+* There are two roles with different permission levels:
+    * A regular user that can only access their own records.
+    * An admin that can CRUD all users and all user records.
 * When a movie is entered, each entry has a Name, Rating of the movie, year of production.
 * The API must be able to return data in the JSON format.
 
@@ -17,8 +19,8 @@ A REST API that allows users to update movie ratings
 
 The API has been designed using [Java 11](https://docs.oracle.com/en/java/javase/11/docs/api/index.html)
 and [Spring Boot](https://spring.io/projects/spring-boot). [Redis](https://redislabs.com/) is used for storage of
-timezones. It can either be used in embedded manner in standalone mode or as a separate entity when running using
-docker. The backend storage is accessed via a set of interfaces. It can easily be swapped out for anything else without
+movies. It can either be used in embedded manner in standalone mode or as a separate entity when running using docker.
+The backend storage is accessed via a set of interfaces. It can easily be swapped out for anything else without
 affecting rest of the application.
 
 #### Application Security
@@ -64,7 +66,7 @@ In order to run [Jacoco](https://www.jacoco.org/jacoco/") separately, it can be 
 ### Postman Collection
 
 A postman collection has been added to the project if you need a more user-friendly way to explore the APIs of the
-application. It can be found at the root directory of the project by the name of `TimezoneAPI.postman_collection.json`
+application. It can be found at the root directory of the project by the name of `MovieAPI.postman_collection.json`
 
 ### Starting the application
 
@@ -235,66 +237,65 @@ Used to gain access to the application
 }
 ```
 
-#### Add Timezone
+#### Add Movie
 
-To add new timezone(s).
+To add new movie(s).
 
 | Method     | URL     | 
 | :-------------      | :----------:      | 
-| POST | /api/user/timezone | 
+| POST | /api/user/movie | 
 
 | Attribute | Type | Description |
 | :-------------      | :----------:      | :----------:|
-| name | String | Timezone Name |
-| city | String | Timezone City |
-| gmtOffset | integer | Offset to GMT. Valid values must be between `-12` to `+12` (Both Inclusive) |
+| name | String | Movie Name |
+| rating | Double | Moving rating between 1 and 10 |
+| yearProduced | integer |  |
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.add.v1+json` | 
+| Content-Type | `application/vnd.movie.add.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 204 | On successful timezone creation |
+| HTTP Status code | 204 | On successful movie creation |
 | HTTP Status code | 401 | If the user is not authenticated |
 
 **Sample Request**
 
 ```
 {
-    "name" : "America/USzfzsfs",
-    "city" : "Newyork",
-    "gmtOffset" : -12
+    "name" : "Second Blood",
+    "rating" : 7.19,
+    "yearProduced" : 2005
 }
 ```
 
-#### Admin Add Timezone
+#### Admin Add Movie
 
-This endpoint can be used by admin to create timezones for a specific user.
+This endpoint can be used by admin to create movies for a specific user.
 
 | Method     | URL     | 
 | :-------------      | :----------:      | 
-| POST | /api/user/timezone |
+| POST | /api/user/movie |
 
 | Query Parameter | Value Type | Description |
 | :-------------      | :----------:      | :----------:      |
-| userId | UUID | User ID for which the timezone must be created |
+| userId | UUID | User ID for which the movie must be created |
 
 | Attribute | Type | Description |
 | :-------------      | :----------:      | :----------:|
-| name | String | Timezone Name |
-| city | String | Timezone City |
+| name | String | Movie Name |
 | gmtOffset | integer | Offset to GMT. Valid values must be between `-12` to `+12` (Both Inclusive) |
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.add.v1+json` | 
+| Content-Type | `application/vnd.movie.add.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 204 | On successful timezone creation |
+| HTTP Status code | 204 | On successful movie creation |
 | HTTP Status code | 401 | If the user is not authenticated |
 | HTTP Status code | 403 | If the user is not authorised |
 
@@ -302,67 +303,67 @@ This endpoint can be used by admin to create timezones for a specific user.
 
 ```
 {
-    "name" : "America/USzfzsfs",
-    "city" : "Newyork",
-    "gmtOffset" : -12
+    "name" : "Second Blood",
+    "rating" : 7.19,
+    "yearProduced" : 2005
 }
 ```
 
-#### Read Timezone
+#### Read Movie
 
-To read timezones created by the user
+To read movies created by the user
 
 | Method     | URL     | 
 | :-------------      | :----------:      |
-| GET | /api/user/timezone | 
+| GET | /api/user/movie | 
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.read.v1+json` | 
-| Accept | `application/vnd.timezone.read.v1+json` | 
+| Content-Type | `application/vnd.movie.read.v1+json` | 
+| Accept | `application/vnd.movie.read.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 200 | On successful read of timezone |
-| HTTP Status code | 401 | If the user is not authenticated |
+| HTTP Status code | 200 | On successful read of movie       |
+| HTTP Status code | 401 | If the user is not authenticated  |
 
 **Sample Response**
 
 ```
 {
-    "timezones": [
+    "movies": [
         {
-            "id": "9caeab84-eeed-4a9d-a964-4d1f7d4d8a7e",
-            "name": "America/USzfzsfs",
-            "city": "Newyork",
-            "gmtOffset": -12
+            "id": "5a39e12c-b8f2-40b2-8a0a-1ad8fac13656",
+            "name": "Third Blood",
+            "yearProduced": 2005,
+            "rating": 7.19
         }
     ]
 }
 ```
 
-#### Admin Read Timezone
+#### Admin Read Movie
 
-To read timezones created by the user
+To read movies created by the user
 
 | Method     | URL     | 
 | :-------------      | :----------:      |
-| GET | /api/user/timezone | 
+| GET | /api/user/movie | 
 
 | Query Parameter | Value Type | Description |
 | :-------------      | :----------:      | :----------:      |
-| userId | UUID | User ID for which the timezone must be created |
+| userId | UUID | User ID for which the movie must be created |
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.read.v1+json` | 
-| Accept | `application/vnd.timezone.read.v1+json` | 
+| Content-Type | `application/vnd.movie.read.v1+json` | 
+| Accept | `application/vnd.movie.read.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 200 | On successful read of timezone |
+| HTTP Status code | 200 | On successful read of movie |
 | HTTP Status code | 401 | If the user is not authenticated |
 | HTTP Status code | 403 | If the user is not authorised |
 
@@ -370,68 +371,68 @@ To read timezones created by the user
 
 ```
 {
-    "timezones": [
+    "movies": [
         {
-            "id": "9caeab84-eeed-4a9d-a964-4d1f7d4d8a7e",
-            "name": "America/USzfzsfs",
-            "city": "Newyork",
-            "gmtOffset": -12
+            "id": "5a39e12c-b8f2-40b2-8a0a-1ad8fac13656",
+            "name": "Third Blood",
+            "yearProduced": 2005,
+            "rating": 7.19
         }
     ]
 }
 ```
 
-#### Update Timezone
+#### Update Movie
 
-To update timezones for the user.
+To update movies for the user.
 
 | Method     | URL     | 
 | :-------------      | :----------:      |
-| PUT | /api/user/timezone |
+| PUT | /api/user/movie |
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.update.v1+json` | 
-| Accept | `application/vnd.timezone.update.v1+json` | 
+| Content-Type | `application/vnd.movie.update.v1+json` | 
+| Accept | `application/vnd.movie.update.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 200 | On successful update of timezone |
+| HTTP Status code | 200 | On successful update of movie |
 | HTTP Status code | 401 | If the user is not authenticated |
 
 **Sample Request**
 
 ```
 {
-    "id": "c48f3735-021b-4c20-9b7f-30cf4202fb7d",
-    "city": "Boston"
+    "id": "5a39e12c-b8f2-40b2-8a0a-1ad8fac13656",
+    "name": "Third Blood"
 }
 ```
 
-Any of the timezone fields could be changed, except for the `id` field as it uniquely identifies the timezone.
+Any of the movie fields could be changed, except for the `id` field as it uniquely identifies the movie.
 
-#### Admin Update Timezone
+#### Admin Update Movie
 
-To update timezones for the user or for a specific user.
+To update movies for the user or for a specific user.
 
 | Method     | URL     | 
 | :-------------      | :----------:      |
-| PUT | /api/user/timezone |
+| PUT | /api/user/movie |
 
 | Query Parameter | Value Type | Description |
 | :-------------      | :----------:      | :----------:      |
-| userId | UUID | User ID for which the timezone must be updated |
+| userId | UUID | User ID for which the movie must be updated |
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.update.v1+json` | 
-| Accept | `application/vnd.timezone.update.v1+json` | 
+| Content-Type | `application/vnd.movie.update.v1+json` | 
+| Accept | `application/vnd.movie.update.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 200 | On successful update of timezone |
+| HTTP Status code | 200 | On successful update of movie |
 | HTTP Status code | 401 | If the user is not authenticated |
 | HTTP Status code | 403 | If the user is not authorised |
 
@@ -439,53 +440,53 @@ To update timezones for the user or for a specific user.
 
 ```
 {
-    "id": "c48f3735-021b-4c20-9b7f-30cf4202fb7d",
-    "city": "Boston"
+    "id": "5a39e12c-b8f2-40b2-8a0a-1ad8fac13656",
+    "name": "Third Blood"
 }
 ```
 
-Any of the timezone fields could be changed, except for the `id` field as it uniquely identifies the timezone.
+Any of the movie fields could be changed, except for the `id` field as it uniquely identifies the movie.
 
-#### Delete Timezone
+#### Delete Movie
 
-To delete timezones for the user
+To delete movies for the user
 
 | Method     | URL     | 
 | :-------------      | :----------:      | 
-| DELETE | /api/user/timezone | 
+| DELETE | /api/user/movie | 
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.delete.v1+json` | 
-| Accept | `application/vnd.timezone.delete.v1+json` | 
+| Content-Type | `application/vnd.movie.delete.v1+json` | 
+| Accept | `application/vnd.movie.delete.v1+json` | 
 | Authorization | `Bearer <Token From login response>` | 
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 200 | On successful delete of timezone |
+| HTTP Status code | 200 | On successful delete of movie |
 | HTTP Status code | 401 | If the user is not authenticated |
 
-#### Admin Delete Timezone
+#### Admin Delete Movie
 
-To delete timezones for the user or for a specific user
+To delete movies for the user or for a specific user
 
 | Method     | URL     | 
 | :-------------      | :----------:      | 
-| DELETE | /api/user/timezone | 
+| DELETE | /api/user/movie | 
 
 | Query Parameter | Value Type | Description |
 | :-------------      | :----------:      | :----------:      |
-| userId | UUID | User ID for which the timezone must be deleted |
+| userId | UUID | User ID for which the movie must be deleted |
 
 | Headers | Value |
 | :-------------      | :----------:      |
-| Content-Type | `application/vnd.timezone.delete.v1+json` |
-| Accept | `application/vnd.timezone.delete.v1+json` |
+| Content-Type | `application/vnd.movie.delete.v1+json` |
+| Accept | `application/vnd.movie.delete.v1+json` |
 | Authorization | `Bearer <Token From login response>` |
 
 | Response Type | Value/Value Type | Description |
 | :------------- | :-------------      | :-------------      |
-| HTTP Status code | 200 | On successful delete of timezone |
+| HTTP Status code | 200 | On successful delete of movie |
 | HTTP Status code | 401 | If the user is not authenticated |
 | HTTP Status code | 403 | If the user is not authorised |
 

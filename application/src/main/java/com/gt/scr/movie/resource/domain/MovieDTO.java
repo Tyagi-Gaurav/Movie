@@ -4,17 +4,18 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Value.Immutable
 @JsonSerialize
-@JsonDeserialize(builder = ImmutableTimezoneDTO.Builder.class)
-public interface TimezoneDTO {
+@JsonDeserialize(builder = ImmutableMovieDTO.Builder.class)
+public interface MovieDTO {
     UUID id();
 
     String name();
 
-    String city();
+    int yearProduced();
 
-    int gmtOffset();
+    BigDecimal rating();
 }

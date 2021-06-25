@@ -1,15 +1,16 @@
-package com.gt.scr.movie.resource.domain;
+package com.gt.scr.movie.test.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Value.Immutable
 @JsonSerialize
-@JsonDeserialize(builder = ImmutableTimezoneUpdateRequestDTO.Builder.class)
-public interface TimezoneUpdateRequestDTO {
+@JsonDeserialize(builder = ImmutableTestMovieUpdateRequestDTO.Builder.class)
+public interface TestMovieUpdateRequestDTO {
     UUID id();
 
     @Value.Default
@@ -18,12 +19,12 @@ public interface TimezoneUpdateRequestDTO {
     }
 
     @Value.Default
-    default String city() {
-        return "";
+    default BigDecimal rating() {
+        return BigDecimal.ZERO;
     }
 
     @Value.Default
-    default int gmtOffset() {
-        return -100;
+    default int yearProduced() {
+        return 0;
     }
 }

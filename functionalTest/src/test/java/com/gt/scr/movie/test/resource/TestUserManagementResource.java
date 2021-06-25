@@ -1,6 +1,6 @@
 package com.gt.scr.movie.test.resource;
 
-import com.gt.scr.movie.test.config.TimeZoneAppConfig;
+import com.gt.scr.movie.test.config.MovieAppConfig;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 public class TestUserManagementResource extends AbstractResource {
 
     @Autowired
-    private TimeZoneAppConfig timeZoneAppConfig;
+    private MovieAppConfig movieAppConfig;
 
     @Autowired
     private ResponseHolder responseHolder;
 
     public void create(TestAccountCreateRequestDTO testAccountCreateRequestDTO) {
-        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/manage", timeZoneAppConfig.port());
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/manage", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -27,8 +27,8 @@ public class TestUserManagementResource extends AbstractResource {
     }
 
     public void delete(String regularUserId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(timeZoneAppConfig.host().trim(),
-                "/api/user/manage", timeZoneAppConfig.port()), regularUserId);
+        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/manage", movieAppConfig.port()), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());

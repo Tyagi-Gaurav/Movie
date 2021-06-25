@@ -1,10 +1,10 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
-import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.exception.DuplicateRecordException;
+import com.gt.scr.movie.service.domain.ImmutableMovie;
+import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
-import com.gt.scr.movie.service.domain.UserTimezone;
+import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,47 +24,47 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest(classes = TimezoneServiceImpl.class)
-class TimezoneServiceImplTest {
+@SpringBootTest(classes = MovieServiceImpl.class)
+class MovieServiceImplTest {
 
     @Autowired
-    private TimezoneService timezoneService;
+    private MovieService movieService;
 
     @MockBean
     private UserService userService;
 
     @Test
-    void shouldAddTimezone() {
+    void shouldAddMovie() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        timezoneService.addTimezone(userId, userTimezone);
+        movieService.addMovieRating(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).contains(Map.entry(userTimezone.id(), userTimezone));
+        assertThat(actualParameter.movies()).contains(Map.entry(movie.id(), movie));
     }
 
     @Test
-    void shouldNotAllowAddingDuplicateTimezoneWithAllValuesSame() {
+    void shouldNotAllowAddingDuplicateMovieWithAllValuesSame() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
-        timezoneService.addTimezone(userId, userTimezone);
+        movieService.addMovieRating(userId, movie);
 
         //when
-        Throwable throwable = catchThrowable(() -> timezoneService.addTimezone(userId, userTimezone));
+        Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, movie));
 
         //then
         assertThat(throwable).isNotNull();
@@ -71,94 +72,94 @@ class TimezoneServiceImplTest {
     }
 
     @Test
-    void shouldRetrieveTimezone() {
+    void shouldRetrieveMovie() {
         //given
         UUID userId = UUID.randomUUID();
-        User user = TestBuilders.aUserWithTimezones();
+        User user = TestBuilders.aUserWithMovies();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        Map<UUID, UserTimezone> timezones = timezoneService.getTimezones(userId);
+        Map<UUID, Movie> movies = movieService.getMovieRating(userId);
 
         //then
-        assertThat(timezones).isEqualTo(user.userTimeZones());
+        assertThat(movies).isEqualTo(user.movies());
     }
 
     @Test
-    void shouldDeleteTimezoneForAUser() {
+    void shouldDeleteMovieForAUser() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        timezoneService.deleteTimezone(userId, userTimezone.id());
+        movieService.deleteMovieRating(userId, movie.id());
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).doesNotContain(Map.entry(userTimezone.id(), userTimezone));
+        assertThat(actualParameter.movies()).doesNotContain(Map.entry(movie.id(), movie));
     }
 
     @Test
-    void shouldUpdateTimezoneForAUser() {
+    void shouldUpdateMovieForAUser() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        timezoneService.updateTimezone(userId, userTimezone);
+        movieService.updateMovieRating(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).isEmpty();
+        assertThat(actualParameter.movies()).isEmpty();
     }
 
     @Test
-    void shouldUpdateOnlyTimezoneNameForAUser() {
+    void shouldUpdateOnlyMovieNameForAUser() {
         //given
         UUID userId = UUID.randomUUID();
-        UUID timezoneId = UUID.randomUUID();
-        UserTimezone timezoneToUpdate = TestBuilders.aUserTimezone();
-        HashMap<UUID, UserTimezone> timezoneMap = new HashMap<>();
+        UUID movieId = UUID.randomUUID();
+        Movie movieToUpdate = TestBuilders.aMovie();
+        HashMap<UUID, Movie> movieMap = new HashMap<>();
 
-        timezoneMap.put(timezoneId, timezoneToUpdate);
-        User user = TestBuilders.aUserWithTimezones(timezoneMap);
+        movieMap.put(movieId, movieToUpdate);
+        User user = TestBuilders.aUserWithMovies(movieMap);
 
         when(userService.findUserBy(userId)).thenReturn(user);
-        String newTimezoneName = "newName";
-        UserTimezone expectedTimezone = ImmutableUserTimezone.builder()
-                .name(newTimezoneName)
-                .id(timezoneId)
-                .city(timezoneToUpdate.city())
-                .gmtOffset(timezoneToUpdate.gmtOffset())
+        String newMovieName = "newName";
+        Movie expectedMovie = ImmutableMovie.builder()
+                .name(newMovieName)
+                .rating(BigDecimal.valueOf(2.3))
+                .yearProduced(2021)
+                .id(movieId)
                 .build();
 
         //when
-        UserTimezone updatedTimezone = ImmutableUserTimezone.builder()
-                .name(newTimezoneName)
-                .city("")
-                .gmtOffset(-100)
-                .id(timezoneId)
+        Movie updatedMovie = ImmutableMovie.builder()
+                .name(newMovieName)
+                .rating(BigDecimal.valueOf(2.3))
+                .yearProduced(2021)
+                .id(movieId)
                 .build();
-        timezoneService.updateTimezone(userId, updatedTimezone);
+        movieService.updateMovieRating(userId, updatedMovie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).contains(Map.entry(timezoneId, expectedTimezone));
+        assertThat(actualParameter.movies()).contains(Map.entry(movieId, expectedMovie));
     }
 }

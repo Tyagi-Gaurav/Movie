@@ -6,18 +6,19 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Value.Immutable
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonDeserialize(builder = ImmutableUserTimezone.Builder.class)
-public interface UserTimezone extends Serializable {
+@JsonDeserialize(builder = ImmutableMovie.Builder.class)
+public interface Movie extends Serializable {
     UUID id();
 
     String name();
 
-    String city();
+    int yearProduced();
 
-    int gmtOffset();
+    BigDecimal rating();
 }

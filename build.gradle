@@ -21,6 +21,6 @@ defaultTasks 'clean', 'check', 'build'
 
 scmVersion {
     tag {
-        prefix = 'Timezone'
+        prefix = 'Movie'
     }
 }
