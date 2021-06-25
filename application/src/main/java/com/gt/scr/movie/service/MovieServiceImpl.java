@@ -1,11 +1,10 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.exception.DuplicateRecordException;
+import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.ImmutableUser;
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
-import com.gt.scr.movie.service.domain.UserTimezone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,19 +59,19 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void updateMovieRating(UUID userId, UserTimezone timezone) {
+    public void updateMovieRating(UUID userId, Movie movie) {
         User userFromDatabase = userService.findUserBy(userId);
 
-        HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
+        HashMap<UUID, Movie> uuidUserMovieMap = userFromDatabase.movies();
 
-        uuidUserTimezoneMap.computeIfPresent(timezone.id(), (uuid, userTimezone) -> ImmutableUserTimezone.builder()
-                .name(isNotBlank(timezone.name()) ? timezone.name() : userTimezone.name())
-                .city(isNotBlank(timezone.city()) ? timezone.city() : userTimezone.city())
-                .gmtOffset(timezone.gmtOffset() != -100 ? timezone.gmtOffset() : userTimezone.gmtOffset())
-                .id(timezone.id())
+        uuidUserMovieMap.computeIfPresent(movie.id(), (uuid, mv) -> ImmutableMovie.builder()
+                .name(isNotBlank(movie.name()) ? movie.name() : mv.name())
+                .rating(movie.rating() != null ? movie.rating() : mv.rating())
+                .yearProduced(movie.yearProduced() != 0 ? movie.yearProduced() : mv.yearProduced())
+                .id(movie.id())
                 .build());
 
         userService.update(ImmutableUser.builder().from(userFromDatabase)
-                .userTimeZones(uuidUserTimezoneMap).build());
+                .movies(uuidUserMovieMap).build());
     }
 }

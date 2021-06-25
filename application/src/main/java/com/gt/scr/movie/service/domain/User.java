@@ -37,11 +37,6 @@ public interface User extends UserDetails {
     default boolean isEnabled() {return true;}
 
     @Value.Default
-    default HashMap<UUID, UserTimezone> userTimeZones() {
-        return new HashMap<>();
-    }
-
-    @Value.Default
     default HashMap<UUID, Movie> movies() {
         return new HashMap<>();
     }

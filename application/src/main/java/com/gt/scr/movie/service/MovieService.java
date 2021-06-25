@@ -1,7 +1,6 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.service.domain.UserTimezone;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Map;
@@ -15,6 +14,6 @@ public interface MovieService {
 
     void deleteMovieRating(UUID userId, UUID movieId);
 
-    void updateMovieRating(UUID userId, UserTimezone timezone);
+    void updateMovieRating(UUID userId, Movie movie);
 }
 

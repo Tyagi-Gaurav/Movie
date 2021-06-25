@@ -1,10 +1,9 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.exception.DuplicateRecordException;
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
+import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
-import com.gt.scr.movie.service.domain.UserTimezone;
 import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -107,59 +107,59 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void shouldUpdateTimezoneForAUser() {
+    void shouldUpdateMovieForAUser() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.updateMovieRating(userId, userTimezone);
+        movieService.updateMovieRating(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).isEmpty();
+        assertThat(actualParameter.movies()).isEmpty();
     }
 
     @Test
-    void shouldUpdateOnlyTimezoneNameForAUser() {
+    void shouldUpdateOnlyMovieNameForAUser() {
         //given
         UUID userId = UUID.randomUUID();
-        UUID timezoneId = UUID.randomUUID();
-        UserTimezone timezoneToUpdate = TestBuilders.aUserTimezone();
-        HashMap<UUID, UserTimezone> timezoneMap = new HashMap<>();
+        UUID movieId = UUID.randomUUID();
+        Movie movieToUpdate = TestBuilders.aMovie();
+        HashMap<UUID, Movie> movieMap = new HashMap<>();
 
-        timezoneMap.put(timezoneId, timezoneToUpdate);
-        User user = TestBuilders.aUserWithTimezones(timezoneMap);
+        movieMap.put(movieId, movieToUpdate);
+        User user = TestBuilders.aUserWithMovies(movieMap);
 
         when(userService.findUserBy(userId)).thenReturn(user);
-        String newTimezoneName = "newName";
-        UserTimezone expectedTimezone = ImmutableUserTimezone.builder()
-                .name(newTimezoneName)
-                .id(timezoneId)
-                .city(timezoneToUpdate.city())
-                .gmtOffset(timezoneToUpdate.gmtOffset())
+        String newMovieName = "newName";
+        Movie expectedMovie = ImmutableMovie.builder()
+                .name(newMovieName)
+                .rating(BigDecimal.valueOf(2.3))
+                .yearProduced(2021)
+                .id(movieId)
                 .build();
 
         //when
-        UserTimezone updatedTimezone = ImmutableUserTimezone.builder()
-                .name(newTimezoneName)
-                .city("")
-                .gmtOffset(-100)
-                .id(timezoneId)
+        Movie updatedMovie = ImmutableMovie.builder()
+                .name(newMovieName)
+                .rating(BigDecimal.valueOf(2.3))
+                .yearProduced(2021)
+                .id(movieId)
                 .build();
-        movieService.updateMovieRating(userId, updatedTimezone);
+        movieService.updateMovieRating(userId, updatedMovie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).contains(Map.entry(timezoneId, expectedTimezone));
+        assertThat(actualParameter.movies()).contains(Map.entry(movieId, expectedMovie));
     }
 }

@@ -1,7 +1,7 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.ImmutableMovieCreateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableTimezoneUpdateRequestDTO;
+import com.gt.scr.movie.resource.domain.ImmutableMovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
@@ -9,7 +9,6 @@ import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.service.domain.UserTimezone;
 import com.gt.scr.movie.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,26 +111,27 @@ class MovieResourceTest {
                 .id(UUID.randomUUID())
                 .authority("USER")
                 .build();
-        UUID timezoneId = UUID.randomUUID();
+        UUID movieId = UUID.randomUUID();
 
         //when
         mockMvc.perform(delete("/user/timezone")
                 .requestAttr("userProfile", userProfile)
-                .param("id", timezoneId.toString())
+                .param("id", movieId.toString())
                 .contentType("application/vnd.movie.delete.v1+json"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).deleteMovieRating(userProfile.id(), timezoneId);
+        verify(movieService).deleteMovieRating(userProfile.id(), movieId);
     }
 
     @Test
-    void shouldAllowUserToUpdateTimeZones() throws Exception {
-        String content = TestUtils.asJsonString(ImmutableTimezoneUpdateRequestDTO.builder()
+    void shouldAllowUserToUpdateMovies() throws Exception {
+        String content = TestUtils.asJsonString(ImmutableMovieUpdateRequestDTO.builder()
                 .id(UUID.randomUUID())
-                .city(randomAlphabetic(5))
                 .name(randomAlphabetic(5))
-                .gmtOffset(1).build());
+                .rating(BigDecimal.ZERO)
+                .yearProduced(2010)
+                .build());
 
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
@@ -142,10 +142,10 @@ class MovieResourceTest {
         mockMvc.perform(put("/user/timezone")
                 .content(content)
                 .requestAttr("userProfile", userProfile)
-                .contentType("application/vnd.timezone.update.v1+json"))
+                .contentType("application/vnd.movie.update.v1+json"))
                 .andExpect(status().isOk());
 
-        verify(movieService).updateMovieRating(eq(userProfile.id()), any(UserTimezone.class));
+        verify(movieService).updateMovieRating(eq(userProfile.id()), any(Movie.class));
     }
 
 

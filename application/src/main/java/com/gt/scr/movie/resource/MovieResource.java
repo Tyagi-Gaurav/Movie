@@ -4,16 +4,12 @@ import com.gt.scr.movie.resource.domain.ImmutableMovieDTO;
 import com.gt.scr.movie.resource.domain.ImmutableMoviesDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
+import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
-import com.gt.scr.movie.resource.domain.TimezoneUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.ImmutableMovie;
-import com.gt.scr.movie.service.domain.ImmutableUserTimezone;
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.service.domain.UserTimezone;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +30,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user/timezone")
 public class MovieResource {
-    private static final Logger LOG = LoggerFactory.getLogger(MovieResource.class);
-
     @Autowired
     private MovieService movieService;
 
@@ -84,20 +78,20 @@ public class MovieResource {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(consumes = "application/vnd.timezone.update.v1+json",
-            produces = "application/vnd.timezone.update.v1+json")
-    public ResponseEntity<Void> updateMovieRating(@RequestBody TimezoneUpdateRequestDTO timezoneUpdateRequestDTO,
+    @PutMapping(consumes = "application/vnd.movie.update.v1+json",
+            produces = "application/vnd.movie.update.v1+json")
+    public ResponseEntity<Void> updateMovieRating(@RequestBody MovieUpdateRequestDTO movieUpdateRequestDTO,
                                                   @RequestAttribute("userProfile") UserProfile userProfile,
                                                   @RequestParam(value = "userId", required = false) String userId) {
 
-        UserTimezone timezone = ImmutableUserTimezone.builder()
-                .id(timezoneUpdateRequestDTO.id())
-                .city(timezoneUpdateRequestDTO.city())
-                .name(timezoneUpdateRequestDTO.name())
-                .gmtOffset(timezoneUpdateRequestDTO.gmtOffset())
+        Movie movie = ImmutableMovie.builder()
+                .id(movieUpdateRequestDTO.id())
+                .rating(movieUpdateRequestDTO.rating())
+                .name(movieUpdateRequestDTO.name())
+                .yearProduced(movieUpdateRequestDTO.yearProduced())
                 .build();
 
-        movieService.updateMovieRating(determineUserId(userId, userProfile.id()), timezone);
+        movieService.updateMovieRating(determineUserId(userId, userProfile.id()), movie);
 
         return ResponseEntity.ok().build();
     }
