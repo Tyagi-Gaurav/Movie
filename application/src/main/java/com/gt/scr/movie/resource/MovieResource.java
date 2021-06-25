@@ -2,13 +2,10 @@ package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.ImmutableMovieDTO;
 import com.gt.scr.movie.resource.domain.ImmutableMoviesDTO;
-import com.gt.scr.movie.resource.domain.ImmutableTimezoneDTO;
-import com.gt.scr.movie.resource.domain.ImmutableTimezonesDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.TimezoneUpdateRequestDTO;
-import com.gt.scr.movie.resource.domain.TimezonesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.ImmutableMovie;
@@ -76,8 +73,8 @@ public class MovieResource {
         return ResponseEntity.ok(moviesDTO);
     }
 
-    @DeleteMapping(consumes = "application/vnd.timezone.delete.v1+json",
-            produces = "application/vnd.timezone.delete.v1+json")
+    @DeleteMapping(consumes = "application/vnd.movie.delete.v1+json",
+            produces = "application/vnd.movie.delete.v1+json")
     public ResponseEntity<Void> deleteMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
                                                   @RequestParam("id") String id,
                                                   @RequestParam(value = "userId", required = false) String userId) {

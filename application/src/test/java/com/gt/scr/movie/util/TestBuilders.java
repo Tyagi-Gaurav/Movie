@@ -46,6 +46,14 @@ public class TestBuilders {
         return aUserWithTimezones(userTimezoneHashMap);
     }
 
+    public static User aUserWithMovies() {
+        Movie movie = aMovie();
+        HashMap<UUID, Movie> userMovieMap = new HashMap<>();
+        userMovieMap.put(movie.id(), movie);
+
+        return aUserWithMovies(userMovieMap);
+    }
+
     public static UserTimezone aUserTimezone() {
         return ImmutableUserTimezone.builder()
                 .name(randomAlphabetic(10))
@@ -55,12 +63,24 @@ public class TestBuilders {
                 .build();
     }
 
-    public static Movie aUserMovie() {
+    public static Movie aMovie() {
         return ImmutableMovie.builder()
                 .name(randomAlphabetic(10))
                 .yearProduced(2010)
                 .rating(BigDecimal.valueOf(10))
                 .id(UUID.randomUUID())
+                .build();
+    }
+
+    public static User aUserWithMovies(HashMap<UUID, Movie> movieMap) {
+        return ImmutableUser.builder()
+                .id(UUID.randomUUID())
+                .password(randomAlphabetic(10))
+                .username(randomAlphabetic(10))
+                .lastName(randomAlphabetic(10))
+                .firstName(randomAlphabetic(10))
+                .authorities(Collections.singleton(new SimpleGrantedAuthority("USER")))
+                .movies(movieMap)
                 .build();
     }
 

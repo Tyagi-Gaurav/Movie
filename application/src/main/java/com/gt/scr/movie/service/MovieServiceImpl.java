@@ -49,14 +49,14 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void deleteMovieRating(UUID userId, UUID timezoneId) {
+    public void deleteMovieRating(UUID userId, UUID movieId) {
         User userFromDatabase = userService.findUserBy(userId);
 
-        HashMap<UUID, UserTimezone> uuidUserTimezoneMap = userFromDatabase.userTimeZones();
-        uuidUserTimezoneMap.remove(timezoneId);
+        HashMap<UUID, Movie> uuidUserMovieMap = userFromDatabase.movies();
+        uuidUserMovieMap.remove(movieId);
 
         userService.update(ImmutableUser.builder().from(userFromDatabase)
-                .userTimeZones(uuidUserTimezoneMap).build());
+                .movies(uuidUserMovieMap).build());
     }
 
     @Override

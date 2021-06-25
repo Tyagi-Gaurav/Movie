@@ -70,7 +70,7 @@ class MovieResourceTest {
     }
 
     @Test
-    void shouldAllowUserToReadTimeZones() throws Exception {
+    void shouldAllowUserToReadMovies() throws Exception {
         UUID id = UUID.randomUUID();
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(id)
@@ -107,7 +107,7 @@ class MovieResourceTest {
     }
 
     @Test
-    void shouldAllowUserToDeleteTimeZones() throws Exception {
+    void shouldAllowUserToDeleteMovies() throws Exception {
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
                 .authority("USER")
@@ -118,7 +118,7 @@ class MovieResourceTest {
         mockMvc.perform(delete("/user/timezone")
                 .requestAttr("userProfile", userProfile)
                 .param("id", timezoneId.toString())
-                .contentType("application/vnd.timezone.delete.v1+json"))
+                .contentType("application/vnd.movie.delete.v1+json"))
                 .andExpect(status().isOk())
                 .andReturn();
 

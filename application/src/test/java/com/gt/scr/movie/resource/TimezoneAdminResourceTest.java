@@ -47,7 +47,7 @@ class TimezoneAdminResourceTest {
     private MovieService movieService;
 
     @Test
-    void shouldAllowAdminToCreateTimeZones() throws Exception {
+    void shouldAllowAdminToCreateMovies() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
         String content = TestUtils.asJsonString(ImmutableMovieCreateRequestDTO.builder()
                 .name(randomAlphabetic(6))
@@ -74,7 +74,7 @@ class TimezoneAdminResourceTest {
     }
 
     @Test
-    void shouldAllowAdminToReadTimeZones() throws Exception {
+    void shouldAllowAdminToReadMovies() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
         UUID usersOwnId = UUID.randomUUID();
         UserProfile userProfile = ImmutableUserProfile.builder()
@@ -114,7 +114,7 @@ class TimezoneAdminResourceTest {
     }
 
     @Test
-    void shouldAllowUserToDeleteTimeZones() throws Exception {
+    void shouldAllowUserToDeleteMovies() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
@@ -127,7 +127,7 @@ class TimezoneAdminResourceTest {
                 .requestAttr("userProfile", userProfile)
                 .param("id", timezoneId.toString())
                 .param("userId", requestedUserId.toString())
-                .contentType("application/vnd.timezone.delete.v1+json"))
+                .contentType("application/vnd.movie.delete.v1+json"))
                 .andExpect(status().isOk())
                 .andReturn();
 

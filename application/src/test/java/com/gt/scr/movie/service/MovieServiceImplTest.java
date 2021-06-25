@@ -34,10 +34,10 @@ class MovieServiceImplTest {
     private UserService userService;
 
     @Test
-    void shouldAddTimezone() {
+    void shouldAddMovie() {
         //given
         UUID userId = UUID.randomUUID();
-        Movie movie = TestBuilders.aUserMovie();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
@@ -54,10 +54,10 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void shouldNotAllowAddingDuplicateTimezoneWithAllValuesSame() {
+    void shouldNotAllowAddingDuplicateMovieWithAllValuesSame() {
         //given
         UUID userId = UUID.randomUUID();
-        Movie movie = TestBuilders.aUserMovie();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
@@ -72,10 +72,10 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void shouldRetrieveTimezone() {
+    void shouldRetrieveMovie() {
         //given
         UUID userId = UUID.randomUUID();
-        User user = TestBuilders.aUserWithTimezones();
+        User user = TestBuilders.aUserWithMovies();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
@@ -87,23 +87,23 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void shouldDeleteTimezoneForAUser() {
+    void shouldDeleteMovieForAUser() {
         //given
         UUID userId = UUID.randomUUID();
-        UserTimezone userTimezone = TestBuilders.aUserTimezone();
+        Movie movie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.deleteMovieRating(userId, userTimezone.id());
+        movieService.deleteMovieRating(userId, movie.id());
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService).update(userArgumentCaptor.capture());
 
         User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.userTimeZones()).doesNotContain(Map.entry(userTimezone.id(), userTimezone));
+        assertThat(actualParameter.movies()).doesNotContain(Map.entry(movie.id(), movie));
     }
 
     @Test

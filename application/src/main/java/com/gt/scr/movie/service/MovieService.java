@@ -13,7 +13,7 @@ public interface MovieService {
 
     Map<UUID, Movie> getMovieRating(UUID userId);
 
-    void deleteMovieRating(UUID userId, UUID timezoneId);
+    void deleteMovieRating(UUID userId, UUID movieId);
 
     void updateMovieRating(UUID userId, UserTimezone timezone);
 }
