@@ -39,7 +39,7 @@ jobs:
       run: docker ps
 
     - name: Run test suite
-      run: ./gradlew remoteFunctional
+      run: ./gradlew remoteFunctional --info
 
     - name: Show container logs
       if: always()
