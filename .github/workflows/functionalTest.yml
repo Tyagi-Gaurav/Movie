@@ -28,7 +28,7 @@ jobs:
       run: ./gradlew clean check build
 
     - name: Build the docker-compose stack
-      run: docker-compose up
+      run: docker-compose up -d
 
     - name: Sleep
       uses: jakejarvis/wait-action@master
