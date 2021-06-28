@@ -39,8 +39,8 @@ jobs:
       run: docker ps
 
     - name: Run test suite
-      if: ${{ always() }}
       run: ./gradlew remoteFunctional
 
     - name: Show container logs
+      if: always()
       run: docker logs local.movie-app
