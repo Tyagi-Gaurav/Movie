@@ -1,9 +1,7 @@
 package com.gt.scr.movie.filter;
 
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
-import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
