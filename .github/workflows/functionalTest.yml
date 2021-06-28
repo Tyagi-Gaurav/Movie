@@ -28,7 +28,7 @@ jobs:
       run: ./gradlew clean check build
 
     - name: Build the docker-compose stack
-      run: docker-compose up -d
+      run: docker-compose up
 
     - name: Sleep
       uses: jakejarvis/wait-action@master
@@ -40,3 +40,6 @@ jobs:
 
     - name: Run test suite
       run: ./gradlew remoteFunctional
+
+    - name: Show container logs
+      run: docker logs local.movie-app
