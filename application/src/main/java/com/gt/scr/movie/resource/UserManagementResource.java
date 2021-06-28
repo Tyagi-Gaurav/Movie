@@ -1,7 +1,7 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserDetailsResponse;
 import com.gt.scr.movie.resource.domain.ImmutableUserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserListResponseDTO;
@@ -9,8 +9,6 @@ import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,8 +30,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/user/manage")
 public class UserManagementResource {
-    private static final Logger LOG = LoggerFactory.getLogger(UserManagementResource.class);
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -62,7 +58,7 @@ public class UserManagementResource {
     public ResponseEntity<UserListResponseDTO> listUsers() {
         List<User> allUsers = userService.getAllUsers();
 
-        ImmutableUserListResponseDTO.Builder builder = ImmutableUserListResponseDTO.builder();
+        var builder = ImmutableUserListResponseDTO.builder();
         allUsers.forEach(user -> builder.addUserDetails(ImmutableUserDetailsResponse.builder()
                 .firstName(user.firstName())
                 .lastName(user.lastName())

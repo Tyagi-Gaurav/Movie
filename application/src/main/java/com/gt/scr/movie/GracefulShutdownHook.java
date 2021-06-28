@@ -28,10 +28,12 @@ public class GracefulShutdownHook implements Runnable {
     private void delayShutdownSpringContext() {
         try {
             final int shutdownWaitSeconds = getShutdownWaitSeconds();
-            LOGGER.info("Going to wait for " + shutdownWaitSeconds + " seconds before shutdown SpringContext!");
-            Thread.sleep(shutdownWaitSeconds * 1000);
+            LOGGER.info("Going to wait for {} seconds before shutdown SpringContext!", shutdownWaitSeconds);
+            Thread.sleep(shutdownWaitSeconds * 1000L);
         } catch (InterruptedException e) {
             LOGGER.error("Error while graceful shutdown Thread.sleep", e);
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
         }
     }
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class EndpointRequestCounter {
     private static final String METHOD_TAG = "method";
     private static final String PATH_TAG = "path";
-    private static final String INFRA_REQUEST_COUNT = "request_count";;
+    private static final String INFRA_REQUEST_COUNT = "request_count";
 
     @Autowired
     private MeterRegistry meterRegistry;

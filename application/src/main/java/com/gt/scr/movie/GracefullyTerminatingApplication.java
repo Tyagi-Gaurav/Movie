@@ -19,7 +19,7 @@ public class GracefullyTerminatingApplication implements Runnable {
 
     @Override
     public void run() {
-        SpringApplication app = new SpringApplication(bootstrapClass);
+        var app = new SpringApplication(bootstrapClass);
         app.setRegisterShutdownHook(false);
         LOGGER.info("Application has removed default shutdown hook and will now initialise spring config...");
         ConfigurableApplicationContext applicationContext = app.run(args);

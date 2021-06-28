@@ -4,8 +4,6 @@ import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,8 +17,6 @@ import java.util.UUID;
 
 @RestController
 public class AccountCreateResource {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AccountCreateResource.class);
 
     @Autowired
     private UserService userService;

@@ -94,7 +94,7 @@ class MovieResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).getMovieRating(eq(userProfile.id()));
+        verify(movieService).getMovieRating(userProfile.id());
         MoviesDTO moviesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
                 MoviesDTO.class);
 

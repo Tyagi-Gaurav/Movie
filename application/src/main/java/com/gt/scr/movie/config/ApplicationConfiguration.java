@@ -69,7 +69,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer  {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory(DatabaseConfig databaseConfig) {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        var redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setPort(databaseConfig.port());
         redisStandaloneConfiguration.setHostName(databaseConfig.host());
 
@@ -87,8 +87,8 @@ public class ApplicationConfiguration implements WebMvcConfigurer  {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-        RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
+    public RedisTemplate<Object, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(lettuceConnectionFactory);
         template.setEnableTransactionSupport(true);
         return template;

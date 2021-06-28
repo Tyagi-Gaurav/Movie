@@ -67,8 +67,8 @@ class MovieServiceImplTest {
         Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, movie));
 
         //then
-        assertThat(throwable).isNotNull();
-        assertThat(throwable).isInstanceOf(DuplicateRecordException.class);
+        assertThat(throwable).isNotNull()
+                .isInstanceOf(DuplicateRecordException.class);
     }
 
     @Test

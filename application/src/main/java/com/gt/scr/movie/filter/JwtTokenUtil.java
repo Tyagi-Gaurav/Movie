@@ -31,7 +31,7 @@ public class JwtTokenUtil {
     }
 
     public <T> T getClaimFromToken(Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken();
+        final var claims = getAllClaimsFromToken();
         return claimsResolver.apply(claims);
     }
 
@@ -42,7 +42,7 @@ public class JwtTokenUtil {
     }
 
     private Boolean isTokenExpired() {
-        final Date expiration = getExpirationDateFromToken();
+        final var expiration = getExpirationDateFromToken();
         return expiration.before(new Date());
     }
 
