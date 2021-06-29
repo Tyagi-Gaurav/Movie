@@ -15,7 +15,7 @@ jacoco {
 }
 
 bootJar {
-    mainClass = 'com.toptal.scr.tz.Application'
+    mainClass = 'com.gt.scr.movie.Application'
 }
 
 processResources {

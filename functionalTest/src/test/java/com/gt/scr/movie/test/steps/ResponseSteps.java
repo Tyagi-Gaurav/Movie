@@ -13,6 +13,7 @@ public class ResponseSteps implements En {
 
     public ResponseSteps() {
         Then("^the response should be received with HTTP status code (\\d+)$", (Integer responseCode) -> {
+            System.out.println("responseHolder.getResponseCode(): " + responseHolder.getResponseCode());
             assertThat(responseHolder.getResponseCode()).isEqualTo(responseCode);
         });
 

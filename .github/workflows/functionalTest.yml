@@ -1,0 +1,47 @@
+name: Functional Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew clean check build
+
+    - name: Build the docker-compose stack
+      run: docker-compose up -d
+
+    - name: Sleep
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '30s'
+
+    - name: Check running containers
+      run: docker ps
+
+    - name: Run test suite
+      if: always()
+      run: ./gradlew remoteFunctional --info
+
+    - name: Show container logs
+      if: always()
+      run: docker logs local.movie-app
