@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @Component
 public class IllegalArgumentExceptionHandler {
-    public static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionHandler.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionHandler.class);
 
     @Autowired
     private ErrorResponseHelper errorResponseHelper;
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public ResponseEntity<String> handle(IllegalArgumentException exception) {
-        LOG.error(exception.getMessage(), exception);
+        LOG.error("Illegal Argument Handler: " + exception.getMessage(), exception);
         return errorResponseHelper.errorResponse(400, exception.getMessage());
 
     }
