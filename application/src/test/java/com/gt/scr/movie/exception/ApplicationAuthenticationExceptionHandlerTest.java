@@ -74,7 +74,7 @@ class ApplicationAuthenticationExceptionHandlerTest {
     static class TestApplicationAuthenticationResource {
         @GetMapping("/exception/throw")
         public void getException() {
-            throw new ApplicationAuthenticationException("Authentication failed");
+            throw new ApplicationAuthenticationException("Authentication failed", new RuntimeException());
         }
     }
 }
