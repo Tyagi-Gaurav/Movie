@@ -22,8 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = UserRepositoryImpl.class)
-class UserRepositoryImplTest {
+@SpringBootTest(classes = UserRedisRepository.class)
+class UserRedisRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 

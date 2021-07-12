@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRedisRepository implements UserRepository {
 
     @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
@@ -54,6 +54,5 @@ public class UserRepositoryImpl implements UserRepository {
             redisTemplate.opsForHash().put("user", user.id(), user);
             redisTemplate.opsForHash().put("userToUserId", user.getUsername(), user.id());
         }
-
     }
 }
