@@ -1,8 +1,10 @@
 package com.gt.scr.movie.exception;
 
 
-import com.gt.scr.movie.resource.domain.ErrorResponse;
-import com.gt.scr.movie.util.TestUtils;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,15 +17,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
+
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -32,10 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
-@SpringBootTest(classes = {ApplicationAuthenticationExceptionHandlerTest.TestApplicationAuthenticationResource.class,
-        ApplicationAuthenticationExceptionHandler.class})
-@ActiveProfiles("ApplicationAuthenticationExceptionHandlerTest")
-class ApplicationAuthenticationExceptionHandlerTest {
+@SpringBootTest(classes = {ValueInstantiationExceptionHandlerTest.TestValueInstantiationResource.class,
+        ValueInstantiationExceptionHandler.class})
+@ActiveProfiles("ValueInstantiationExceptionHandlerTest")
+class ValueInstantiationExceptionHandlerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -56,25 +57,21 @@ class ApplicationAuthenticationExceptionHandlerTest {
     }
 
     @Test
-    void shouldHandleAuthenticationException() throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/exception/throw")
+    void shouldHandleValueInstantiationException() throws Exception {
+        mvc.perform(get("/exception/throw")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
-                .andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        ErrorResponse testErrorResponse = TestUtils.readFromString(response.getContentAsString(), ErrorResponse.class);
-        assertThat(testErrorResponse.message()).isEqualTo("Authentication failed");
+                .andExpect(status().isBadRequest());
     }
 
     @ControllerAdvice
     @RestController
-    @Profile("ApplicationAuthenticationExceptionHandlerTest")
-    static class TestApplicationAuthenticationResource {
+    @Profile("ValueInstantiationExceptionHandlerTest")
+    static class TestValueInstantiationResource {
         @GetMapping("/exception/throw")
-        public void getException() {
-            throw new ApplicationAuthenticationException("Authentication failed", new RuntimeException());
+        public void getException() throws IOException {
+            String message = "Test";
+            JsonParser parser = new JsonFactory().createParser(message);
+            throw ValueInstantiationException.from(parser, message, TypeFactory.unknownType());
         }
     }
 }

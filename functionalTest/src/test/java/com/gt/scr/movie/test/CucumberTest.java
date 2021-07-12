@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "classpath:features",
-        tags = "@RunThis",
         plugin = {"pretty", "json:target/cucumber-report.json"},
         glue = {"com.gt.scr.movie.test.steps"},
         monochrome = true

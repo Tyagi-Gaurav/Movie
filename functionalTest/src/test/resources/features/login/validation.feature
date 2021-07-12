@@ -1,6 +1,5 @@
 Feature: Validating inputs
 
-  @RunThis
   Scenario Outline: Return 400 status code when input does not satisfy constraints
     Given a user attempts to create a new account with following details
       | firstName | lastName | userName   | role   | password   |

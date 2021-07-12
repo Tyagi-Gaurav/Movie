@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,5 +53,18 @@ class ErrorResponseHelperTest {
         assertThat(responseEntity.getStatusCode().value()).isEqualTo(statusCode);
 
         assertThat(responseEntity.getBody()).isEqualTo(expectedMessage);
+    }
+
+    @Test
+    void shouldReturnRuntimeExceptionWhenJsonProcessingFails() throws JsonProcessingException {
+        when(objectMapper.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
+
+        //when
+        Throwable throwable = catchThrowableOfType(
+                () -> errorResponseHelper.errorResponse(400, "Exception occurred"),
+                RuntimeException.class);
+
+        //then
+        assertThat(throwable).isInstanceOf(RuntimeException.class);
     }
 }
