@@ -1,5 +1,6 @@
 package com.gt.scr.movie.exception;
 
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Component
-public class IllegalArgumentExceptionHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionHandler.class);
+public class ValueInstantiationExceptionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ValueInstantiationExceptionHandler.class);
 
     @Autowired
     private ErrorResponseHelper errorResponseHelper;
 
-    @ExceptionHandler(value = {IllegalArgumentException.class})
-    public ResponseEntity<String> handle(IllegalArgumentException exception) {
-        LOG.error("Illegal Argument Handler: " + exception.getMessage(), exception);
+    @ExceptionHandler(value = {ValueInstantiationException.class})
+    public ResponseEntity<String> handle(ValueInstantiationException exception) {
+        LOG.error("Value Instantiation Exception: " + exception.getMessage(), exception);
         return errorResponseHelper.errorResponse(400, exception.getMessage());
     }
 }

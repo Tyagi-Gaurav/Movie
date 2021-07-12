@@ -9,8 +9,8 @@ Feature: Validating inputs
     Examples:
       | username              | password                    | role  |
       | Usr                   | ddfdsffdf                   | USER  |
-      | gdfgjszghjghsgdgsjdgj | ddfdsffdf                   | USER  |
-      | user                  | hfhdsfhdsfkhjhsdfkddd345345 | USER  |
-      | user                  | hsyy                        | USER  |
-      | user                  | user123                     | user  |
-      | user                  | user123                     | OTHER |
+#      | gdfgjszghjghsgdgsjdgj | ddfdsffdf                   | USER  |
+#      | user                  | hfhdsfhdsfkhjhsdfkddd345345 | USER  |
+#      | user                  | hsyy                        | USER  |
+#      | user                  | user123                     | user  |
+#      | user                  | user123                     | OTHER |
