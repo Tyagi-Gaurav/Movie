@@ -21,7 +21,7 @@ public class TestBuilders {
                 .username(randomAlphabetic(10))
                 .lastName(randomAlphabetic(10))
                 .firstName(randomAlphabetic(10))
-                .authorities(Collections.singleton(new SimpleGrantedAuthority("USER")))
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority("USER")))
                 .build();
     }
 

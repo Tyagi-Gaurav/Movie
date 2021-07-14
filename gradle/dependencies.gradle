@@ -21,6 +21,9 @@ ext {
     validationApiVersion = '2.0.1.Final'
     metricsInterceptor = '1.7.0'
     embeddedRedisVersion = '0.7.3'
+    mysqlVersion = '8.0.25'
+    c3p0Version = '0.9.5.5'
+    h2DbVersion = '1.4.200'
 }
 
 dependencyManagement {
@@ -50,6 +53,9 @@ dependencyManagement {
         dependency "org.slf4j:slf4j-log4j12:$slf4jVersion"
         dependency "commons-logging:commons-logging:$commonsLoggingVersion"
         dependency "io.micrometer:micrometer-core:$metricsInterceptor"
+        dependency "mysql:mysql-connector-java:$mysqlVersion"
+        dependency "com.mchange:c3p0:$c3p0Version"
+        dependency "com.h2database:h2:$h2DbVersion"
 
         dependency "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
         dependency "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
