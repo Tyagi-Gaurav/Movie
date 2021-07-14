@@ -2,7 +2,9 @@ package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.ImmutableMovie;
+import com.gt.scr.movie.service.domain.ImmutableMovieVideo;
 import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.movie.service.domain.MovieVideo;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +46,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.addMovieRating(userId, movie);
+        movieService.addMovie(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -61,10 +64,10 @@ class MovieServiceImplTest {
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
-        movieService.addMovieRating(userId, movie);
+        movieService.addMovie(userId, movie);
 
         //when
-        Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, movie));
+        Throwable throwable = catchThrowable(() -> movieService.addMovie(userId, movie));
 
         //then
         assertThat(throwable).isNotNull()
@@ -80,7 +83,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        Map<UUID, Movie> movies = movieService.getMovieRating(userId);
+        Map<UUID, Movie> movies = movieService.getMovie(userId);
 
         //then
         assertThat(movies).isEqualTo(user.movies());
@@ -96,7 +99,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.deleteMovieRating(userId, movie.id());
+        movieService.deleteMovie(userId, movie.id());
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -116,7 +119,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.updateMovieRating(userId, movie);
+        movieService.updateMovie(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -124,6 +127,43 @@ class MovieServiceImplTest {
 
         User actualParameter = userArgumentCaptor.getValue();
         assertThat(actualParameter.movies()).isEmpty();
+    }
+
+    @Test
+    void shouldUpdateMovieVideoForAUser() {
+        //given
+        UUID userId = UUID.randomUUID();
+        UUID movieId = UUID.randomUUID();
+        Movie movieToUpdate = TestBuilders.aMovie();
+        HashMap<UUID, Movie> movieMap = new HashMap<>();
+
+        movieMap.put(movieId, movieToUpdate);
+        User user = TestBuilders.aUserWithMovies(movieMap);
+
+        when(userService.findUserBy(userId)).thenReturn(user);
+        byte[] videoContent = {(byte) 0x81, (byte) 0xb0};
+        MovieVideo movieVideo = ImmutableMovieVideo.builder()
+                .content(videoContent)
+                .build();
+
+        //when
+        Movie updatedMovie = ImmutableMovie.builder()
+                .id(movieId)
+                .yearProduced(movieToUpdate.yearProduced())
+                .rating(movieToUpdate.rating())
+                .name(movieToUpdate.name())
+                .movieVideo(Optional.of(movieVideo))
+                .build();
+        movieService.updateMovie(userId, updatedMovie);
+
+        //then
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userService).update(userArgumentCaptor.capture());
+
+        User actualParameter = userArgumentCaptor.getValue();
+        Movie movie = actualParameter.movies().get(movieId);
+        assertThat(movie.movieVideo()).isNotEmpty();
+        assertThat(movie.movieVideo().get().content()).isEqualTo(videoContent);
     }
 
     @Test
@@ -153,7 +193,7 @@ class MovieServiceImplTest {
                 .yearProduced(2021)
                 .id(movieId)
                 .build();
-        movieService.updateMovieRating(userId, updatedMovie);
+        movieService.updateMovie(userId, updatedMovie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);

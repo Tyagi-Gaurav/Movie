@@ -2,7 +2,9 @@ package com.gt.scr.movie.test.resource;
 
 import com.gt.scr.movie.test.config.MovieAppConfig;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
+import com.gt.scr.movie.test.domain.TestMovieDTO;
 import com.gt.scr.movie.test.domain.TestMovieUpdateRequestDTO;
+import com.gt.scr.movie.test.domain.TestMoviesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -100,7 +102,7 @@ public class TestMovieResource extends AbstractResource {
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
     }
 
-    public void updateMovie(TestMovieUpdateRequestDTO updateRequestDTO, String regularUserId) {
+    public void updateMovieUsingAdminUser(TestMovieUpdateRequestDTO updateRequestDTO, String regularUserId) {
         String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
                 "/api/user/movie", movieAppConfig.port()), regularUserId);
         HttpHeaders headers = new HttpHeaders();
@@ -108,5 +110,16 @@ public class TestMovieResource extends AbstractResource {
         headers.setBearerAuth(responseHolder.getToken());
         HttpEntity<TestMovieUpdateRequestDTO> requestObject = new HttpEntity<>(updateRequestDTO, headers);
         responseHolder.setResponse(this.put(fullUrl, requestObject, String.class));
+    }
+
+    public UUID getMovieIdFor(String movieName, String userId) {
+        this.readMovies(userId);
+        var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
+        var movies = testMoviesDTO.movies();
+
+        return movies.stream()
+                .filter(mv -> movieName.equals(mv.name()))
+                .findFirst()
+                .map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
     }
 }

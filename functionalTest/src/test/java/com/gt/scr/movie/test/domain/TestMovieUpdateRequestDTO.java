@@ -27,4 +27,9 @@ public interface TestMovieUpdateRequestDTO {
     default int yearProduced() {
         return 0;
     }
+
+    @Value.Default
+    default TestMovieVideoRequestDTO videoRequestDto() {
+        return null;
+    }
 }

@@ -2,8 +2,10 @@ package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.ImmutableMovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableMovieUpdateRequestDTO;
+import com.gt.scr.movie.resource.domain.ImmutableMovieVideoUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
 import com.gt.scr.movie.resource.domain.MovieDTO;
+import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
@@ -12,6 +14,7 @@ import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,7 +68,7 @@ class MovieResourceTest {
                 .contentType("application/vnd.movie.add.v1+json"))
                 .andExpect(status().isNoContent());
 
-        verify(movieService).addMovieRating(eq(userProfile.id()), any(Movie.class));
+        verify(movieService).addMovie(eq(userProfile.id()), any(Movie.class));
     }
 
     @Test
@@ -85,7 +88,7 @@ class MovieResourceTest {
                 .build();
         moviesMap.put(userProfile.id(), expectedReturnObject);
 
-        when(movieService.getMovieRating(id)).thenReturn(moviesMap);
+        when(movieService.getMovie(id)).thenReturn(moviesMap);
 
         //when
         MvcResult mvcResult = mockMvc.perform(get("/user/movie")
@@ -94,7 +97,7 @@ class MovieResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).getMovieRating(userProfile.id());
+        verify(movieService).getMovie(userProfile.id());
         MoviesDTO moviesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
                 MoviesDTO.class);
 
@@ -121,17 +124,18 @@ class MovieResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).deleteMovieRating(userProfile.id(), movieId);
+        verify(movieService).deleteMovie(userProfile.id(), movieId);
     }
 
     @Test
     void shouldAllowUserToUpdateMovies() throws Exception {
-        String content = TestUtils.asJsonString(ImmutableMovieUpdateRequestDTO.builder()
+        MovieUpdateRequestDTO body = ImmutableMovieUpdateRequestDTO.builder()
                 .id(UUID.randomUUID())
                 .name(randomAlphabetic(5))
                 .rating(BigDecimal.ZERO)
                 .yearProduced(2010)
-                .build());
+                .build();
+        String content = TestUtils.asJsonString(body);
 
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
@@ -145,7 +149,48 @@ class MovieResourceTest {
                 .contentType("application/vnd.movie.update.v1+json"))
                 .andExpect(status().isOk());
 
-        verify(movieService).updateMovieRating(eq(userProfile.id()), any(Movie.class));
+        ArgumentCaptor<Movie> movieArgumentCaptor = ArgumentCaptor.forClass(Movie.class);
+        verify(movieService).updateMovie(eq(userProfile.id()), movieArgumentCaptor.capture());
+        Movie movie = movieArgumentCaptor.getValue();
+
+        assertThat(movie.id()).isEqualTo(body.id());
+        assertThat(movie.name()).isEqualTo(body.name());
+        assertThat(movie.rating()).isEqualTo(body.rating());
+        assertThat(movie.yearProduced()).isEqualTo(body.yearProduced());
+    }
+
+    @Test
+    void shouldAllowUserToUpdateMovieVideos() throws Exception {
+        byte[] videoContents = {(byte) 0x81, (byte) 0xb6};
+        MovieUpdateRequestDTO body = ImmutableMovieUpdateRequestDTO.builder()
+                .id(UUID.randomUUID())
+                .name(randomAlphabetic(5))
+                .rating(BigDecimal.ZERO)
+                .yearProduced(2010)
+                .videoRequestDto(ImmutableMovieVideoUpdateRequestDTO.builder()
+                        .content(videoContents)
+                        .build())
+                .build();
+        String content = TestUtils.asJsonString(body);
+
+        UserProfile userProfile = ImmutableUserProfile.builder()
+                .id(UUID.randomUUID())
+                .authority("USER")
+                .build();
+
+        //when
+        mockMvc.perform(put("/user/movie")
+                .content(content)
+                .requestAttr("userProfile", userProfile)
+                .contentType("application/vnd.movie.update.v1+json"))
+                .andExpect(status().isOk());
+
+        ArgumentCaptor<Movie> movieArgumentCaptor = ArgumentCaptor.forClass(Movie.class);
+        verify(movieService).updateMovie(eq(userProfile.id()), movieArgumentCaptor.capture());
+        Movie movie = movieArgumentCaptor.getValue();
+
+        assertThat(movie.movieVideo()).isNotEmpty();
+        assertThat(movie.movieVideo().get().content()).isEqualTo(videoContents);
     }
 
 

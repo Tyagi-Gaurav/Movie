@@ -1,6 +1,7 @@
 package com.gt.scr.movie.util;
 
 import com.gt.scr.movie.service.domain.ImmutableMovie;
+import com.gt.scr.movie.service.domain.ImmutableMovieVideo;
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
@@ -9,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -50,6 +52,18 @@ public class TestBuilders {
                 .yearProduced(2010)
                 .rating(BigDecimal.valueOf(10))
                 .id(UUID.randomUUID())
+                .build();
+    }
+
+    public static Movie aMovieWithVideo() {
+        return ImmutableMovie.builder()
+                .name(randomAlphabetic(10))
+                .yearProduced(2010)
+                .rating(BigDecimal.valueOf(10))
+                .id(UUID.randomUUID())
+                .movieVideo(Optional.of(ImmutableMovieVideo.builder()
+                        .content((byte) 0x81, (byte) 0xb0)
+                        .build()))
                 .build();
     }
 

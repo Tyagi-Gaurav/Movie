@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Value.Immutable
@@ -26,5 +28,11 @@ public interface MovieUpdateRequestDTO {
     @Value.Default
     default int yearProduced() {
         return 0;
+    }
+
+    @Value.Default
+    @Nullable
+    default MovieVideoUpdateRequestDTO videoRequestDto() {
+        return null;
     }
 }

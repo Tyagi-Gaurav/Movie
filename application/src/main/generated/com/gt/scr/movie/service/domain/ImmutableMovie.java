@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -35,12 +36,19 @@ public final class ImmutableMovie implements Movie {
   private final String name;
   private final int yearProduced;
   private final BigDecimal rating;
+  private final @Nullable MovieVideo movieVideo;
 
-  private ImmutableMovie(UUID id, String name, int yearProduced, BigDecimal rating) {
+  private ImmutableMovie(
+      UUID id,
+      String name,
+      int yearProduced,
+      BigDecimal rating,
+      @Nullable MovieVideo movieVideo) {
     this.id = id;
     this.name = name;
     this.yearProduced = yearProduced;
     this.rating = rating;
+    this.movieVideo = movieVideo;
   }
 
   /**
@@ -80,6 +88,15 @@ public final class ImmutableMovie implements Movie {
   }
 
   /**
+   * @return The value of the {@code movieVideo} attribute
+   */
+  @JsonProperty("movieVideo")
+  @Override
+  public Optional<MovieVideo> movieVideo() {
+    return Optional.ofNullable(movieVideo);
+  }
+
+  /**
    * Copy the current immutable object by setting a value for the {@link Movie#id() id} attribute.
    * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for id
@@ -88,7 +105,7 @@ public final class ImmutableMovie implements Movie {
   public final ImmutableMovie withId(UUID value) {
     if (this.id == value) return this;
     UUID newValue = Objects.requireNonNull(value, "id");
-    return new ImmutableMovie(newValue, this.name, this.yearProduced, this.rating);
+    return new ImmutableMovie(newValue, this.name, this.yearProduced, this.rating, this.movieVideo);
   }
 
   /**
@@ -100,7 +117,7 @@ public final class ImmutableMovie implements Movie {
   public final ImmutableMovie withName(String value) {
     String newValue = Objects.requireNonNull(value, "name");
     if (this.name.equals(newValue)) return this;
-    return new ImmutableMovie(this.id, newValue, this.yearProduced, this.rating);
+    return new ImmutableMovie(this.id, newValue, this.yearProduced, this.rating, this.movieVideo);
   }
 
   /**
@@ -111,7 +128,7 @@ public final class ImmutableMovie implements Movie {
    */
   public final ImmutableMovie withYearProduced(int value) {
     if (this.yearProduced == value) return this;
-    return new ImmutableMovie(this.id, this.name, value, this.rating);
+    return new ImmutableMovie(this.id, this.name, value, this.rating, this.movieVideo);
   }
 
   /**
@@ -123,7 +140,31 @@ public final class ImmutableMovie implements Movie {
   public final ImmutableMovie withRating(BigDecimal value) {
     BigDecimal newValue = Objects.requireNonNull(value, "rating");
     if (this.rating.equals(newValue)) return this;
-    return new ImmutableMovie(this.id, this.name, this.yearProduced, newValue);
+    return new ImmutableMovie(this.id, this.name, this.yearProduced, newValue, this.movieVideo);
+  }
+
+  /**
+   * Copy the current immutable object by setting a <i>present</i> value for the optional {@link Movie#movieVideo() movieVideo} attribute.
+   * @param value The value for movieVideo
+   * @return A modified copy of {@code this} object
+   */
+  public final ImmutableMovie withMovieVideo(MovieVideo value) {
+    @Nullable MovieVideo newValue = Objects.requireNonNull(value, "movieVideo");
+    if (this.movieVideo == newValue) return this;
+    return new ImmutableMovie(this.id, this.name, this.yearProduced, this.rating, newValue);
+  }
+
+  /**
+   * Copy the current immutable object by setting an optional value for the {@link Movie#movieVideo() movieVideo} attribute.
+   * A shallow reference equality check is used on unboxed optional value to prevent copying of the same value by returning {@code this}.
+   * @param optional A value for movieVideo
+   * @return A modified copy of {@code this} object
+   */
+  @SuppressWarnings("unchecked") // safe covariant cast
+  public final ImmutableMovie withMovieVideo(Optional<? extends MovieVideo> optional) {
+    @Nullable MovieVideo value = optional.orElse(null);
+    if (this.movieVideo == value) return this;
+    return new ImmutableMovie(this.id, this.name, this.yearProduced, this.rating, value);
   }
 
   /**
@@ -141,11 +182,12 @@ public final class ImmutableMovie implements Movie {
     return id.equals(another.id)
         && name.equals(another.name)
         && yearProduced == another.yearProduced
-        && rating.equals(another.rating);
+        && rating.equals(another.rating)
+        && Objects.equals(movieVideo, another.movieVideo);
   }
 
   /**
-   * Computes a hash code from attributes: {@code id}, {@code name}, {@code yearProduced}, {@code rating}.
+   * Computes a hash code from attributes: {@code id}, {@code name}, {@code yearProduced}, {@code rating}, {@code movieVideo}.
    * @return hashCode value
    */
   @Override
@@ -155,6 +197,7 @@ public final class ImmutableMovie implements Movie {
     h += (h << 5) + name.hashCode();
     h += (h << 5) + yearProduced;
     h += (h << 5) + rating.hashCode();
+    h += (h << 5) + Objects.hashCode(movieVideo);
     return h;
   }
 
@@ -170,6 +213,7 @@ public final class ImmutableMovie implements Movie {
         .add("name", name)
         .add("yearProduced", yearProduced)
         .add("rating", rating)
+        .add("movieVideo", movieVideo)
         .toString();
   }
 
@@ -197,6 +241,7 @@ public final class ImmutableMovie implements Movie {
    *    .name(String) // required {@link Movie#name() name}
    *    .yearProduced(int) // required {@link Movie#yearProduced() yearProduced}
    *    .rating(java.math.BigDecimal) // required {@link Movie#rating() rating}
+   *    .movieVideo(com.gt.scr.movie.service.domain.MovieVideo) // optional {@link Movie#movieVideo() movieVideo}
    *    .build();
    * </pre>
    * @return A new ImmutableMovie builder
@@ -226,6 +271,7 @@ public final class ImmutableMovie implements Movie {
     private @Nullable String name;
     private int yearProduced;
     private @Nullable BigDecimal rating;
+    private @Nullable MovieVideo movieVideo;
 
     private Builder() {
     }
@@ -244,6 +290,10 @@ public final class ImmutableMovie implements Movie {
       name(instance.name());
       yearProduced(instance.yearProduced());
       rating(instance.rating());
+      Optional<MovieVideo> movieVideoOptional = instance.movieVideo();
+      if (movieVideoOptional.isPresent()) {
+        movieVideo(movieVideoOptional);
+      }
       return this;
     }
 
@@ -300,6 +350,29 @@ public final class ImmutableMovie implements Movie {
     }
 
     /**
+     * Initializes the optional value {@link Movie#movieVideo() movieVideo} to movieVideo.
+     * @param movieVideo The value for movieVideo
+     * @return {@code this} builder for chained invocation
+     */
+    @CanIgnoreReturnValue 
+    public final Builder movieVideo(MovieVideo movieVideo) {
+      this.movieVideo = Objects.requireNonNull(movieVideo, "movieVideo");
+      return this;
+    }
+
+    /**
+     * Initializes the optional value {@link Movie#movieVideo() movieVideo} to movieVideo.
+     * @param movieVideo The value for movieVideo
+     * @return {@code this} builder for use in a chained invocation
+     */
+    @CanIgnoreReturnValue 
+    @JsonProperty("movieVideo")
+    public final Builder movieVideo(Optional<? extends MovieVideo> movieVideo) {
+      this.movieVideo = movieVideo.orElse(null);
+      return this;
+    }
+
+    /**
      * Builds a new {@link ImmutableMovie ImmutableMovie}.
      * @return An immutable instance of Movie
      * @throws java.lang.IllegalStateException if any required attributes are missing
@@ -308,7 +381,7 @@ public final class ImmutableMovie implements Movie {
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableMovie(id, name, yearProduced, rating);
+      return new ImmutableMovie(id, name, yearProduced, rating, movieVideo);
     }
 
     private String formatRequiredAttributesMessage() {

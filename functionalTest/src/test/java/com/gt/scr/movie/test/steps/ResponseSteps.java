@@ -17,7 +17,7 @@ public class ResponseSteps implements En {
             assertThat(responseHolder.getResponseCode()).isEqualTo(responseCode);
         });
 
-        And("^the response should be a success status response$", () -> {
+        And("^the response should have a success status$", () -> {
             String response = responseHolder.readResponse(String.class);
             assertThat(response).isEqualTo("OK");
         });

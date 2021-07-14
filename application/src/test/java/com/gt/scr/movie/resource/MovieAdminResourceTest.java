@@ -67,8 +67,8 @@ class MovieAdminResourceTest {
                 .contentType("application/vnd.movie.add.v1+json"))
                 .andExpect(status().isNoContent());
 
-        verify(movieService).addMovieRating(eq(requestedUserId), any(Movie.class));
-        verify(movieService, times(0)).addMovieRating(eq(userProfile.id()),
+        verify(movieService).addMovie(eq(requestedUserId), any(Movie.class));
+        verify(movieService, times(0)).addMovie(eq(userProfile.id()),
                 any(Movie.class));
     }
 
@@ -90,7 +90,7 @@ class MovieAdminResourceTest {
                 .build();
         movieMap.put(userProfile.id(), expectedReturnObject);
 
-        when(movieService.getMovieRating(requestedUserId)).thenReturn(movieMap);
+        when(movieService.getMovie(requestedUserId)).thenReturn(movieMap);
 
         //when
         MvcResult mvcResult = mockMvc.perform(get("/user/movie")
@@ -100,8 +100,8 @@ class MovieAdminResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).getMovieRating(requestedUserId);
-        verify(movieService, times(0)).getMovieRating(usersOwnId);
+        verify(movieService).getMovie(requestedUserId);
+        verify(movieService, times(0)).getMovie(usersOwnId);
         MoviesDTO moviesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
                 MoviesDTO.class);
 
@@ -130,7 +130,7 @@ class MovieAdminResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).deleteMovieRating(requestedUserId, movieId);
+        verify(movieService).deleteMovie(requestedUserId, movieId);
     }
 
     @Test
@@ -156,8 +156,8 @@ class MovieAdminResourceTest {
                 .contentType("application/vnd.movie.update.v1+json"))
                 .andExpect(status().isOk());
 
-        verify(movieService).updateMovieRating(eq(requestedUserId), any(Movie.class));
-        verify(movieService, times(0)).updateMovieRating(eq(userProfile.id()), any(Movie.class));
+        verify(movieService).updateMovie(eq(requestedUserId), any(Movie.class));
+        verify(movieService, times(0)).updateMovie(eq(userProfile.id()), any(Movie.class));
     }
 
 

@@ -3,6 +3,7 @@ package com.gt.scr.movie.test.steps;
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.ImmutableTestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.ImmutableTestMovieUpdateRequestDTO;
+import com.gt.scr.movie.test.domain.ImmutableTestMovieVideoRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieDTO;
 import com.gt.scr.movie.test.domain.TestMoviesDTO;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.gt.scr.movie.test.util.TestUtils.readByteStreamFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MovieSteps implements En {
@@ -41,6 +43,19 @@ public class MovieSteps implements En {
         When("^the authenticated user attempts to read the movies", () -> {
             testMovieResource.readMovies();
         });
+
+        When("^the authenticated user attempts to upload a new video \"(.*)\" for movie: '(.*)'$",
+                (String videoFileName, String movieName) -> {
+                    UUID movieId = testMovieResource.getMovieIdFor(movieName, scenarioContext.getRegularUserId());
+                    byte[] bytes = readByteStreamFor(videoFileName);
+                    ImmutableTestMovieUpdateRequestDTO movieUpdateRequestDTO =
+                            ImmutableTestMovieUpdateRequestDTO
+                            .builder()
+                                    .videoRequestDto(ImmutableTestMovieVideoRequestDTO.builder().content(bytes).build())
+                                    .id(movieId)
+                            .build();
+                    testMovieResource.updateMovie(movieUpdateRequestDTO);
+                });
 
         And("^the authenticated user attempts to read the movies for the previous user$", () -> {
             String regularUserId = scenarioContext.getRegularUserId();
@@ -155,14 +170,7 @@ public class MovieSteps implements En {
         When("^the admin user attempts to update the movie with name: '(.*)' to$",
                 (String name, TestMovieCreateRequestDTO testMovieCreateRequestDTO) -> {
                     String regularUserId = scenarioContext.getRegularUserId();
-                    testMovieResource.readMovies(regularUserId);
-                    var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
-                    var movies = testMoviesDTO.movies();
-
-                    UUID uuid = movies.stream()
-                            .filter(mv -> name.equals(mv.name()))
-                            .findFirst()
-                            .map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
+                    UUID uuid = testMovieResource.getMovieIdFor(name, regularUserId);
 
                     var updateRequestDTO =
                             ImmutableTestMovieUpdateRequestDTO.builder()
@@ -172,7 +180,7 @@ public class MovieSteps implements En {
                                     .id(uuid)
                                     .build();
 
-                    testMovieResource.updateMovie(updateRequestDTO, regularUserId);
+                    testMovieResource.updateMovieUsingAdminUser(updateRequestDTO, regularUserId);
                 });
     }
 }

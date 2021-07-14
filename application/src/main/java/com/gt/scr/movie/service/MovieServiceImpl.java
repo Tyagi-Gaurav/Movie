@@ -21,7 +21,7 @@ public class MovieServiceImpl implements MovieService {
     private UserService userService;
 
     @Override
-    public void addMovieRating(UUID userId, Movie movie) {
+    public void addMovie(UUID userId, Movie movie) {
         var userFromDatabase = userService.findUserBy(userId);
         HashMap<UUID, Movie> uuidUserMoviesHashMap =
                 userFromDatabase.movies();
@@ -42,13 +42,13 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Map<UUID, Movie> getMovieRating(UUID userId) {
+    public Map<UUID, Movie> getMovie(UUID userId) {
         var userFromDatabase = userService.findUserBy(userId);
         return userFromDatabase.movies();
     }
 
     @Override
-    public void deleteMovieRating(UUID userId, UUID movieId) {
+    public void deleteMovie(UUID userId, UUID movieId) {
         var userFromDatabase = userService.findUserBy(userId);
 
         HashMap<UUID, Movie> uuidUserMovieMap = userFromDatabase.movies();
@@ -59,7 +59,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void updateMovieRating(UUID userId, Movie movie) {
+    public void updateMovie(UUID userId, Movie movie) {
         var userFromDatabase = userService.findUserBy(userId);
 
         HashMap<UUID, Movie> uuidUserMovieMap = userFromDatabase.movies();
@@ -69,6 +69,7 @@ public class MovieServiceImpl implements MovieService {
                 .rating(!BigDecimal.ZERO.equals(movie.rating()) ? movie.rating() : mv.rating())
                 .yearProduced(movie.yearProduced() != 0 ? movie.yearProduced() : mv.yearProduced())
                 .id(movie.id())
+                .movieVideo(movie.movieVideo().isPresent() ? movie.movieVideo() : mv.movieVideo())
                 .build());
 
         userService.update(ImmutableUser.builder().from(userFromDatabase)

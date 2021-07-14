@@ -23,6 +23,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
   private final String name;
   private final BigDecimal rating;
   private final int yearProduced;
+  private final TestMovieVideoRequestDTO videoRequestDto;
 
   private ImmutableTestMovieUpdateRequestDTO(ImmutableTestMovieUpdateRequestDTO.Builder builder) {
     this.id = builder.id;
@@ -35,17 +36,27 @@ public final class ImmutableTestMovieUpdateRequestDTO
     if (builder.yearProducedIsSet()) {
       initShim.yearProduced(builder.yearProduced);
     }
+    if (builder.videoRequestDto != null) {
+      initShim.videoRequestDto(builder.videoRequestDto);
+    }
     this.name = initShim.name();
     this.rating = initShim.rating();
     this.yearProduced = initShim.yearProduced();
+    this.videoRequestDto = initShim.videoRequestDto();
     this.initShim = null;
   }
 
-  private ImmutableTestMovieUpdateRequestDTO(UUID id, String name, BigDecimal rating, int yearProduced) {
+  private ImmutableTestMovieUpdateRequestDTO(
+      UUID id,
+      String name,
+      BigDecimal rating,
+      int yearProduced,
+      TestMovieVideoRequestDTO videoRequestDto) {
     this.id = id;
     this.name = name;
     this.rating = rating;
     this.yearProduced = yearProduced;
+    this.videoRequestDto = videoRequestDto;
     this.initShim = null;
   }
 
@@ -110,11 +121,30 @@ public final class ImmutableTestMovieUpdateRequestDTO
       yearProducedBuildStage = STAGE_INITIALIZED;
     }
 
+    private byte videoRequestDtoBuildStage = STAGE_UNINITIALIZED;
+    private TestMovieVideoRequestDTO videoRequestDto;
+
+    TestMovieVideoRequestDTO videoRequestDto() {
+      if (videoRequestDtoBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
+      if (videoRequestDtoBuildStage == STAGE_UNINITIALIZED) {
+        videoRequestDtoBuildStage = STAGE_INITIALIZING;
+        this.videoRequestDto = Objects.requireNonNull(videoRequestDtoInitialize(), "videoRequestDto");
+        videoRequestDtoBuildStage = STAGE_INITIALIZED;
+      }
+      return this.videoRequestDto;
+    }
+
+    void videoRequestDto(TestMovieVideoRequestDTO videoRequestDto) {
+      this.videoRequestDto = videoRequestDto;
+      videoRequestDtoBuildStage = STAGE_INITIALIZED;
+    }
+
     private String formatInitCycleMessage() {
       List<String> attributes = new ArrayList<>();
       if (nameBuildStage == STAGE_INITIALIZING) attributes.add("name");
       if (ratingBuildStage == STAGE_INITIALIZING) attributes.add("rating");
       if (yearProducedBuildStage == STAGE_INITIALIZING) attributes.add("yearProduced");
+      if (videoRequestDtoBuildStage == STAGE_INITIALIZING) attributes.add("videoRequestDto");
       return "Cannot build TestMovieUpdateRequestDTO, attribute initializers form cycle " + attributes;
     }
   }
@@ -129,6 +159,10 @@ public final class ImmutableTestMovieUpdateRequestDTO
 
   private int yearProducedInitialize() {
     return TestMovieUpdateRequestDTO.super.yearProduced();
+  }
+
+  private TestMovieVideoRequestDTO videoRequestDtoInitialize() {
+    return TestMovieUpdateRequestDTO.super.videoRequestDto();
   }
 
   /**
@@ -177,6 +211,18 @@ public final class ImmutableTestMovieUpdateRequestDTO
   }
 
   /**
+   * @return The value of the {@code videoRequestDto} attribute
+   */
+  @JsonProperty("videoRequestDto")
+  @Override
+  public TestMovieVideoRequestDTO videoRequestDto() {
+    InitShim shim = this.initShim;
+    return shim != null
+        ? shim.videoRequestDto()
+        : this.videoRequestDto;
+  }
+
+  /**
    * Copy the current immutable object by setting a value for the {@link TestMovieUpdateRequestDTO#id() id} attribute.
    * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for id
@@ -185,7 +231,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
   public final ImmutableTestMovieUpdateRequestDTO withId(UUID value) {
     if (this.id == value) return this;
     UUID newValue = Objects.requireNonNull(value, "id");
-    return new ImmutableTestMovieUpdateRequestDTO(newValue, this.name, this.rating, this.yearProduced);
+    return new ImmutableTestMovieUpdateRequestDTO(newValue, this.name, this.rating, this.yearProduced, this.videoRequestDto);
   }
 
   /**
@@ -197,7 +243,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
   public final ImmutableTestMovieUpdateRequestDTO withName(String value) {
     String newValue = Objects.requireNonNull(value, "name");
     if (this.name.equals(newValue)) return this;
-    return new ImmutableTestMovieUpdateRequestDTO(this.id, newValue, this.rating, this.yearProduced);
+    return new ImmutableTestMovieUpdateRequestDTO(this.id, newValue, this.rating, this.yearProduced, this.videoRequestDto);
   }
 
   /**
@@ -209,7 +255,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
   public final ImmutableTestMovieUpdateRequestDTO withRating(BigDecimal value) {
     BigDecimal newValue = Objects.requireNonNull(value, "rating");
     if (this.rating.equals(newValue)) return this;
-    return new ImmutableTestMovieUpdateRequestDTO(this.id, this.name, newValue, this.yearProduced);
+    return new ImmutableTestMovieUpdateRequestDTO(this.id, this.name, newValue, this.yearProduced, this.videoRequestDto);
   }
 
   /**
@@ -220,7 +266,19 @@ public final class ImmutableTestMovieUpdateRequestDTO
    */
   public final ImmutableTestMovieUpdateRequestDTO withYearProduced(int value) {
     if (this.yearProduced == value) return this;
-    return new ImmutableTestMovieUpdateRequestDTO(this.id, this.name, this.rating, value);
+    return new ImmutableTestMovieUpdateRequestDTO(this.id, this.name, this.rating, value, this.videoRequestDto);
+  }
+
+  /**
+   * Copy the current immutable object by setting a value for the {@link TestMovieUpdateRequestDTO#videoRequestDto() videoRequestDto} attribute.
+   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for videoRequestDto
+   * @return A modified copy of the {@code this} object
+   */
+  public final ImmutableTestMovieUpdateRequestDTO withVideoRequestDto(TestMovieVideoRequestDTO value) {
+    if (this.videoRequestDto == value) return this;
+    TestMovieVideoRequestDTO newValue = Objects.requireNonNull(value, "videoRequestDto");
+    return new ImmutableTestMovieUpdateRequestDTO(this.id, this.name, this.rating, this.yearProduced, newValue);
   }
 
   /**
@@ -238,11 +296,12 @@ public final class ImmutableTestMovieUpdateRequestDTO
     return id.equals(another.id)
         && name.equals(another.name)
         && rating.equals(another.rating)
-        && yearProduced == another.yearProduced;
+        && yearProduced == another.yearProduced
+        && videoRequestDto.equals(another.videoRequestDto);
   }
 
   /**
-   * Computes a hash code from attributes: {@code id}, {@code name}, {@code rating}, {@code yearProduced}.
+   * Computes a hash code from attributes: {@code id}, {@code name}, {@code rating}, {@code yearProduced}, {@code videoRequestDto}.
    * @return hashCode value
    */
   @Override
@@ -252,6 +311,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
     h += (h << 5) + name.hashCode();
     h += (h << 5) + rating.hashCode();
     h += (h << 5) + yearProduced;
+    h += (h << 5) + videoRequestDto.hashCode();
     return h;
   }
 
@@ -266,6 +326,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
         + ", name=" + name
         + ", rating=" + rating
         + ", yearProduced=" + yearProduced
+        + ", videoRequestDto=" + videoRequestDto
         + "}";
   }
 
@@ -293,6 +354,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
    *    .name(String) // optional {@link TestMovieUpdateRequestDTO#name() name}
    *    .rating(java.math.BigDecimal) // optional {@link TestMovieUpdateRequestDTO#rating() rating}
    *    .yearProduced(int) // optional {@link TestMovieUpdateRequestDTO#yearProduced() yearProduced}
+   *    .videoRequestDto(com.gt.scr.movie.test.domain.TestMovieVideoRequestDTO) // optional {@link TestMovieUpdateRequestDTO#videoRequestDto() videoRequestDto}
    *    .build();
    * </pre>
    * @return A new ImmutableTestMovieUpdateRequestDTO builder
@@ -319,6 +381,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
     private String name;
     private BigDecimal rating;
     private int yearProduced;
+    private TestMovieVideoRequestDTO videoRequestDto;
 
     private Builder() {
     }
@@ -336,6 +399,7 @@ public final class ImmutableTestMovieUpdateRequestDTO
       name(instance.name());
       rating(instance.rating());
       yearProduced(instance.yearProduced());
+      videoRequestDto(instance.videoRequestDto());
       return this;
     }
 
@@ -385,6 +449,18 @@ public final class ImmutableTestMovieUpdateRequestDTO
     public final Builder yearProduced(int yearProduced) {
       this.yearProduced = yearProduced;
       optBits |= OPT_BIT_YEAR_PRODUCED;
+      return this;
+    }
+
+    /**
+     * Initializes the value for the {@link TestMovieUpdateRequestDTO#videoRequestDto() videoRequestDto} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link TestMovieUpdateRequestDTO#videoRequestDto() videoRequestDto}.</em>
+     * @param videoRequestDto The value for videoRequestDto 
+     * @return {@code this} builder for use in a chained invocation
+     */
+    @JsonProperty("videoRequestDto")
+    public final Builder videoRequestDto(TestMovieVideoRequestDTO videoRequestDto) {
+      this.videoRequestDto = Objects.requireNonNull(videoRequestDto, "videoRequestDto");
       return this;
     }
 
