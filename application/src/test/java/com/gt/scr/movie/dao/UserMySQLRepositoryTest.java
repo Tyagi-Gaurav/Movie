@@ -198,6 +198,7 @@ class UserMySQLRepositoryTest {
             try {
 
                 URL resource = TestMovieRepoContextConfiguration.class.getClassLoader().getResource("db.changelog/dbchangelog.sql");
+                assertThat(resource).describedAs("Unable to find sql file to create database").isNotNull();
                 String tempFile = resource.toURI().getRawPath();
                 cpds.setDriverClass("org.h2.Driver");
                 String jdbcUrl =
