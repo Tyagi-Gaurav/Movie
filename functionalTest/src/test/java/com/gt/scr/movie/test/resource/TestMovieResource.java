@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Component
 public class TestMovieResource extends AbstractResource {
 
@@ -113,7 +115,11 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public UUID getMovieIdFor(String movieName, String userId) {
-        this.readMovies(userId);
+        if (userId != null) {
+            this.readMovies(userId);
+        } else {
+            this.readMovies();
+        }
         var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
         var movies = testMoviesDTO.movies();
 
@@ -121,5 +127,9 @@ public class TestMovieResource extends AbstractResource {
                 .filter(mv -> movieName.equals(mv.name()))
                 .findFirst()
                 .map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
+    }
+
+    public UUID getMovieIdForCurrentUser(String movieName) {
+        return this.getMovieIdFor(movieName, null);
     }
 }

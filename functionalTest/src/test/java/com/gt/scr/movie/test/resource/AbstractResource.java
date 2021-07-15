@@ -1,6 +1,5 @@
 package com.gt.scr.movie.test.resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,14 +86,14 @@ public class AbstractResource {
     }
 
     private void log(String url, Object body) {
-        try {
-            LOG.info(String.format("\n============ Payload Start ======= \n" +
-                            "\tFull URL: %s ,\n " +
-                            "\tBody: \n\t%s \n" +
-                            "============ Payload End ======= \n", url,
-                    objectMapper.writeValueAsString(body)));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            LOG.info(String.format("\n============ Payload Start ======= \n" +
+//                            "\tFull URL: %s ,\n " +
+//                            "\tBody: \n\t%s \n" +
+//                            "============ Payload End ======= \n", url,
+//                    objectMapper.writeValueAsString(body)));
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
     }
 }

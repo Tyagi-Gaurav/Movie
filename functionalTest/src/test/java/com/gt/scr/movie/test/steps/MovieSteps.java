@@ -46,7 +46,7 @@ public class MovieSteps implements En {
 
         When("^the authenticated user attempts to upload a new video \"(.*)\" for movie: '(.*)'$",
                 (String videoFileName, String movieName) -> {
-                    UUID movieId = testMovieResource.getMovieIdFor(movieName, scenarioContext.getRegularUserId());
+                    UUID movieId = testMovieResource.getMovieIdForCurrentUser(movieName);
                     byte[] bytes = readByteStreamFor(videoFileName);
                     ImmutableTestMovieUpdateRequestDTO movieUpdateRequestDTO =
                             ImmutableTestMovieUpdateRequestDTO
@@ -168,9 +168,9 @@ public class MovieSteps implements En {
         });
 
         When("^the admin user attempts to update the movie with name: '(.*)' to$",
-                (String name, TestMovieCreateRequestDTO testMovieCreateRequestDTO) -> {
+                (String movieName, TestMovieCreateRequestDTO testMovieCreateRequestDTO) -> {
                     String regularUserId = scenarioContext.getRegularUserId();
-                    UUID uuid = testMovieResource.getMovieIdFor(name, regularUserId);
+                    UUID uuid = testMovieResource.getMovieIdFor(movieName, regularUserId);
 
                     var updateRequestDTO =
                             ImmutableTestMovieUpdateRequestDTO.builder()
