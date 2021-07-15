@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +61,19 @@ class UserRedisRepositoryTest {
     }
 
     @Test
+    void shouldFindUserByUserIdReturnsNullWhenUserDoesNotExist() {
+        //given
+        User expectedUser = TestBuilders.aUser();
+        when(hashOperations.get("user", expectedUser.id())).thenReturn(null);
+
+        //when
+        User user = userRepository.findUserBy(expectedUser.id());
+
+        //then
+        assertThat(user).isEqualTo(null);
+    }
+
+    @Test
     void shouldFindUserByUserName() {
         //given
         String userName = "userName";
@@ -72,6 +86,21 @@ class UserRedisRepositoryTest {
 
         //then
         assertThat(user).isEqualTo(expectedUser);
+    }
+
+    @Test
+    void shouldFindUserByUserNameThrowsExceptionWhenUserDoesNotExist() {
+        //given
+        String userName = "userName";
+        User expectedUser = TestBuilders.aUser();
+        when(hashOperations.get("user", expectedUser.id())).thenReturn(null);
+
+        //when
+        IllegalStateException exception =
+                catchThrowableOfType(() -> userRepository.findUserBy(userName), IllegalStateException.class);
+
+        //then
+        assertThat(exception).isNotNull();
     }
 
     @Test
