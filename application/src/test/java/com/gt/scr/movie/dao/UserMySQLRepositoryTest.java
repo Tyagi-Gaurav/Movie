@@ -135,45 +135,50 @@ class UserMySQLRepositoryTest {
     }
 
     private Optional<User> getUser(UUID id) throws SQLException {
-        Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
-        preparedStatement.setString(1, id.toString());
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID)) {
+            preparedStatement.setString(1, id.toString());
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        if (resultSet.next()) {
-            return Optional.of(ImmutableUser.builder()
-                    .id(UUID.fromString(resultSet.getString("ID")))
-                    .username(resultSet.getString("USER_NAME"))
-                    .firstName(resultSet.getString("FIRST_NAME"))
-                    .lastName(resultSet.getString("LAST_NAME"))
-                    .password(resultSet.getString("PASSWORD"))
-                    .authorities(Arrays.stream(resultSet.getString("ROLES").split(","))
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList()))
-                    .build());
+            if (resultSet.next()) {
+                return Optional.of(ImmutableUser.builder()
+                        .id(UUID.fromString(resultSet.getString("ID")))
+                        .username(resultSet.getString("USER_NAME"))
+                        .firstName(resultSet.getString("FIRST_NAME"))
+                        .lastName(resultSet.getString("LAST_NAME"))
+                        .password(resultSet.getString("PASSWORD"))
+                        .authorities(Arrays.stream(resultSet.getString("ROLES").split(","))
+                                .map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toList()))
+                        .build());
+            }
+
+            resultSet.close();
+
+            return Optional.empty();
         }
-
-        return Optional.empty();
     }
 
     private void addToDatabase(User expectedUser) throws SQLException {
-        Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER);
-        preparedStatement.setString(1, expectedUser.id().toString());
-        preparedStatement.setString(2, expectedUser.getUsername());
-        preparedStatement.setString(3, expectedUser.firstName());
-        preparedStatement.setString(4, expectedUser.lastName());
-        preparedStatement.setString(5, expectedUser.getPassword());
-        preparedStatement.setString(6,
-                Strings.join(expectedUser.getAuthorities()).with(","));
-        preparedStatement.execute();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER);) {
+            preparedStatement.setString(1, expectedUser.id().toString());
+            preparedStatement.setString(2, expectedUser.getUsername());
+            preparedStatement.setString(3, expectedUser.firstName());
+            preparedStatement.setString(4, expectedUser.lastName());
+            preparedStatement.setString(5, expectedUser.getPassword());
+            preparedStatement.setString(6,
+                    Strings.join(expectedUser.getAuthorities()).with(","));
+            preparedStatement.execute();
+        }
     }
 
     private void deleteAllUsers() throws SQLException {
-        Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_USERS);
-        preparedStatement.execute();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_USERS)) {
+            preparedStatement.execute();
+        }
     }
 
     // Test for unique user insert

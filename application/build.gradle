@@ -104,6 +104,16 @@ spotbugsMain {
     }
 }
 
+spotbugsTest {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/test/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
 pmd {
     consoleOutput = true
     toolVersion = "6.21.0"
