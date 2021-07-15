@@ -22,6 +22,7 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.dynamicAnalysis", "reuseReports"
+        property "sonar.jacoco.reportPath", layout.buildDirectory.dir('jacocoHtml').get().asFile
     }
 }
 
