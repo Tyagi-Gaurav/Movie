@@ -28,10 +28,9 @@ public class UserMySQLRepository implements UserRepository {
 
     @Override
     public User findUserBy(UUID userId) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where ID = ?");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where ID = ?")) {
             preparedStatement.setString(1, userId.toString());
             LOG.info("Begin executing query");
 
@@ -59,10 +58,9 @@ public class UserMySQLRepository implements UserRepository {
 
     @Override
     public User findUserBy(String userName) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where USER_NAME = ?");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where USER_NAME = ?")) {
             preparedStatement.setString(1, userName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -88,10 +86,9 @@ public class UserMySQLRepository implements UserRepository {
 
     @Override
     public List<User> getAllUsers() {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER")) {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 //TODO Return when no records found
@@ -121,13 +118,11 @@ public class UserMySQLRepository implements UserRepository {
 
     @Override
     public void delete(UUID userId) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "DELETE FROM USER where ID = ?");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM USER where ID = ?")) {
             preparedStatement.setString(1, userId.toString());
             preparedStatement.execute();
-            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
             //TODO throw DownstreamException
@@ -136,13 +131,12 @@ public class UserMySQLRepository implements UserRepository {
 
     @Override
     public void update(User user) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE USER SET FIRST_NAME = ?, " +
-                            "LAST_NAME = ?, " +
-                            "PASSWORD = ?," +
-                            "ROLES = ? where ID = ?");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE USER SET FIRST_NAME = ?, " +
+                             "LAST_NAME = ?, " +
+                             "PASSWORD = ?," +
+                             "ROLES = ? where ID = ?")) {
 
             preparedStatement.setString(1, user.firstName());
             preparedStatement.setString(2, user.lastName());
@@ -150,10 +144,7 @@ public class UserMySQLRepository implements UserRepository {
             preparedStatement.setString(4, user.getRole());
             preparedStatement.setString(5, user.id().toString());
 
-            try (preparedStatement) {
-                preparedStatement.execute();
-            }
-            preparedStatement.close();
+            preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             //TODO throw DownstreamException

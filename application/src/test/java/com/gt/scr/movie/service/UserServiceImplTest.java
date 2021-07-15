@@ -1,11 +1,12 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -21,6 +22,7 @@ class UserServiceImplTest {
     private UserService userService;
 
     @MockBean
+    @Qualifier("mysql")
     private UserRepository repository;
 
     @Test

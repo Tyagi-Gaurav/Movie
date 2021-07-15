@@ -1,6 +1,7 @@
 package com.gt.scr.movie.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.filter.LoggingInterceptor;
 import com.gt.scr.movie.filter.MetricsInterceptor;
 import com.gt.scr.movie.filter.RequestIdInterceptor;
