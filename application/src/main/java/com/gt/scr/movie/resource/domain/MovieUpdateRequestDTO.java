@@ -6,7 +6,6 @@ import org.immutables.value.Value;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.UUID;
 
 @Value.Immutable
