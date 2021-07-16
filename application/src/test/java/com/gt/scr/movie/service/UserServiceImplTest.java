@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.Mockito.*;
@@ -28,7 +31,7 @@ class UserServiceImplTest {
     @Test
     void shouldAddUser() {
         User user = TestBuilders.aUser();
-        when(repository.findUserBy(user.getUsername())).thenThrow(IllegalStateException.class);
+        when(repository.findUserBy(user.getUsername())).thenReturn(empty());
 
         //when
         userService.add(user);
@@ -81,20 +84,20 @@ class UserServiceImplTest {
         verify(repository).update(user);
     }
 
-//    @Test
-//    void shouldThrowExceptionWhenTryingToAddDuplicateOrder() {
-//        //given
-//        User userA = TestBuilders.aUser();
-//        User userB = TestBuilders.aUserWithUserName(userA.getUsername());
-//        when(repository.findUserBy(userA.getUsername())).thenThrow(IllegalStateException.class).thenReturn(userA);
-//        userService.add(userA);
-//
-//        //when
-//        Throwable throwable = catchThrowable(() -> userService.add(userB));
-//
-//        //then
-//        assertThat(throwable).isNotNull();
-//        assertThat(throwable).isInstanceOf(DuplicateRecordException.class);
-//        verify(repository, times(2)).findUserBy(userA.getUsername());
-//    }
+    @Test
+    void shouldThrowExceptionWhenTryingToAddDuplicateUser() {
+        //given
+        User userA = TestBuilders.aUser();
+        User userB = TestBuilders.aUserWithUserName(userA.getUsername());
+        when(repository.findUserBy(userA.getUsername())).thenReturn(Optional.empty()).thenReturn(of(userA));
+        userService.add(userA);
+
+        //when
+        Throwable throwable = catchThrowable(() -> userService.add(userB));
+
+        //then
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(DuplicateRecordException.class);
+        verify(repository, times(2)).findUserBy(userA.getUsername());
+    }
 }

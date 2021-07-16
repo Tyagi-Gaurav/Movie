@@ -20,11 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void add(User user) {
-        try {
-            userRepository.findUserBy(user.getUsername());
+        Optional<User> userBy = userRepository.findUserBy(user.getUsername());
+        if (userBy.isPresent()) {
             throw new DuplicateRecordException("User already exists.");
-        } catch (IllegalStateException ignored) {
-           //User Not found. Carry on.
         }
 
         userRepository.update(user);
