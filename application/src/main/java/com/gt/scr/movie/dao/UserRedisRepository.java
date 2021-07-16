@@ -24,7 +24,7 @@ public class UserRedisRepository implements UserRepository {
     @Override
     public Optional<User> findUserBy(UUID userId) {
         Optional<Object> optional = Optional.ofNullable(redisTemplate.opsForHash().get("user", userId));
-        return optional.map(obj -> (User) obj);
+        return optional.map(User.class::cast);
     }
 
     @Override
