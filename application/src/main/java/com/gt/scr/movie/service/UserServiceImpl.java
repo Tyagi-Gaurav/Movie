@@ -5,9 +5,11 @@ import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,17 +41,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User loadUserByUsername(String userName) {
+    public Optional<User> loadUserBy(String userName) {
         return userRepository.findUserBy(userName);
     }
 
     @Override
     public User findUserBy(UUID userId) {
-        return userRepository.findUserBy(userId);
+        Optional<User> userBy = userRepository.findUserBy(userId);
+        return userBy.orElse(null);
     }
 
     @Override
     public void update(User user) {
         userRepository.update(user);
+    }
+
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = this.loadUserBy(username);
+        return user.orElseThrow(() -> new UsernameNotFoundException("Unable to find User: " + username));
     }
 }

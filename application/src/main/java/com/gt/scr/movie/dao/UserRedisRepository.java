@@ -22,15 +22,15 @@ public class UserRedisRepository implements UserRepository {
     private DatabaseConfig databaseConfig;
 
     @Override
-    public User findUserBy(UUID userId) {
+    public Optional<User> findUserBy(UUID userId) {
         Optional<Object> optional = Optional.ofNullable(redisTemplate.opsForHash().get("user", userId));
-        return (User) optional.orElse(null);
+        return optional.map(obj -> (User) obj);
     }
 
     @Override
-    public User findUserBy(String userName) {
+    public Optional<User> findUserBy(String userName) {
         Optional<Object> userToUserId = Optional.ofNullable(redisTemplate.opsForHash().get("userToUserId", userName));
-        return userToUserId.map(userId -> findUserBy((UUID)userId)).orElseThrow(IllegalStateException::new);
+        return userToUserId.flatMap(userId -> findUserBy((UUID) userId));
     }
 
     @Override

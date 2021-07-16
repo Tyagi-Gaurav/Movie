@@ -43,7 +43,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.addMovieRating(userId, movie);
+        movieService.addMovie(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -61,10 +61,10 @@ class MovieServiceImplTest {
         User user = TestBuilders.aUser();
 
         when(userService.findUserBy(userId)).thenReturn(user);
-        movieService.addMovieRating(userId, movie);
+        movieService.addMovie(userId, movie);
 
         //when
-        Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, movie));
+        Throwable throwable = catchThrowable(() -> movieService.addMovie(userId, movie));
 
         //then
         assertThat(throwable).isNotNull()
@@ -80,7 +80,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        Map<UUID, Movie> movies = movieService.getMovieRating(userId);
+        Map<UUID, Movie> movies = movieService.getMovie(userId);
 
         //then
         assertThat(movies).isEqualTo(user.movies());
@@ -96,7 +96,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.deleteMovieRating(userId, movie.id());
+        movieService.deleteMovie(userId, movie.id());
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -116,7 +116,7 @@ class MovieServiceImplTest {
         when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.updateMovieRating(userId, movie);
+        movieService.updateMovie(userId, movie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -153,7 +153,7 @@ class MovieServiceImplTest {
                 .yearProduced(2021)
                 .id(movieId)
                 .build();
-        movieService.updateMovieRating(userId, updatedMovie);
+        movieService.updateMovie(userId, updatedMovie);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);

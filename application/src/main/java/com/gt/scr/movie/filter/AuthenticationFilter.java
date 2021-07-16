@@ -83,7 +83,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				// Spring Security Configurations successfully.
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-				List<Object> authoritiesObjects = (List<Object>) jwtTokenUtil.getClaimFromToken(claims -> claims.get("Authorities"));
+					List<Object> authoritiesObjects = (List<Object>) jwtTokenUtil.getClaimFromToken(claims -> claims.get("Authorities"));
 
 				LinkedHashMap authorities = (LinkedHashMap) authoritiesObjects.get(0);
 				String authority = authorities.get("authority").toString();

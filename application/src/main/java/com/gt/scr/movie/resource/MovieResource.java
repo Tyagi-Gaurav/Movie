@@ -45,7 +45,7 @@ public class MovieResource {
                 .yearProduced(movieCreateRequestDTO.yearProduced())
                 .build();
 
-        movieService.addMovieRating(determineUserId(userId, userProfile.id()), movie);
+        movieService.addMovie(determineUserId(userId, userProfile.id()), movie);
         return ResponseEntity.noContent().build();
     }
 
@@ -54,7 +54,7 @@ public class MovieResource {
     public ResponseEntity<MoviesDTO> getMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
                                                        @RequestParam(value = "userId", required = false) String userId) {
 
-        Map<UUID, Movie> movies = movieService.getMovieRating(determineUserId(userId, userProfile.id()));
+        Map<UUID, Movie> movies = movieService.getMovie(determineUserId(userId, userProfile.id()));
 
         List<MovieDTO> movieDTOs = movies.values().stream().map(mv -> ImmutableMovieDTO.builder()
                 .id(mv.id())
@@ -72,7 +72,7 @@ public class MovieResource {
     public ResponseEntity<Void> deleteMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
                                                   @RequestParam("id") String id,
                                                   @RequestParam(value = "userId", required = false) String userId) {
-        movieService.deleteMovieRating(determineUserId(userId, userProfile.id()),
+        movieService.deleteMovie(determineUserId(userId, userProfile.id()),
                 UUID.fromString(id));
 
         return ResponseEntity.ok().build();
@@ -91,7 +91,7 @@ public class MovieResource {
                 .yearProduced(movieUpdateRequestDTO.yearProduced())
                 .build();
 
-        movieService.updateMovieRating(determineUserId(userId, userProfile.id()), movie);
+        movieService.updateMovie(determineUserId(userId, userProfile.id()), movie);
 
         return ResponseEntity.ok().build();
     }

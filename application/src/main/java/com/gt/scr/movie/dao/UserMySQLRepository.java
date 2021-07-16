@@ -15,8 +15,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 @Repository("mysql")
 public class UserMySQLRepository implements UserRepository {
@@ -24,6 +28,7 @@ public class UserMySQLRepository implements UserRepository {
 
     @Autowired
     private DataSource dataSource;
+
     private static final String USER_NAME = "USER_NAME";
     private static final String FIRST_NAME = "FIRST_NAME";
     private static final String LAST_NAME = "LAST_NAME";
@@ -31,7 +36,7 @@ public class UserMySQLRepository implements UserRepository {
     private static final String ROLES = "ROLES";
 
     @Override
-    public User findUserBy(UUID userId) {
+    public Optional<User> findUserBy(UUID userId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where ID = ?")) {
@@ -40,17 +45,20 @@ public class UserMySQLRepository implements UserRepository {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 LOG.info("After executing query");
-                resultSet.next(); //TODO Return when no records found
-                return ImmutableUser.builder()
-                        .id(UUID.fromString(resultSet.getString("ID")))
-                        .username(resultSet.getString(USER_NAME))
-                        .firstName(resultSet.getString(FIRST_NAME))
-                        .lastName(resultSet.getString(LAST_NAME))
-                        .password(resultSet.getString(PASSWORD))
-                        .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
-                                .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList()))
-                        .build();
+                if (resultSet.next()) {
+                    return of(ImmutableUser.builder()
+                            .id(UUID.fromString(resultSet.getString("ID")))
+                            .username(resultSet.getString(USER_NAME))
+                            .firstName(resultSet.getString(FIRST_NAME))
+                            .lastName(resultSet.getString(LAST_NAME))
+                            .password(resultSet.getString(PASSWORD))
+                            .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
+                                    .map(SimpleGrantedAuthority::new)
+                                    .collect(Collectors.toList()))
+                            .build());
+                } else {
+                    return empty();
+                }
             }
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
@@ -58,24 +66,27 @@ public class UserMySQLRepository implements UserRepository {
     }
 
     @Override
-    public User findUserBy(String userName) {
+    public Optional<User> findUserBy(String userName) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where USER_NAME = ?")) {
             preparedStatement.setString(1, userName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                resultSet.next(); //TODO Return when no records found
-                return ImmutableUser.builder()
-                        .id(UUID.fromString(resultSet.getString("ID")))
-                        .username(resultSet.getString(USER_NAME))
-                        .firstName(resultSet.getString(FIRST_NAME))
-                        .lastName(resultSet.getString(LAST_NAME))
-                        .password(resultSet.getString(PASSWORD))
-                        .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
-                                .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList()))
-                        .build();
+                if (resultSet.next()) {
+                    return of(ImmutableUser.builder()
+                            .id(UUID.fromString(resultSet.getString("ID")))
+                            .username(resultSet.getString(USER_NAME))
+                            .firstName(resultSet.getString(FIRST_NAME))
+                            .lastName(resultSet.getString(LAST_NAME))
+                            .password(resultSet.getString(PASSWORD))
+                            .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
+                                    .map(SimpleGrantedAuthority::new)
+                                    .collect(Collectors.toList()))
+                            .build());
+                } else {
+                    return empty();
+                }
             }
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
@@ -89,7 +100,6 @@ public class UserMySQLRepository implements UserRepository {
                      "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER")) {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                //TODO Return when no records found
                 List<User> users = new ArrayList<>();
                 while (resultSet.next()) {
                     users.add(ImmutableUser.builder()

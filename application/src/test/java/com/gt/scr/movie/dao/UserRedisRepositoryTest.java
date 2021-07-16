@@ -16,10 +16,10 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,10 +54,10 @@ class UserRedisRepositoryTest {
         when(hashOperations.get("user", expectedUser.id())).thenReturn(expectedUser);
 
         //when
-        User user = userRepository.findUserBy(expectedUser.id());
+        Optional<User> user = userRepository.findUserBy(expectedUser.id());
 
         //then
-        assertThat(user).isEqualTo(expectedUser);
+        assertThat(user).isPresent().hasValue(expectedUser);
     }
 
     @Test
@@ -67,10 +67,10 @@ class UserRedisRepositoryTest {
         when(hashOperations.get("user", expectedUser.id())).thenReturn(null);
 
         //when
-        User user = userRepository.findUserBy(expectedUser.id());
+        Optional<User> user = userRepository.findUserBy(expectedUser.id());
 
         //then
-        assertThat(user).isEqualTo(null);
+        assertThat(user).isEmpty();
     }
 
     @Test
@@ -82,25 +82,24 @@ class UserRedisRepositoryTest {
         when(hashOperations.get("userToUserId", userName)).thenReturn(expectedUser.id());
 
         //when
-        User user = userRepository.findUserBy(userName);
+        Optional<User> user = userRepository.findUserBy(userName);
 
         //then
-        assertThat(user).isEqualTo(expectedUser);
+        assertThat(user).isPresent().hasValue(expectedUser);
     }
 
     @Test
-    void shouldFindUserByUserNameThrowsExceptionWhenUserDoesNotExist() {
+    void shouldFindUserByUserNameReturnsEmptyWhenNoUserExists() {
         //given
         String userName = "userName";
         User expectedUser = TestBuilders.aUser();
         when(hashOperations.get("user", expectedUser.id())).thenReturn(null);
 
         //when
-        IllegalStateException exception =
-                catchThrowableOfType(() -> userRepository.findUserBy(userName), IllegalStateException.class);
+        Optional<User> user = userRepository.findUserBy(userName);
 
         //then
-        assertThat(exception).isNotNull();
+        assertThat(user).isEmpty();
     }
 
     @Test

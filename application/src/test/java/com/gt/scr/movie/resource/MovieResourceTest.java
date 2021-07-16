@@ -65,7 +65,7 @@ class MovieResourceTest {
                 .contentType("application/vnd.movie.add.v1+json"))
                 .andExpect(status().isNoContent());
 
-        verify(movieService).addMovieRating(eq(userProfile.id()), any(Movie.class));
+        verify(movieService).addMovie(eq(userProfile.id()), any(Movie.class));
     }
 
     @Test
@@ -85,7 +85,7 @@ class MovieResourceTest {
                 .build();
         moviesMap.put(userProfile.id(), expectedReturnObject);
 
-        when(movieService.getMovieRating(id)).thenReturn(moviesMap);
+        when(movieService.getMovie(id)).thenReturn(moviesMap);
 
         //when
         MvcResult mvcResult = mockMvc.perform(get("/user/movie")
@@ -94,7 +94,7 @@ class MovieResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).getMovieRating(userProfile.id());
+        verify(movieService).getMovie(userProfile.id());
         MoviesDTO moviesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
                 MoviesDTO.class);
 
@@ -121,7 +121,7 @@ class MovieResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).deleteMovieRating(userProfile.id(), movieId);
+        verify(movieService).deleteMovie(userProfile.id(), movieId);
     }
 
     @Test
@@ -145,7 +145,7 @@ class MovieResourceTest {
                 .contentType("application/vnd.movie.update.v1+json"))
                 .andExpect(status().isOk());
 
-        verify(movieService).updateMovieRating(eq(userProfile.id()), any(Movie.class));
+        verify(movieService).updateMovie(eq(userProfile.id()), any(Movie.class));
     }
 
 

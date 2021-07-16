@@ -32,7 +32,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = UserMySQLRepository.class)
@@ -71,11 +72,22 @@ class UserMySQLRepositoryTest {
         addToDatabase(expectedUser);
 
         //when
-        User user = userRepository.findUserBy(expectedUser.id());
+        Optional<User> user = userRepository.findUserBy(expectedUser.id());
 
         //then
-        assertThat(user).isNotNull();
-        assertThat(user).isEqualTo(expectedUser);
+        assertThat(user).isPresent().hasValue(expectedUser);
+    }
+
+    @Test
+    void shouldReturnEmptyUserWhenNoUserFoundByUserId() {
+        //given
+        User expectedUser = TestBuilders.aUser();
+
+        //when
+        Optional<User> user = userRepository.findUserBy(expectedUser.id());
+
+        //then
+        assertThat(user).isEmpty();
     }
 
     @Test
@@ -85,7 +97,8 @@ class UserMySQLRepositoryTest {
         addToDatabase(expectedUser);
 
         //when
-        DatabaseException exception = catchThrowableOfType(()-> buggyUserRepository.findUserBy(expectedUser.id()),
+        UUID userId = expectedUser.id();
+        DatabaseException exception = catchThrowableOfType(()-> buggyUserRepository.findUserBy(userId),
                 DatabaseException.class);
 
         //then
@@ -99,11 +112,10 @@ class UserMySQLRepositoryTest {
         addToDatabase(expectedUser);
 
         //when
-        User user = userRepository.findUserBy(expectedUser.getUsername());
+        Optional<User> user = userRepository.findUserBy(expectedUser.getUsername());
 
         //then
-        assertThat(user).isNotNull();
-        assertThat(user).isEqualTo(expectedUser);
+        assertThat(user).isPresent().hasValue(expectedUser);
     }
 
     @Test
@@ -113,11 +125,25 @@ class UserMySQLRepositoryTest {
         addToDatabase(expectedUser);
 
         //when
-        DatabaseException exception = catchThrowableOfType(()-> buggyUserRepository.findUserBy(expectedUser.getUsername()),
+        String username = expectedUser.getUsername();
+        DatabaseException exception = catchThrowableOfType(()->
+                        buggyUserRepository.findUserBy(username),
                 DatabaseException.class);
 
         //then
         assertThat(exception).isNotNull();
+    }
+
+    @Test
+    void shouldReturnEmptyUserWhenNoUserFoundByUserName() {
+        //given
+        User expectedUser = TestBuilders.aUser();
+
+        //when
+        Optional<User> user = userRepository.findUserBy(expectedUser.getUsername());
+
+        //then
+        assertThat(user).isEmpty();
     }
 
     @Test
@@ -152,6 +178,15 @@ class UserMySQLRepositoryTest {
     }
 
     @Test
+    void shouldReturnEmptyListWhenNoUsersFound() {
+        //when
+        List<User> allUsers = userRepository.getAllUsers();
+
+        //then
+        assertThat(allUsers).isEmpty();
+    }
+
+    @Test
     void shouldDeleteUser() throws SQLException {
         //given
         User currentUser = TestBuilders.aUser();
@@ -171,8 +206,9 @@ class UserMySQLRepositoryTest {
         addToDatabase(currentUser);
 
         //when
+        UUID currentUserId = currentUser.id();
         DatabaseException databaseException =
-                catchThrowableOfType(() -> buggyUserRepository.delete(currentUser.id()), DatabaseException.class);
+                catchThrowableOfType(() -> buggyUserRepository.delete(currentUserId), DatabaseException.class);
 
         //then
         assertThat(databaseException).isNotNull();

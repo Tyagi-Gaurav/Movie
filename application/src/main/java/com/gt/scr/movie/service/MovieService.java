@@ -8,12 +8,12 @@ import java.util.UUID;
 
 public interface MovieService {
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    void addMovieRating(UUID userId, Movie movie);
+    void addMovie(UUID userId, Movie movie);
 
-    Map<UUID, Movie> getMovieRating(UUID userId);
+    Map<UUID, Movie> getMovie(UUID userId);
 
-    void deleteMovieRating(UUID userId, UUID movieId);
+    void deleteMovie(UUID userId, UUID movieId);
 
-    void updateMovieRating(UUID userId, Movie movie);
+    void updateMovie(UUID userId, Movie movie);
 }
 
