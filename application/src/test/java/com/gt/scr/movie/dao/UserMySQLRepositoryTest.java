@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = UserMySQLRepository.class)
@@ -41,6 +41,8 @@ import static org.mockito.Mockito.when;
 class UserMySQLRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+
+    private final UserRepository buggyUserRepository = new UserMySQLRepository();
 
     @Autowired
     private DataSource dataSource;
@@ -77,6 +79,20 @@ class UserMySQLRepositoryTest {
     }
 
     @Test
+    void shouldHandleExceptionWhenFindUserByIdFails() throws SQLException {
+        //given
+        User expectedUser = TestBuilders.aUser();
+        addToDatabase(expectedUser);
+
+        //when
+        DatabaseException exception = catchThrowableOfType(()-> buggyUserRepository.findUserBy(expectedUser.id()),
+                DatabaseException.class);
+
+        //then
+        assertThat(exception).isNotNull();
+    }
+
+    @Test
     void shouldFindUserByUserName() throws SQLException {
         //given
         User expectedUser = TestBuilders.aUser();
@@ -88,6 +104,20 @@ class UserMySQLRepositoryTest {
         //then
         assertThat(user).isNotNull();
         assertThat(user).isEqualTo(expectedUser);
+    }
+
+    @Test
+    void shouldHandleExceptionWhenFindUserByUserNameFails() throws SQLException {
+        //given
+        User expectedUser = TestBuilders.aUser();
+        addToDatabase(expectedUser);
+
+        //when
+        DatabaseException exception = catchThrowableOfType(()-> buggyUserRepository.findUserBy(expectedUser.getUsername()),
+                DatabaseException.class);
+
+        //then
+        assertThat(exception).isNotNull();
     }
 
     @Test
@@ -106,6 +136,22 @@ class UserMySQLRepositoryTest {
     }
 
     @Test
+    void shouldHandleExceptionWhenGetAllUsersFails() throws SQLException {
+        //given
+        User expectedUserA = TestBuilders.aUser();
+        addToDatabase(expectedUserA);
+        User expectedUserB = TestBuilders.aUser();
+        addToDatabase(expectedUserB);
+
+        //when
+        DatabaseException databaseException =
+                catchThrowableOfType(buggyUserRepository::getAllUsers, DatabaseException.class);
+
+        //then
+        assertThat(databaseException).isNotNull();
+    }
+
+    @Test
     void shouldDeleteUser() throws SQLException {
         //given
         User currentUser = TestBuilders.aUser();
@@ -116,6 +162,20 @@ class UserMySQLRepositoryTest {
 
         //then
         assertThat(getUser(currentUser.id())).isEmpty();
+    }
+
+    @Test
+    void shouldHandleExceptionWhenDeleteUserFails() throws SQLException {
+        //given
+        User currentUser = TestBuilders.aUser();
+        addToDatabase(currentUser);
+
+        //when
+        DatabaseException databaseException =
+                catchThrowableOfType(() -> buggyUserRepository.delete(currentUser.id()), DatabaseException.class);
+
+        //then
+        assertThat(databaseException).isNotNull();
     }
 
     @Test
@@ -132,6 +192,21 @@ class UserMySQLRepositoryTest {
         Optional<User> user = getUser(currentUser.id());
         assertThat(user).isNotEmpty();
         assertThat(user.get().firstName()).isEqualTo("test");
+    }
+
+    @Test
+    void shouldHandleExceptionWhenUpdateUserFails() throws SQLException {
+        //given
+        User currentUser = TestBuilders.aUser();
+        addToDatabase(currentUser);
+
+        //when
+        ImmutableUser updatedUser = ImmutableUser.copyOf(currentUser).withFirstName("test");
+        DatabaseException databaseException =
+                catchThrowableOfType(() -> buggyUserRepository.update(updatedUser), DatabaseException.class);
+
+        //then
+        assertThat(databaseException).isNotNull();
     }
 
     private Optional<User> getUser(UUID id) throws SQLException {

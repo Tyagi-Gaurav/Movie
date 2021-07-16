@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +24,11 @@ public class UserMySQLRepository implements UserRepository {
 
     @Autowired
     private DataSource dataSource;
+    private static final String USER_NAME = "USER_NAME";
+    private static final String FIRST_NAME = "FIRST_NAME";
+    private static final String LAST_NAME = "LAST_NAME";
+    private static final String PASSWORD = "PASSWORD";
+    private static final String ROLES = "ROLES";
 
     @Override
     public User findUserBy(UUID userId) {
@@ -39,21 +43,18 @@ public class UserMySQLRepository implements UserRepository {
                 resultSet.next(); //TODO Return when no records found
                 return ImmutableUser.builder()
                         .id(UUID.fromString(resultSet.getString("ID")))
-                        .username(resultSet.getString("USER_NAME"))
-                        .firstName(resultSet.getString("FIRST_NAME"))
-                        .lastName(resultSet.getString("LAST_NAME"))
-                        .password(resultSet.getString("PASSWORD"))
-                        .authorities(Arrays.stream(resultSet.getString("ROLES").split(","))
+                        .username(resultSet.getString(USER_NAME))
+                        .firstName(resultSet.getString(FIRST_NAME))
+                        .lastName(resultSet.getString(LAST_NAME))
+                        .password(resultSet.getString(PASSWORD))
+                        .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
                                 .map(SimpleGrantedAuthority::new)
                                 .collect(Collectors.toList()))
                         .build();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //TODO throw DownstreamException
+        } catch (Exception e) {
+            throw new DatabaseException(e.getMessage(), e);
         }
-
-        return null;
     }
 
     @Override
@@ -67,21 +68,18 @@ public class UserMySQLRepository implements UserRepository {
                 resultSet.next(); //TODO Return when no records found
                 return ImmutableUser.builder()
                         .id(UUID.fromString(resultSet.getString("ID")))
-                        .username(resultSet.getString("USER_NAME"))
-                        .firstName(resultSet.getString("FIRST_NAME"))
-                        .lastName(resultSet.getString("LAST_NAME"))
-                        .password(resultSet.getString("PASSWORD"))
-                        .authorities(Arrays.stream(resultSet.getString("ROLES").split(","))
+                        .username(resultSet.getString(USER_NAME))
+                        .firstName(resultSet.getString(FIRST_NAME))
+                        .lastName(resultSet.getString(LAST_NAME))
+                        .password(resultSet.getString(PASSWORD))
+                        .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
                                 .map(SimpleGrantedAuthority::new)
                                 .collect(Collectors.toList()))
                         .build();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //TODO throw DownstreamException
+        } catch (Exception e) {
+            throw new DatabaseException(e.getMessage(), e);
         }
-
-        return null;
     }
 
     @Override
@@ -96,11 +94,11 @@ public class UserMySQLRepository implements UserRepository {
                 while (resultSet.next()) {
                     users.add(ImmutableUser.builder()
                             .id(UUID.fromString(resultSet.getString("ID")))
-                            .username(resultSet.getString("USER_NAME"))
-                            .firstName(resultSet.getString("FIRST_NAME"))
-                            .lastName(resultSet.getString("LAST_NAME"))
-                            .password(resultSet.getString("PASSWORD"))
-                            .authorities(Arrays.stream(resultSet.getString("ROLES").split(","))
+                            .username(resultSet.getString(USER_NAME))
+                            .firstName(resultSet.getString(FIRST_NAME))
+                            .lastName(resultSet.getString(LAST_NAME))
+                            .password(resultSet.getString(PASSWORD))
+                            .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
                                     .map(SimpleGrantedAuthority::new)
                                     .collect(Collectors.toList()))
                             .build());
@@ -108,12 +106,9 @@ public class UserMySQLRepository implements UserRepository {
 
                 return users;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //TODO throw DownstreamException
+        } catch (Exception e) {
+            throw new DatabaseException(e.getMessage(), e);
         }
-
-        return null;
     }
 
     @Override
@@ -123,9 +118,8 @@ public class UserMySQLRepository implements UserRepository {
                      "DELETE FROM USER where ID = ?")) {
             preparedStatement.setString(1, userId.toString());
             preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //TODO throw DownstreamException
+        } catch (Exception e) {
+            throw new DatabaseException(e.getMessage(), e);
         }
     }
 
@@ -145,9 +139,8 @@ public class UserMySQLRepository implements UserRepository {
             preparedStatement.setString(5, user.id().toString());
 
             preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //TODO throw DownstreamException
+        } catch (Exception e) {
+            throw new DatabaseException(e.getMessage(), e);
         }
     }
 }
