@@ -1,5 +1,7 @@
 spring:
   active: local
+  liquibase:
+    changeLog: classpath:db.changelog/dbchangelog.sql
 
 server:
   port: ${SERVER_PORT:8080}
@@ -27,3 +29,13 @@ database:
   duplicateInterval: ${DUPLICATE_INTERVAL:10ms}
   connectionTimeout: ${CONNECTION_TIMEOUT:10s}
   commandTimeout: ${COMMAND_TIMEOUT:500ms}
+
+mysql:
+  driver: "com.mysql.cj.jdbc.Driver"
+  host: ${MYSQL_HOST:localhost}
+  port: ${MYSQL_PORT:3306}
+  user: ${MYSQL_USER:user}
+  password: ${MYSQL_PWD:password}
+  minPoolSize: 2
+  maxPoolSize: 2
+  database: ${MYSQL_DB_NAME:movieMetadata}

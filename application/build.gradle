@@ -53,6 +53,7 @@ dependencies {
     implementation "it.ozimov:embedded-redis"
     implementation "mysql:mysql-connector-java"
     implementation "com.mchange:c3p0"
+    implementation "org.liquibase:liquibase-core"
 
     //Immutables
     implementation "org.immutables:value-annotations"
@@ -67,6 +68,8 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "com.h2database:h2"
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:mysql"
 }
 
 test {

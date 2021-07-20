@@ -298,7 +298,7 @@ class UserMySQLRepositoryTest {
     static class TestMovieRepoContextConfiguration {
 
         @Bean
-        public DatabaseConfig mySQLConfig() {
+        public DatabaseConfig mySQLTestConfig() {
             return ModifiableDatabaseConfig.create();
         }
 
