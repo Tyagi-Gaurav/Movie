@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateRecordException("User already exists.");
         }
 
-        userRepository.update(user);
+        userRepository.create(user);
     }
 
     @Override

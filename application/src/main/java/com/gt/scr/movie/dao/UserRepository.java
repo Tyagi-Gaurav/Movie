@@ -16,4 +16,6 @@ public interface UserRepository {
     void delete(UUID userId);
 
     void update(User user);
+
+    default void create(User user) {}
 }

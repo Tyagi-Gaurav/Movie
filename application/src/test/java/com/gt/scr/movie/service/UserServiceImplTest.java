@@ -37,7 +37,7 @@ class UserServiceImplTest {
         userService.add(user);
 
         //then
-        verify(repository).update(user);
+        verify(repository).create(user);
     }
 
     @Test

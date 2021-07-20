@@ -2,6 +2,7 @@ package com.gt.scr.movie.dao;
 
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
+import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,8 @@ public class UserMySQLRepository implements UserRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where ID = ?")) {
             preparedStatement.setString(1, userId.toString());
-            LOG.info("Begin executing query");
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                LOG.info("After executing query");
                 if (resultSet.next()) {
                     return of(ImmutableUser.builder()
                             .id(UUID.fromString(resultSet.getString("ID")))
@@ -147,6 +146,27 @@ public class UserMySQLRepository implements UserRepository {
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, user.getRole());
             preparedStatement.setString(5, user.id().toString());
+
+            preparedStatement.execute();
+        } catch (Exception e) {
+            throw new DatabaseException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void create(User user) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) " +
+                             "VALUES (?, ?, ?, ?, ?, ?)")) {
+
+            preparedStatement.setString(1, user.id().toString());
+            preparedStatement.setString(2, user.getUsername());
+            preparedStatement.setString(3, user.firstName());
+            preparedStatement.setString(4, user.lastName());
+            preparedStatement.setString(5, user.getPassword());
+            preparedStatement.setString(6,
+                    Strings.join(user.getAuthorities()).with(","));
 
             preparedStatement.execute();
         } catch (Exception e) {

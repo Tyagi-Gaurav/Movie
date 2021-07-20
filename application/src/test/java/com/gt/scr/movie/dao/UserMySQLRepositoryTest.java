@@ -245,6 +245,33 @@ class UserMySQLRepositoryTest {
         assertThat(databaseException).isNotNull();
     }
 
+    @Test
+    void shouldCreateUser() throws SQLException {
+        //given
+        User currentUser = TestBuilders.aUser();
+
+        //when
+        userRepository.create(currentUser);
+
+        //then
+        Optional<User> user = getUser(currentUser.id());
+        assertThat(user).isNotEmpty();
+        assertThat(user).hasValue(currentUser);
+    }
+
+    @Test
+    void shouldHandleExceptionWhenCreateUserFails() {
+        //given
+        User currentUser = TestBuilders.aUser();
+
+        //when
+        DatabaseException databaseException =
+                catchThrowableOfType(() -> buggyUserRepository.update(currentUser), DatabaseException.class);
+
+        //then
+        assertThat(databaseException).isNotNull();
+    }
+
     private Optional<User> getUser(UUID id) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID)) {
