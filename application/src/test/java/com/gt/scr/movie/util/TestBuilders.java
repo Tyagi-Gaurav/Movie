@@ -7,6 +7,7 @@ import com.gt.scr.movie.service.domain.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
@@ -48,8 +49,9 @@ public class TestBuilders {
         return ImmutableMovie.builder()
                 .name(randomAlphabetic(10))
                 .yearProduced(2010)
-                .rating(BigDecimal.valueOf(10))
+                .rating(BigDecimal.valueOf(9.50).setScale(2, RoundingMode.UNNECESSARY))
                 .id(UUID.randomUUID())
+                .creationTimeStamp(System.nanoTime())
                 .build();
     }
 

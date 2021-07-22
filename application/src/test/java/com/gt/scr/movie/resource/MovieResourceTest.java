@@ -51,7 +51,8 @@ class MovieResourceTest {
         String content = TestUtils.asJsonString(ImmutableMovieCreateRequestDTO.builder()
                 .name(randomAlphabetic(6))
                 .rating(BigDecimal.ONE)
-                .yearProduced(2010).build());
+                .yearProduced(2010)
+                .build());
 
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())

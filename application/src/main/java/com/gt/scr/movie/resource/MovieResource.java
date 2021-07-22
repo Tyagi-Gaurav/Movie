@@ -43,6 +43,7 @@ public class MovieResource {
                 .name(movieCreateRequestDTO.name())
                 .rating(movieCreateRequestDTO.rating())
                 .yearProduced(movieCreateRequestDTO.yearProduced())
+                .creationTimeStamp(System.nanoTime())
                 .build();
 
         movieService.addMovie(determineUserId(userId, userProfile.id()), movie);

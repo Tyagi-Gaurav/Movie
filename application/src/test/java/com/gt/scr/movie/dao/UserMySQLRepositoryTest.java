@@ -6,7 +6,6 @@ import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.TestBuilders;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.gt.scr.movie.util.TestUtils.addToDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.when;
@@ -69,7 +69,7 @@ class UserMySQLRepositoryTest {
     void shouldFindUserByUserId() throws SQLException {
         //given
         User expectedUser = TestBuilders.aUser();
-        addToDatabase(expectedUser);
+        addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
         Optional<User> user = userRepository.findUserBy(expectedUser.id());
@@ -94,7 +94,7 @@ class UserMySQLRepositoryTest {
     void shouldHandleExceptionWhenFindUserByIdFails() throws SQLException {
         //given
         User expectedUser = TestBuilders.aUser();
-        addToDatabase(expectedUser);
+        addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
         UUID userId = expectedUser.id();
@@ -109,7 +109,7 @@ class UserMySQLRepositoryTest {
     void shouldFindUserByUserName() throws SQLException {
         //given
         User expectedUser = TestBuilders.aUser();
-        addToDatabase(expectedUser);
+        addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
         Optional<User> user = userRepository.findUserBy(expectedUser.getUsername());
@@ -122,7 +122,7 @@ class UserMySQLRepositoryTest {
     void shouldHandleExceptionWhenFindUserByUserNameFails() throws SQLException {
         //given
         User expectedUser = TestBuilders.aUser();
-        addToDatabase(expectedUser);
+        addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
         String username = expectedUser.getUsername();
@@ -150,9 +150,9 @@ class UserMySQLRepositoryTest {
     void shouldGetAllUsers() throws SQLException {
         //given
         User expectedUserA = TestBuilders.aUser();
-        addToDatabase(expectedUserA);
+        addToDatabase(expectedUserA, dataSource, ADD_USER);
         User expectedUserB = TestBuilders.aUser();
-        addToDatabase(expectedUserB);
+        addToDatabase(expectedUserB, dataSource, ADD_USER);
 
         //when
         List<User> allUsers = userRepository.getAllUsers();
@@ -165,9 +165,9 @@ class UserMySQLRepositoryTest {
     void shouldHandleExceptionWhenGetAllUsersFails() throws SQLException {
         //given
         User expectedUserA = TestBuilders.aUser();
-        addToDatabase(expectedUserA);
+        addToDatabase(expectedUserA, dataSource, ADD_USER);
         User expectedUserB = TestBuilders.aUser();
-        addToDatabase(expectedUserB);
+        addToDatabase(expectedUserB, dataSource, ADD_USER);
 
         //when
         DatabaseException databaseException =
@@ -190,7 +190,7 @@ class UserMySQLRepositoryTest {
     void shouldDeleteUser() throws SQLException {
         //given
         User currentUser = TestBuilders.aUser();
-        addToDatabase(currentUser);
+        addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
         userRepository.delete(currentUser.id());
@@ -203,7 +203,7 @@ class UserMySQLRepositoryTest {
     void shouldHandleExceptionWhenDeleteUserFails() throws SQLException {
         //given
         User currentUser = TestBuilders.aUser();
-        addToDatabase(currentUser);
+        addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
         UUID currentUserId = currentUser.id();
@@ -218,7 +218,7 @@ class UserMySQLRepositoryTest {
     void shouldUpdateUser() throws SQLException {
         //given
         User currentUser = TestBuilders.aUser();
-        addToDatabase(currentUser);
+        addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
         ImmutableUser updatedUser = ImmutableUser.copyOf(currentUser).withFirstName("test");
@@ -234,7 +234,7 @@ class UserMySQLRepositoryTest {
     void shouldHandleExceptionWhenUpdateUserFails() throws SQLException {
         //given
         User currentUser = TestBuilders.aUser();
-        addToDatabase(currentUser);
+        addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
         ImmutableUser updatedUser = ImmutableUser.copyOf(currentUser).withFirstName("test");
@@ -255,8 +255,7 @@ class UserMySQLRepositoryTest {
 
         //then
         Optional<User> user = getUser(currentUser.id());
-        assertThat(user).isNotEmpty();
-        assertThat(user).hasValue(currentUser);
+        assertThat(user).isNotEmpty().hasValue(currentUser);
     }
 
     @Test
@@ -298,28 +297,12 @@ class UserMySQLRepositoryTest {
         }
     }
 
-    private void addToDatabase(User expectedUser) throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER);) {
-            preparedStatement.setString(1, expectedUser.id().toString());
-            preparedStatement.setString(2, expectedUser.getUsername());
-            preparedStatement.setString(3, expectedUser.firstName());
-            preparedStatement.setString(4, expectedUser.lastName());
-            preparedStatement.setString(5, expectedUser.getPassword());
-            preparedStatement.setString(6,
-                    Strings.join(expectedUser.getAuthorities()).with(","));
-            preparedStatement.execute();
-        }
-    }
-
     private void deleteAllUsers() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_USERS)) {
             preparedStatement.execute();
         }
     }
-
-    // Test for unique user insert
 
     @TestConfiguration
     static class TestMovieRepoContextConfiguration {
