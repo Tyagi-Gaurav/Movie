@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -125,6 +127,38 @@ class MovieMySQLRepositoryTest {
 
         //then
         assertThat(movie).isPresent().hasValue(expectedMovie);
+    }
+
+    @Test
+    void shouldRetrieveRatingCorrectlyWithAppropriateScale() throws SQLException {
+        //given
+        Movie expectedMovie = TestBuilders.aMovieBuilder()
+                .rating(BigDecimal.valueOf(7.8)).build();
+
+        User user = TestBuilders.aUser();
+        addToDatabase(user, dataSource, ADD_USER);
+        addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
+
+        //when
+        Optional<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
+
+        //then
+        assertThat(movie).isPresent().hasValue(expectedMovie);
+    }
+
+    @Test
+    void shouldNotFindMovieByNameForADifferentUser() throws SQLException {
+        //given
+        Movie expectedMovie = TestBuilders.aMovie();
+        User user = TestBuilders.aUser();
+        addToDatabase(user, dataSource, ADD_USER);
+        addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
+
+        //when
+        Optional<Movie> movie = movieRepository.findMovieBy(UUID.randomUUID(), expectedMovie.name());
+
+        //then
+        assertThat(movie).isEmpty();
     }
 
     @Test
@@ -316,7 +350,7 @@ class MovieMySQLRepositoryTest {
                         .id(UUID.fromString(resultSet.getString("ID")))
                         .name(resultSet.getString("NAME"))
                         .yearProduced(resultSet.getInt("YEAR_PRODUCED"))
-                        .rating(resultSet.getBigDecimal("RATING"))
+                        .rating(resultSet.getBigDecimal("RATING").setScale(1, RoundingMode.UNNECESSARY))
                         .creationTimeStamp(resultSet.getLong("CREATION_TIMESTAMP"))
                         .build());
             }

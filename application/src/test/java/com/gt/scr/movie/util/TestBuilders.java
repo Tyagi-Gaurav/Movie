@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -37,33 +36,22 @@ public class TestBuilders {
                 .build();
     }
 
-    public static User aUserWithMovies() {
-        Movie movie = aMovie();
-        HashMap<UUID, Movie> userMovieMap = new HashMap<>();
-        userMovieMap.put(movie.id(), movie);
-
-        return aUserWithMovies(userMovieMap);
-    }
-
     public static Movie aMovie() {
         return ImmutableMovie.builder()
                 .name(randomAlphabetic(10))
                 .yearProduced(2010)
-                .rating(BigDecimal.valueOf(9.50).setScale(2, RoundingMode.UNNECESSARY))
+                .rating(BigDecimal.valueOf(9.5))
                 .id(UUID.randomUUID())
                 .creationTimeStamp(System.nanoTime())
                 .build();
     }
 
-    public static User aUserWithMovies(HashMap<UUID, Movie> movieMap) {
-        return ImmutableUser.builder()
+    public static ImmutableMovie.Builder aMovieBuilder() {
+        return ImmutableMovie.builder()
+                .name(randomAlphabetic(10))
+                .yearProduced(2010)
+                .rating(BigDecimal.valueOf(9.5))
                 .id(UUID.randomUUID())
-                .password(randomAlphabetic(10))
-                .username(randomAlphabetic(10))
-                .lastName(randomAlphabetic(10))
-                .firstName(randomAlphabetic(10))
-                .authorities(Collections.singleton(new SimpleGrantedAuthority("USER")))
-                .movies(movieMap)
-                .build();
+                .creationTimeStamp(System.nanoTime());
     }
 }

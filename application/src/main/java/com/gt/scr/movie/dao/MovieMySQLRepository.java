@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,8 +53,9 @@ public class MovieMySQLRepository implements MovieRepository {
     public Optional<Movie> findMovieBy(UUID userId, String name) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where NAME = ?")) {
+                     "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where NAME = ? and USER_ID = ?")) {
             preparedStatement.setString(1, name);
+            preparedStatement.setString(2, userId.toString());
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -143,7 +145,7 @@ public class MovieMySQLRepository implements MovieRepository {
                 .id(UUID.fromString(resultSet.getString(ID)))
                 .name(resultSet.getString(NAME))
                 .yearProduced(resultSet.getInt(YEAR_PRODUCED))
-                .rating(resultSet.getBigDecimal(RATING))
+                .rating(resultSet.getBigDecimal(RATING).setScale(1, RoundingMode.UNNECESSARY))
                 .creationTimeStamp(resultSet.getLong(CREATION_TIMESTAMP))
                 .build();
     }

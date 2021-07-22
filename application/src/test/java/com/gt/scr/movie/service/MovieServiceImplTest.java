@@ -12,14 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = MovieServiceImpl.class)
@@ -106,14 +107,86 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void shouldUpdateMovieForAUser() {
+    void shouldNotAllowUpdateCreationTimeStampForMovie() {
         //given
-        Movie movie = TestBuilders.aMovie();
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withCreationTimeStamp(System.nanoTime());
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
-        movieService.updateMovie(movie);
+        movieService.updateMovie(movieNew);
 
         //then
-        verify(movieRepository).update(movie);
+        verify(movieRepository).update(movieOld);
+    }
+
+    @Test
+    void shouldNotAllowUpdateZeroRatingForMovie() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withRating(BigDecimal.ZERO);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository).update(movieOld);
+    }
+
+    @Test
+    void shouldAllowUpdateNameForMovie() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withName("NewName");
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldAllowUpdateRatingForMovie() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withRating(BigDecimal.ONE);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldAllowUpdateYearProducedForMovie() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withYearProduced(1900);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldNotUpdateMovieWhenItDoesNotExist() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withYearProduced(1900);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(empty());
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository, times(0)).update(any());
     }
 }

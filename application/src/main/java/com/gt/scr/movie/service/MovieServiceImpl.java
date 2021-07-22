@@ -2,10 +2,13 @@ package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
+import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +37,17 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void updateMovie(Movie movie) {
-        movieRepository.update(movie);
+        Optional<Movie> oldMovie = movieRepository.findMovieBy(movie.id());
+
+        oldMovie.map(om -> {
+            Movie newMovieToUpdate = ImmutableMovie.copyOf(om)
+                    .withName(StringUtils.isBlank(movie.name()) ? om.name() : movie.name())
+                    .withYearProduced(movie.yearProduced() == 0 ? om.yearProduced() : movie.yearProduced())
+                    .withRating(movie.rating() == null || movie.rating().equals(BigDecimal.ZERO) ? om.rating() : movie.rating());
+
+            movieRepository.update(newMovieToUpdate);
+            return null;
+        });
     }
 
     @Override

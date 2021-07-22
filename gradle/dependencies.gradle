@@ -24,7 +24,7 @@ ext {
     mysqlVersion = '8.0.25'
     c3p0Version = '0.9.5.5'
     h2DbVersion = '1.4.200'
-    liquibaseVersion = '3.8.9'
+    liquibaseVersion = '4.4.1'
 }
 
 dependencyManagement {
