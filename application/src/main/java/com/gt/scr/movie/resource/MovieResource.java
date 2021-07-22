@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -55,9 +54,9 @@ public class MovieResource {
     public ResponseEntity<MoviesDTO> getMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
                                                        @RequestParam(value = "userId", required = false) String userId) {
 
-        Map<UUID, Movie> movies = movieService.getMovie(determineUserId(userId, userProfile.id()));
+        List<Movie> movies = movieService.getMoviesFor(determineUserId(userId, userProfile.id()));
 
-        List<MovieDTO> movieDTOs = movies.values().stream().map(mv -> ImmutableMovieDTO.builder()
+        List<MovieDTO> movieDTOs = movies.stream().map(mv -> ImmutableMovieDTO.builder()
                 .id(mv.id())
                 .name(mv.name())
                 .rating(mv.rating())
@@ -73,8 +72,7 @@ public class MovieResource {
     public ResponseEntity<Void> deleteMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
                                                   @RequestParam("id") String id,
                                                   @RequestParam(value = "userId", required = false) String userId) {
-        movieService.deleteMovie(determineUserId(userId, userProfile.id()),
-                UUID.fromString(id));
+        movieService.deleteMovie(UUID.fromString(id));
 
         return ResponseEntity.ok().build();
     }
@@ -92,7 +90,7 @@ public class MovieResource {
                 .yearProduced(movieUpdateRequestDTO.yearProduced())
                 .build();
 
-        movieService.updateMovie(determineUserId(userId, userProfile.id()), movie);
+        movieService.updateMovie(movie);
 
         return ResponseEntity.ok().build();
     }

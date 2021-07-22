@@ -3,6 +3,7 @@ package com.gt.scr.movie.dao;
 import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -17,6 +18,7 @@ import java.util.UUID;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+@Repository
 public class MovieMySQLRepository implements MovieRepository {
     @Autowired
     private DataSource dataSource;

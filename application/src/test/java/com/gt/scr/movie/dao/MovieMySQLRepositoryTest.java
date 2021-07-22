@@ -133,11 +133,12 @@ class MovieMySQLRepositoryTest {
         Movie expectedMovie = TestBuilders.aMovie();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
-        addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
+        UUID userId = user.id();
+        addToDatabase(expectedMovie, dataSource, userId, ADD_MOVIE);
 
         //when
         String name = expectedMovie.name();
-        DatabaseException exception = catchThrowableOfType(()-> buggyMovieRepository.findMovieBy(user.id(), name),
+        DatabaseException exception = catchThrowableOfType(()-> buggyMovieRepository.findMovieBy(userId, name),
                 DatabaseException.class);
 
         //then
@@ -182,12 +183,13 @@ class MovieMySQLRepositoryTest {
         Movie expectedMovieA = TestBuilders.aMovie();
         Movie expectedMovieB = TestBuilders.aMovie();
         addToDatabase(user, dataSource, ADD_USER);
-        addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
-        addToDatabase(expectedMovieB, dataSource, user.id(), ADD_MOVIE);
+        UUID userId = user.id();
+        addToDatabase(expectedMovieA, dataSource, userId, ADD_MOVIE);
+        addToDatabase(expectedMovieB, dataSource, userId, ADD_MOVIE);
 
         //when
         DatabaseException databaseException =
-                catchThrowableOfType(() -> buggyMovieRepository.getAllMoviesForUser(user.id()), DatabaseException.class);
+                catchThrowableOfType(() -> buggyMovieRepository.getAllMoviesForUser(userId), DatabaseException.class);
 
         //then
         assertThat(databaseException).isNotNull();

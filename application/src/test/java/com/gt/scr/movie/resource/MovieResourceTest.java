@@ -22,8 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -77,16 +76,14 @@ class MovieResourceTest {
                 .authority("USER")
                 .build();
 
-        Map<UUID, Movie> moviesMap = new HashMap<>();
         Movie expectedReturnObject = ImmutableMovie.builder()
                 .id(id)
                 .name(randomAlphabetic(5))
                 .yearProduced(2010)
                 .rating(BigDecimal.ONE)
                 .build();
-        moviesMap.put(userProfile.id(), expectedReturnObject);
 
-        when(movieService.getMovie(id)).thenReturn(moviesMap);
+        when(movieService.getMoviesFor(id)).thenReturn(List.of(expectedReturnObject));
 
         //when
         MvcResult mvcResult = mockMvc.perform(get("/user/movie")
@@ -95,7 +92,7 @@ class MovieResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).getMovie(userProfile.id());
+        verify(movieService).getMoviesFor(userProfile.id());
         MoviesDTO moviesDTO = TestUtils.readFromString(mvcResult.getResponse().getContentAsString(),
                 MoviesDTO.class);
 
@@ -122,7 +119,7 @@ class MovieResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(movieService).deleteMovie(userProfile.id(), movieId);
+        verify(movieService).deleteMovie(movieId);
     }
 
     @Test
@@ -146,7 +143,7 @@ class MovieResourceTest {
                 .contentType("application/vnd.movie.update.v1+json"))
                 .andExpect(status().isOk());
 
-        verify(movieService).updateMovie(eq(userProfile.id()), any(Movie.class));
+        verify(movieService).updateMovie(any(Movie.class));
     }
 
 

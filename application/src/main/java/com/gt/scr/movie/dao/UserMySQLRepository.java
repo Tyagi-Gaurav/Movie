@@ -3,8 +3,6 @@ package com.gt.scr.movie.dao;
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
 import org.assertj.core.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
@@ -25,8 +23,6 @@ import static java.util.Optional.of;
 
 @Repository("mysql")
 public class UserMySQLRepository implements UserRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(UserMySQLRepository.class);
-
     @Autowired
     private DataSource dataSource;
 

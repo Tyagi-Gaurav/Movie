@@ -1,7 +1,6 @@
 package com.gt.scr.movie.dao;
 
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.service.domain.User;
 
 import java.util.List;
 import java.util.Optional;
