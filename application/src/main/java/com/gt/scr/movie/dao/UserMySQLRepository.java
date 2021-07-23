@@ -2,7 +2,7 @@ package com.gt.scr.movie.dao;
 
 import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
-import org.assertj.core.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
@@ -162,7 +162,7 @@ public class UserMySQLRepository implements UserRepository {
             preparedStatement.setString(4, user.lastName());
             preparedStatement.setString(5, user.getPassword());
             preparedStatement.setString(6,
-                    Strings.join(user.getAuthorities()).with(","));
+                    StringUtils.join(user.getAuthorities(), ","));
 
             preparedStatement.execute();
         } catch (Exception e) {

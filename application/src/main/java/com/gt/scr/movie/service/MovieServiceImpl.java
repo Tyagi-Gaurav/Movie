@@ -39,14 +39,13 @@ public class MovieServiceImpl implements MovieService {
     public void updateMovie(Movie movie) {
         Optional<Movie> oldMovie = movieRepository.findMovieBy(movie.id());
 
-        oldMovie.map(om -> {
+        oldMovie.ifPresent(om -> {
             Movie newMovieToUpdate = ImmutableMovie.copyOf(om)
                     .withName(StringUtils.isBlank(movie.name()) ? om.name() : movie.name())
                     .withYearProduced(movie.yearProduced() == 0 ? om.yearProduced() : movie.yearProduced())
                     .withRating(movie.rating() == null || movie.rating().equals(BigDecimal.ZERO) ? om.rating() : movie.rating());
 
             movieRepository.update(newMovieToUpdate);
-            return null;
         });
     }
 

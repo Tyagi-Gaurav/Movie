@@ -58,6 +58,7 @@ class MovieMySQLRepositoryTest {
             "INSERT INTO MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 
     private static final String DELETE_ALL_MOVIES = "DELETE FROM MOVIE";
+    private static final String DELETE_ALL_USERS = "DELETE FROM USER CASCADE";
 
     private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM "
             + "MOVIE WHERE ID = ?";
@@ -65,6 +66,7 @@ class MovieMySQLRepositoryTest {
     @BeforeEach
     void setUp() throws SQLException {
         when(databaseConfig.duplicateInterval()).thenReturn(Duration.ofMillis(10));
+        deleteAllUsers();
         deleteAllMovies();
     }
 
@@ -262,12 +264,13 @@ class MovieMySQLRepositoryTest {
         //given
         User user = TestBuilders.aUser();
         Movie expectedMovieA = TestBuilders.aMovie();
+        UUID movieId = expectedMovieA.id();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
         DatabaseException databaseException =
-                catchThrowableOfType(() -> buggyMovieRepository.delete(expectedMovieA.id()), DatabaseException.class);
+                catchThrowableOfType(() -> buggyMovieRepository.delete(movieId), DatabaseException.class);
 
         //then
         assertThat(databaseException).isNotNull();
@@ -364,6 +367,13 @@ class MovieMySQLRepositoryTest {
     private void deleteAllMovies() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_MOVIES)) {
+            preparedStatement.execute();
+        }
+    }
+
+    private void deleteAllUsers() throws SQLException {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_USERS)) {
             preparedStatement.execute();
         }
     }

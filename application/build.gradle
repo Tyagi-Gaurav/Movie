@@ -9,6 +9,20 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    integration {
+        java.srcDir "$projectDir/src/integration/java"
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+configurations {
+    integrationImplementation.extendsFrom testImplementation
+    integrationRuntime.extendsFrom testRuntime
+}
+
+
 jacoco {
     toolVersion = "0.8.6"
     reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
@@ -29,9 +43,7 @@ processResources {
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-test"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-test"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
@@ -64,8 +76,10 @@ dependencies {
     implementation "io.micrometer:micrometer-core"
     annotationProcessor "org.immutables:value"
 
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.assertj:assertj-core"
     testImplementation "com.h2database:h2"
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
     testImplementation "org.testcontainers:junit-jupiter"
@@ -78,7 +92,7 @@ test {
 
     jacoco {
         excludes = ['com/toptal/scr/tz/Application.class',
-                     'com/toptal/scr/tz/Grace**']
+                    'com/toptal/scr/tz/Grace**']
     }
 }
 
@@ -123,3 +137,21 @@ pmd {
     rulesMinimumPriority = 2
     ruleSets = ["category/java/errorprone.xml"]
 }
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
+
+    useJUnitPlatform()
+
+    reports {
+        html.enabled true
+        junitXml.enabled = true
+    }
+    shouldRunAfter test
+}
+
+check.dependsOn integrationTest
