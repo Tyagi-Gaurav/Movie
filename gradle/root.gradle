@@ -19,7 +19,7 @@ subprojects {
     apply from: "${it.rootDir}/gradle/dependencies.gradle"
 
     project.ext {
-        springBootVersion = '2.4.5'
+        springBootVersion = '2.5.3'
     }
 
     scmVersion {

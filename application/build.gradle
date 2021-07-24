@@ -12,16 +12,15 @@ repositories {
 sourceSets {
     integration {
         java.srcDir "$projectDir/src/integration/java"
-        compileClasspath += sourceSets.main.output
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
         runtimeClasspath += output + compileClasspath
     }
 }
 
 configurations {
     integrationImplementation.extendsFrom testImplementation
-    integrationRuntime.extendsFrom testRuntime
+    integrationRuntime.extendsFrom testImplementation
 }
-
 
 jacoco {
     toolVersion = "0.8.6"
@@ -77,6 +76,8 @@ dependencies {
     annotationProcessor "org.immutables:value"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.springframework.boot:spring-boot-test-autoconfigure"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.assertj:assertj-core"
@@ -143,7 +144,7 @@ tasks.register('integrationTest', Test) {
     group = 'verification'
 
     testClassesDirs = sourceSets.integration.output.classesDirs
-    classpath = sourceSets.integration.runtimeClasspath
+    classpath += sourceSets.integration.runtimeClasspath
 
     useJUnitPlatform()
 

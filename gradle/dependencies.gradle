@@ -1,7 +1,7 @@
 apply plugin: 'io.spring.dependency-management'
 
 ext {
-    springBootVersion = '2.4.5'
+    springBootVersion = '2.5.3'
     springVersion = '5.3.7'
     cucumberVersion = '6.10.3'
     junitVersion = '5.7.1'
@@ -29,7 +29,7 @@ ext {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:2.4.5"
+        mavenBom "org.springframework.boot:spring-boot-dependencies:2.5.3"
     }
     dependencies {
         dependency("org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion") {
