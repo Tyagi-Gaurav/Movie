@@ -6,8 +6,6 @@ import com.gt.scr.movie.filter.MetricsInterceptor;
 import com.gt.scr.movie.filter.RequestIdInterceptor;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.lettuce.core.ClientOptions;
-import io.lettuce.core.SocketOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +14,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import redis.embedded.RedisServer;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.sql.DataSource;
@@ -104,36 +96,36 @@ public class ApplicationConfiguration implements WebMvcConfigurer  {
         return ModifiableMySQLConfig.create();
     }
 
-    @Bean
-    public LettuceConnectionFactory redisConnectionFactory(DatabaseConfig databaseConfig) {
-        var redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setPort(databaseConfig.port());
-        redisStandaloneConfiguration.setHostName(databaseConfig.host());
+//    @Bean
+//    public LettuceConnectionFactory redisConnectionFactory(DatabaseConfig databaseConfig) {
+//        var redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+//        redisStandaloneConfiguration.setPort(databaseConfig.port());
+//        redisStandaloneConfiguration.setHostName(databaseConfig.host());
+//
+//        LettuceClientConfiguration clientConfiguration = LettuceClientConfiguration.builder()
+//                .clientOptions(
+//                        ClientOptions.builder()
+//                                .socketOptions(
+//                                        SocketOptions.builder()
+//                                                .connectTimeout(databaseConfig.connectionTimeout())
+//                                                .build())
+//                                .build())
+//                .commandTimeout(databaseConfig.commandTimeout())
+//                .build();
+//        return new LettuceConnectionFactory(redisStandaloneConfiguration, clientConfiguration);
+//    }
 
-        LettuceClientConfiguration clientConfiguration = LettuceClientConfiguration.builder()
-                .clientOptions(
-                        ClientOptions.builder()
-                                .socketOptions(
-                                        SocketOptions.builder()
-                                                .connectTimeout(databaseConfig.connectionTimeout())
-                                                .build())
-                                .build())
-                .commandTimeout(databaseConfig.commandTimeout())
-                .build();
-        return new LettuceConnectionFactory(redisStandaloneConfiguration, clientConfiguration);
-    }
+//    @Bean
+//    public RedisTemplate<Object, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
+//        RedisTemplate<Object, Object> template = new RedisTemplate<>();
+//        template.setConnectionFactory(lettuceConnectionFactory);
+//        template.setEnableTransactionSupport(true);
+//        return template;
+//    }
 
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-        RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(lettuceConnectionFactory);
-        template.setEnableTransactionSupport(true);
-        return template;
-    }
-
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    @Profile("!prod")
-    public RedisServer redisServer(DatabaseConfig databaseConfig) {
-        return new RedisServer(databaseConfig.port());
-    }
+//    @Bean(initMethod = "start", destroyMethod = "stop")
+//    @Profile("!prod")
+//    public RedisServer redisServer(DatabaseConfig databaseConfig) {
+//        return new RedisServer(databaseConfig.port());
+//    }
 }
