@@ -1,4 +1,4 @@
-package com.gt.scr.movie.command;
+package com.gt.scr.movie.functions;
 
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.util.TestUtils;

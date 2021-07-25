@@ -1,6 +1,5 @@
 package com.gt.scr.movie;
 
-import com.gt.scr.movie.command.TestExecutor;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import org.junit.jupiter.api.Test;
@@ -18,15 +17,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = Initializer.class)
 @AutoConfigureMockMvc
-public class CreateUserTest {
+public class UserJourneysTest {
     @Autowired
-    private TestExecutor testExecutor;
+    private ScenarioExecutor scenarioExecutor;
 
     @Test
     public void createUserTest() {
         AccountCreateRequestDTO accountCreateRequestDTO =
                 TestObjectBuilder.accountCreateRequestDTO().build();
-        testExecutor
+        scenarioExecutor
                 .when().userIsCreatedWith(accountCreateRequestDTO)
                 .then().statusIs(204);
     }
@@ -36,7 +35,7 @@ public class CreateUserTest {
         AccountCreateRequestDTO accountCreateRequestDTO =
                 TestObjectBuilder.accountCreateRequestDTO().build();
         LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO).build();
-        testExecutor
+        scenarioExecutor
                 .when().userIsCreatedWith(accountCreateRequestDTO)
                 .then().statusIs(204)
                 .and().userLoginsWith(loginRequestDTO)

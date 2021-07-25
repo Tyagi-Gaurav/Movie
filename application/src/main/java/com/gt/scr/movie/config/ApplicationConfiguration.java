@@ -95,37 +95,4 @@ public class ApplicationConfiguration implements WebMvcConfigurer  {
     public MySQLConfig mySQLConfig() {
         return ModifiableMySQLConfig.create();
     }
-
-//    @Bean
-//    public LettuceConnectionFactory redisConnectionFactory(DatabaseConfig databaseConfig) {
-//        var redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-//        redisStandaloneConfiguration.setPort(databaseConfig.port());
-//        redisStandaloneConfiguration.setHostName(databaseConfig.host());
-//
-//        LettuceClientConfiguration clientConfiguration = LettuceClientConfiguration.builder()
-//                .clientOptions(
-//                        ClientOptions.builder()
-//                                .socketOptions(
-//                                        SocketOptions.builder()
-//                                                .connectTimeout(databaseConfig.connectionTimeout())
-//                                                .build())
-//                                .build())
-//                .commandTimeout(databaseConfig.commandTimeout())
-//                .build();
-//        return new LettuceConnectionFactory(redisStandaloneConfiguration, clientConfiguration);
-//    }
-
-//    @Bean
-//    public RedisTemplate<Object, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-//        RedisTemplate<Object, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(lettuceConnectionFactory);
-//        template.setEnableTransactionSupport(true);
-//        return template;
-//    }
-
-//    @Bean(initMethod = "start", destroyMethod = "stop")
-//    @Profile("!prod")
-//    public RedisServer redisServer(DatabaseConfig databaseConfig) {
-//        return new RedisServer(databaseConfig.port());
-//    }
 }

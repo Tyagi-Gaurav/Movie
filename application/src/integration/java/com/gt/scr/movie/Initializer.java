@@ -11,8 +11,6 @@ import static org.testcontainers.containers.MySQLContainer.MYSQL_PORT;
 
 public class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-    private static final int REDIS_PORT = 6379;
-
     static MySQLContainer mySQL = new MySQLContainer<>(DockerImageName.parse("mysql"))
             .withUsername("root")
             .withPassword("password")
