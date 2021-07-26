@@ -9,7 +9,6 @@ import com.google.errorprone.annotations.Var;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -46,7 +45,6 @@ public final class ImmutableUser implements User {
   private final boolean isAccountNonLocked;
   private final boolean isCredentialsNonExpired;
   private final boolean isEnabled;
-  private final HashMap<UUID, Movie> movies;
 
   private ImmutableUser(ImmutableUser.Builder builder) {
     this.authorities = builder.authorities;
@@ -67,14 +65,10 @@ public final class ImmutableUser implements User {
     if (builder.isEnabledIsSet()) {
       initShim.isEnabled(builder.isEnabled);
     }
-    if (builder.movies != null) {
-      initShim.movies(builder.movies);
-    }
     this.isAccountNonExpired = initShim.isAccountNonExpired();
     this.isAccountNonLocked = initShim.isAccountNonLocked();
     this.isCredentialsNonExpired = initShim.isCredentialsNonExpired();
     this.isEnabled = initShim.isEnabled();
-    this.movies = initShim.movies();
     this.initShim = null;
   }
 
@@ -88,8 +82,7 @@ public final class ImmutableUser implements User {
       boolean isAccountNonExpired,
       boolean isAccountNonLocked,
       boolean isCredentialsNonExpired,
-      boolean isEnabled,
-      HashMap<UUID, Movie> movies) {
+      boolean isEnabled) {
     this.authorities = authorities;
     this.password = password;
     this.username = username;
@@ -100,7 +93,6 @@ public final class ImmutableUser implements User {
     this.isAccountNonLocked = isAccountNonLocked;
     this.isCredentialsNonExpired = isCredentialsNonExpired;
     this.isEnabled = isEnabled;
-    this.movies = movies;
     this.initShim = null;
   }
 
@@ -184,31 +176,12 @@ public final class ImmutableUser implements User {
       isEnabledBuildStage = STAGE_INITIALIZED;
     }
 
-    private byte moviesBuildStage = STAGE_UNINITIALIZED;
-    private HashMap<UUID, Movie> movies;
-
-    HashMap<UUID, Movie> movies() {
-      if (moviesBuildStage == STAGE_INITIALIZING) throw new IllegalStateException(formatInitCycleMessage());
-      if (moviesBuildStage == STAGE_UNINITIALIZED) {
-        moviesBuildStage = STAGE_INITIALIZING;
-        this.movies = Objects.requireNonNull(moviesInitialize(), "movies");
-        moviesBuildStage = STAGE_INITIALIZED;
-      }
-      return this.movies;
-    }
-
-    void movies(HashMap<UUID, Movie> movies) {
-      this.movies = movies;
-      moviesBuildStage = STAGE_INITIALIZED;
-    }
-
     private String formatInitCycleMessage() {
       List<String> attributes = new ArrayList<>();
       if (isAccountNonExpiredBuildStage == STAGE_INITIALIZING) attributes.add("isAccountNonExpired");
       if (isAccountNonLockedBuildStage == STAGE_INITIALIZING) attributes.add("isAccountNonLocked");
       if (isCredentialsNonExpiredBuildStage == STAGE_INITIALIZING) attributes.add("isCredentialsNonExpired");
       if (isEnabledBuildStage == STAGE_INITIALIZING) attributes.add("isEnabled");
-      if (moviesBuildStage == STAGE_INITIALIZING) attributes.add("movies");
       return "Cannot build User, attribute initializers form cycle " + attributes;
     }
   }
@@ -227,10 +200,6 @@ public final class ImmutableUser implements User {
 
   private boolean isEnabledInitialize() {
     return User.super.isEnabled();
-  }
-
-  private HashMap<UUID, Movie> moviesInitialize() {
-    return User.super.movies();
   }
 
   /**
@@ -336,18 +305,6 @@ public final class ImmutableUser implements User {
   }
 
   /**
-   * @return The value of the {@code movies} attribute
-   */
-  @JsonProperty("movies")
-  @Override
-  public HashMap<UUID, Movie> movies() {
-    InitShim shim = this.initShim;
-    return shim != null
-        ? shim.movies()
-        : this.movies;
-  }
-
-  /**
    * Copy the current immutable object by setting a value for the {@link User#getAuthorities() authorities} attribute.
    * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for authorities
@@ -366,8 +323,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -389,8 +345,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -412,8 +367,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -435,8 +389,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -458,8 +411,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -481,8 +433,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -503,8 +454,7 @@ public final class ImmutableUser implements User {
         value,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -525,8 +475,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         value,
         this.isCredentialsNonExpired,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -547,8 +496,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         value,
-        this.isEnabled,
-        this.movies);
+        this.isEnabled);
   }
 
   /**
@@ -569,31 +517,7 @@ public final class ImmutableUser implements User {
         this.isAccountNonExpired,
         this.isAccountNonLocked,
         this.isCredentialsNonExpired,
-        value,
-        this.movies);
-  }
-
-  /**
-   * Copy the current immutable object by setting a value for the {@link User#movies() movies} attribute.
-   * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
-   * @param value A new value for movies
-   * @return A modified copy of the {@code this} object
-   */
-  public final ImmutableUser withMovies(HashMap<UUID, Movie> value) {
-    if (this.movies == value) return this;
-    HashMap<UUID, Movie> newValue = Objects.requireNonNull(value, "movies");
-    return new ImmutableUser(
-        this.authorities,
-        this.password,
-        this.username,
-        this.id,
-        this.firstName,
-        this.lastName,
-        this.isAccountNonExpired,
-        this.isAccountNonLocked,
-        this.isCredentialsNonExpired,
-        this.isEnabled,
-        newValue);
+        value);
   }
 
   /**
@@ -617,12 +541,11 @@ public final class ImmutableUser implements User {
         && isAccountNonExpired == another.isAccountNonExpired
         && isAccountNonLocked == another.isAccountNonLocked
         && isCredentialsNonExpired == another.isCredentialsNonExpired
-        && isEnabled == another.isEnabled
-        && movies.equals(another.movies);
+        && isEnabled == another.isEnabled;
   }
 
   /**
-   * Computes a hash code from attributes: {@code authorities}, {@code password}, {@code username}, {@code id}, {@code firstName}, {@code lastName}, {@code isAccountNonExpired}, {@code isAccountNonLocked}, {@code isCredentialsNonExpired}, {@code isEnabled}, {@code movies}.
+   * Computes a hash code from attributes: {@code authorities}, {@code password}, {@code username}, {@code id}, {@code firstName}, {@code lastName}, {@code isAccountNonExpired}, {@code isAccountNonLocked}, {@code isCredentialsNonExpired}, {@code isEnabled}.
    * @return hashCode value
    */
   @Override
@@ -638,7 +561,6 @@ public final class ImmutableUser implements User {
     h += (h << 5) + Booleans.hashCode(isAccountNonLocked);
     h += (h << 5) + Booleans.hashCode(isCredentialsNonExpired);
     h += (h << 5) + Booleans.hashCode(isEnabled);
-    h += (h << 5) + movies.hashCode();
     return h;
   }
 
@@ -660,7 +582,6 @@ public final class ImmutableUser implements User {
         .add("isAccountNonLocked", isAccountNonLocked)
         .add("isCredentialsNonExpired", isCredentialsNonExpired)
         .add("isEnabled", isEnabled)
-        .add("movies", movies)
         .toString();
   }
 
@@ -692,8 +613,8 @@ public final class ImmutableUser implements User {
     private final String[] names;
     private final Object[] values;
     SerialForm(ImmutableUser instance) {
-      List<String> names = new ArrayList<>(11);
-      List<Object> values = new ArrayList<>(11);
+      List<String> names = new ArrayList<>(10);
+      List<Object> values = new ArrayList<>(10);
       names.add("authorities");
       values.add(instance.getAuthorities());
       names.add("password");
@@ -714,8 +635,6 @@ public final class ImmutableUser implements User {
       values.add(instance.isCredentialsNonExpired());
       names.add("isEnabled");
       values.add(instance.isEnabled());
-      names.add("movies");
-      values.add(instance.movies());
       this.names = names.toArray(new String[names.size()]);
       this.values = values.toArray();
     }
@@ -765,10 +684,6 @@ public final class ImmutableUser implements User {
           builder.isEnabled((Boolean) toSingle("isEnabled", values[i]));
           continue;
         }
-        if ("movies".equals(name)) {
-          builder.movies((HashMap<UUID, Movie>) toSingle("movies", values[i]));
-          continue;
-        }
       }
       return builder.build();
     }
@@ -804,7 +719,6 @@ public final class ImmutableUser implements User {
    *    .isAccountNonLocked(boolean) // optional {@link User#isAccountNonLocked() isAccountNonLocked}
    *    .isCredentialsNonExpired(boolean) // optional {@link User#isCredentialsNonExpired() isCredentialsNonExpired}
    *    .isEnabled(boolean) // optional {@link User#isEnabled() isEnabled}
-   *    .movies(HashMap&amp;lt;UUID, com.gt.scr.movie.service.domain.Movie&amp;gt;) // optional {@link User#movies() movies}
    *    .build();
    * </pre>
    * @return A new ImmutableUser builder
@@ -847,7 +761,6 @@ public final class ImmutableUser implements User {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
-    private @Nullable HashMap<UUID, Movie> movies;
 
     private Builder() {
     }
@@ -902,7 +815,6 @@ public final class ImmutableUser implements User {
       }
       if (object instanceof User) {
         User instance = (User) object;
-        movies(instance.movies());
         firstName(instance.firstName());
         lastName(instance.lastName());
         if ((bits & 0x1L) == 0) {
@@ -1056,19 +968,6 @@ public final class ImmutableUser implements User {
     public final Builder isEnabled(boolean isEnabled) {
       this.isEnabled = isEnabled;
       optBits |= OPT_BIT_IS_ENABLED;
-      return this;
-    }
-
-    /**
-     * Initializes the value for the {@link User#movies() movies} attribute.
-     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link User#movies() movies}.</em>
-     * @param movies The value for movies 
-     * @return {@code this} builder for use in a chained invocation
-     */
-    @CanIgnoreReturnValue 
-    @JsonProperty("movies")
-    public final Builder movies(HashMap<UUID, Movie> movies) {
-      this.movies = Objects.requireNonNull(movies, "movies");
       return this;
     }
 
