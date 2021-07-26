@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class LoginFunction
+public class Login
         implements BiFunction<MockMvc, LoginRequestDTO, MvcResult> {
 
     @Override

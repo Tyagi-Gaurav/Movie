@@ -38,7 +38,7 @@ public class UserJourneysTest {
         scenarioExecutor
                 .when().userIsCreatedWith(accountCreateRequestDTO)
                 .then().statusIs(204)
-                .and().userLoginsWith(loginRequestDTO)
+                .and().adminUserLoginsWith(loginRequestDTO)
                 .then().statusIs(200);
     }
 }

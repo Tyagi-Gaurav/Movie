@@ -1,5 +1,8 @@
 package com.gt.scr.movie;
 
+import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.LoginRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Collections;
 
 @EnableAutoConfiguration
 @ExtendWith(SpringExtension.class)
@@ -21,6 +26,29 @@ public class MovieJourneysTest {
 
     @Test
     void deletingUserShouldDeleteUserMovies() {
+        AccountCreateRequestDTO adminAccountCreateRequestDTO =
+                TestObjectBuilder.accountCreateRequestDTO().role("ADMIN").build();
+        LoginRequestDTO adminLoginRequestDTO =
+                TestObjectBuilder.loginRequestUsing(adminAccountCreateRequestDTO).build();
+        AccountCreateRequestDTO userAccountCreateRequestDTO =
+                TestObjectBuilder.accountCreateRequestDTO().build();
+        LoginRequestDTO userLoginRequestDTO =
+                TestObjectBuilder.loginRequestUsing(userAccountCreateRequestDTO).build();
 
+        MovieCreateRequestDTO movieCreateRequestDTO =
+                TestObjectBuilder.movieCreateRequestDTO().build();
+
+        scenarioExecutor
+                .when().userIsCreatedWith(adminAccountCreateRequestDTO)
+                .and().statusIs(204)
+                .and().adminUserLoginsWith(adminLoginRequestDTO)
+                .when().userIsCreatedWith(userAccountCreateRequestDTO)
+                .and().userLoginsWith(userLoginRequestDTO)
+                .and().userCreatesAMovieWith(movieCreateRequestDTO)
+                .when().userRetrievesAllMovies()
+                .then().theResponseShouldHaveFollowingMoviesInAnyOrder(
+                Collections.singletonList(movieCreateRequestDTO.name()))
+                .and().adminUserDeletesTheUser()
+                .then().verifyNoMoviesExistForTheNormalUserInDatabase();
     }
 }
