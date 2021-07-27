@@ -23,13 +23,6 @@ auth:
   tokenDuration: ${TOKEN_DURATION:1h}
   secret: ${SECRET:19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676}
 
-database:
-  host: ${DATABASE_HOST:localhost}
-  port: ${DATABASE_PORT:6379}
-  duplicateInterval: ${DUPLICATE_INTERVAL:10ms}
-  connectionTimeout: ${CONNECTION_TIMEOUT:10s}
-  commandTimeout: ${COMMAND_TIMEOUT:500ms}
-
 mysql:
   driver: "com.mysql.cj.jdbc.Driver"
   host: ${MYSQL_HOST:localhost}
