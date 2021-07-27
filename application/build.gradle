@@ -102,8 +102,10 @@ jacocoTestReport {
     reports {
         xml.enabled false
         csv.enabled false
+        html.enabled true
         html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
     }
+    executionData.from = files('build/jacoco/test.exec')
 }
 
 spotbugs {
