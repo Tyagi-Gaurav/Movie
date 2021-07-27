@@ -21,4 +21,9 @@ public interface Movie extends Serializable {
     int yearProduced();
 
     BigDecimal rating();
+
+    @Value.Default
+    default long creationTimeStamp() {
+        return System.nanoTime();
+    }
 }

@@ -3,17 +3,17 @@ package com.gt.scr.movie.service;
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 public interface MovieService {
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    void addMovieRating(UUID userId, Movie movie);
+    void addMovie(UUID userId, Movie movie);
 
-    Map<UUID, Movie> getMovieRating(UUID userId);
+    List<Movie> getMoviesFor(UUID userId);
 
-    void deleteMovieRating(UUID userId, UUID movieId);
+    void updateMovie(Movie movie);
 
-    void updateMovieRating(UUID userId, Movie movie);
+    void deleteMovie(UUID id);
 }
 

@@ -5,6 +5,7 @@ import com.gt.scr.movie.service.domain.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService extends UserDetailsService {
@@ -14,7 +15,7 @@ public interface UserService extends UserDetailsService {
 
     void deleteUser(UUID userId);
 
-    User loadUserByUsername(String username);
+    Optional<User> loadUserBy(String username);
 
     User findUserBy(UUID userId);
 

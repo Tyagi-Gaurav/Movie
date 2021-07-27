@@ -1,16 +1,20 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.Mockito.*;
@@ -21,18 +25,19 @@ class UserServiceImplTest {
     private UserService userService;
 
     @MockBean
+    @Qualifier("mysql")
     private UserRepository repository;
 
     @Test
     void shouldAddUser() {
         User user = TestBuilders.aUser();
-        when(repository.findUserBy(user.getUsername())).thenThrow(IllegalStateException.class);
+        when(repository.findUserBy(user.getUsername())).thenReturn(empty());
 
         //when
         userService.add(user);
 
         //then
-        verify(repository).update(user);
+        verify(repository).create(user);
     }
 
     @Test
@@ -51,7 +56,7 @@ class UserServiceImplTest {
         String user = "userName";
 
         //when
-        userService.loadUserByUsername(user);
+        userService.loadUserBy(user);
 
         //then
         verify(repository).findUserBy(user);
@@ -80,11 +85,11 @@ class UserServiceImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenTryingToAddDuplicateOrder() {
+    void shouldThrowExceptionWhenTryingToAddDuplicateUser() {
         //given
         User userA = TestBuilders.aUser();
         User userB = TestBuilders.aUserWithUserName(userA.getUsername());
-        when(repository.findUserBy(userA.getUsername())).thenThrow(IllegalStateException.class).thenReturn(userA);
+        when(repository.findUserBy(userA.getUsername())).thenReturn(Optional.empty()).thenReturn(of(userA));
         userService.add(userA);
 
         //when

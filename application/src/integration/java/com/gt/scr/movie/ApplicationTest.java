@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 "management.port=0"
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration
+@ContextConfiguration(initializers = Initializer.class)
 @EnableAutoConfiguration
 class ApplicationTest {
     @Autowired

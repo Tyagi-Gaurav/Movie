@@ -1,27 +1,26 @@
 package com.gt.scr.movie.service;
 
+import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = MovieServiceImpl.class)
@@ -31,26 +30,20 @@ class MovieServiceImplTest {
     private MovieService movieService;
 
     @MockBean
-    private UserService userService;
+    private MovieRepository movieRepository;
 
     @Test
     void shouldAddMovie() {
         //given
         UUID userId = UUID.randomUUID();
         Movie movie = TestBuilders.aMovie();
-        User user = TestBuilders.aUser();
-
-        when(userService.findUserBy(userId)).thenReturn(user);
+        when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Optional.empty());
 
         //when
-        movieService.addMovieRating(userId, movie);
+        movieService.addMovie(userId, movie);
 
         //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService).update(userArgumentCaptor.capture());
-
-        User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.movies()).contains(Map.entry(movie.id(), movie));
+        verify(movieRepository).create(userId, movie);
     }
 
     @Test
@@ -58,108 +51,142 @@ class MovieServiceImplTest {
         //given
         UUID userId = UUID.randomUUID();
         Movie movie = TestBuilders.aMovie();
-        User user = TestBuilders.aUser();
 
-        when(userService.findUserBy(userId)).thenReturn(user);
-        movieService.addMovieRating(userId, movie);
+        when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(of(movie));
 
         //when
-        Throwable throwable = catchThrowable(() -> movieService.addMovieRating(userId, movie));
+        DuplicateRecordException duplicateRecordException =
+                catchThrowableOfType(() -> movieService.addMovie(userId, movie), DuplicateRecordException.class);
 
         //then
-        assertThat(throwable).isNotNull()
-                .isInstanceOf(DuplicateRecordException.class);
+        assertThat(duplicateRecordException).isNotNull();
+    }
+
+    @Test
+    void shouldAllowAddingDuplicateMovieWithOnlyNameSameButDiferentYear() {
+        //given
+        UUID userId = UUID.randomUUID();
+        Movie movieA = TestBuilders.aMovie();
+        Movie remakeOfMovieA = ImmutableMovie.copyOf(movieA).withYearProduced(2021);
+
+        when(movieRepository.findMovieBy(userId, movieA.name())).thenReturn(of(movieA));
+
+        //when
+        Throwable throwable = catchThrowable(() -> movieService.addMovie(userId, remakeOfMovieA));
+
+        //then
+        assertThat(throwable).isNull();
+        verify(movieRepository).create(userId, remakeOfMovieA);
     }
 
     @Test
     void shouldRetrieveMovie() {
         //given
         UUID userId = UUID.randomUUID();
-        User user = TestBuilders.aUserWithMovies();
-
-        when(userService.findUserBy(userId)).thenReturn(user);
+        Movie aMovie = TestBuilders.aMovie();
+        Movie bMovie = TestBuilders.aMovie();
+        when(movieRepository.getAllMoviesForUser(userId)).thenReturn(List.of(aMovie, bMovie));
 
         //when
-        Map<UUID, Movie> movies = movieService.getMovieRating(userId);
+        List<Movie> movies = movieService.getMoviesFor(userId);
 
         //then
-        assertThat(movies).isEqualTo(user.movies());
+        assertThat(movies).containsExactlyInAnyOrderElementsOf(List.of(aMovie, bMovie));
     }
 
     @Test
     void shouldDeleteMovieForAUser() {
         //given
-        UUID userId = UUID.randomUUID();
         Movie movie = TestBuilders.aMovie();
-        User user = TestBuilders.aUser();
-
-        when(userService.findUserBy(userId)).thenReturn(user);
 
         //when
-        movieService.deleteMovieRating(userId, movie.id());
+        movieService.deleteMovie(movie.id());
 
         //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService).update(userArgumentCaptor.capture());
-
-        User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.movies()).doesNotContain(Map.entry(movie.id(), movie));
+        verify(movieRepository).delete(movie.id());
     }
 
     @Test
-    void shouldUpdateMovieForAUser() {
+    void shouldNotAllowUpdateCreationTimeStampForMovie() {
         //given
-        UUID userId = UUID.randomUUID();
-        Movie movie = TestBuilders.aMovie();
-        User user = TestBuilders.aUser();
-
-        when(userService.findUserBy(userId)).thenReturn(user);
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withCreationTimeStamp(System.nanoTime());
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
-        movieService.updateMovieRating(userId, movie);
+        movieService.updateMovie(movieNew);
 
         //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService).update(userArgumentCaptor.capture());
-
-        User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.movies()).isEmpty();
+        verify(movieRepository).update(movieOld);
     }
 
     @Test
-    void shouldUpdateOnlyMovieNameForAUser() {
+    void shouldNotAllowUpdateZeroRatingForMovie() {
         //given
-        UUID userId = UUID.randomUUID();
-        UUID movieId = UUID.randomUUID();
-        Movie movieToUpdate = TestBuilders.aMovie();
-        HashMap<UUID, Movie> movieMap = new HashMap<>();
-
-        movieMap.put(movieId, movieToUpdate);
-        User user = TestBuilders.aUserWithMovies(movieMap);
-
-        when(userService.findUserBy(userId)).thenReturn(user);
-        String newMovieName = "newName";
-        Movie expectedMovie = ImmutableMovie.builder()
-                .name(newMovieName)
-                .rating(BigDecimal.valueOf(2.3))
-                .yearProduced(2021)
-                .id(movieId)
-                .build();
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withRating(BigDecimal.ZERO);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
-        Movie updatedMovie = ImmutableMovie.builder()
-                .name(newMovieName)
-                .rating(BigDecimal.valueOf(2.3))
-                .yearProduced(2021)
-                .id(movieId)
-                .build();
-        movieService.updateMovieRating(userId, updatedMovie);
+        movieService.updateMovie(movieNew);
 
         //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService).update(userArgumentCaptor.capture());
+        verify(movieRepository).update(movieOld);
+    }
 
-        User actualParameter = userArgumentCaptor.getValue();
-        assertThat(actualParameter.movies()).contains(Map.entry(movieId, expectedMovie));
+    @Test
+    void shouldAllowUpdateNameForMovie() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withName("NewName");
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldAllowUpdateRatingForMovie() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withRating(BigDecimal.ONE);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldAllowUpdateYearProducedForMovie() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withYearProduced(1900);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldNotUpdateMovieWhenItDoesNotExist() {
+        //given
+        Movie movieOld = TestBuilders.aMovie();
+        Movie movieNew = ImmutableMovie.copyOf(movieOld).withYearProduced(1900);
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(empty());
+
+        //when
+        movieService.updateMovie(movieNew);
+
+        //then
+        verify(movieRepository, times(0)).update(any());
     }
 }

@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 @Value.Immutable
@@ -36,11 +35,6 @@ public interface User extends UserDetails {
 
     @Value.Default
     default boolean isEnabled() {return true;}
-
-    @Value.Default
-    default HashMap<UUID, Movie> movies() {
-        return new HashMap<>();
-    }
 
     default String getRole() {
         return getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElseGet(() -> "");

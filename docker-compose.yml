@@ -3,25 +3,32 @@ services:
   movie-app:
     container_name: local.movie-app
     depends_on:
-      - db
+      - mysql
     build:
       context: application
     ports:
       - "8080:8080"
     environment:
-      - "DATABASE_HOST=local.database"
-      - "DATABASE_PORT=6379"
       - "SPRING_PROFILES_ACTIVE=prod"
       - "SERVER_PORT=8080"
       - "SERVER_MGT_PORT=8081"
+      - "MYSQL_HOST=local.mysql"
+      - "MYSQL_PWD=password"
+      - "MYSQL_USER=root"
+      - "MYSQL_DB_NAME=movieMetadata"
     networks:
       - overlay
 
-  db:
-    image: redis
-    container_name: local.database
+  mysql:
+    image: mysql:8.0.19
+    container_name: local.mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
     ports:
-      - "6379:6379"
+      - "3306:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=password"
+      - "MYSQL_DATABASE=movieMetadata"
     networks:
       - overlay
 

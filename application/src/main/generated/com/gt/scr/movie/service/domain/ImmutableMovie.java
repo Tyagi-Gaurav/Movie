@@ -3,6 +3,7 @@ package com.gt.scr.movie.service.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
+import com.google.common.primitives.Longs;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
@@ -35,12 +36,29 @@ public final class ImmutableMovie implements Movie {
   private final String name;
   private final int yearProduced;
   private final BigDecimal rating;
+  private final long creationTimeStamp;
 
-  private ImmutableMovie(UUID id, String name, int yearProduced, BigDecimal rating) {
+  private ImmutableMovie(ImmutableMovie.Builder builder) {
+    this.id = builder.id;
+    this.name = builder.name;
+    this.yearProduced = builder.yearProduced;
+    this.rating = builder.rating;
+    this.creationTimeStamp = builder.creationTimeStampIsSet()
+        ? builder.creationTimeStamp
+        : Movie.super.creationTimeStamp();
+  }
+
+  private ImmutableMovie(
+      UUID id,
+      String name,
+      int yearProduced,
+      BigDecimal rating,
+      long creationTimeStamp) {
     this.id = id;
     this.name = name;
     this.yearProduced = yearProduced;
     this.rating = rating;
+    this.creationTimeStamp = creationTimeStamp;
   }
 
   /**
@@ -80,6 +98,15 @@ public final class ImmutableMovie implements Movie {
   }
 
   /**
+   * @return The value of the {@code creationTimeStamp} attribute
+   */
+  @JsonProperty("creationTimeStamp")
+  @Override
+  public long creationTimeStamp() {
+    return creationTimeStamp;
+  }
+
+  /**
    * Copy the current immutable object by setting a value for the {@link Movie#id() id} attribute.
    * A shallow reference equality check is used to prevent copying of the same value by returning {@code this}.
    * @param value A new value for id
@@ -88,7 +115,7 @@ public final class ImmutableMovie implements Movie {
   public final ImmutableMovie withId(UUID value) {
     if (this.id == value) return this;
     UUID newValue = Objects.requireNonNull(value, "id");
-    return new ImmutableMovie(newValue, this.name, this.yearProduced, this.rating);
+    return new ImmutableMovie(newValue, this.name, this.yearProduced, this.rating, this.creationTimeStamp);
   }
 
   /**
@@ -100,7 +127,7 @@ public final class ImmutableMovie implements Movie {
   public final ImmutableMovie withName(String value) {
     String newValue = Objects.requireNonNull(value, "name");
     if (this.name.equals(newValue)) return this;
-    return new ImmutableMovie(this.id, newValue, this.yearProduced, this.rating);
+    return new ImmutableMovie(this.id, newValue, this.yearProduced, this.rating, this.creationTimeStamp);
   }
 
   /**
@@ -111,7 +138,7 @@ public final class ImmutableMovie implements Movie {
    */
   public final ImmutableMovie withYearProduced(int value) {
     if (this.yearProduced == value) return this;
-    return new ImmutableMovie(this.id, this.name, value, this.rating);
+    return new ImmutableMovie(this.id, this.name, value, this.rating, this.creationTimeStamp);
   }
 
   /**
@@ -123,7 +150,18 @@ public final class ImmutableMovie implements Movie {
   public final ImmutableMovie withRating(BigDecimal value) {
     BigDecimal newValue = Objects.requireNonNull(value, "rating");
     if (this.rating.equals(newValue)) return this;
-    return new ImmutableMovie(this.id, this.name, this.yearProduced, newValue);
+    return new ImmutableMovie(this.id, this.name, this.yearProduced, newValue, this.creationTimeStamp);
+  }
+
+  /**
+   * Copy the current immutable object by setting a value for the {@link Movie#creationTimeStamp() creationTimeStamp} attribute.
+   * A value equality check is used to prevent copying of the same value by returning {@code this}.
+   * @param value A new value for creationTimeStamp
+   * @return A modified copy of the {@code this} object
+   */
+  public final ImmutableMovie withCreationTimeStamp(long value) {
+    if (this.creationTimeStamp == value) return this;
+    return new ImmutableMovie(this.id, this.name, this.yearProduced, this.rating, value);
   }
 
   /**
@@ -141,11 +179,12 @@ public final class ImmutableMovie implements Movie {
     return id.equals(another.id)
         && name.equals(another.name)
         && yearProduced == another.yearProduced
-        && rating.equals(another.rating);
+        && rating.equals(another.rating)
+        && creationTimeStamp == another.creationTimeStamp;
   }
 
   /**
-   * Computes a hash code from attributes: {@code id}, {@code name}, {@code yearProduced}, {@code rating}.
+   * Computes a hash code from attributes: {@code id}, {@code name}, {@code yearProduced}, {@code rating}, {@code creationTimeStamp}.
    * @return hashCode value
    */
   @Override
@@ -155,6 +194,7 @@ public final class ImmutableMovie implements Movie {
     h += (h << 5) + name.hashCode();
     h += (h << 5) + yearProduced;
     h += (h << 5) + rating.hashCode();
+    h += (h << 5) + Longs.hashCode(creationTimeStamp);
     return h;
   }
 
@@ -170,6 +210,7 @@ public final class ImmutableMovie implements Movie {
         .add("name", name)
         .add("yearProduced", yearProduced)
         .add("rating", rating)
+        .add("creationTimeStamp", creationTimeStamp)
         .toString();
   }
 
@@ -197,6 +238,7 @@ public final class ImmutableMovie implements Movie {
    *    .name(String) // required {@link Movie#name() name}
    *    .yearProduced(int) // required {@link Movie#yearProduced() yearProduced}
    *    .rating(java.math.BigDecimal) // required {@link Movie#rating() rating}
+   *    .creationTimeStamp(long) // optional {@link Movie#creationTimeStamp() creationTimeStamp}
    *    .build();
    * </pre>
    * @return A new ImmutableMovie builder
@@ -220,12 +262,15 @@ public final class ImmutableMovie implements Movie {
     private static final long INIT_BIT_NAME = 0x2L;
     private static final long INIT_BIT_YEAR_PRODUCED = 0x4L;
     private static final long INIT_BIT_RATING = 0x8L;
+    private static final long OPT_BIT_CREATION_TIME_STAMP = 0x1L;
     private long initBits = 0xfL;
+    private long optBits;
 
     private @Nullable UUID id;
     private @Nullable String name;
     private int yearProduced;
     private @Nullable BigDecimal rating;
+    private long creationTimeStamp;
 
     private Builder() {
     }
@@ -244,6 +289,7 @@ public final class ImmutableMovie implements Movie {
       name(instance.name());
       yearProduced(instance.yearProduced());
       rating(instance.rating());
+      creationTimeStamp(instance.creationTimeStamp());
       return this;
     }
 
@@ -300,6 +346,20 @@ public final class ImmutableMovie implements Movie {
     }
 
     /**
+     * Initializes the value for the {@link Movie#creationTimeStamp() creationTimeStamp} attribute.
+     * <p><em>If not set, this attribute will have a default value as returned by the initializer of {@link Movie#creationTimeStamp() creationTimeStamp}.</em>
+     * @param creationTimeStamp The value for creationTimeStamp 
+     * @return {@code this} builder for use in a chained invocation
+     */
+    @CanIgnoreReturnValue 
+    @JsonProperty("creationTimeStamp")
+    public final Builder creationTimeStamp(long creationTimeStamp) {
+      this.creationTimeStamp = creationTimeStamp;
+      optBits |= OPT_BIT_CREATION_TIME_STAMP;
+      return this;
+    }
+
+    /**
      * Builds a new {@link ImmutableMovie ImmutableMovie}.
      * @return An immutable instance of Movie
      * @throws java.lang.IllegalStateException if any required attributes are missing
@@ -308,7 +368,11 @@ public final class ImmutableMovie implements Movie {
       if (initBits != 0) {
         throw new IllegalStateException(formatRequiredAttributesMessage());
       }
-      return new ImmutableMovie(id, name, yearProduced, rating);
+      return new ImmutableMovie(this);
+    }
+
+    private boolean creationTimeStampIsSet() {
+      return (optBits & OPT_BIT_CREATION_TIME_STAMP) != 0;
     }
 
     private String formatRequiredAttributesMessage() {

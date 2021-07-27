@@ -9,6 +9,19 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    integration {
+        java.srcDir "$projectDir/src/integration/java"
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+configurations {
+    integrationImplementation.extendsFrom testImplementation
+    integrationRuntime.extendsFrom testImplementation
+}
+
 jacoco {
     toolVersion = "0.8.6"
     reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
@@ -29,12 +42,11 @@ processResources {
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-test"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-test"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.springframework:spring-jdbc"
     implementation "org.springframework:spring-webmvc"
     implementation "org.springframework:spring-core"
     implementation "org.apache.commons:commons-lang3"
@@ -50,6 +62,9 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-impl"
     implementation "io.jsonwebtoken:jjwt-jackson"
     implementation "it.ozimov:embedded-redis"
+    implementation "mysql:mysql-connector-java"
+    implementation "com.mchange:c3p0"
+    implementation "org.liquibase:liquibase-core"
 
     //Immutables
     implementation "org.immutables:value-annotations"
@@ -60,9 +75,16 @@ dependencies {
     implementation "io.micrometer:micrometer-core"
     annotationProcessor "org.immutables:value"
 
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.springframework.boot:spring-boot-test-autoconfigure"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.assertj:assertj-core"
+    testImplementation "com.h2database:h2"
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:mysql"
 }
 
 test {
@@ -71,7 +93,7 @@ test {
 
     jacoco {
         excludes = ['com/toptal/scr/tz/Application.class',
-                     'com/toptal/scr/tz/Grace**']
+                    'com/toptal/scr/tz/Grace**']
     }
 }
 
@@ -100,9 +122,37 @@ spotbugsMain {
     }
 }
 
+spotbugsTest {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/test/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
 pmd {
     consoleOutput = true
     toolVersion = "6.21.0"
     rulesMinimumPriority = 2
     ruleSets = ["category/java/errorprone.xml"]
 }
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath += sourceSets.integration.runtimeClasspath
+
+    useJUnitPlatform()
+
+    reports {
+        html.enabled true
+        junitXml.enabled = true
+    }
+    shouldRunAfter test
+}
+
+check.dependsOn integrationTest

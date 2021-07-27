@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,28 +34,29 @@ public class MovieResource {
 
     @PostMapping(consumes = "application/vnd.movie.add.v1+json",
             produces = "application/vnd.movie.add.v1+json")
-    public ResponseEntity<Void> createMovieRating(@RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
-                                                  @RequestAttribute("userProfile") UserProfile userProfile,
-                                                  @RequestParam(value = "userId", required = false) String userId) {
+    public ResponseEntity<Void> createMovie(@RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
+                                            @RequestAttribute("userProfile") UserProfile userProfile,
+                                            @RequestParam(value = "userId", required = false) String userId) {
         Movie movie = ImmutableMovie.builder()
                 .id(UUID.randomUUID())
                 .name(movieCreateRequestDTO.name())
                 .rating(movieCreateRequestDTO.rating())
                 .yearProduced(movieCreateRequestDTO.yearProduced())
+                .creationTimeStamp(System.nanoTime())
                 .build();
 
-        movieService.addMovieRating(determineUserId(userId, userProfile.id()), movie);
+        movieService.addMovie(determineUserId(userId, userProfile.id()), movie);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(consumes = "application/vnd.movie.read.v1+json",
             produces = "application/vnd.movie.read.v1+json")
-    public ResponseEntity<MoviesDTO> getMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
-                                                       @RequestParam(value = "userId", required = false) String userId) {
+    public ResponseEntity<MoviesDTO> getMovie(@RequestAttribute("userProfile") UserProfile userProfile,
+                                              @RequestParam(value = "userId", required = false) String userId) {
 
-        Map<UUID, Movie> movies = movieService.getMovieRating(determineUserId(userId, userProfile.id()));
+        List<Movie> movies = movieService.getMoviesFor(determineUserId(userId, userProfile.id()));
 
-        List<MovieDTO> movieDTOs = movies.values().stream().map(mv -> ImmutableMovieDTO.builder()
+        List<MovieDTO> movieDTOs = movies.stream().map(mv -> ImmutableMovieDTO.builder()
                 .id(mv.id())
                 .name(mv.name())
                 .rating(mv.rating())
@@ -69,20 +69,19 @@ public class MovieResource {
 
     @DeleteMapping(consumes = "application/vnd.movie.delete.v1+json",
             produces = "application/vnd.movie.delete.v1+json")
-    public ResponseEntity<Void> deleteMovieRating(@RequestAttribute("userProfile") UserProfile userProfile,
-                                                  @RequestParam("id") String id,
-                                                  @RequestParam(value = "userId", required = false) String userId) {
-        movieService.deleteMovieRating(determineUserId(userId, userProfile.id()),
-                UUID.fromString(id));
+    public ResponseEntity<Void> deleteMovie(@RequestAttribute("userProfile") UserProfile userProfile,
+                                            @RequestParam("id") String id,
+                                            @RequestParam(value = "userId", required = false) String userId) {
+        movieService.deleteMovie(UUID.fromString(id));
 
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(consumes = "application/vnd.movie.update.v1+json",
             produces = "application/vnd.movie.update.v1+json")
-    public ResponseEntity<Void> updateMovieRating(@RequestBody MovieUpdateRequestDTO movieUpdateRequestDTO,
-                                                  @RequestAttribute("userProfile") UserProfile userProfile,
-                                                  @RequestParam(value = "userId", required = false) String userId) {
+    public ResponseEntity<Void> updateMovie(@RequestBody MovieUpdateRequestDTO movieUpdateRequestDTO,
+                                            @RequestAttribute("userProfile") UserProfile userProfile,
+                                            @RequestParam(value = "userId", required = false) String userId) {
 
         Movie movie = ImmutableMovie.builder()
                 .id(movieUpdateRequestDTO.id())
@@ -91,7 +90,7 @@ public class MovieResource {
                 .yearProduced(movieUpdateRequestDTO.yearProduced())
                 .build();
 
-        movieService.updateMovieRating(determineUserId(userId, userProfile.id()), movie);
+        movieService.updateMovie(movie);
 
         return ResponseEntity.ok().build();
     }
