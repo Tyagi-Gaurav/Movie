@@ -9,6 +9,9 @@ repositories {
     mavenCentral()
 }
 
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
+
 sourceSets {
     integration {
         java.srcDir "$projectDir/src/integration/java"
