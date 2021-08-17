@@ -3,12 +3,14 @@ package com.gt.scr.movie.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@Order(value = 1)
 @Component
 public class ApplicationAuthenticationExceptionHandler {
     public static final Logger LOG = LoggerFactory.getLogger(ApplicationAuthenticationExceptionHandler.class);
