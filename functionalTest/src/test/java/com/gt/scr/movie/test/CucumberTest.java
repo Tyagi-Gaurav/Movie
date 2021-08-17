@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
         features = "classpath:features",
         plugin = {"pretty", "json:target/cucumber-report.json"},
         glue = {"com.gt.scr.movie.test.steps"},
-        tags = "@RunThis",
         monochrome = true
 )
 public class CucumberTest { }

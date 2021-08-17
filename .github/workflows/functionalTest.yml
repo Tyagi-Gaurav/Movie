@@ -41,6 +41,8 @@ jobs:
     - name: Run test suite
       run: ./gradlew remoteFunctional --info
 
-    - name: Show container logs
-      if: always()
-      run: docker logs local.movie-app
+#   Enable below only for DEBUG
+
+#    - name: Show container logs
+#      if: always()
+#      run: docker logs local.movie-app
