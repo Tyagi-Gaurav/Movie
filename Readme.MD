@@ -1,4 +1,4 @@
-[![Java CI with Gradle](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/gradle.yml/badge.svg)](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/gradle.yml)
+[![Java CI with Gradle](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/gradle.yml/badge.svg)](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/functionalTest.yml)
 [![Sonar](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/sonar.yml/badge.svg)](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/sonar.yml)
 
 ## Movie API
