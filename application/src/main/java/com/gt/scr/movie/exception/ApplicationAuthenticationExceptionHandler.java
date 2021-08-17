@@ -20,7 +20,9 @@ public class ApplicationAuthenticationExceptionHandler {
 
     @ExceptionHandler(value = {ApplicationAuthenticationException.class})
     public ResponseEntity<String> handle(ApplicationAuthenticationException exception) {
-        LOG.error(exception.getMessage(), exception);
+        if (LOG.isErrorEnabled()) {
+            LOG.error(exception.getMessage(), exception);
+        }
         return errorResponseHelper.errorResponse(401, exception.getMessage());
     }
 }

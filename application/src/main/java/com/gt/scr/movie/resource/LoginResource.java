@@ -38,7 +38,9 @@ public class LoginResource {
             produces = "application/vnd.login.v1+json")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         try {
-            LOG.info("Login user request");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Login user request");
+            }
             var user = authenticate(loginRequestDTO);
             final String token = JwtTokenUtil.generateToken(user, authConfig.tokenDuration(), signingKey);
             ImmutableLoginResponseDTO response = ImmutableLoginResponseDTO.builder()
@@ -48,7 +50,9 @@ public class LoginResource {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
             throw e;
         }
     }
@@ -59,7 +63,9 @@ public class LoginResource {
                     new UsernamePasswordAuthenticationToken(request.userName(), request.password()));
             return (User)auth.getPrincipal();
         } catch (AuthenticationException e) {
-            LOG.error(e.getMessage(), e);
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
             throw new ApplicationAuthenticationException("Authentication failed", e);
         }
     }

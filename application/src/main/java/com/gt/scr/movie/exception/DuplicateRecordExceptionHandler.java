@@ -20,7 +20,9 @@ public class DuplicateRecordExceptionHandler {
 
     @ExceptionHandler(value = {DuplicateRecordException.class})
     public ResponseEntity<String> handle(DuplicateRecordException exception) {
-        LOG.error(exception.getMessage(), exception);
+        if (LOG.isErrorEnabled()) {
+            LOG.error(exception.getMessage(), exception);
+        }
         return errorResponseHelper.errorResponse(403, exception.getMessage());
     }
 }

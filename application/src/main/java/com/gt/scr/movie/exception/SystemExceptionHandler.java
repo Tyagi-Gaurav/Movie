@@ -18,13 +18,17 @@ public class SystemExceptionHandler {
 
     @ExceptionHandler(value = {RuntimeException.class})
     public ResponseEntity<String> handleRuntime(RuntimeException exception) {
-        LOG.error(exception.getMessage(), exception);
+        if (LOG.isErrorEnabled()) {
+            LOG.error(exception.getMessage(), exception);
+        }
         return errorResponseHelper.errorResponse(500, "Unexpected error occurred");
     }
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<String> handleException(Exception exception) {
-        LOG.error(exception.getMessage(), exception);
+        if (LOG.isErrorEnabled()) {
+            LOG.error(exception.getMessage(), exception);
+        }
         return errorResponseHelper.errorResponse(500, "Unexpected error occurred");
     }
 }

@@ -21,7 +21,9 @@ public class ValueInstantiationExceptionHandler {
 
     @ExceptionHandler(value = {ValueInstantiationException.class})
     public ResponseEntity<String> handle(ValueInstantiationException exception) {
-        LOG.error("Value Instantiation Exception: " + exception.getMessage(), exception);
+        if (LOG.isErrorEnabled()) {
+            LOG.error("Value Instantiation Exception: " + exception.getMessage(), exception);
+        }
         return errorResponseHelper.errorResponse(400, exception.getMessage());
     }
 }

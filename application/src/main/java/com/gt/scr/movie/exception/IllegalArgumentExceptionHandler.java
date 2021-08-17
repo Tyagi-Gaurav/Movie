@@ -20,7 +20,9 @@ public class IllegalArgumentExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public ResponseEntity<String> handle(IllegalArgumentException exception) {
-        LOG.error("Illegal Argument Handler: " + exception.getMessage(), exception);
+        if (LOG.isErrorEnabled()) {
+            LOG.error("Illegal Argument Handler: " + exception.getMessage(), exception);
+        }
         return errorResponseHelper.errorResponse(400, exception.getMessage());
     }
 }
