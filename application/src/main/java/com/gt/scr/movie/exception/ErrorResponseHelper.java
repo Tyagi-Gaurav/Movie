@@ -27,7 +27,7 @@ public class ErrorResponseHelper {
                     .message(message)
                     .build());
 
-            LOG.error("Response Body: {}", responseBody);
+            LOG.error("Response Body with status code {}: {}", statusCode, responseBody);
 
             exceptionCounter.increment(statusCode);
             

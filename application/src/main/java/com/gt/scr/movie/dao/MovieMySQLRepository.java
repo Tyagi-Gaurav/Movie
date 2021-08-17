@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.math.RoundingMode;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,8 +31,8 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public Optional<Movie> findMovieBy(UUID movieId) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where ID = ?")) {
             preparedStatement.setString(1, movieId.toString());
 
@@ -51,8 +50,8 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public Optional<Movie> findMovieBy(UUID userId, String name) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where NAME = ? and USER_ID = ?")) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, userId.toString());
@@ -71,8 +70,8 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public List<Movie> getAllMoviesForUser(UUID userId) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE WHERE USER_ID = ?")) {
             preparedStatement.setString(1, userId.toString());
 
@@ -91,8 +90,8 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public void delete(UUID movieId) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(
                      "DELETE FROM MOVIE where id = ?")) {
             preparedStatement.setString(1, movieId.toString());
             preparedStatement.execute();
@@ -104,7 +103,7 @@ public class MovieMySQLRepository implements MovieRepository {
     @Override
     public void update(Movie updatedMovie) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
+             var preparedStatement = connection.prepareStatement(
                      "UPDATE MOVIE SET NAME = ?, " +
                              "YEAR_PRODUCED = ?, " +
                              "RATING = ?" +
@@ -124,7 +123,7 @@ public class MovieMySQLRepository implements MovieRepository {
     @Override
     public void create(UUID userId, Movie movie) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
+             var preparedStatement = connection.prepareStatement(
                      "INSERT INTO MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) " +
                              "VALUES (?, ?, ?, ?, ?, ?)")) {
 

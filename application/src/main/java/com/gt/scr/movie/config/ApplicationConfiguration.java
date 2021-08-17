@@ -14,6 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -24,6 +25,7 @@ import java.beans.PropertyVetoException;
 import java.security.Key;
 
 @Configuration
+@EnableWebMvc
 public class ApplicationConfiguration implements WebMvcConfigurer  {
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfiguration.class);
 

@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:16
 
 ADD build/libs/application-DEV.jar /data/application.jar
 

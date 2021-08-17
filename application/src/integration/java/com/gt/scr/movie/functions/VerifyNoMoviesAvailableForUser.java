@@ -12,11 +12,10 @@ import java.util.function.BiConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class VerifyNoMoviesAvailableForUser implements BiConsumer<DataSource, LoginResponseDTO> {
+    private static final String GET_MOVIES_FOR_USER = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE WHERE USER_ID = ?";
 
     @Override
     public void accept(DataSource dataSource, LoginResponseDTO loginResponseDTO) {
-        String GET_MOVIES_FOR_USER = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE WHERE USER_ID = ?";
-
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_MOVIES_FOR_USER)) {
 

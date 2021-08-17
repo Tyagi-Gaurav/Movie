@@ -24,6 +24,10 @@ movies. It can either be used in embedded manner in standalone mode or as a sepa
 The backend storage is accessed via a set of interfaces. It can easily be swapped out for anything else without
 affecting rest of the application.
 
+### Java Version
+
+The application current runs on Java 16.
+
 #### Application Security
 
 To access the application, users need a valid `userId` and `password` to login. Once they login, they would be provided

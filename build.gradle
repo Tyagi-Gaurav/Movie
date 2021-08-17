@@ -5,9 +5,6 @@ buildscript {
         gradlePluginPortal()
         maven { url "https://plugins.gradle.org/m2/" }
     }
-    dependencies {
-        classpath 'io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE'
-    }
 }
 
 plugins {
@@ -25,7 +22,6 @@ sonarqube {
     }
 }
 
-apply plugin: "io.spring.dependency-management"
 apply from: 'gradle/root.gradle'
 
 defaultTasks 'clean', 'check', 'build'
