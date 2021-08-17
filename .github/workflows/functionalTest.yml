@@ -42,4 +42,5 @@ jobs:
       run: ./gradlew remoteFunctional --info
 
     - name: Show container logs
+      if: always()
       run: docker logs local.movie-app

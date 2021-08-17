@@ -1,3 +1,4 @@
+@RunThis
 Feature: Users should be able to create an account
 
   Scenario: User should be able to create a new account
