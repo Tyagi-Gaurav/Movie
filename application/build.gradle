@@ -170,9 +170,10 @@ spotbugsTest {
 
 pmd {
     consoleOutput = true
-    toolVersion = "6.21.0"
+    toolVersion = "6.37.0"
     rulesMinimumPriority = 2
-    ruleSets = ["category/java/errorprone.xml"]
+    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+    reportsDir = layout.buildDirectory.dir('pmd').get().asFile
 }
 
 tasks.register('integrationTest', Test) {
