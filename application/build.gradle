@@ -14,7 +14,7 @@ ext {
     jacksonVersion = '2.12.4'
     jsonWebTokenVersion = '0.11.2'
     embeddedRedisVersion = '0.7.3'
-    mysqlVersion = '8.0.25'
+    mysqlVersion = '8.0.26'
     c3p0Version = '0.9.5.5'
     liquibaseVersion = '4.4.2'
     immutablesVersion = '2.8.8'
