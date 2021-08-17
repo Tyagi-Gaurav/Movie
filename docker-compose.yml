@@ -32,5 +32,17 @@ services:
     networks:
       - overlay
 
+#  functionaltest:
+#    container_name: local.functional.test
+#    depends_on:
+#      - movie-app
+#    build:
+#      context: functionalTest
+#    environment:
+#      - "MOVIE_APP_HOST=local.movie-app"
+#      - "MOVIE_APP_PORT=8080"
+#    networks:
+#      - overlay
+
 networks:
   overlay:

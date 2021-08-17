@@ -5,6 +5,29 @@ plugins {
     id 'pmd'
 }
 
+ext {
+    springBootVersion = '2.5.3'
+    springVersion = '5.3.9'
+    commonsLang3Version = '3.12.0'
+    commonsTextVersion = '1.9'
+    slf4jVersion = '2.0.0-alpha2'
+    jacksonVersion = '2.12.4'
+    jsonWebTokenVersion = '0.11.2'
+    embeddedRedisVersion = '0.7.3'
+    mysqlVersion = '8.0.25'
+    c3p0Version = '0.9.5.5'
+    liquibaseVersion = '4.4.2'
+    immutablesVersion = '2.8.8'
+    guavaVersion = '30.1.1-jre'
+    metricsInterceptor = '1.7.0'
+    junitVersion = '5.7.2'
+    assertJVersion = '3.20.2'
+    h2DbVersion = '1.4.200'
+    testContainerVersion = '1.16.0'
+    mockitoVersion = '3.11.2'
+    validationApiVersion = '2.0.1.Final'
+}
+
 repositories {
     mavenCentral()
 }
@@ -45,49 +68,57 @@ processResources {
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-data-redis"
-    implementation "org.springframework:spring-jdbc"
-    implementation "org.springframework:spring-webmvc"
-    implementation "org.springframework:spring-core"
-    implementation "org.apache.commons:commons-lang3"
-    implementation "org.apache.commons:commons-text"
-    implementation "org.slf4j:slf4j-log4j12"
+    implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
+        exclude group:"ch.qos.logback"
+    }
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}") {
+        exclude group: "org.slf4j", module:"slf4j-api"
+    }
+    implementation "org.springframework:spring-jdbc:${springVersion}"
+    implementation "org.springframework:spring-webmvc:${springVersion}"
+    implementation "org.springframework:spring-core:${springVersion}"
+    implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+    implementation "org.apache.commons:commons-text:${commonsTextVersion}"
+    implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
 
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    implementation "com.fasterxml.jackson.core:jackson-core"
-    implementation "com.fasterxml.jackson.core:jackson-databind"
-    implementation "com.fasterxml.jackson.core:jackson-annotations"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
 
-    implementation "io.jsonwebtoken:jjwt-api"
-    implementation "io.jsonwebtoken:jjwt-impl"
-    implementation "io.jsonwebtoken:jjwt-jackson"
-    implementation "it.ozimov:embedded-redis"
-    implementation "mysql:mysql-connector-java"
-    implementation "com.mchange:c3p0"
-    implementation "org.liquibase:liquibase-core"
+    implementation "io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}"
+    implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
+    implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
+    implementation("it.ozimov:embedded-redis:${embeddedRedisVersion}") {
+        exclude group:"org.slf4j", module:"slf4j-simple"
+    }
 
+    implementation "mysql:mysql-connector-java:${mysqlVersion}"
+    implementation "com.mchange:c3p0:${c3p0Version}"
+    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+    implementation "javax.validation:validation-api:$validationApiVersion"
     //Immutables
-    implementation "org.immutables:value-annotations"
-    implementation "org.immutables:value"
-    implementation "org.immutables:builder"
-    implementation "org.immutables:serial"
-    implementation "com.google.guava:guava"
-    implementation "io.micrometer:micrometer-core"
-    annotationProcessor "org.immutables:value"
+    implementation "org.immutables:value-annotations:${immutablesVersion}"
+    implementation "org.immutables:value:${immutablesVersion}"
+    implementation "org.immutables:builder:${immutablesVersion}"
+    implementation "org.immutables:serial:${immutablesVersion}"
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "io.micrometer:micrometer-core:${metricsInterceptor}"
+    annotationProcessor "org.immutables:value:${immutablesVersion}"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "org.springframework:spring-test"
-    testImplementation "org.springframework.boot:spring-boot-test-autoconfigure"
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation "org.assertj:assertj-core"
-    testImplementation "com.h2database:h2"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-test-autoconfigure:${springBootVersion}"
+    testImplementation "org.springframework:spring-test:${springVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation "org.assertj:assertj-core:${assertJVersion}"
+    testImplementation "com.h2database:h2:${h2DbVersion}"
+    testImplementation "org.testcontainers:junit-jupiter:${testContainerVersion}"
+    testImplementation "org.testcontainers:mysql:${testContainerVersion}"
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
-    testImplementation "org.testcontainers:junit-jupiter"
-    testImplementation "org.testcontainers:mysql"
 }
 
 test {

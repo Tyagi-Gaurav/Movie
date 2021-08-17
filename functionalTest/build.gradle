@@ -17,33 +17,51 @@ sourceSets {
     }
 }
 
+jar{
+    manifest{
+        attributes 'Main-Class' : 'com.gt.scr.movie.test'
+    }
+}
+
+ext {
+    springBootVersion = '2.5.3'
+    springVersion = '5.3.7'
+    cucumberVersion = '6.10.4'
+    junitVersion = '5.7.2'
+    junitPlatformVersion = '1.7.1'
+    immutablesVersion = '2.8.8'
+    jacksonVersion = '2.12.4'
+    assertJVersion = '3.20.2'
+    mockitoVersion = '3.11.2'
+    slf4jVersion = '2.0.0-alpha2'
+    commonsLang3Version = '3.12.0'
+}
+
 dependencies {
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "org.springframework.boot:spring-boot-starter-actuator"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "org.springframework.boot:spring-boot-starter-web"
-    testImplementation "org.springframework:spring-webmvc"
-    testImplementation "org.springframework:spring-web"
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation "org.junit.platform:junit-platform-commons"
-    testImplementation "org.junit.platform:junit-platform-runner"
-    testImplementation "org.junit.platform:junit-platform-suite-api"
-    testImplementation "io.cucumber:cucumber-java8"
-    testImplementation "io.cucumber:cucumber-java"
-    testImplementation "io.cucumber:cucumber-junit"
-    testImplementation "io.cucumber:cucumber-spring"
-    testImplementation group: 'io.cucumber', name: 'cucumber-jvm', version: "$cucumberVersion", ext: 'pom'
-    testImplementation "org.assertj:assertj-core"
-    testImplementation "org.awaitility:awaitility"
-    testImplementation "org.slf4j:slf4j-log4j12"
-    testImplementation "org.apache.commons:commons-lang3"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    testImplementation "org.springframework:spring-webmvc:${springVersion}"
+    testImplementation "org.springframework:spring-web:${springVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation "org.junit.platform:junit-platform-commons:${junitPlatformVersion}"
+    testImplementation "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
+    testImplementation "org.junit.platform:junit-platform-suite-api:${junitPlatformVersion}"
+    testImplementation "io.cucumber:cucumber-java8:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-spring:${cucumberVersion}"
+    testImplementation "org.assertj:assertj-core:${assertJVersion}"
+    testImplementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+    testImplementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
 
     //Immutables
-    testImplementation "org.immutables:value-annotations"
-    testImplementation "org.immutables:value"
-    testImplementation "org.immutables:builder"
-    testAnnotationProcessor "org.immutables:value"
+    testImplementation "org.immutables:value-annotations:${immutablesVersion}"
+    testImplementation "org.immutables:value:${immutablesVersion}"
+    testImplementation "org.immutables:builder:${immutablesVersion}"
+    testAnnotationProcessor "org.immutables:value:${immutablesVersion}"
 }
 
 task remoteFunctional(type: Test) {
