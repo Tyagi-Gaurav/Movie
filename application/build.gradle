@@ -24,7 +24,7 @@ ext {
     assertJVersion = '3.20.2'
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.16.0'
-    mockitoVersion = '3.11.2'
+    mockitoVersion = '3.12.2'
     validationApiVersion = '2.0.1.Final'
 }
 
