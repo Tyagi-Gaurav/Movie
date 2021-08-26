@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class MovieResource {
 
     @PostMapping(consumes = "application/vnd.movie.add.v1+json",
             produces = "application/vnd.movie.add.v1+json")
-    public ResponseEntity<Void> createMovie(@RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
+    public ResponseEntity<Void> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
                                             @RequestAttribute("userProfile") UserProfile userProfile,
                                             @RequestParam(value = "userId", required = false) String userId) {
         Movie movie = ImmutableMovie.builder()

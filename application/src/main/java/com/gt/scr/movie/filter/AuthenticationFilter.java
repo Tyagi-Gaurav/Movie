@@ -1,6 +1,6 @@
 package com.gt.scr.movie.filter;
 
-import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
+import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,10 +87,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 				LinkedHashMap authorities = (LinkedHashMap) authoritiesObjects.get(0);
 				String authority = authorities.get("authority").toString();
-				var userprofile = ImmutableUserProfile.builder()
-						.id(userDetails.id())
-						.authority(authority)
-						.build();
+				var userprofile = new UserProfile(userDetails.id(), authority);
 				request.setAttribute("userProfile", userprofile);
 
 				LOG.info("User authenticated with role: {}", authority);

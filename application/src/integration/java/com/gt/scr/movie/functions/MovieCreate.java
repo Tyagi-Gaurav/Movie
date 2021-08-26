@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MovieCreate
         implements Interaction<MockMvc,
@@ -24,7 +23,6 @@ public class MovieCreate
                     .content(TestUtils.asJsonString(movieCreateRequestDTO))
                     .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", loginResponseDTO.token()))
                     .contentType("application/vnd.movie.add.v1+json"))
-                    .andExpect(status().isNoContent())
                     .andReturn();
         } catch (Exception exception) {
             throw new RuntimeException(exception);

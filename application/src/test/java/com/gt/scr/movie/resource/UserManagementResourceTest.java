@@ -3,7 +3,6 @@ package com.gt.scr.movie.resource;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableAccountUpdateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
 import com.gt.scr.movie.resource.domain.UserDetailsResponse;
 import com.gt.scr.movie.resource.domain.UserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
@@ -109,10 +108,7 @@ class UserManagementResourceTest {
     void shouldAllowAdminToDeleteUser() throws Exception {
         UUID userIdToDelete = UUID.randomUUID();
 
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("USER")
-                .build();
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "USER");
 
         //when
         mockMvc.perform(delete("/user/manage")
@@ -129,10 +125,7 @@ class UserManagementResourceTest {
     void shouldNotAllowAdminToDeleteSelf() throws Exception {
         UUID userIdToDelete = UUID.randomUUID();
 
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(userIdToDelete)
-                .authority("ADMIN")
-                .build();
+        UserProfile userProfile = new UserProfile(userIdToDelete, "ADMIN");
 
         //when
         mockMvc.perform(delete("/user/manage")
