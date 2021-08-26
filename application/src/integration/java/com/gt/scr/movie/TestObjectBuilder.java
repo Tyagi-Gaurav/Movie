@@ -32,6 +32,11 @@ public class TestObjectBuilder {
                 BigDecimal.valueOf(5));
     }
 
+    public static MovieCreateRequestDTO invalidMovieCreateRequestDTO(String name) {
+        return new MovieCreateRequestDTO(name, 2010,
+                BigDecimal.valueOf(5));
+    }
+
     public static AccountCreateRequestDTO adminAccountCreateRequest() {
         return new AccountCreateRequestDTO(
                 randomAlphabetic(4), randomAlphabetic(6)

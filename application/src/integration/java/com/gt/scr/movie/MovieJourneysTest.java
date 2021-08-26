@@ -5,6 +5,9 @@ import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +26,24 @@ import java.util.Collections;
 public class MovieJourneysTest {
     @Autowired
     private ScenarioExecutor scenarioExecutor;
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", "abc", "abcde", "efuusidhfauihsdfuhiusdhfaiuhsfiuhiufhs"})
+    public void createMovieWithInvalidData(String movieName) {
+        AccountCreateRequestDTO userAccountCreateRequestDTO =
+                TestObjectBuilder.userAccountCreateRequestDTO();
+        LoginRequestDTO userLoginRequestDTO =
+                TestObjectBuilder.loginRequestUsing(userAccountCreateRequestDTO);
+
+        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.invalidMovieCreateRequestDTO(movieName);
+
+        scenarioExecutor
+                .when().userIsCreatedWith(userAccountCreateRequestDTO)
+                .and().userLoginsWith(userLoginRequestDTO)
+                .and().userCreatesAMovieWith(movieCreateRequestDTO)
+                .then().statusIs(400);
+    }
 
     @Test
     void deletingUserShouldDeleteUserMovies() {

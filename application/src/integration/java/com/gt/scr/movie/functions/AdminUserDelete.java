@@ -6,7 +6,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AdminUserDelete
         implements Interaction<MockMvc, LoginResponseDTO, String, MvcResult> {
@@ -21,7 +20,6 @@ public class AdminUserDelete
                     .param("userId", userId)
                     .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", loginResponseDTO.token()))
                     .contentType("application/vnd.user.delete.v1+json"))
-                    .andExpect(status().isOk())
                     .andReturn();
         } catch (Exception exception) {
             throw new RuntimeException(exception);

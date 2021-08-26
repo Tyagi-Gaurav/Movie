@@ -1,7 +1,6 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.ImmutableMovieUpdateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
@@ -51,10 +50,7 @@ class MovieResourceTest {
                 new MovieCreateRequestDTO(randomAlphabetic(6),
                         2010, BigDecimal.ONE));
 
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("USER")
-                .build();
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "USER");
 
         //when
         mockMvc.perform(post("/user/movie")
@@ -69,10 +65,7 @@ class MovieResourceTest {
     @Test
     void shouldAllowUserToReadMovies() throws Exception {
         UUID id = UUID.randomUUID();
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(id)
-                .authority("USER")
-                .build();
+        UserProfile userProfile = new UserProfile(id, "USER");
 
         Movie expectedReturnObject = ImmutableMovie.builder()
                 .id(id)
@@ -103,10 +96,7 @@ class MovieResourceTest {
 
     @Test
     void shouldAllowUserToDeleteMovies() throws Exception {
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("USER")
-                .build();
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "USER");
         UUID movieId = UUID.randomUUID();
 
         //when
@@ -129,10 +119,7 @@ class MovieResourceTest {
                 .yearProduced(2010)
                 .build());
 
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("USER")
-                .build();
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "USER");
 
         //when
         mockMvc.perform(put("/user/movie")

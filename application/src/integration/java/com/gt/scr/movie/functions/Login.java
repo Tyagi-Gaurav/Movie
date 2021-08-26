@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.function.BiFunction;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class Login
         implements BiFunction<MockMvc, LoginRequestDTO, MvcResult> {
@@ -19,7 +18,6 @@ public class Login
             return mockMvc.perform(post("/user/login")
                     .content(TestUtils.asJsonString(loginRequestDTO))
                     .contentType("application/vnd.login.v1+json"))
-                    .andExpect(status().isOk())
                     .andReturn();
         } catch (Exception exception) {
             throw new RuntimeException(exception);

@@ -1,7 +1,6 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.ImmutableMovieUpdateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
@@ -50,10 +49,7 @@ class MovieAdminResourceTest {
         String content = TestUtils.asJsonString(new MovieCreateRequestDTO(randomAlphabetic(6),
                 2010, BigDecimal.valueOf(10)));
 
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("ADMIN")
-                .build();
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN");
 
         //when
         mockMvc.perform(post("/user/movie")
@@ -72,10 +68,7 @@ class MovieAdminResourceTest {
     void shouldAllowAdminToReadMovies() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
         UUID usersOwnId = UUID.randomUUID();
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(usersOwnId)
-                .authority("ADMIN")
-                .build();
+        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN");
 
         Movie expectedReturnObject = ImmutableMovie.builder()
                 .id(usersOwnId)
@@ -109,10 +102,7 @@ class MovieAdminResourceTest {
     @Test
     void shouldAllowUserToDeleteMovies() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("ADMIN")
-                .build();
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN");
         UUID movieId = UUID.randomUUID();
 
         //when
@@ -137,10 +127,7 @@ class MovieAdminResourceTest {
                 .yearProduced(2010)
                 .build());
 
-        UserProfile userProfile = ImmutableUserProfile.builder()
-                .id(UUID.randomUUID())
-                .authority("USER")
-                .build();
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "USER");
 
         //when
         mockMvc.perform(put("/user/movie")
