@@ -1,10 +1,9 @@
 package com.gt.scr.movie.test.steps;
 
 import com.gt.scr.movie.test.config.ScenarioContext;
-import com.gt.scr.movie.test.domain.ImmutableTestMovieCreateRequestDTO;
-import com.gt.scr.movie.test.domain.ImmutableTestMovieUpdateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieDTO;
+import com.gt.scr.movie.test.domain.TestMovieUpdateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMoviesDTO;
 import com.gt.scr.movie.test.resource.ResponseHolder;
 import com.gt.scr.movie.test.resource.TestMovieResource;
@@ -58,11 +57,9 @@ public class MovieSteps implements En {
             var movies = testMoviesDTO.movies();
             assertThat(movies).isNotEmpty();
 
-            List<TestMovieCreateRequestDTO> actual = movies.stream().map(mv -> ImmutableTestMovieCreateRequestDTO.builder()
-                    .name(mv.name())
-                    .rating(mv.rating())
-                    .yearProduced(mv.yearProduced())
-                    .build()).collect(Collectors.toList());
+            List<TestMovieCreateRequestDTO> actual = movies.stream().map(mv ->
+                    new TestMovieCreateRequestDTO(mv.name(), mv.yearProduced(), mv.rating()))
+                    .collect(Collectors.toList());
 
 
             assertThat(actual).hasSameElementsAs(movieCreateRequestDTOS);
@@ -95,12 +92,11 @@ public class MovieSteps implements En {
                             .findFirst().map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
 
                     var updateRequestDTO =
-                            ImmutableTestMovieUpdateRequestDTO.builder()
-                                    .name(testMovieCreateRequestDTO.name())
-                                    .rating(testMovieCreateRequestDTO.rating())
-                                    .yearProduced(testMovieCreateRequestDTO.yearProduced())
-                                    .id(uuid)
-                                    .build();
+                            new TestMovieUpdateRequestDTO(
+                                    uuid, testMovieCreateRequestDTO.name(),
+                                    testMovieCreateRequestDTO.rating(),
+                                    testMovieCreateRequestDTO.yearProduced()
+                            );
 
                     testMovieResource.updateMovie(updateRequestDTO);
                 });
@@ -115,11 +111,7 @@ public class MovieSteps implements En {
                             .filter(mv -> fromMovieName.equals(mv.name()))
                             .findFirst().orElseThrow(IllegalStateException::new);
 
-                    var updateRequestDTO =
-                            ImmutableTestMovieUpdateRequestDTO.builder()
-                                    .name(toMovieName)
-                                    .id(testMovieDTO.id())
-                                    .build();
+                    var updateRequestDTO = new TestMovieUpdateRequestDTO(testMovieDTO.id(), toMovieName);
 
                     testMovieResource.updateMovie(updateRequestDTO);
                 });
@@ -165,12 +157,9 @@ public class MovieSteps implements En {
                             .map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
 
                     var updateRequestDTO =
-                            ImmutableTestMovieUpdateRequestDTO.builder()
-                                    .name(testMovieCreateRequestDTO.name())
-                                    .yearProduced(testMovieCreateRequestDTO.yearProduced())
-                                    .rating(testMovieCreateRequestDTO.rating())
-                                    .id(uuid)
-                                    .build();
+                            new TestMovieUpdateRequestDTO(uuid, testMovieCreateRequestDTO.name(),
+                                    testMovieCreateRequestDTO.rating(),
+                                    testMovieCreateRequestDTO.yearProduced());
 
                     testMovieResource.updateMovie(updateRequestDTO, regularUserId);
                 });
