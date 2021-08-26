@@ -1,8 +1,8 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.movie.resource.domain.ImmutableMovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableMovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
+import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
@@ -47,11 +47,8 @@ class MovieAdminResourceTest {
     @Test
     void shouldAllowAdminToCreateMovies() throws Exception {
         UUID requestedUserId = UUID.randomUUID();
-        String content = TestUtils.asJsonString(ImmutableMovieCreateRequestDTO.builder()
-                .name(randomAlphabetic(6))
-                .rating(BigDecimal.valueOf(10))
-                .yearProduced(2010)
-                .build());
+        String content = TestUtils.asJsonString(new MovieCreateRequestDTO(randomAlphabetic(6),
+                2010, BigDecimal.valueOf(10)));
 
         UserProfile userProfile = ImmutableUserProfile.builder()
                 .id(UUID.randomUUID())
