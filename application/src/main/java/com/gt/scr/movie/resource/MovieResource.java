@@ -6,7 +6,6 @@ import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,13 +34,11 @@ public class MovieResource {
     public ResponseEntity<Void> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
                                             @RequestAttribute("userProfile") UserProfile userProfile,
                                             @RequestParam(value = "userId", required = false) String userId) {
-        Movie movie = ImmutableMovie.builder()
-                .id(UUID.randomUUID())
-                .name(movieCreateRequestDTO.name())
-                .rating(movieCreateRequestDTO.rating())
-                .yearProduced(movieCreateRequestDTO.yearProduced())
-                .creationTimeStamp(System.nanoTime())
-                .build();
+        Movie movie = new Movie(UUID.randomUUID(),
+                movieCreateRequestDTO.name(),
+                movieCreateRequestDTO.yearProduced(),
+                movieCreateRequestDTO.rating(),
+                System.nanoTime());
 
         movieService.addMovie(determineUserId(userId, userProfile.id()), movie);
         return ResponseEntity.noContent().build();
@@ -72,12 +69,11 @@ public class MovieResource {
             produces = "application/vnd.movie.update.v1+json")
     public ResponseEntity<Void> updateMovie(@RequestBody MovieUpdateRequestDTO movieUpdateRequestDTO) {
 
-        Movie movie = ImmutableMovie.builder()
-                .id(movieUpdateRequestDTO.id())
-                .rating(movieUpdateRequestDTO.rating())
-                .name(movieUpdateRequestDTO.name())
-                .yearProduced(movieUpdateRequestDTO.yearProduced())
-                .build();
+        Movie movie = new Movie(movieUpdateRequestDTO.id(),
+                movieUpdateRequestDTO.name(),
+                movieUpdateRequestDTO.yearProduced(),
+                movieUpdateRequestDTO.rating(),
+                System.nanoTime());
 
         movieService.updateMovie(movie);
 

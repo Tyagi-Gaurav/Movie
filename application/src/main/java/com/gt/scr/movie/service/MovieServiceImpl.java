@@ -2,7 +2,6 @@ package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +39,12 @@ public class MovieServiceImpl implements MovieService {
         Optional<Movie> oldMovie = movieRepository.findMovieBy(movie.id());
 
         oldMovie.ifPresent(om -> {
-            Movie newMovieToUpdate = ImmutableMovie.copyOf(om)
-                    .withName(StringUtils.isBlank(movie.name()) ? om.name() : movie.name())
-                    .withYearProduced(movie.yearProduced() == 0 ? om.yearProduced() : movie.yearProduced())
-                    .withRating(movie.rating() == null || movie.rating().equals(BigDecimal.ZERO) ? om.rating() : movie.rating());
+            Movie newMovieToUpdate =
+                    new Movie(om.id(),
+                            StringUtils.isBlank(movie.name()) ? om.name() : movie.name(),
+                            movie.yearProduced() == 0 ? om.yearProduced() : movie.yearProduced(),
+                            movie.rating() == null || movie.rating().equals(BigDecimal.ZERO) ? om.rating() : movie.rating(),
+                            om.creationTimeStamp());
 
             movieRepository.update(newMovieToUpdate);
         });
