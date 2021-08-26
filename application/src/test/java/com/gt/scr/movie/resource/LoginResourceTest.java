@@ -7,8 +7,8 @@ import com.gt.scr.movie.exception.ErrorResponseHelper;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import com.gt.scr.movie.service.domain.User;
-import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.util.TestUtils;
+import com.gt.scr.movie.util.UserBuilder;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +82,7 @@ class LoginResourceTest {
         loginRequestDTO = new LoginRequestDTO(RandomStringUtils.random(8),
                 RandomStringUtils.random(8));
 
-        user = TestBuilders.aUser();
+        user = UserBuilder.aUser().build();
         when(authentication.getPrincipal()).thenReturn(user);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))

@@ -1,8 +1,8 @@
 package com.gt.scr.movie.filter;
 
-import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.movie.util.UserBuilder;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-import static java.util.Optional.of;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -70,7 +69,7 @@ class AuthenticationFilterTest {
     @Test
     void shouldAuthenticateValidUser() throws ServletException, IOException {
         //given
-        User user = TestBuilders.aUser();
+        User user = UserBuilder.aUser().build();
         when(httpServletRequest.getHeader("Authorization")).thenReturn(token);
         when(userService.findUserBy(UUID.fromString(userId))).thenReturn(user);
         when(jwtTokenUtil.validateToken(user)).thenReturn(true);

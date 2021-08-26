@@ -2,7 +2,6 @@ package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +28,12 @@ public class AccountCreateResource {
             consumes = {"application/vnd+account.create.v1+json"},
             produces = {"application/vnd+account.create.v1+json"})
     public ResponseEntity<Void> createAccount(@Valid @RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
-        User user = ImmutableUser.builder()
-                .id(UUID.randomUUID())
-                .username(accountCreateRequestDTO.userName())
-                .password(passwordEncoder.encode(accountCreateRequestDTO.password()))
-                .firstName(accountCreateRequestDTO.firstName())
-                .lastName(accountCreateRequestDTO.lastName())
-                .authorities(Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())))
-                .build();
+        User user = new User(UUID.randomUUID(),
+                accountCreateRequestDTO.firstName(),
+                accountCreateRequestDTO.lastName(),
+                accountCreateRequestDTO.userName(),
+                passwordEncoder.encode(accountCreateRequestDTO.password()),
+                Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())));
 
         userService.add(user);
 

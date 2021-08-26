@@ -3,40 +3,46 @@ package com.gt.scr.movie.service.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.immutables.serial.Serial;
-import org.immutables.value.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.UUID;
 
-@Value.Immutable
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonDeserialize(builder = ImmutableUser.Builder.class)
-@Serial.Structural
-public interface User extends UserDetails {
-    int serialVersionUID = 1;
+@JsonDeserialize
+public record User(UUID id,
+                   String firstName,
+                   String lastName,
+                   String username,
+                   String password,
+                   Collection<GrantedAuthority> authorities) implements UserDetails {
 
-    UUID id();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
 
-    String firstName();
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
 
-    String lastName();
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
 
-    @Value.Default
-    default boolean isAccountNonExpired() { return true;}
+    public boolean isAccountNonExpired() { return true;}
 
-    @Value.Default
-    default boolean isAccountNonLocked() { return true;}
+    public boolean isAccountNonLocked() { return true;}
 
-    @Value.Default
-    default boolean isCredentialsNonExpired() {return true;}
+    public boolean isCredentialsNonExpired() {return true;}
 
-    @Value.Default
-    default boolean isEnabled() {return true;}
+    public boolean isEnabled() {return true;}
 
-    default String getRole() {
+    public String getRole() {
         return getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElseGet(() -> "");
     }
 }

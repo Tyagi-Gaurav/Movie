@@ -7,8 +7,8 @@ import com.gt.scr.movie.resource.domain.UserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
-import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.util.TestUtils;
+import com.gt.scr.movie.util.UserBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,7 +79,7 @@ class UserManagementResourceTest {
     @Test
     void shouldAllowAdminToReadAllUsers() throws Exception {
         //given
-        User user = TestBuilders.aUser();
+        User user = UserBuilder.aUser().build();
         given(userService.getAllUsers()).willReturn(Collections.singletonList(user));
 
         //when

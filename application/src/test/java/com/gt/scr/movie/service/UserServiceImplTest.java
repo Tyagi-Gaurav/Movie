@@ -3,7 +3,6 @@ package com.gt.scr.movie.service;
 import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.User;
-import com.gt.scr.movie.util.TestBuilders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +30,7 @@ class UserServiceImplTest {
 
     @Test
     void shouldAddUser() {
-        User user = TestBuilders.aUser();
+        User user = aUser().build();
         when(repository.findUserBy(user.getUsername())).thenReturn(empty());
 
         //when
@@ -42,7 +42,7 @@ class UserServiceImplTest {
 
     @Test
     void shouldDeleteUser() {
-        User user = TestBuilders.aUser();
+        User user = aUser().build();
 
         //when
         userService.deleteUser(user.id());
@@ -75,7 +75,7 @@ class UserServiceImplTest {
 
     @Test
     void shouldUpdateUser() {
-        User user = TestBuilders.aUser();
+        User user = aUser().build();
 
         //when
         userService.update(user);
@@ -87,8 +87,8 @@ class UserServiceImplTest {
     @Test
     void shouldThrowExceptionWhenTryingToAddDuplicateUser() {
         //given
-        User userA = TestBuilders.aUser();
-        User userB = TestBuilders.aUserWithUserName(userA.getUsername());
+        User userA = aUser().build();
+        User userB = aUser().withUserName(userA.getUsername()).build();
         when(repository.findUserBy(userA.getUsername())).thenReturn(Optional.empty()).thenReturn(of(userA));
         userService.add(userA);
 

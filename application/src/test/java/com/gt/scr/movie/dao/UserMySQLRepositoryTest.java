@@ -2,9 +2,8 @@ package com.gt.scr.movie.dao;
 
 import com.gt.scr.movie.config.DatabaseConfig;
 import com.gt.scr.movie.config.ModifiableDatabaseConfig;
-import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
-import com.gt.scr.movie.util.TestBuilders;
+import com.gt.scr.movie.util.UserBuilder;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +31,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.gt.scr.movie.util.TestUtils.addToDatabase;
+import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.when;
@@ -68,7 +68,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldFindUserByUserId() throws SQLException {
         //given
-        User expectedUser = TestBuilders.aUser();
+        User expectedUser = aUser().build();
         addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
@@ -81,7 +81,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldReturnEmptyUserWhenNoUserFoundByUserId() {
         //given
-        User expectedUser = TestBuilders.aUser();
+        User expectedUser = aUser().build();
 
         //when
         Optional<User> user = userRepository.findUserBy(expectedUser.id());
@@ -93,7 +93,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenFindUserByIdFails() throws SQLException {
         //given
-        User expectedUser = TestBuilders.aUser();
+        User expectedUser = aUser().build();
         addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
@@ -108,7 +108,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldFindUserByUserName() throws SQLException {
         //given
-        User expectedUser = TestBuilders.aUser();
+        User expectedUser = aUser().build();
         addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
@@ -121,7 +121,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenFindUserByUserNameFails() throws SQLException {
         //given
-        User expectedUser = TestBuilders.aUser();
+        User expectedUser = aUser().build();
         addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
@@ -137,7 +137,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldReturnEmptyUserWhenNoUserFoundByUserName() {
         //given
-        User expectedUser = TestBuilders.aUser();
+        User expectedUser = aUser().build();
 
         //when
         Optional<User> user = userRepository.findUserBy(expectedUser.getUsername());
@@ -149,9 +149,9 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldGetAllUsers() throws SQLException {
         //given
-        User expectedUserA = TestBuilders.aUser();
+        User expectedUserA = aUser().build();
         addToDatabase(expectedUserA, dataSource, ADD_USER);
-        User expectedUserB = TestBuilders.aUser();
+        User expectedUserB = aUser().build();
         addToDatabase(expectedUserB, dataSource, ADD_USER);
 
         //when
@@ -164,9 +164,9 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenGetAllUsersFails() throws SQLException {
         //given
-        User expectedUserA = TestBuilders.aUser();
+        User expectedUserA = aUser().build();
         addToDatabase(expectedUserA, dataSource, ADD_USER);
-        User expectedUserB = TestBuilders.aUser();
+        User expectedUserB = aUser().build();
         addToDatabase(expectedUserB, dataSource, ADD_USER);
 
         //when
@@ -189,7 +189,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldDeleteUser() throws SQLException {
         //given
-        User currentUser = TestBuilders.aUser();
+        User currentUser = aUser().build();
         addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
@@ -202,7 +202,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenDeleteUserFails() throws SQLException {
         //given
-        User currentUser = TestBuilders.aUser();
+        User currentUser = aUser().build();
         addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
@@ -217,11 +217,11 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldUpdateUser() throws SQLException {
         //given
-        User currentUser = TestBuilders.aUser();
+        User currentUser = aUser().build();
         addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
-        ImmutableUser updatedUser = ImmutableUser.copyOf(currentUser).withFirstName("test");
+        User updatedUser = UserBuilder.copyOf(currentUser).withFirstName("test").build();
         userRepository.update(updatedUser);
 
         //then
@@ -233,11 +233,11 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenUpdateUserFails() throws SQLException {
         //given
-        User currentUser = TestBuilders.aUser();
+        User currentUser = aUser().build();
         addToDatabase(currentUser, dataSource, ADD_USER);
 
         //when
-        ImmutableUser updatedUser = ImmutableUser.copyOf(currentUser).withFirstName("test");
+        User updatedUser = UserBuilder.copyOf(currentUser).withFirstName("test").build();
         DatabaseException databaseException =
                 catchThrowableOfType(() -> buggyUserRepository.update(updatedUser), DatabaseException.class);
 
@@ -248,7 +248,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldCreateUser() throws SQLException {
         //given
-        User currentUser = TestBuilders.aUser();
+        User currentUser = aUser().build();
 
         //when
         userRepository.create(currentUser);
@@ -261,7 +261,7 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenCreateUserFails() {
         //given
-        User currentUser = TestBuilders.aUser();
+        User currentUser = aUser().build();
 
         //when
         DatabaseException databaseException =
@@ -279,16 +279,17 @@ class UserMySQLRepositoryTest {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return Optional.of(ImmutableUser.builder()
-                        .id(UUID.fromString(resultSet.getString("ID")))
-                        .username(resultSet.getString("USER_NAME"))
-                        .firstName(resultSet.getString("FIRST_NAME"))
-                        .lastName(resultSet.getString("LAST_NAME"))
-                        .password(resultSet.getString("PASSWORD"))
-                        .authorities(Arrays.stream(resultSet.getString("ROLES").split(","))
-                                .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList()))
-                        .build());
+                return Optional.of(
+                                new User(
+                                        UUID.fromString(resultSet.getString("ID")),
+                                        resultSet.getString("FIRST_NAME"),
+                                        resultSet.getString("LAST_NAME"),
+                                        resultSet.getString("USER_NAME"),
+                                        resultSet.getString("PASSWORD"),
+                                        Arrays.stream(resultSet.getString("ROLES").split(","))
+                                                .map(SimpleGrantedAuthority::new)
+                                                .collect(Collectors.toList())
+                                ));
             }
 
             resultSet.close();

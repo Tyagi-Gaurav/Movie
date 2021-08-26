@@ -1,6 +1,5 @@
 package com.gt.scr.movie.dao;
 
-import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,16 +41,7 @@ public class UserMySQLRepository implements UserRepository {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return of(ImmutableUser.builder()
-                            .id(UUID.fromString(resultSet.getString("ID")))
-                            .username(resultSet.getString(USER_NAME))
-                            .firstName(resultSet.getString(FIRST_NAME))
-                            .lastName(resultSet.getString(LAST_NAME))
-                            .password(resultSet.getString(PASSWORD))
-                            .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
-                                    .map(SimpleGrantedAuthority::new)
-                                    .collect(Collectors.toList()))
-                            .build());
+                    return of(getUserFrom(resultSet));
                 } else {
                     return empty();
                 }
@@ -69,16 +60,7 @@ public class UserMySQLRepository implements UserRepository {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return of(ImmutableUser.builder()
-                            .id(UUID.fromString(resultSet.getString("ID")))
-                            .username(resultSet.getString(USER_NAME))
-                            .firstName(resultSet.getString(FIRST_NAME))
-                            .lastName(resultSet.getString(LAST_NAME))
-                            .password(resultSet.getString(PASSWORD))
-                            .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
-                                    .map(SimpleGrantedAuthority::new)
-                                    .collect(Collectors.toList()))
-                            .build());
+                    return of(getUserFrom(resultSet));
                 } else {
                     return empty();
                 }
@@ -97,16 +79,7 @@ public class UserMySQLRepository implements UserRepository {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 List<User> users = new ArrayList<>();
                 while (resultSet.next()) {
-                    users.add(ImmutableUser.builder()
-                            .id(UUID.fromString(resultSet.getString("ID")))
-                            .username(resultSet.getString(USER_NAME))
-                            .firstName(resultSet.getString(FIRST_NAME))
-                            .lastName(resultSet.getString(LAST_NAME))
-                            .password(resultSet.getString(PASSWORD))
-                            .authorities(Arrays.stream(resultSet.getString(ROLES).split(","))
-                                    .map(SimpleGrantedAuthority::new)
-                                    .collect(Collectors.toList()))
-                            .build());
+                    users.add(getUserFrom(resultSet));
                 }
 
                 return users;
@@ -168,5 +141,15 @@ public class UserMySQLRepository implements UserRepository {
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
         }
+    }
+
+    public User getUserFrom(ResultSet resultSet) throws SQLException {
+        return new User(UUID.fromString(resultSet.getString("ID")),
+                resultSet.getString(FIRST_NAME),
+                resultSet.getString(LAST_NAME),
+                resultSet.getString(USER_NAME),
+                resultSet.getString(PASSWORD),
+                Arrays.stream(resultSet.getString(ROLES).split(","))
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
 }
