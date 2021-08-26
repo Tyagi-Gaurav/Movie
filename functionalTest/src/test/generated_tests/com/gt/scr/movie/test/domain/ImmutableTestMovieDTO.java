@@ -121,10 +121,10 @@ public final class ImmutableTestMovieDTO implements TestMovieDTO {
   public boolean equals(Object another) {
     if (this == another) return true;
     return another instanceof ImmutableTestMovieDTO
-        && equalTo((ImmutableTestMovieDTO) another);
+        && equalTo(0, (ImmutableTestMovieDTO) another);
   }
 
-  private boolean equalTo(ImmutableTestMovieDTO another) {
+  private boolean equalTo(int synthetic, ImmutableTestMovieDTO another) {
     return id.equals(another.id)
         && name.equals(another.name)
         && rating.equals(another.rating)

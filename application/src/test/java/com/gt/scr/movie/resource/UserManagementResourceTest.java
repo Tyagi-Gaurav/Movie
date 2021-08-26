@@ -2,7 +2,6 @@ package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableAccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableAccountUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.ImmutableUserProfile;
 import com.gt.scr.movie.resource.domain.UserDetailsResponse;
@@ -61,13 +60,13 @@ class UserManagementResourceTest {
 
     @Test
     void shouldAllowAdminToCreateUser() throws Exception {
-        AccountCreateRequestDTO requestDTO = ImmutableAccountCreateRequestDTO.builder()
-                .role("USER")
-                .userName(RandomStringUtils.randomAlphabetic(10))
-                .password(RandomStringUtils.randomAlphabetic(10))
-                .firstName("sdfsdfx")
-                .lastName("bsdfsdf")
-                .build();
+        AccountCreateRequestDTO requestDTO = new AccountCreateRequestDTO(
+                RandomStringUtils.randomAlphabetic(10),
+                RandomStringUtils.randomAlphabetic(10),
+                "sdfsdfx",
+                "bsdfsdf",
+                "USER");
+
         String content = TestUtils.asJsonString(requestDTO);
 
         //when

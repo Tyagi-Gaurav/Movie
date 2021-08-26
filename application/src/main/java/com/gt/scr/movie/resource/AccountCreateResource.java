@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class AccountCreateResource {
     @PostMapping(path = "/user/account/create",
             consumes = {"application/vnd+account.create.v1+json"},
             produces = {"application/vnd+account.create.v1+json"})
-    public ResponseEntity<Void> createAccount(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
+    public ResponseEntity<Void> createAccount(@Valid @RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
         User user = ImmutableUser.builder()
                 .id(UUID.randomUUID())
                 .username(accountCreateRequestDTO.userName())

@@ -231,10 +231,10 @@ public final class ImmutableTestMovieUpdateRequestDTO
   public boolean equals(Object another) {
     if (this == another) return true;
     return another instanceof ImmutableTestMovieUpdateRequestDTO
-        && equalTo((ImmutableTestMovieUpdateRequestDTO) another);
+        && equalTo(0, (ImmutableTestMovieUpdateRequestDTO) another);
   }
 
-  private boolean equalTo(ImmutableTestMovieUpdateRequestDTO another) {
+  private boolean equalTo(int synthetic, ImmutableTestMovieUpdateRequestDTO another) {
     return id.equals(another.id)
         && name.equals(another.name)
         && rating.equals(another.rating)

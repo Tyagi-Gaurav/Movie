@@ -25,7 +25,6 @@ ext {
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.16.0'
     mockitoVersion = '3.11.2'
-    validationApiVersion = '2.0.1.Final'
 }
 
 repositories {
@@ -64,7 +63,7 @@ processResources {
         include '**/*.properties'
     }
 
-    duplicatesStrategy = "include"
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 dependencies {
@@ -73,6 +72,7 @@ dependencies {
     }
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
     implementation("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}") {
         exclude group: "org.slf4j", module:"slf4j-api"
     }
@@ -98,7 +98,7 @@ dependencies {
     implementation "mysql:mysql-connector-java:${mysqlVersion}"
     implementation "com.mchange:c3p0:${c3p0Version}"
     implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-    implementation "javax.validation:validation-api:$validationApiVersion"
+
     //Immutables
     implementation "org.immutables:value-annotations:${immutablesVersion}"
     implementation "org.immutables:value:${immutablesVersion}"
@@ -126,8 +126,8 @@ test {
     finalizedBy jacocoTestReport
 
     jacoco {
-        excludes = ['com/toptal/scr/tz/Application.class',
-                    'com/toptal/scr/tz/Grace**']
+        excludes = ['com/gt/scr/movie/Application.class',
+                    'com/gt/scr/movie/Grace**']
     }
 }
 
