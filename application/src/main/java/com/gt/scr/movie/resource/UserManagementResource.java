@@ -6,7 +6,6 @@ import com.gt.scr.movie.resource.domain.UserDetailsResponse;
 import com.gt.scr.movie.resource.domain.UserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.ImmutableUser;
 import com.gt.scr.movie.service.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,14 +37,12 @@ public class UserManagementResource {
     @PostMapping(consumes = "application/vnd.user.add.v1+json",
             produces = "application/vnd.user.add.v1+json")
     public ResponseEntity<Void> createUser(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
-        User user = ImmutableUser.builder()
-                .id(UUID.randomUUID())
-                .username(accountCreateRequestDTO.userName())
-                .password(passwordEncoder.encode(accountCreateRequestDTO.password()))
-                .firstName(accountCreateRequestDTO.firstName())
-                .lastName(accountCreateRequestDTO.lastName())
-                .authorities(Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())))
-                .build();
+        User user = new User(UUID.randomUUID(),
+                accountCreateRequestDTO.firstName(),
+                accountCreateRequestDTO.lastName(),
+                accountCreateRequestDTO.userName(),
+                passwordEncoder.encode(accountCreateRequestDTO.password()),
+                Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())));
 
         userService.add(user);
 
@@ -81,14 +78,12 @@ public class UserManagementResource {
     public ResponseEntity<Void> updateUser(@RequestParam("userId") UUID userId,
                                            @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
 
-        User user = ImmutableUser.builder()
-                .id(userId)
-                .username(accountUpdateRequestDTO.userName())
-                .password(passwordEncoder.encode(accountUpdateRequestDTO.password()))
-                .firstName(accountUpdateRequestDTO.firstName())
-                .lastName(accountUpdateRequestDTO.lastName())
-                .authorities(Collections.singletonList(new SimpleGrantedAuthority(accountUpdateRequestDTO.role())))
-                .build();
+        User user = new User(userId,
+                accountUpdateRequestDTO.firstName(),
+                accountUpdateRequestDTO.lastName(),
+                accountUpdateRequestDTO.userName(),
+                passwordEncoder.encode(accountUpdateRequestDTO.password()),
+                Collections.singletonList(new SimpleGrantedAuthority(accountUpdateRequestDTO.role())));
 
         userService.update(user);
 
