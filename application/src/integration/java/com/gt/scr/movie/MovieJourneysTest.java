@@ -29,11 +29,11 @@ public class MovieJourneysTest {
         AccountCreateRequestDTO adminAccountCreateRequestDTO =
                 TestObjectBuilder.adminAccountCreateRequest();
         LoginRequestDTO adminLoginRequestDTO =
-                TestObjectBuilder.loginRequestUsing(adminAccountCreateRequestDTO).build();
+                TestObjectBuilder.loginRequestUsing(adminAccountCreateRequestDTO);
         AccountCreateRequestDTO userAccountCreateRequestDTO =
                 TestObjectBuilder.userAccountCreateRequestDTO();
         LoginRequestDTO userLoginRequestDTO =
-                TestObjectBuilder.loginRequestUsing(userAccountCreateRequestDTO).build();
+                TestObjectBuilder.loginRequestUsing(userAccountCreateRequestDTO);
 
         MovieCreateRequestDTO movieCreateRequestDTO =
                 TestObjectBuilder.movieCreateRequestDTO().build();

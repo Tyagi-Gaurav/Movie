@@ -43,7 +43,7 @@ public class UserJourneysTest {
     public void createUserAndLoginTest() {
         AccountCreateRequestDTO accountCreateRequestDTO =
                 TestObjectBuilder.userAccountCreateRequestDTO();
-        LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO).build();
+        LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO);
         scenarioExecutor
                 .when().userIsCreatedWith(accountCreateRequestDTO)
                 .then().statusIs(204)

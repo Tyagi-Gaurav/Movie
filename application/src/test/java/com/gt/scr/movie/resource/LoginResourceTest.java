@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.movie.config.AuthConfig;
 import com.gt.scr.movie.exception.ApplicationAuthenticationExceptionHandler;
 import com.gt.scr.movie.exception.ErrorResponseHelper;
-import com.gt.scr.movie.resource.domain.ImmutableLoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import com.gt.scr.movie.service.domain.User;
@@ -80,9 +79,8 @@ class LoginResourceTest {
 
     @BeforeEach
     void setUp() {
-        loginRequestDTO = ImmutableLoginRequestDTO.builder()
-                .userName(RandomStringUtils.random(8))
-                .password(RandomStringUtils.random(8)).build();
+        loginRequestDTO = new LoginRequestDTO(RandomStringUtils.random(8),
+                RandomStringUtils.random(8));
 
         user = TestBuilders.aUser();
         when(authentication.getPrincipal()).thenReturn(user);
