@@ -2,19 +2,11 @@ package com.gt.scr.movie.resource.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.immutables.value.Value;
 
-@Value.Immutable
 @JsonSerialize
-@JsonDeserialize(builder = ImmutableAccountUpdateRequestDTO.Builder.class)
-public interface AccountUpdateRequestDTO {
-    String userName();
-
-    String password();
-
-    String firstName();
-
-    String lastName();
-
-    String role();
-}
+@JsonDeserialize
+public record AccountUpdateRequestDTO(String userName,
+                                      String password,
+                                      String firstName,
+                                      String lastName,
+                                      String role) { }

@@ -2,7 +2,6 @@ package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableAccountUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.UserDetailsResponse;
 import com.gt.scr.movie.resource.domain.UserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
@@ -10,7 +9,6 @@ import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.TestBuilders;
 import com.gt.scr.movie.util.TestUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -60,8 +59,8 @@ class UserManagementResourceTest {
     @Test
     void shouldAllowAdminToCreateUser() throws Exception {
         AccountCreateRequestDTO requestDTO = new AccountCreateRequestDTO(
-                RandomStringUtils.randomAlphabetic(10),
-                RandomStringUtils.randomAlphabetic(10),
+                randomAlphabetic(10),
+                randomAlphabetic(10),
                 "sdfsdfx",
                 "bsdfsdf",
                 "USER");
@@ -135,19 +134,14 @@ class UserManagementResourceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
     void shouldAllowAdminToUpdateAUser() throws Exception {
         UUID userIdToUpdate = UUID.randomUUID();
-        AccountUpdateRequestDTO requestDTO = ImmutableAccountUpdateRequestDTO.builder()
-                .role("user")
-                .userName(RandomStringUtils.randomAlphabetic(10))
-                .password(RandomStringUtils.randomAlphabetic(10))
-                .firstName("x")
-                .lastName("b")
-                .build();
+        AccountUpdateRequestDTO requestDTO = new AccountUpdateRequestDTO(randomAlphabetic(10),
+                randomAlphabetic(10), "x", "b", "user");
         String content = TestUtils.asJsonString(requestDTO);
 
         //when
