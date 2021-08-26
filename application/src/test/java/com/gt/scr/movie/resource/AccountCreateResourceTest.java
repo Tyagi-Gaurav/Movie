@@ -1,7 +1,6 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableAccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.TestUtils;
@@ -45,13 +44,13 @@ class AccountCreateResourceTest {
 
     @BeforeEach
     void setUp() {
-        requestDTO = ImmutableAccountCreateRequestDTO.builder()
-                .role("USER")
-                .userName(RandomStringUtils.randomAlphabetic(10))
-                .password(RandomStringUtils.randomAlphabetic(10))
-                .firstName("xsdfdsf")
-                .lastName("bsdafdsf")
-                .build();
+        requestDTO = new AccountCreateRequestDTO(
+                RandomStringUtils.randomAlphabetic(10),
+                RandomStringUtils.randomAlphabetic(10),
+                "xsdfdsf",
+                "bsdafdsf",
+                "USER"
+        );
 
         when(passwordEncoder.encode(anyString())).thenReturn(String.valueOf(AdditionalAnswers.returnsFirstArg()));
     }

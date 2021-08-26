@@ -12,12 +12,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,6 +83,13 @@ class SystemExceptionHandlerTest {
         assertThat(testErrorResponse.message()).isEqualTo("Unexpected error occurred");
     }
 
+    @Test
+    void shouldHandleOtherCustomException() throws Exception {
+        mvc.perform(get("/exception/throw/methodArgumentNotValid")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
     @ControllerAdvice
     @RestController
     @Profile("ExceptionHandlerTest")
@@ -92,6 +102,13 @@ class SystemExceptionHandlerTest {
         @GetMapping("/exception/throw")
         public void getException() throws Exception {
             throw new Exception();
+        }
+
+        @GetMapping("/exception/throw/methodArgumentNotValid")
+        public void methodArgumentNotValidException() throws Exception {
+            throw new MethodArgumentNotValidException(
+                    new MethodParameter(TestRuntimeExceptionSource.class.getMethod("methodArgumentNotValidException"), -1),
+                    new BeanPropertyBindingResult(new TestRuntimeExceptionSource(), ""));
         }
     }
 }

@@ -159,10 +159,10 @@ public final class ImmutableTestAccountCreateRequestDTO
   public boolean equals(Object another) {
     if (this == another) return true;
     return another instanceof ImmutableTestAccountCreateRequestDTO
-        && equalTo((ImmutableTestAccountCreateRequestDTO) another);
+        && equalTo(0, (ImmutableTestAccountCreateRequestDTO) another);
   }
 
-  private boolean equalTo(ImmutableTestAccountCreateRequestDTO another) {
+  private boolean equalTo(int synthetic, ImmutableTestAccountCreateRequestDTO another) {
     return userName.equals(another.userName)
         && password.equals(another.password)
         && firstName.equals(another.firstName)

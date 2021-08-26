@@ -2,11 +2,11 @@ package com.gt.scr.movie.test.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.immutables.value.Generated;
 
 /**
@@ -40,7 +40,7 @@ public final class ImmutableTestMoviesDTO implements TestMoviesDTO {
    * @return A modified copy of {@code this} object
    */
   public final ImmutableTestMoviesDTO withMovies(TestMovieDTO... elements) {
-    List<TestMovieDTO> newValue = createUnmodifiableList(false, createSafeList(Arrays.asList(elements), true, false));
+    List<TestMovieDTO> newValue = List.of(elements);
     return new ImmutableTestMoviesDTO(newValue);
   }
 
@@ -52,7 +52,10 @@ public final class ImmutableTestMoviesDTO implements TestMoviesDTO {
    */
   public final ImmutableTestMoviesDTO withMovies(Iterable<? extends TestMovieDTO> elements) {
     if (this.movies == elements) return this;
-    List<TestMovieDTO> newValue = createUnmodifiableList(false, createSafeList(elements, true, false));
+    List<TestMovieDTO> newValue = elements instanceof Collection<?>
+        ? List.copyOf((Collection<? extends TestMovieDTO>) elements)
+        : StreamSupport.stream(elements.spliterator(), false)
+            .collect(Collectors.toUnmodifiableList());
     return new ImmutableTestMoviesDTO(newValue);
   }
 
@@ -64,10 +67,10 @@ public final class ImmutableTestMoviesDTO implements TestMoviesDTO {
   public boolean equals(Object another) {
     if (this == another) return true;
     return another instanceof ImmutableTestMoviesDTO
-        && equalTo((ImmutableTestMoviesDTO) another);
+        && equalTo(0, (ImmutableTestMoviesDTO) another);
   }
 
-  private boolean equalTo(ImmutableTestMoviesDTO another) {
+  private boolean equalTo(int synthetic, ImmutableTestMoviesDTO another) {
     return movies.equals(another.movies);
   }
 
@@ -202,40 +205,7 @@ public final class ImmutableTestMoviesDTO implements TestMoviesDTO {
      * @throws java.lang.IllegalStateException if any required attributes are missing
      */
     public ImmutableTestMoviesDTO build() {
-      return new ImmutableTestMoviesDTO(createUnmodifiableList(true, movies));
-    }
-  }
-
-  private static <T> List<T> createSafeList(Iterable<? extends T> iterable, boolean checkNulls, boolean skipNulls) {
-    ArrayList<T> list;
-    if (iterable instanceof Collection<?>) {
-      int size = ((Collection<?>) iterable).size();
-      if (size == 0) return Collections.emptyList();
-      list = new ArrayList<>();
-    } else {
-      list = new ArrayList<>();
-    }
-    for (T element : iterable) {
-      if (skipNulls && element == null) continue;
-      if (checkNulls) Objects.requireNonNull(element, "element");
-      list.add(element);
-    }
-    return list;
-  }
-
-  private static <T> List<T> createUnmodifiableList(boolean clone, List<T> list) {
-    switch(list.size()) {
-    case 0: return Collections.emptyList();
-    case 1: return Collections.singletonList(list.get(0));
-    default:
-      if (clone) {
-        return Collections.unmodifiableList(new ArrayList<>(list));
-      } else {
-        if (list instanceof ArrayList<?>) {
-          ((ArrayList<?>) list).trimToSize();
-        }
-        return Collections.unmodifiableList(list);
-      }
+      return new ImmutableTestMoviesDTO(List.copyOf(movies));
     }
   }
 }

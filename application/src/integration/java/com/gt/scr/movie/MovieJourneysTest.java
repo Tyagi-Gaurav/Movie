@@ -27,11 +27,11 @@ public class MovieJourneysTest {
     @Test
     void deletingUserShouldDeleteUserMovies() {
         AccountCreateRequestDTO adminAccountCreateRequestDTO =
-                TestObjectBuilder.accountCreateRequestDTO().role("ADMIN").build();
+                TestObjectBuilder.adminAccountCreateRequest();
         LoginRequestDTO adminLoginRequestDTO =
                 TestObjectBuilder.loginRequestUsing(adminAccountCreateRequestDTO).build();
         AccountCreateRequestDTO userAccountCreateRequestDTO =
-                TestObjectBuilder.accountCreateRequestDTO().build();
+                TestObjectBuilder.userAccountCreateRequestDTO();
         LoginRequestDTO userLoginRequestDTO =
                 TestObjectBuilder.loginRequestUsing(userAccountCreateRequestDTO).build();
 

@@ -74,10 +74,10 @@ public final class ImmutableTestLoginResponseDTO implements TestLoginResponseDTO
   public boolean equals(Object another) {
     if (this == another) return true;
     return another instanceof ImmutableTestLoginResponseDTO
-        && equalTo((ImmutableTestLoginResponseDTO) another);
+        && equalTo(0, (ImmutableTestLoginResponseDTO) another);
   }
 
-  private boolean equalTo(ImmutableTestLoginResponseDTO another) {
+  private boolean equalTo(int synthetic, ImmutableTestLoginResponseDTO another) {
     return token.equals(another.token)
         && id.equals(another.id);
   }

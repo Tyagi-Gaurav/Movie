@@ -14,7 +14,7 @@ subprojects {
 
     sourceCompatibility = 1.11
     targetCompatibility = 1.11
-    group 'toptal.timezone'
+    group 'gt.movie'
 
     project.ext {
         springBootVersion = '2.5.3'

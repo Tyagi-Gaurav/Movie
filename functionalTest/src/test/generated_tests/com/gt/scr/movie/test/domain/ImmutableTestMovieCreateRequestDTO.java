@@ -98,10 +98,10 @@ public final class ImmutableTestMovieCreateRequestDTO
   public boolean equals(Object another) {
     if (this == another) return true;
     return another instanceof ImmutableTestMovieCreateRequestDTO
-        && equalTo((ImmutableTestMovieCreateRequestDTO) another);
+        && equalTo(0, (ImmutableTestMovieCreateRequestDTO) another);
   }
 
-  private boolean equalTo(ImmutableTestMovieCreateRequestDTO another) {
+  private boolean equalTo(int synthetic, ImmutableTestMovieCreateRequestDTO another) {
     return name.equals(another.name)
         && yearProduced == another.yearProduced
         && rating.equals(another.rating);

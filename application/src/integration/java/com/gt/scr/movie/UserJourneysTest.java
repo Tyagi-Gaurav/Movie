@@ -24,16 +24,25 @@ public class UserJourneysTest {
     @Test
     public void createUserTest() {
         AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.accountCreateRequestDTO().build();
+                TestObjectBuilder.userAccountCreateRequestDTO();
         scenarioExecutor
                 .when().userIsCreatedWith(accountCreateRequestDTO)
                 .then().statusIs(204);
     }
 
     @Test
+    public void createUserTestWithInvalidData() {
+        AccountCreateRequestDTO invalidAccountCreateRequest =
+                TestObjectBuilder.invalidUserAccountCreateRequestDTO();
+        scenarioExecutor
+                .when().userIsCreatedWith(invalidAccountCreateRequest)
+                .then().statusIs(400);
+    }
+
+    @Test
     public void createUserAndLoginTest() {
         AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.accountCreateRequestDTO().build();
+                TestObjectBuilder.userAccountCreateRequestDTO();
         LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO).build();
         scenarioExecutor
                 .when().userIsCreatedWith(accountCreateRequestDTO)
