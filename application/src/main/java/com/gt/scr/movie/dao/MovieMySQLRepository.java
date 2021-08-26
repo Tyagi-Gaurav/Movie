@@ -1,6 +1,5 @@
 package com.gt.scr.movie.dao;
 
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -140,12 +139,10 @@ public class MovieMySQLRepository implements MovieRepository {
     }
 
     private Movie extractMovieFrom(ResultSet resultSet) throws SQLException {
-        return ImmutableMovie.builder()
-                .id(UUID.fromString(resultSet.getString(ID)))
-                .name(resultSet.getString(NAME))
-                .yearProduced(resultSet.getInt(YEAR_PRODUCED))
-                .rating(resultSet.getBigDecimal(RATING).setScale(1, RoundingMode.UNNECESSARY))
-                .creationTimeStamp(resultSet.getLong(CREATION_TIMESTAMP))
-                .build();
+        return new Movie(UUID.fromString(resultSet.getString(ID)),
+                         resultSet.getString(NAME),
+                        resultSet.getInt(YEAR_PRODUCED),
+                        resultSet.getBigDecimal(RATING).setScale(1, RoundingMode.UNNECESSARY),
+                        resultSet.getLong(CREATION_TIMESTAMP));
     }
 }

@@ -6,7 +6,6 @@ import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.util.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -67,12 +66,8 @@ class MovieResourceTest {
         UUID id = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(id, "USER");
 
-        Movie expectedReturnObject = ImmutableMovie.builder()
-                .id(id)
-                .name(randomAlphabetic(5))
-                .yearProduced(2010)
-                .rating(BigDecimal.ONE)
-                .build();
+        var expectedReturnObject = new Movie(id, randomAlphabetic(5),
+                2010, BigDecimal.ONE, System.nanoTime());
 
         when(movieService.getMoviesFor(id)).thenReturn(List.of(expectedReturnObject));
 
@@ -115,7 +110,7 @@ class MovieResourceTest {
         String content = TestUtils.asJsonString(new MovieUpdateRequestDTO(UUID.randomUUID(),
                 randomAlphabetic(5), BigDecimal.ZERO, 2010));
 
-        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "USER");
+        var userProfile = new UserProfile(UUID.randomUUID(), "USER");
 
         //when
         mockMvc.perform(put("/user/movie")

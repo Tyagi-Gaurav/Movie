@@ -2,9 +2,8 @@ package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.util.TestBuilders;
+import com.gt.scr.movie.util.MovieBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.gt.scr.movie.util.MovieBuilder.aMovie;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.*;
@@ -36,7 +36,7 @@ class MovieServiceImplTest {
     void shouldAddMovie() {
         //given
         UUID userId = UUID.randomUUID();
-        Movie movie = TestBuilders.aMovie();
+        Movie movie = aMovie().build();
         when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Optional.empty());
 
         //when
@@ -50,7 +50,7 @@ class MovieServiceImplTest {
     void shouldNotAllowAddingDuplicateMovieWithAllValuesSame() {
         //given
         UUID userId = UUID.randomUUID();
-        Movie movie = TestBuilders.aMovie();
+        Movie movie = aMovie().build();
 
         when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(of(movie));
 
@@ -66,8 +66,8 @@ class MovieServiceImplTest {
     void shouldAllowAddingDuplicateMovieWithOnlyNameSameButDiferentYear() {
         //given
         UUID userId = UUID.randomUUID();
-        Movie movieA = TestBuilders.aMovie();
-        Movie remakeOfMovieA = ImmutableMovie.copyOf(movieA).withYearProduced(2021);
+        Movie movieA = aMovie().build();
+        Movie remakeOfMovieA = MovieBuilder.copyOf(movieA).withYearProduced(2021).build();
 
         when(movieRepository.findMovieBy(userId, movieA.name())).thenReturn(of(movieA));
 
@@ -83,8 +83,8 @@ class MovieServiceImplTest {
     void shouldRetrieveMovie() {
         //given
         UUID userId = UUID.randomUUID();
-        Movie aMovie = TestBuilders.aMovie();
-        Movie bMovie = TestBuilders.aMovie();
+        Movie aMovie = aMovie().build();
+        Movie bMovie = aMovie().build();
         when(movieRepository.getAllMoviesForUser(userId)).thenReturn(List.of(aMovie, bMovie));
 
         //when
@@ -97,7 +97,7 @@ class MovieServiceImplTest {
     @Test
     void shouldDeleteMovieForAUser() {
         //given
-        Movie movie = TestBuilders.aMovie();
+        Movie movie = aMovie().build();
 
         //when
         movieService.deleteMovie(movie.id());
@@ -109,8 +109,8 @@ class MovieServiceImplTest {
     @Test
     void shouldNotAllowUpdateCreationTimeStampForMovie() {
         //given
-        Movie movieOld = TestBuilders.aMovie();
-        Movie movieNew = ImmutableMovie.copyOf(movieOld).withCreationTimeStamp(System.nanoTime());
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withCreationTimeStamp(System.nanoTime()).build();
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
@@ -123,8 +123,8 @@ class MovieServiceImplTest {
     @Test
     void shouldNotAllowUpdateZeroRatingForMovie() {
         //given
-        Movie movieOld = TestBuilders.aMovie();
-        Movie movieNew = ImmutableMovie.copyOf(movieOld).withRating(BigDecimal.ZERO);
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withRating(BigDecimal.ZERO).build();
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
@@ -137,8 +137,8 @@ class MovieServiceImplTest {
     @Test
     void shouldAllowUpdateNameForMovie() {
         //given
-        Movie movieOld = TestBuilders.aMovie();
-        Movie movieNew = ImmutableMovie.copyOf(movieOld).withName("NewName");
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withName("NewName").build();
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
@@ -151,8 +151,8 @@ class MovieServiceImplTest {
     @Test
     void shouldAllowUpdateRatingForMovie() {
         //given
-        Movie movieOld = TestBuilders.aMovie();
-        Movie movieNew = ImmutableMovie.copyOf(movieOld).withRating(BigDecimal.ONE);
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withRating(BigDecimal.ONE).build();
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
@@ -165,8 +165,8 @@ class MovieServiceImplTest {
     @Test
     void shouldAllowUpdateYearProducedForMovie() {
         //given
-        Movie movieOld = TestBuilders.aMovie();
-        Movie movieNew = ImmutableMovie.copyOf(movieOld).withYearProduced(1900);
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withYearProduced(1900).build();
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
 
         //when
@@ -179,8 +179,8 @@ class MovieServiceImplTest {
     @Test
     void shouldNotUpdateMovieWhenItDoesNotExist() {
         //given
-        Movie movieOld = TestBuilders.aMovie();
-        Movie movieNew = ImmutableMovie.copyOf(movieOld).withYearProduced(1900);
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withYearProduced(1900).build();
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(empty());
 
         //when

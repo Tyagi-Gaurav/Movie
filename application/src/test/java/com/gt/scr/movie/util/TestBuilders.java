@@ -1,13 +1,9 @@
 package com.gt.scr.movie.util;
 
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.ImmutableUser;
-import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -34,24 +30,5 @@ public class TestBuilders {
                 .firstName(randomAlphabetic(10))
                 .authorities(Collections.singleton(new SimpleGrantedAuthority("USER")))
                 .build();
-    }
-
-    public static Movie aMovie() {
-        return ImmutableMovie.builder()
-                .name(randomAlphabetic(10))
-                .yearProduced(2010)
-                .rating(BigDecimal.valueOf(9.5))
-                .id(UUID.randomUUID())
-                .creationTimeStamp(System.nanoTime())
-                .build();
-    }
-
-    public static ImmutableMovie.Builder aMovieBuilder() {
-        return ImmutableMovie.builder()
-                .name(randomAlphabetic(10))
-                .yearProduced(2010)
-                .rating(BigDecimal.valueOf(9.5))
-                .id(UUID.randomUUID())
-                .creationTimeStamp(System.nanoTime());
     }
 }

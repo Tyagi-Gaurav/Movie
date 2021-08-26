@@ -6,7 +6,6 @@ import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.util.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -70,12 +69,8 @@ class MovieAdminResourceTest {
         UUID usersOwnId = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN");
 
-        Movie expectedReturnObject = ImmutableMovie.builder()
-                .id(usersOwnId)
-                .name(randomAlphabetic(5))
-                .rating(BigDecimal.ONE)
-                .yearProduced(2010)
-                .build();
+        Movie expectedReturnObject = new Movie(usersOwnId, randomAlphabetic(5),
+                2010, BigDecimal.ONE, System.nanoTime());
 
         when(movieService.getMoviesFor(requestedUserId)).thenReturn(List.of(expectedReturnObject));
 

@@ -2,7 +2,6 @@ package com.gt.scr.movie.dao;
 
 import com.gt.scr.movie.config.DatabaseConfig;
 import com.gt.scr.movie.config.ModifiableDatabaseConfig;
-import com.gt.scr.movie.service.domain.ImmutableMovie;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.TestBuilders;
@@ -31,6 +30,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.gt.scr.movie.util.MovieBuilder.aMovie;
+import static com.gt.scr.movie.util.MovieBuilder.copyOf;
 import static com.gt.scr.movie.util.TestUtils.addToDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
@@ -73,7 +74,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldFindMovieById() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
@@ -88,7 +89,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldReturnEmptyMovieWhenNoMovieFoundById() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
 
@@ -102,7 +103,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenFindMovieByIdFails() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
@@ -119,7 +120,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldFindMovieByName() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
@@ -134,8 +135,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldRetrieveRatingCorrectlyWithAppropriateScale() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovieBuilder()
-                .rating(BigDecimal.valueOf(7.8)).build();
+        Movie expectedMovie = aMovie().withRating(BigDecimal.valueOf(7.8)).build();
 
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
@@ -151,7 +151,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldNotFindMovieByNameForADifferentUser() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
@@ -166,7 +166,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldHandleExceptionWhenFindMovieByNameFails() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
         UUID userId = user.id();
@@ -184,7 +184,7 @@ class MovieMySQLRepositoryTest {
     @Test
     void shouldReturnEmptyMovieWhenNoMovieFoundByName() throws SQLException {
         //given
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
         User user = TestBuilders.aUser();
         addToDatabase(user, dataSource, ADD_USER);
 
@@ -199,8 +199,8 @@ class MovieMySQLRepositoryTest {
     void shouldGetAllMoviesForAUser() throws SQLException {
         //given
         User user = TestBuilders.aUser();
-        Movie expectedMovieA = TestBuilders.aMovie();
-        Movie expectedMovieB = TestBuilders.aMovie();
+        Movie expectedMovieA = aMovie().build();
+        Movie expectedMovieB = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
         addToDatabase(expectedMovieB, dataSource, user.id(), ADD_MOVIE);
@@ -216,8 +216,8 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenGetAllMoviesFails() throws SQLException {
         //given
         User user = TestBuilders.aUser();
-        Movie expectedMovieA = TestBuilders.aMovie();
-        Movie expectedMovieB = TestBuilders.aMovie();
+        Movie expectedMovieA = aMovie().build();
+        Movie expectedMovieB = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
         UUID userId = user.id();
         addToDatabase(expectedMovieA, dataSource, userId, ADD_MOVIE);
@@ -248,7 +248,7 @@ class MovieMySQLRepositoryTest {
     void shouldDeleteMovieForUser() throws SQLException {
         //given
         User user = TestBuilders.aUser();
-        Movie expectedMovieA = TestBuilders.aMovie();
+        Movie expectedMovieA = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
@@ -263,7 +263,7 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenDeleteUserFails() throws SQLException {
         //given
         User user = TestBuilders.aUser();
-        Movie expectedMovieA = TestBuilders.aMovie();
+        Movie expectedMovieA = aMovie().build();
         UUID movieId = expectedMovieA.id();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
@@ -280,12 +280,12 @@ class MovieMySQLRepositoryTest {
     void shouldUpdateMovie() throws SQLException {
         //given
         User user = TestBuilders.aUser();
-        Movie expectedMovieA = TestBuilders.aMovie();
+        Movie expectedMovieA = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        ImmutableMovie updatedMovie = ImmutableMovie.copyOf(expectedMovieA).withName("test");
+        Movie updatedMovie = copyOf(expectedMovieA).withName("test").build();
         movieRepository.update(updatedMovie);
 
         //then
@@ -298,12 +298,12 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenUpdateMovieFails() throws SQLException {
         //given
         User user = TestBuilders.aUser();
-        Movie expectedMovieA = TestBuilders.aMovie();
+        Movie expectedMovieA = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        ImmutableMovie updatedMovie = ImmutableMovie.copyOf(expectedMovieA).withName("test");
+        Movie updatedMovie = copyOf(expectedMovieA).withName("test").build();
         DatabaseException databaseException =
                 catchThrowableOfType(() -> buggyMovieRepository.update(updatedMovie), DatabaseException.class);
 
@@ -316,7 +316,7 @@ class MovieMySQLRepositoryTest {
         //given
         User currentUser = TestBuilders.aUser();
         addToDatabase(currentUser, dataSource, ADD_USER);
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
 
         //when
         movieRepository.create(currentUser.id(), expectedMovie);
@@ -331,7 +331,7 @@ class MovieMySQLRepositoryTest {
         //given
         User currentUser = TestBuilders.aUser();
         addToDatabase(currentUser, dataSource, ADD_USER);
-        Movie expectedMovie = TestBuilders.aMovie();
+        Movie expectedMovie = aMovie().build();
 
         //when
         DatabaseException databaseException =
@@ -349,13 +349,11 @@ class MovieMySQLRepositoryTest {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return Optional.of(ImmutableMovie.builder()
-                        .id(UUID.fromString(resultSet.getString("ID")))
-                        .name(resultSet.getString("NAME"))
-                        .yearProduced(resultSet.getInt("YEAR_PRODUCED"))
-                        .rating(resultSet.getBigDecimal("RATING").setScale(1, RoundingMode.UNNECESSARY))
-                        .creationTimeStamp(resultSet.getLong("CREATION_TIMESTAMP"))
-                        .build());
+                return Optional.of(new Movie(UUID.fromString(resultSet.getString("ID")),
+                        resultSet.getString("NAME"),
+                        resultSet.getInt("YEAR_PRODUCED"),
+                        resultSet.getBigDecimal("RATING").setScale(1, RoundingMode.UNNECESSARY),
+                        resultSet.getLong("CREATION_TIMESTAMP")));
             }
 
             resultSet.close();
