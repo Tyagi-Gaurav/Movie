@@ -1,8 +1,6 @@
 package com.gt.scr.movie.test.steps;
 
 import com.gt.scr.movie.test.config.ScenarioContext;
-import com.gt.scr.movie.test.domain.ImmutableTestAccountCreateRequestDTO;
-import com.gt.scr.movie.test.domain.ImmutableTestLoginRequestDTO;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestLoginRequestDTO;
 import com.gt.scr.movie.test.resource.ResponseHolder;
@@ -13,7 +11,7 @@ import io.cucumber.java8.En;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.gt.scr.movie.test.util.StringValueScenario.*;
+import static com.gt.scr.movie.test.util.StringValueScenario.actualOrRandom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserSteps implements En {
@@ -41,10 +39,13 @@ public class UserSteps implements En {
                         userNameValue = scenarioContext.getLastUserName();
                     }
 
-                    testAccountCreateRequestDTO = ImmutableTestAccountCreateRequestDTO.builder().from(testAccountCreateRequestDTO)
-                            .userName(get(userNameValue, 6))
-                            .password(get(testAccountCreateRequestDTO.password(), 6))
-                            .build();
+                    testAccountCreateRequestDTO = new TestAccountCreateRequestDTO(
+                            actualOrRandom(userNameValue, 6),
+                            actualOrRandom(testAccountCreateRequestDTO.password(), 6),
+                            testAccountCreateRequestDTO.firstName(),
+                            testAccountCreateRequestDTO.lastName(),
+                            testAccountCreateRequestDTO.role()
+                    );
 
                     scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
                     testAccountCreateResource.create(testAccountCreateRequestDTO);
@@ -56,22 +57,20 @@ public class UserSteps implements En {
 
         When("^the user attempts to login using random password$", () -> {
             TestAccountCreateRequestDTO userCredentialsRequest = scenarioContext.getUserCredentialsRequest();
-            TestLoginRequestDTO testLoginRequestDTO = ImmutableTestLoginRequestDTO.builder()
-                    .userName(userCredentialsRequest.userName())
-                    .password(RandomStringUtils.randomAlphabetic(7))
-                    .build();
+            TestLoginRequestDTO testLoginRequestDTO = new TestLoginRequestDTO(
+                    userCredentialsRequest.userName(),
+                    RandomStringUtils.randomAlphabetic(7));
             testLoginResource.create(testLoginRequestDTO);
         });
 
         Given("^a user creates a new account and performs login with user name '(.*)' and role '(.*)'$",
                 (String userName, String role) -> {
-                    TestAccountCreateRequestDTO testAccountCreateRequestDTO = ImmutableTestAccountCreateRequestDTO.builder()
-                            .userName(get(userName, 6))
-                            .password(RandomStringUtils.randomAlphabetic(6))
-                            .role(role)
-                            .firstName(RandomStringUtils.randomAlphabetic(6))
-                            .lastName(RandomStringUtils.randomAlphabetic(6))
-                            .build();
+                    TestAccountCreateRequestDTO testAccountCreateRequestDTO = new TestAccountCreateRequestDTO(
+                            actualOrRandom(userName, 6),
+                            RandomStringUtils.randomAlphabetic(6),
+                            RandomStringUtils.randomAlphabetic(6),
+                            RandomStringUtils.randomAlphabetic(6),
+                            role);
 
                     scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
                     testAccountCreateResource.create(testAccountCreateRequestDTO);
@@ -93,13 +92,12 @@ public class UserSteps implements En {
 
         When("the authenticated admin user creates another user with user name {string} and role {string}",
                 (String userName, String role) -> {
-                    TestAccountCreateRequestDTO testAccountCreateRequestDTO = ImmutableTestAccountCreateRequestDTO.builder()
-                            .userName(get(userName, 6))
-                            .password(RandomStringUtils.randomAlphabetic(6))
-                            .role(role)
-                            .firstName(RandomStringUtils.randomAlphabetic(6))
-                            .lastName(RandomStringUtils.randomAlphabetic(6))
-                            .build();
+                    TestAccountCreateRequestDTO testAccountCreateRequestDTO = new TestAccountCreateRequestDTO(
+                            actualOrRandom(userName, 6),
+                            RandomStringUtils.randomAlphabetic(6),
+                            RandomStringUtils.randomAlphabetic(6),
+                            RandomStringUtils.randomAlphabetic(6),
+                            role);
 
                     scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
                     userManagementResource.create(testAccountCreateRequestDTO);
@@ -117,10 +115,9 @@ public class UserSteps implements En {
     }
 
     private void loginUsing(TestAccountCreateRequestDTO userCredentialsRequest) {
-        TestLoginRequestDTO testLoginRequestDTO = ImmutableTestLoginRequestDTO.builder()
-                .userName(userCredentialsRequest.userName())
-                .password(userCredentialsRequest.password())
-                .build();
+        TestLoginRequestDTO testLoginRequestDTO = new TestLoginRequestDTO(
+                userCredentialsRequest.userName(),
+                userCredentialsRequest.password());
         testLoginResource.create(testLoginRequestDTO);
     }
 }
