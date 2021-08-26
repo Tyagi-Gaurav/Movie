@@ -1,8 +1,8 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.movie.resource.domain.ImmutableMovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
+import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
@@ -112,12 +112,8 @@ class MovieResourceTest {
 
     @Test
     void shouldAllowUserToUpdateMovies() throws Exception {
-        String content = TestUtils.asJsonString(ImmutableMovieUpdateRequestDTO.builder()
-                .id(UUID.randomUUID())
-                .name(randomAlphabetic(5))
-                .rating(BigDecimal.ZERO)
-                .yearProduced(2010)
-                .build());
+        String content = TestUtils.asJsonString(new MovieUpdateRequestDTO(UUID.randomUUID(),
+                randomAlphabetic(5), BigDecimal.ZERO, 2010));
 
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "USER");
 
