@@ -1,8 +1,8 @@
 package com.gt.scr.movie;
 
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableMovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 
 import java.math.BigDecimal;
 
@@ -27,11 +27,9 @@ public class TestObjectBuilder {
         return new LoginRequestDTO(accountCreateRequestDTO.userName(), accountCreateRequestDTO.password());
     }
 
-    public static ImmutableMovieCreateRequestDTO.Builder movieCreateRequestDTO() {
-        return ImmutableMovieCreateRequestDTO.builder()
-                .name(randomAlphabetic(7))
-                .yearProduced(2010)
-                .rating(BigDecimal.valueOf(5));
+    public static MovieCreateRequestDTO movieCreateRequestDTO() {
+        return new MovieCreateRequestDTO(randomAlphabetic(7), 2010,
+                BigDecimal.valueOf(5));
     }
 
     public static AccountCreateRequestDTO adminAccountCreateRequest() {

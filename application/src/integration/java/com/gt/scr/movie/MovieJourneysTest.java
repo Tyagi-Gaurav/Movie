@@ -36,7 +36,7 @@ public class MovieJourneysTest {
                 TestObjectBuilder.loginRequestUsing(userAccountCreateRequestDTO);
 
         MovieCreateRequestDTO movieCreateRequestDTO =
-                TestObjectBuilder.movieCreateRequestDTO().build();
+                TestObjectBuilder.movieCreateRequestDTO();
 
         scenarioExecutor
                 .when().userIsCreatedWith(adminAccountCreateRequestDTO)
