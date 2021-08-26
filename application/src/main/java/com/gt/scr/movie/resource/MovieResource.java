@@ -1,7 +1,5 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.movie.resource.domain.ImmutableMovieDTO;
-import com.gt.scr.movie.resource.domain.ImmutableMoviesDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user/movie")
@@ -57,15 +54,10 @@ public class MovieResource {
 
         List<Movie> movies = movieService.getMoviesFor(determineUserId(userId, userProfile.id()));
 
-        List<MovieDTO> movieDTOs = movies.stream().map(mv -> ImmutableMovieDTO.builder()
-                .id(mv.id())
-                .name(mv.name())
-                .rating(mv.rating())
-                .yearProduced(mv.yearProduced())
-                .build()).collect(Collectors.toList());
+        List<MovieDTO> movieDTOs = movies.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
+                mv.yearProduced(), mv.rating())).toList();
 
-        MoviesDTO moviesDTO = ImmutableMoviesDTO.builder().movies(movieDTOs).build();
-        return ResponseEntity.ok(moviesDTO);
+        return ResponseEntity.ok(new MoviesDTO(movieDTOs));
     }
 
     @DeleteMapping(consumes = "application/vnd.movie.delete.v1+json",
