@@ -2,8 +2,7 @@ package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
-import com.gt.scr.movie.resource.domain.ImmutableUserDetailsResponse;
-import com.gt.scr.movie.resource.domain.ImmutableUserListResponseDTO;
+import com.gt.scr.movie.resource.domain.UserDetailsResponse;
 import com.gt.scr.movie.resource.domain.UserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
@@ -58,16 +57,11 @@ public class UserManagementResource {
     public ResponseEntity<UserListResponseDTO> listUsers() {
         List<User> allUsers = userService.getAllUsers();
 
-        var builder = ImmutableUserListResponseDTO.builder();
-        allUsers.forEach(user -> builder.addUserDetails(ImmutableUserDetailsResponse.builder()
-                .firstName(user.firstName())
-                .lastName(user.lastName())
-                .role(user.getRole())
-                .userName(user.getUsername())
-                .id(user.id())
-                .build()));
+        List<UserDetailsResponse> userDetailsResponses = allUsers.stream()
+                .map(user -> new UserDetailsResponse(user.getUsername(), user.firstName(), user.lastName(),
+                        user.getRole(), user.id())).toList();
 
-        return ResponseEntity.ok(builder.build());
+        return ResponseEntity.ok(new UserListResponseDTO(userDetailsResponses));
     }
 
     @DeleteMapping(consumes = "application/vnd.user.delete.v1+json",

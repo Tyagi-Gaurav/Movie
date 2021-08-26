@@ -3,7 +3,6 @@ package com.gt.scr.movie.resource;
 import com.gt.scr.movie.config.AuthConfig;
 import com.gt.scr.movie.exception.ApplicationAuthenticationException;
 import com.gt.scr.movie.filter.JwtTokenUtil;
-import com.gt.scr.movie.resource.domain.ImmutableLoginResponseDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import com.gt.scr.movie.service.domain.User;
@@ -43,10 +42,7 @@ public class LoginResource {
             }
             var user = authenticate(loginRequestDTO);
             final String token = JwtTokenUtil.generateToken(user, authConfig.tokenDuration(), signingKey);
-            ImmutableLoginResponseDTO response = ImmutableLoginResponseDTO.builder()
-                    .token(token)
-                    .id(user.id())
-                    .build();
+            LoginResponseDTO response = new LoginResponseDTO(token, user.id());
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
