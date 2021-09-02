@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import reactor.core.publisher.Flux;
 
 import javax.sql.DataSource;
 import java.net.URL;
@@ -155,10 +156,11 @@ class UserMySQLRepositoryTest {
         addToDatabase(expectedUserB, dataSource, ADD_USER);
 
         //when
-        List<User> allUsers = userRepository.getAllUsers();
+        Flux<User> allUsers = userRepository.getAllUsers();
 
         //then
-        assertThat(allUsers).containsExactlyInAnyOrderElementsOf(List.of(expectedUserA, expectedUserB));
+        assertThat(allUsers.toStream().collect(Collectors.toList()))
+                .containsExactlyInAnyOrderElementsOf(List.of(expectedUserA, expectedUserB));
     }
 
     @Test
@@ -180,10 +182,10 @@ class UserMySQLRepositoryTest {
     @Test
     void shouldReturnEmptyListWhenNoUsersFound() {
         //when
-        List<User> allUsers = userRepository.getAllUsers();
+        Flux<User> allUsers = userRepository.getAllUsers();
 
         //then
-        assertThat(allUsers).isEmpty();
+        assertThat(allUsers).isEqualTo(Flux.empty());
     }
 
     @Test
