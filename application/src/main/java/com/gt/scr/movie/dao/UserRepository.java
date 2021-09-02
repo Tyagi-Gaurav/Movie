@@ -1,6 +1,7 @@
 package com.gt.scr.movie.dao;
 
 import com.gt.scr.movie.service.domain.User;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,7 @@ public interface UserRepository {
 
     Optional<User> findUserBy(String userName);
 
-    List<User> getAllUsers();
+    Flux<User> getAllUsers();
 
     void delete(UUID userId);
 

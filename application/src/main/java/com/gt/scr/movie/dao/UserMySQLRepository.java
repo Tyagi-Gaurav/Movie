@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -71,7 +72,7 @@ public class UserMySQLRepository implements UserRepository {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public Flux<User> getAllUsers() {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER")) {
@@ -82,7 +83,11 @@ public class UserMySQLRepository implements UserRepository {
                     users.add(getUserFrom(resultSet));
                 }
 
-                return users;
+                if (users.isEmpty()) {
+                    return Flux.empty();
+                }
+
+                return Flux.fromIterable(users);
             }
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
