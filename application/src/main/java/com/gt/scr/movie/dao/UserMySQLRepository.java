@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,12 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 @Repository("mysql")
 public class UserMySQLRepository implements UserRepository {
@@ -34,7 +31,7 @@ public class UserMySQLRepository implements UserRepository {
     private static final String ROLES = "ROLES";
 
     @Override
-    public Optional<User> findUserBy(UUID userId) {
+    public Mono<User> findUserBy(UUID userId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where ID = ?")) {
@@ -42,9 +39,9 @@ public class UserMySQLRepository implements UserRepository {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return of(getUserFrom(resultSet));
+                    return Mono.just(getUserFrom(resultSet));
                 } else {
-                    return empty();
+                    return Mono.empty();
                 }
             }
         } catch (Exception e) {
@@ -53,7 +50,7 @@ public class UserMySQLRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserBy(String userName) {
+    public Mono<User> findUserBy(String userName) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where USER_NAME = ?")) {
@@ -61,9 +58,9 @@ public class UserMySQLRepository implements UserRepository {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return of(getUserFrom(resultSet));
+                    return Mono.just(getUserFrom(resultSet));
                 } else {
-                    return empty();
+                    return Mono.empty();
                 }
             }
         } catch (Exception e) {

@@ -23,8 +23,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import reactor.core.publisher.Flux;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,7 +80,7 @@ class UserManagementResourceTest {
     void shouldAllowAdminToReadAllUsers() throws Exception {
         //given
         User user = UserBuilder.aUser().build();
-        given(userService.getAllUsers()).willReturn(Collections.singletonList(user));
+        given(userService.getAllUsers()).willReturn(Flux.just(user));
 
         //when
         MvcResult mvcResult = mockMvc.perform(get("/user/manage")
