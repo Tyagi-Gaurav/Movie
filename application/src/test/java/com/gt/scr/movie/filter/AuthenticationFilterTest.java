@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Mono;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.FilterChain;
@@ -71,7 +72,7 @@ class AuthenticationFilterTest {
         //given
         User user = UserBuilder.aUser().build();
         when(httpServletRequest.getHeader("Authorization")).thenReturn(token);
-        when(userService.findUserBy(UUID.fromString(userId))).thenReturn(user);
+        when(userService.findUserBy(UUID.fromString(userId))).thenReturn(Mono.just(user));
         when(jwtTokenUtil.validateToken(user)).thenReturn(true);
         LinkedHashMap authoritiesMap = new LinkedHashMap();
         authoritiesMap.put("authority", "USER");

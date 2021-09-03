@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,9 +53,9 @@ public class UserManagementResource {
     @GetMapping(consumes = "application/vnd.user.read.v1+json",
             produces = "application/vnd.user.read.v1+json")
     public ResponseEntity<UserListResponseDTO> listUsers() {
-        List<User> allUsers = userService.getAllUsers();
+        Flux<User> allUsers = userService.getAllUsers();
 
-        List<UserDetailsResponse> userDetailsResponses = allUsers.stream()
+        List<UserDetailsResponse> userDetailsResponses = allUsers.toStream()
                 .map(user -> new UserDetailsResponse(user.getUsername(), user.firstName(), user.lastName(),
                         user.getRole(), user.id())).toList();
 

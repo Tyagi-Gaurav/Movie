@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import javax.sql.DataSource;
 import java.net.URL;
@@ -26,7 +28,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -73,10 +74,11 @@ class UserMySQLRepositoryTest {
         addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
-        Optional<User> user = userRepository.findUserBy(expectedUser.id());
+        Mono<User> user = userRepository.findUserBy(expectedUser.id());
 
         //then
-        assertThat(user).isPresent().hasValue(expectedUser);
+        StepVerifier.create(user).expectNext(expectedUser)
+                .verifyComplete();
     }
 
     @Test
@@ -85,10 +87,10 @@ class UserMySQLRepositoryTest {
         User expectedUser = aUser().build();
 
         //when
-        Optional<User> user = userRepository.findUserBy(expectedUser.id());
+        Mono<User> user = userRepository.findUserBy(expectedUser.id());
 
         //then
-        assertThat(user).isEmpty();
+        StepVerifier.create(user).verifyComplete();
     }
 
     @Test
@@ -99,7 +101,7 @@ class UserMySQLRepositoryTest {
 
         //when
         UUID userId = expectedUser.id();
-        DatabaseException exception = catchThrowableOfType(()-> buggyUserRepository.findUserBy(userId),
+        DatabaseException exception = catchThrowableOfType(() -> buggyUserRepository.findUserBy(userId),
                 DatabaseException.class);
 
         //then
@@ -113,10 +115,10 @@ class UserMySQLRepositoryTest {
         addToDatabase(expectedUser, dataSource, ADD_USER);
 
         //when
-        Optional<User> user = userRepository.findUserBy(expectedUser.getUsername());
+        Mono<User> user = userRepository.findUserBy(expectedUser.getUsername());
 
         //then
-        assertThat(user).isPresent().hasValue(expectedUser);
+        StepVerifier.create(user).expectNext(expectedUser).verifyComplete();
     }
 
     @Test
@@ -127,7 +129,7 @@ class UserMySQLRepositoryTest {
 
         //when
         String username = expectedUser.getUsername();
-        DatabaseException exception = catchThrowableOfType(()->
+        DatabaseException exception = catchThrowableOfType(() ->
                         buggyUserRepository.findUserBy(username),
                 DatabaseException.class);
 
@@ -141,10 +143,10 @@ class UserMySQLRepositoryTest {
         User expectedUser = aUser().build();
 
         //when
-        Optional<User> user = userRepository.findUserBy(expectedUser.getUsername());
+        Mono<User> user = userRepository.findUserBy(expectedUser.getUsername());
 
         //then
-        assertThat(user).isEmpty();
+        StepVerifier.create(user).verifyComplete();
     }
 
     @Test
@@ -159,8 +161,9 @@ class UserMySQLRepositoryTest {
         Flux<User> allUsers = userRepository.getAllUsers();
 
         //then
-        assertThat(allUsers.toStream().collect(Collectors.toList()))
-                .containsExactlyInAnyOrderElementsOf(List.of(expectedUserA, expectedUserB));
+        StepVerifier.create(allUsers)
+                .expectNext(expectedUserA, expectedUserB)
+                .verifyComplete();
     }
 
     @Test
@@ -185,7 +188,9 @@ class UserMySQLRepositoryTest {
         Flux<User> allUsers = userRepository.getAllUsers();
 
         //then
-        assertThat(allUsers).isEqualTo(Flux.empty());
+        StepVerifier.create(allUsers)
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -282,16 +287,16 @@ class UserMySQLRepositoryTest {
 
             if (resultSet.next()) {
                 return Optional.of(
-                                new User(
-                                        UUID.fromString(resultSet.getString("ID")),
-                                        resultSet.getString("FIRST_NAME"),
-                                        resultSet.getString("LAST_NAME"),
-                                        resultSet.getString("USER_NAME"),
-                                        resultSet.getString("PASSWORD"),
-                                        Arrays.stream(resultSet.getString("ROLES").split(","))
-                                                .map(SimpleGrantedAuthority::new)
-                                                .collect(Collectors.toList())
-                                ));
+                        new User(
+                                UUID.fromString(resultSet.getString("ID")),
+                                resultSet.getString("FIRST_NAME"),
+                                resultSet.getString("LAST_NAME"),
+                                resultSet.getString("USER_NAME"),
+                                resultSet.getString("PASSWORD"),
+                                Arrays.stream(resultSet.getString("ROLES").split(","))
+                                        .map(SimpleGrantedAuthority::new)
+                                        .collect(Collectors.toList())
+                        ));
             }
 
             resultSet.close();

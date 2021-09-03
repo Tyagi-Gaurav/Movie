@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.gt.scr.movie.util.UserBuilder.aUser;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.Mockito.*;
@@ -31,7 +29,7 @@ class UserServiceImplTest {
     @Test
     void shouldAddUser() {
         User user = aUser().build();
-        when(repository.findUserBy(user.getUsername())).thenReturn(empty());
+        when(repository.findUserBy(user.getUsername())).thenReturn(Mono.empty());
 
         //when
         userService.add(user);
@@ -89,7 +87,7 @@ class UserServiceImplTest {
         //given
         User userA = aUser().build();
         User userB = aUser().withUserName(userA.getUsername()).build();
-        when(repository.findUserBy(userA.getUsername())).thenReturn(Optional.empty()).thenReturn(of(userA));
+        when(repository.findUserBy(userA.getUsername())).thenReturn(Mono.empty()).thenReturn(Mono.just(userA));
         userService.add(userA);
 
         //when

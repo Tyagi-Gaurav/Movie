@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,17 +20,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void add(User user) {
-        Optional<User> userBy = userRepository.findUserBy(user.getUsername());
-        if (userBy.isPresent()) {
-            throw new DuplicateRecordException("User already exists.");
-        }
-
-        userRepository.create(user);
+        userRepository.findUserBy(user.getUsername())
+                .flatMap(user1 -> Mono.error(() -> new DuplicateRecordException("User already exists.")))
+                .switchIfEmpty(Mono.defer(() -> {
+                    userRepository.create(user);
+                    return Mono.empty();
+                })).block();
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.getAllUsers().toStream().collect(Collectors.toList());
+    public Flux<User> getAllUsers() {
+        return userRepository.getAllUsers();
     }
 
     @Override
@@ -40,14 +39,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> loadUserBy(String userName) {
+    public Mono<User> loadUserBy(String userName) {
         return userRepository.findUserBy(userName);
     }
 
     @Override
-    public User findUserBy(UUID userId) {
-        Optional<User> userBy = userRepository.findUserBy(userId);
-        return userBy.orElse(null);
+    public Mono<User> findUserBy(UUID userId) {
+        return userRepository.findUserBy(userId);
     }
 
     @Override
@@ -57,7 +55,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = this.loadUserBy(username);
-        return user.orElseThrow(() -> new UsernameNotFoundException("Unable to find User: " + username));
+        Mono<User> userMono = loadUserBy(username)
+                .switchIfEmpty(
+                        Mono.defer(() -> Mono.error(() ->
+                                new UsernameNotFoundException("Unable to find User: " + username))));
+
+        return userMono.block();
     }
 }
