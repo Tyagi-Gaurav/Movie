@@ -20,7 +20,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void addMovie(UUID userId, Movie movie) {
-        Optional<Movie> movieExists = movieRepository.findMovieBy(userId, movie.name());
+        Optional<Movie> movieExists = movieRepository.findMovieBy(userId, movie.name()).blockOptional();
 
         if (movieExists.filter(m -> m.yearProduced() == movie.yearProduced()).isEmpty()) {
             movieRepository.create(userId, movie);
@@ -31,12 +31,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getMoviesFor(UUID userId) {
-        return movieRepository.getAllMoviesForUser(userId);
+        return movieRepository.getAllMoviesForUser(userId).collectList().block();
     }
 
     @Override
     public void updateMovie(Movie movie) {
-        Optional<Movie> oldMovie = movieRepository.findMovieBy(movie.id());
+        Optional<Movie> oldMovie = movieRepository.findMovieBy(movie.id()).blockOptional();
 
         oldMovie.ifPresent(om -> {
             Movie newMovieToUpdate =
