@@ -3,6 +3,8 @@ package com.gt.scr.movie.dao;
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.sql.DataSource;
 import java.math.RoundingMode;
@@ -11,11 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 @Repository
 public class MovieMySQLRepository implements MovieRepository {
@@ -29,7 +27,7 @@ public class MovieMySQLRepository implements MovieRepository {
     private static final String CREATION_TIMESTAMP = "CREATION_TIMESTAMP";
 
     @Override
-    public Optional<Movie> findMovieBy(UUID movieId) {
+    public Mono<Movie> findMovieBy(UUID movieId) {
         try (var connection = dataSource.getConnection();
              var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where ID = ?")) {
@@ -37,9 +35,9 @@ public class MovieMySQLRepository implements MovieRepository {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return of(extractMovieFrom(resultSet));
+                    return Mono.just(extractMovieFrom(resultSet));
                 } else {
-                    return empty();
+                    return Mono.empty();
                 }
             }
         } catch (Exception e) {
@@ -48,7 +46,7 @@ public class MovieMySQLRepository implements MovieRepository {
     }
 
     @Override
-    public Optional<Movie> findMovieBy(UUID userId, String name) {
+    public Mono<Movie> findMovieBy(UUID userId, String name) {
         try (var connection = dataSource.getConnection();
              var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where NAME = ? and USER_ID = ?")) {
@@ -57,9 +55,9 @@ public class MovieMySQLRepository implements MovieRepository {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return of(extractMovieFrom(resultSet));
+                    return Mono.just(extractMovieFrom(resultSet));
                 } else {
-                    return empty();
+                    return Mono.empty();
                 }
             }
         } catch (Exception e) {
@@ -68,7 +66,7 @@ public class MovieMySQLRepository implements MovieRepository {
     }
 
     @Override
-    public List<Movie> getAllMoviesForUser(UUID userId) {
+    public Flux<Movie> getAllMoviesForUser(UUID userId) {
         try (var connection = dataSource.getConnection();
              var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE WHERE USER_ID = ?")) {
@@ -80,7 +78,7 @@ public class MovieMySQLRepository implements MovieRepository {
                     movies.add(extractMovieFrom(resultSet));
                 }
 
-                return movies;
+                return Flux.fromIterable(movies);
             }
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);

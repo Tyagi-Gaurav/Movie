@@ -15,6 +15,9 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -25,7 +28,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -80,10 +82,12 @@ class MovieMySQLRepositoryTest {
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        Optional<Movie> movie = movieRepository.findMovieBy(expectedMovie.id());
+        Mono<Movie> movie = movieRepository.findMovieBy(expectedMovie.id());
 
         //then
-        assertThat(movie).isPresent().hasValue(expectedMovie);
+        StepVerifier.create(movie)
+                .expectNext(expectedMovie)
+                .verifyComplete();
     }
 
     @Test
@@ -94,10 +98,10 @@ class MovieMySQLRepositoryTest {
         addToDatabase(user, dataSource, ADD_USER);
 
         //when
-        Optional<Movie> movie = movieRepository.findMovieBy(expectedMovie.id());
+        Mono<Movie> movie = movieRepository.findMovieBy(expectedMovie.id());
 
         //then
-        assertThat(movie).isEmpty();
+        StepVerifier.create(movie).verifyComplete();
     }
 
     @Test
@@ -110,7 +114,7 @@ class MovieMySQLRepositoryTest {
 
         //when
         UUID movieId = expectedMovie.id();
-        DatabaseException exception = catchThrowableOfType(()-> buggyMovieRepository.findMovieBy(movieId),
+        DatabaseException exception = catchThrowableOfType(() -> buggyMovieRepository.findMovieBy(movieId),
                 DatabaseException.class);
 
         //then
@@ -126,10 +130,10 @@ class MovieMySQLRepositoryTest {
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        Optional<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
+        Mono<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
 
         //then
-        assertThat(movie).isPresent().hasValue(expectedMovie);
+        StepVerifier.create(movie).expectNext(expectedMovie).verifyComplete();
     }
 
     @Test
@@ -142,10 +146,12 @@ class MovieMySQLRepositoryTest {
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        Optional<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
+        Mono<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
 
         //then
-        assertThat(movie).isPresent().hasValue(expectedMovie);
+        StepVerifier.create(movie)
+                .expectNext(expectedMovie)
+                .verifyComplete();
     }
 
     @Test
@@ -157,10 +163,10 @@ class MovieMySQLRepositoryTest {
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        Optional<Movie> movie = movieRepository.findMovieBy(UUID.randomUUID(), expectedMovie.name());
+        Mono<Movie> movie = movieRepository.findMovieBy(UUID.randomUUID(), expectedMovie.name());
 
         //then
-        assertThat(movie).isEmpty();
+        StepVerifier.create(movie).verifyComplete();
     }
 
     @Test
@@ -174,7 +180,7 @@ class MovieMySQLRepositoryTest {
 
         //when
         String name = expectedMovie.name();
-        DatabaseException exception = catchThrowableOfType(()-> buggyMovieRepository.findMovieBy(userId, name),
+        DatabaseException exception = catchThrowableOfType(() -> buggyMovieRepository.findMovieBy(userId, name),
                 DatabaseException.class);
 
         //then
@@ -189,10 +195,11 @@ class MovieMySQLRepositoryTest {
         addToDatabase(user, dataSource, ADD_USER);
 
         //when
-        Optional<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
+        Mono<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
 
         //then
-        assertThat(movie).isEmpty();
+        StepVerifier.create(movie)
+                .verifyComplete();
     }
 
     @Test
@@ -206,10 +213,13 @@ class MovieMySQLRepositoryTest {
         addToDatabase(expectedMovieB, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        List<Movie> allMovies = movieRepository.getAllMoviesForUser(user.id());
+        Flux<Movie> allMovies = movieRepository.getAllMoviesForUser(user.id());
 
         //then
-        assertThat(allMovies).containsExactlyInAnyOrderElementsOf(List.of(expectedMovieA, expectedMovieB));
+        StepVerifier.create(allMovies)
+                .expectNext(expectedMovieA)
+                .expectNext(expectedMovieB)
+                .verifyComplete();
     }
 
     @Test
@@ -238,10 +248,10 @@ class MovieMySQLRepositoryTest {
         addToDatabase(user, dataSource, ADD_USER);
 
         //when
-        List<Movie> allMovies = movieRepository.getAllMoviesForUser(user.id());
+        Flux<Movie> allMovies = movieRepository.getAllMoviesForUser(user.id());
 
         //then
-        assertThat(allMovies).isEmpty();
+        StepVerifier.create(allMovies).verifyComplete();
     }
 
     @Test

@@ -10,15 +10,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.gt.scr.movie.util.MovieBuilder.aMovie;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -37,7 +36,7 @@ class MovieServiceImplTest {
         //given
         UUID userId = UUID.randomUUID();
         Movie movie = aMovie().build();
-        when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Optional.empty());
+        when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Mono.empty());
 
         //when
         movieService.addMovie(userId, movie);
@@ -52,7 +51,7 @@ class MovieServiceImplTest {
         UUID userId = UUID.randomUUID();
         Movie movie = aMovie().build();
 
-        when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(of(movie));
+        when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Mono.just(movie));
 
         //when
         DuplicateRecordException duplicateRecordException =
@@ -69,7 +68,7 @@ class MovieServiceImplTest {
         Movie movieA = aMovie().build();
         Movie remakeOfMovieA = MovieBuilder.copyOf(movieA).withYearProduced(2021).build();
 
-        when(movieRepository.findMovieBy(userId, movieA.name())).thenReturn(of(movieA));
+        when(movieRepository.findMovieBy(userId, movieA.name())).thenReturn(Mono.just(movieA));
 
         //when
         Throwable throwable = catchThrowable(() -> movieService.addMovie(userId, remakeOfMovieA));
@@ -85,7 +84,7 @@ class MovieServiceImplTest {
         UUID userId = UUID.randomUUID();
         Movie aMovie = aMovie().build();
         Movie bMovie = aMovie().build();
-        when(movieRepository.getAllMoviesForUser(userId)).thenReturn(List.of(aMovie, bMovie));
+        when(movieRepository.getAllMoviesForUser(userId)).thenReturn(Flux.just(aMovie, bMovie));
 
         //when
         List<Movie> movies = movieService.getMoviesFor(userId);
@@ -111,7 +110,7 @@ class MovieServiceImplTest {
         //given
         Movie movieOld = aMovie().build();
         Movie movieNew = MovieBuilder.copyOf(movieOld).withCreationTimeStamp(System.nanoTime()).build();
-        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
         movieService.updateMovie(movieNew);
@@ -125,7 +124,7 @@ class MovieServiceImplTest {
         //given
         Movie movieOld = aMovie().build();
         Movie movieNew = MovieBuilder.copyOf(movieOld).withRating(BigDecimal.ZERO).build();
-        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
         movieService.updateMovie(movieNew);
@@ -139,7 +138,7 @@ class MovieServiceImplTest {
         //given
         Movie movieOld = aMovie().build();
         Movie movieNew = MovieBuilder.copyOf(movieOld).withName("NewName").build();
-        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
         movieService.updateMovie(movieNew);
@@ -153,7 +152,7 @@ class MovieServiceImplTest {
         //given
         Movie movieOld = aMovie().build();
         Movie movieNew = MovieBuilder.copyOf(movieOld).withRating(BigDecimal.ONE).build();
-        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
         movieService.updateMovie(movieNew);
@@ -167,7 +166,7 @@ class MovieServiceImplTest {
         //given
         Movie movieOld = aMovie().build();
         Movie movieNew = MovieBuilder.copyOf(movieOld).withYearProduced(1900).build();
-        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(of(movieOld));
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
         movieService.updateMovie(movieNew);
@@ -181,7 +180,7 @@ class MovieServiceImplTest {
         //given
         Movie movieOld = aMovie().build();
         Movie movieNew = MovieBuilder.copyOf(movieOld).withYearProduced(1900).build();
-        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(empty());
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.empty());
 
         //when
         movieService.updateMovie(movieNew);
