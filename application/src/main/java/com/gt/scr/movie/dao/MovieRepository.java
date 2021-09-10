@@ -4,8 +4,6 @@ import com.gt.scr.movie.service.domain.Movie;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface MovieRepository {

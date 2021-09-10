@@ -70,7 +70,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			LOG.info("Fetch user from repository: {}", userId);
 			var userDetails = userService.findUserBy(UUID.fromString(userId)).block();
 
-			if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(userDetails))) {
+			if (userDetails != null && Boolean.TRUE.equals(jwtTokenUtil.validateToken(userDetails))) {
 				LOG.info("Token validated for user {}", userId);
 				var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
