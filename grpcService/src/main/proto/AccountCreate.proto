@@ -1,0 +1,21 @@
+syntax = "proto3";
+package com.gt.scr.movie.grpc;
+
+option java_multiple_files = true;
+
+option java_outer_classname = "AccountCreateGrpc";
+
+message AccountCreateGrpcRequestDTO {
+  string userName = 1;
+  string password = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string role = 5;
+}
+
+message Empty {}
+
+service CreateAccountService {
+  rpc createAccount(AccountCreateGrpcRequestDTO) returns (Empty);
+}
+
