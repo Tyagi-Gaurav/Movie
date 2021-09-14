@@ -69,14 +69,14 @@ processResources {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
-        exclude group:"ch.qos.logback"
+        exclude group: "ch.qos.logback"
     }
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
     implementation("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}") {
-        exclude group: "org.slf4j", module:"slf4j-api"
+        exclude group: "org.slf4j", module: "slf4j-api"
     }
     implementation "org.springframework:spring-jdbc:${springVersion}"
     implementation "org.springframework:spring-core:${springVersion}"
@@ -93,7 +93,7 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
     implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
     implementation("it.ozimov:embedded-redis:${embeddedRedisVersion}") {
-        exclude group:"org.slf4j", module:"slf4j-simple"
+        exclude group: "org.slf4j", module: "slf4j-simple"
     }
 
     implementation "mysql:mysql-connector-java:${mysqlVersion}"

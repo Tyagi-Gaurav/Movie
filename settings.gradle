@@ -1,4 +1,5 @@
 rootProject.name = 'Movie'
 include 'functionalTest'
 include 'application'
+include 'grpcService'
 
