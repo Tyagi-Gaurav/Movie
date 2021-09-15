@@ -20,7 +20,7 @@ public class Initializer implements ApplicationContextInitializer<ConfigurableAp
     public void initialize(ConfigurableApplicationContext applicationContext) {
         mySQL.start();
 
-        // Override Redis configuration
+        // Override MySql configuration
         String mysqlContainerIP = "mysql.host=" + mySQL.getContainerIpAddress();
         String mysqlContainerPort = "mysql.port=" + mySQL.getMappedPort(MYSQL_PORT);
         String mysqlContaineruser = "mysql.user=root";

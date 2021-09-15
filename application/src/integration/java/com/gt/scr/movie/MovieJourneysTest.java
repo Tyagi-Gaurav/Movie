@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
@@ -23,9 +25,13 @@ import java.util.Collections;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = Initializer.class)
 @AutoConfigureMockMvc
+@ActiveProfiles("MovieJourneysTest")
 public class MovieJourneysTest {
     @Autowired
     private ScenarioExecutor scenarioExecutor;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @ParameterizedTest
     @NullSource

@@ -26,6 +26,7 @@ ext {
     testContainerVersion = '1.16.0'
     mockitoVersion = '3.11.2'
     reactorVersion = '3.4.9'
+    grpcVersion = '1.40.1'
 }
 
 repositories {
@@ -68,6 +69,8 @@ processResources {
 }
 
 dependencies {
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    implementation project(":grpcService")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
         exclude group: "ch.qos.logback"
     }
