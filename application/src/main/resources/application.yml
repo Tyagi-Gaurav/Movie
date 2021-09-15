@@ -1,5 +1,5 @@
 spring:
-  active: local
+  active: prod
   liquibase:
     changeLog: classpath:db.changelog/dbchangelog.sql
 
