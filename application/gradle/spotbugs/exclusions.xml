@@ -6,4 +6,7 @@
             <Class name="~.*\.WebSecurityConfig.*" />
         </Or>
     </Match>
+    <Match>
+
+    </Match>
 </FindBugsFilter>

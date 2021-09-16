@@ -34,6 +34,8 @@ public class CreateAccountGrpcResource extends CreateAccountServiceGrpc.CreateAc
 
         userService.add(user);
 
-        //responseObserver.onError();
+        responseObserver.onNext(Empty.newBuilder()
+                .build());
+        responseObserver.onCompleted();
     }
 }

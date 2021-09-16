@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Profile("prod")
+@Profile({"prod", "grpc"})
 public class GrpcConfig {
     @Bean
     public CreateAccountGrpcResource createAccountGrpcResource(UserService userService,
