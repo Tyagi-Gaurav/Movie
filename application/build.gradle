@@ -42,11 +42,19 @@ sourceSets {
         compileClasspath += sourceSets.main.output + sourceSets.test.output
         runtimeClasspath += output + compileClasspath
     }
+    grpcIntegration {
+        java.srcDir "$projectDir/src/grpc-integration/java"
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += output + compileClasspath
+    }
 }
 
 configurations {
     integrationImplementation.extendsFrom testImplementation
     integrationRuntime.extendsFrom testImplementation
+
+    grpcIntegrationImplementation.extendsFrom testImplementation
+    grpcIntegrationRuntime.extendsFrom testImplementation
 }
 
 jacoco {
@@ -173,6 +181,26 @@ spotbugsTest {
     }
 }
 
+spotbugsIntegration {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/integration/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
+spotbugsGrpcIntegration {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/grpcIntegration/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
 pmd {
     consoleOutput = true
     toolVersion = "6.37.0"
@@ -197,4 +225,20 @@ tasks.register('integrationTest', Test) {
     shouldRunAfter test
 }
 
-check.dependsOn integrationTest
+tasks.register('grpcIntegrationTest', Test) {
+    description = 'Runs GRPC integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath += sourceSets.integration.runtimeClasspath
+
+    useJUnitPlatform()
+
+    reports {
+        html.enabled true
+        junitXml.enabled = true
+    }
+    shouldRunAfter test
+}
+
+check.dependsOn(integrationTest, grpcIntegrationTest)

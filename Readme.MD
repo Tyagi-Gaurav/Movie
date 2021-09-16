@@ -50,6 +50,12 @@ the tests. They can be triggered separately using.
 ./gradlew clean integrationTest
 ```
 
+* GRPC Integration tests: These are a set of slow running tests that spin up the entire application in memory before running
+  the GRPC tests. They can be triggered separately using.
+```
+./gradlew clean grpcIntegrationTest
+```
+
 * Functional tests: The functional tests verify correctness of the application as a black box. Hence, they need the
   application to be running before they can be triggered.
     - To start the application, run the following command.
@@ -180,7 +186,7 @@ For non-standalone mode, it just needs docker host and docker compose installati
 
 ### Endpoints
 
-#### Create User
+#### Create User (REST/GRPC)
 
 Use this to create a new regular user or admin user account.
 
@@ -216,7 +222,7 @@ Use this to create a new regular user or admin user account.
 }
 ```
 
-#### Login
+#### Login (REST)
 
 Used to gain access to the application
 
@@ -257,7 +263,7 @@ Used to gain access to the application
 }
 ```
 
-#### Add Movie
+#### Add Movie (REST)
 
 To add new movie(s).
 
@@ -291,7 +297,7 @@ To add new movie(s).
 }
 ```
 
-#### Admin Add Movie
+#### Admin Add Movie (REST)
 
 This endpoint can be used by admin to create movies for a specific user.
 
@@ -329,7 +335,7 @@ This endpoint can be used by admin to create movies for a specific user.
 }
 ```
 
-#### Read Movie
+#### Read Movie (REST)
 
 To read movies created by the user
 
@@ -363,7 +369,7 @@ To read movies created by the user
 }
 ```
 
-#### Admin Read Movie
+#### Admin Read Movie (REST)
 
 To read movies created by the user
 
@@ -402,7 +408,7 @@ To read movies created by the user
 }
 ```
 
-#### Update Movie
+#### Update Movie (REST)
 
 To update movies for the user.
 
@@ -432,7 +438,7 @@ To update movies for the user.
 
 Any of the movie fields could be changed, except for the `id` field as it uniquely identifies the movie.
 
-#### Admin Update Movie
+#### Admin Update Movie (REST)
 
 To update movies for the user or for a specific user.
 
@@ -467,7 +473,7 @@ To update movies for the user or for a specific user.
 
 Any of the movie fields could be changed, except for the `id` field as it uniquely identifies the movie.
 
-#### Delete Movie
+#### Delete Movie (REST)
 
 To delete movies for the user
 
@@ -486,7 +492,7 @@ To delete movies for the user
 | HTTP Status code | 200 | On successful delete of movie |
 | HTTP Status code | 401 | If the user is not authenticated |
 
-#### Admin Delete Movie
+#### Admin Delete Movie (REST)
 
 To delete movies for the user or for a specific user
 
@@ -510,7 +516,7 @@ To delete movies for the user or for a specific user
 | HTTP Status code | 401 | If the user is not authenticated |
 | HTTP Status code | 403 | If the user is not authorised |
 
-#### Create User
+#### Create User (REST)
 
 | Method     | URL     | 
 | :-------------      | :----------:      | 
@@ -539,7 +545,7 @@ To delete movies for the user or for a specific user
 }
 ```
 
-#### Read Users
+#### Read Users (REST)
 
 | Method     | URL     |
 | :-------------      | :------------- |
@@ -579,7 +585,7 @@ To delete movies for the user or for a specific user
 }
 ```
 
-#### Delete User
+#### Delete User (REST)
 
 | Method     | URL     | 
 | :-------------      | :----------:      | 
@@ -600,7 +606,7 @@ To delete movies for the user or for a specific user
 | HTTP Status code | 401 | If the user is not authenticated |
 | HTTP Status code | 403 | If the user is not authorised |
 
-#### Update User
+#### Update User (REST)
 
 | Method     | URL     | 
 | :-------------      | :----------:      | 
