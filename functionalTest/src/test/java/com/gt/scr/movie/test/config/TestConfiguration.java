@@ -1,5 +1,7 @@
 package com.gt.scr.movie.test.config;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -24,5 +26,11 @@ public class TestConfiguration {
     @ConfigurationProperties("movie-app")
     public MovieAppConfig movieAppConfig() {
         return ModifiableMovieAppConfig.create();
+    }
+
+    @Bean
+    public ManagedChannel managedChannel() {
+        return ManagedChannelBuilder.forTarget("localhost:8900")
+                .usePlaintext().build();
     }
 }
