@@ -2,8 +2,6 @@ package com.gt.scr.movie.test.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,8 +13,6 @@ import java.util.Optional;
 
 @Component
 public class ResponseHolder {
-    private static final Logger LOG = LoggerFactory.getLogger(ResponseHolder.class);
-
     private List<ResponseEntity> previousResponses = new ArrayList<>();
     private ObjectMapper objectMapper = new ObjectMapper();
     private String token;

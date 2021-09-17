@@ -634,3 +634,6 @@ To delete movies for the user or for a specific user
     "role": "USER"
 }
 ```
+
+### Some Application HowTo's
+[How do I?](./HowTo.MD#How do I?)

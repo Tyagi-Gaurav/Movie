@@ -1,8 +1,13 @@
 package com.gt.scr.movie.test.config;
 
+import com.google.common.base.MoreObjects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.immutables.value.Generated;
 
 /**
@@ -12,7 +17,9 @@ import org.immutables.value.Generated;
  */
 @Generated(from = "MovieAppConfig", generator = "Modifiables")
 @SuppressWarnings({"all"})
+@ParametersAreNonnullByDefault
 @javax.annotation.processing.Generated({"Modifiables.generator", "MovieAppConfig"})
+@NotThreadSafe
 public final class ModifiableMovieAppConfig implements MovieAppConfig {
   private static final long INIT_BIT_HOST = 0x1L;
   private static final long INIT_BIT_PORT = 0x2L;
@@ -57,6 +64,7 @@ public final class ModifiableMovieAppConfig implements MovieAppConfig {
    * Clears the object by setting all attributes to their initial values.
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public ModifiableMovieAppConfig clear() {
     initBits = 0x3L;
     host = null;
@@ -105,6 +113,7 @@ public final class ModifiableMovieAppConfig implements MovieAppConfig {
    * @param host The value for host
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public ModifiableMovieAppConfig setHost(String host) {
     this.host = Objects.requireNonNull(host, "host");
     initBits &= ~INIT_BIT_HOST;
@@ -116,6 +125,7 @@ public final class ModifiableMovieAppConfig implements MovieAppConfig {
    * @param port The value for port
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public ModifiableMovieAppConfig setPort(int port) {
     this.port = port;
     initBits &= ~INIT_BIT_PORT;
@@ -143,6 +153,7 @@ public final class ModifiableMovieAppConfig implements MovieAppConfig {
    * Reset an attribute to its initial value.
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public final ModifiableMovieAppConfig unsetHost() {
     initBits |= INIT_BIT_HOST;
     host = null;
@@ -153,6 +164,7 @@ public final class ModifiableMovieAppConfig implements MovieAppConfig {
    * Reset an attribute to its initial value.
    * @return {@code this} for use in a chained invocation
    */
+  @CanIgnoreReturnValue
   public final ModifiableMovieAppConfig unsetPort() {
     initBits |= INIT_BIT_PORT;
     port = 0;
@@ -186,7 +198,7 @@ public final class ModifiableMovieAppConfig implements MovieAppConfig {
    * @return {@code true} if {@code this} is equal to {@code another} instance
    */
   @Override
-  public boolean equals(Object another) {
+  public boolean equals(@Nullable Object another) {
     if (this == another) return true;
     if (!(another instanceof ModifiableMovieAppConfig)) return false;
     ModifiableMovieAppConfig other = (ModifiableMovieAppConfig) another;
@@ -220,9 +232,9 @@ public final class ModifiableMovieAppConfig implements MovieAppConfig {
    */
   @Override
   public String toString() {
-    return "ModifiableMovieAppConfig{"
-        + "host="  + (hostIsSet() ? host() : "?")
-        + ", port="  + (portIsSet() ? port() : "?")
-        + "}";
+    return MoreObjects.toStringHelper("ModifiableMovieAppConfig")
+        .add("host", hostIsSet() ? host() : "?")
+        .add("port", portIsSet() ? port() : "?")
+        .toString();
   }
 }
