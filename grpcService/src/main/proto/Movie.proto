@@ -1,0 +1,18 @@
+syntax = "proto3";
+import "Common.proto";
+package com.gt.scr.movie.grpc;
+
+option java_multiple_files = true;
+
+option java_outer_classname = "MovieGrpc";
+
+message MovieGrpcCreateRequestDTO {
+  string name = 1;
+  int32 yearProduced = 2;
+  double rating = 3;
+}
+
+service MovieService {
+  rpc createMovie(MovieGrpcCreateRequestDTO) returns (com.gt.scr.movie.grpc.Empty);
+}
+

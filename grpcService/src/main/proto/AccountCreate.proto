@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "Common.proto";
 package com.gt.scr.movie.grpc;
 
 option java_multiple_files = true;
@@ -13,9 +14,7 @@ message AccountCreateGrpcRequestDTO {
   string role = 5;
 }
 
-message Empty {}
-
 service CreateAccountService {
-  rpc createAccount(AccountCreateGrpcRequestDTO) returns (Empty);
+  rpc createAccount(AccountCreateGrpcRequestDTO) returns (com.gt.scr.movie.grpc.Empty);
 }
 

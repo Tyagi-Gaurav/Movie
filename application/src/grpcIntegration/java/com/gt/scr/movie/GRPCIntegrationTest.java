@@ -2,6 +2,7 @@ package com.gt.scr.movie;
 
 import com.gt.scr.movie.grpc.AccountCreateGrpcRequestDTO;
 import com.gt.scr.movie.grpc.LoginGrpcRequestDTO;
+import com.gt.scr.movie.grpc.MovieGrpcCreateRequestDTO;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.junit.jupiter.api.AfterAll;
@@ -67,5 +68,38 @@ class GRPCIntegrationTest {
                 .loginUserWith(loginGrpcRequestDTO)
                 .then()
                 .loginResponseShouldHaveCorrectDetails();
+    }
+
+    @Test
+    @DisplayName("Account Create, Login and Create Movie Entry")
+    public void runScenario2() {
+        AccountCreateGrpcRequestDTO requestDTO = AccountCreateGrpcRequestDTO.newBuilder()
+                .setFirstName("testFirstName")
+                .setLastName("testLastName")
+                .setPassword("testPassword")
+                .setUserName("testUserName")
+                .setRole("ADMIN").build();
+
+        LoginGrpcRequestDTO loginGrpcRequestDTO = LoginGrpcRequestDTO.newBuilder()
+                .setUserName("testUserName")
+                .setPassword("testPassword")
+                .build();
+
+        MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = MovieGrpcCreateRequestDTO.newBuilder()
+                .setName("TestMovieName")
+                .setRating(10.0)
+                .setYearProduced(2020)
+                .build();
+
+        grpcScenarioExecutor
+                .createUserWith(requestDTO)
+                .and().resultIsReturned()
+                .then()
+                .loginUserWith(loginGrpcRequestDTO)
+                .then()
+                .loginResponseShouldHaveCorrectDetails()
+                .then()
+                .createMovieWith(movieGrpcCreateRequestDTO)
+                .and().resultIsReturned();
     }
 }
