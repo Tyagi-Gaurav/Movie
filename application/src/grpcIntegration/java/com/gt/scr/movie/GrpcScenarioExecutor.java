@@ -2,9 +2,12 @@ package com.gt.scr.movie;
 
 import com.gt.scr.movie.grpc.AccountCreateGrpcRequestDTO;
 import com.gt.scr.movie.grpc.CreateAccountServiceGrpc;
+import com.gt.scr.movie.grpc.Empty;
 import com.gt.scr.movie.grpc.LoginGrpcRequestDTO;
 import com.gt.scr.movie.grpc.LoginGrpcResponseDTO;
 import com.gt.scr.movie.grpc.LoginServiceGrpc;
+import com.gt.scr.movie.grpc.MovieGrpcCreateRequestDTO;
+import com.gt.scr.movie.grpc.MovieServiceGrpc;
 import io.grpc.ManagedChannel;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,11 +15,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GrpcScenarioExecutor {
     private final CreateAccountServiceGrpc.CreateAccountServiceBlockingStub accountServiceBlockingStub;
     private final LoginServiceGrpc.LoginServiceBlockingStub loginServiceBlockingStub;
+    private final ManagedChannel managedChannel;
+    private MovieServiceGrpc.MovieServiceBlockingStub movieServiceBlockingStub;
     private Object lastResponse;
+    private String normalUserToken;
 
     public GrpcScenarioExecutor(ManagedChannel managedChannel) {
         accountServiceBlockingStub = CreateAccountServiceGrpc.newBlockingStub(managedChannel);
         loginServiceBlockingStub = LoginServiceGrpc.newBlockingStub(managedChannel);
+        this.managedChannel = managedChannel;
     }
 
     public GrpcScenarioExecutor createUserWith(AccountCreateGrpcRequestDTO requestDTO) {
@@ -46,9 +53,18 @@ public class GrpcScenarioExecutor {
         return this;
     }
 
-    public void loginResponseShouldHaveCorrectDetails() {
+    public GrpcScenarioExecutor loginResponseShouldHaveCorrectDetails() {
         LoginGrpcResponseDTO loginGrpcResponseDTO = (LoginGrpcResponseDTO) this.lastResponse;
         assertThat(loginGrpcResponseDTO.getToken()).isNotEmpty();
         assertThat(loginGrpcResponseDTO.getId()).isNotEmpty();
+        this.normalUserToken = loginGrpcResponseDTO.getToken();
+        return this;
+    }
+
+    public GrpcScenarioExecutor createMovieWith(MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO) {
+        movieServiceBlockingStub = MovieServiceGrpc.newBlockingStub(managedChannel)
+                .withCallCredentials(new IntegrationAuthenticationCallCredentials(normalUserToken));
+        lastResponse = movieServiceBlockingStub.createMovie(movieGrpcCreateRequestDTO);
+        return this;
     }
 }
