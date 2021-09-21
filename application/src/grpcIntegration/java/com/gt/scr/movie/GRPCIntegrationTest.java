@@ -1,12 +1,12 @@
 package com.gt.scr.movie;
 
 import com.gt.scr.movie.grpc.AccountCreateGrpcRequestDTO;
-import com.gt.scr.movie.grpc.CreateAccountServiceGrpc;
-import com.gt.scr.movie.grpc.Empty;
+import com.gt.scr.movie.grpc.LoginGrpcRequestDTO;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -33,11 +31,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles({"grpc"})
 class GRPCIntegrationTest {
     private static ManagedChannel managedChannel;
+    private static GrpcScenarioExecutor grpcScenarioExecutor;
 
     @BeforeAll
     static void setUp() {
         managedChannel = ManagedChannelBuilder.forTarget("localhost:8900")
                 .usePlaintext().build();
+        grpcScenarioExecutor = new GrpcScenarioExecutor(managedChannel);
     }
 
     @AfterAll
@@ -46,10 +46,8 @@ class GRPCIntegrationTest {
     }
 
     @Test
-    public void runThis() {
-        CreateAccountServiceGrpc.CreateAccountServiceBlockingStub stub =
-                CreateAccountServiceGrpc.newBlockingStub(managedChannel);
-
+    @DisplayName("Account Create and Login")
+    public void runScenario1() {
         AccountCreateGrpcRequestDTO requestDTO = AccountCreateGrpcRequestDTO.newBuilder()
                 .setFirstName("testFirstName")
                 .setLastName("testLastName")
@@ -57,7 +55,17 @@ class GRPCIntegrationTest {
                 .setUserName("testUserName")
                 .setRole("ADMIN").build();
 
-        Empty response = stub.createAccount(requestDTO);
-        assertThat(response).isNotNull();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = LoginGrpcRequestDTO.newBuilder()
+                .setUserName("testUserName")
+                .setPassword("testPassword")
+                .build();
+
+        grpcScenarioExecutor
+                .createUserWith(requestDTO)
+                .and().resultIsReturned()
+                .then()
+                .loginUserWith(loginGrpcRequestDTO)
+                .then()
+                .loginResponseShouldHaveCorrectDetails();
     }
 }
