@@ -184,9 +184,9 @@ For non-standalone mode, it just needs docker host and docker compose installati
 | COMMAND_TIMEOUT     | 500ms      | The default query timeout for all database queries. |
 | GracefulShutdownWaitSeconds     | 20 seconds      | The time application waits to terminate after receiving a SIGTERM signal. |
 
-### Endpoints
+### REST Endpoints
 
-#### Create User (REST/GRPC)
+#### Create User (REST)
 
 Use this to create a new regular user or admin user account.
 
@@ -634,6 +634,11 @@ To delete movies for the user or for a specific user
     "role": "USER"
 }
 ```
+
+### GRPC Endpoints
+
+#### CreateAccount
+#### Login
 
 ### Some Application HowTo's
 [How do I?](./HowTo.MD#How do I?)

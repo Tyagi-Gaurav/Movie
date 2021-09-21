@@ -9,6 +9,7 @@ services:
     ports:
       - "8080:8080"
       - "8900:8900"
+      - "8443:8443"
     environment:
       - "SPRING_PROFILES_ACTIVE=prod"
       - "SERVER_PORT=8080"

@@ -7,3 +7,8 @@ $ mysql -h localhost -p -u root
 (pwd: password)
 mysql> use movieMetadata
 ```
+
+#### How do I generate GRPC stubs for the proto file?
+```
+./gradlew grpcService:generateProto
+```

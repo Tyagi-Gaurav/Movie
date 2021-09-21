@@ -1,5 +1,6 @@
 Feature: Users should be able to create an account
 
+  @grpc
   Scenario: User should be able to create a new account
     Given a user attempts to create a new account with following details
       | firstName | lastName | userName | role | password |
@@ -17,6 +18,7 @@ Feature: Users should be able to create an account
       | bcsdf     | desdff   | <captured> | USER | <random> |
     Then the response should be received with HTTP status code 403
 
+  @grpc
   Scenario: User should be able to login after creating a new account
     Given a user attempts to create a new account with following details
       | firstName | lastName | userName | role | password |
