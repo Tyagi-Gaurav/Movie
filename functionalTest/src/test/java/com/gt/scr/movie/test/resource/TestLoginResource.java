@@ -64,6 +64,8 @@ public class TestLoginResource extends AbstractResource {
         if (responseDTO != null) {
             responseHolder.setResponse(ResponseEntity.status(HttpStatus.OK)
                     .body(new TestLoginResponseDTO(responseDTO.getToken(), responseDTO.getId())));
+            responseHolder.storeUserToken(responseDTO.getToken());
+            responseHolder.storeUserId(responseDTO.getId());
         } else {
             responseHolder.setResponse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
         }

@@ -20,8 +20,8 @@ public class TestAuthenticationCallCredentials extends CallCredentials {
         appExecutor.execute(() -> {
             Metadata metadata = new Metadata();
             metadata.put(
-                    Metadata.Key.of("Authorization",
-                            Metadata.ASCII_STRING_MARSHALLER), "Bearer " + token);
+                    Metadata.Key.of("authToken",
+                            Metadata.ASCII_STRING_MARSHALLER), token);
             applier.apply(metadata);
         });
     }
