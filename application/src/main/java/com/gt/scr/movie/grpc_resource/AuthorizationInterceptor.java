@@ -17,7 +17,7 @@ public class AuthorizationInterceptor implements ServerInterceptor {
 
     private final Key signingKey;
     private final UserService userService;
-    public static final Context.Key USER_ID_KEY = Context.key("USER_ID");
+    public static final Context.Key<String> USER_ID_KEY = Context.key("USER_ID");
 
     public AuthorizationInterceptor(Key signingKey, UserService userService) {
         this.signingKey = signingKey;
@@ -25,9 +25,9 @@ public class AuthorizationInterceptor implements ServerInterceptor {
     }
 
     @Override
-    public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call,
+    public <R, Q> ServerCall.Listener<R> interceptCall(ServerCall<R, Q> call,
                                                                  Metadata headers,
-                                                                 ServerCallHandler<ReqT, RespT> next) {
+                                                                 ServerCallHandler<R, Q> next) {
         String authToken = headers.get(Metadata.Key.of("authToken", Metadata.ASCII_STRING_MARSHALLER));
 
         if (authToken != null) {
