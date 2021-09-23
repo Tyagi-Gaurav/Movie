@@ -26,7 +26,7 @@ public class MovieGrpcResource extends MovieServiceGrpc.MovieServiceImplBase {
                 BigDecimal.valueOf(request.getRating()),
                 System.nanoTime());
 
-        String userId = AuthorizationInterceptor.USER_ID_KEY.get().toString();
+        String userId = AuthorizationInterceptor.USER_ID_KEY.get();
 
         movieService.addMovie(UUID.fromString(userId), movie);
         responseObserver.onNext(Empty.newBuilder().build());

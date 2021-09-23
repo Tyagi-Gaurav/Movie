@@ -6,12 +6,12 @@ import io.grpc.Metadata;
 import io.grpc.ServerCall;
 import io.grpc.Status;
 
-public class ExceptionHandlingServerCallListener<ReqT, RespT>
-            extends ForwardingServerCallListener.SimpleForwardingServerCallListener<ReqT> {
-        private ServerCall<ReqT, RespT> serverCall;
+public class ExceptionHandlingServerCallListener<R, T>
+            extends ForwardingServerCallListener.SimpleForwardingServerCallListener<R> {
+        private ServerCall<R, T> serverCall;
         private Metadata metadata;
 
-        ExceptionHandlingServerCallListener(ServerCall.Listener<ReqT> listener, ServerCall<ReqT, RespT> serverCall,
+        ExceptionHandlingServerCallListener(ServerCall.Listener<R> listener, ServerCall<R, T> serverCall,
                                             Metadata metadata) {
             super(listener);
             this.serverCall = serverCall;
@@ -39,7 +39,7 @@ public class ExceptionHandlingServerCallListener<ReqT, RespT>
         }
 
         private void handleException(Exception exception,
-                                     ServerCall<ReqT, RespT> serverCall,
+                                     ServerCall<R, T> serverCall,
                                      Metadata metadata) {
             if (exception instanceof IllegalArgumentException) {
                 serverCall.close(Status.INVALID_ARGUMENT.withDescription(exception.getMessage()), metadata);
