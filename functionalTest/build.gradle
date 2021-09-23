@@ -35,7 +35,7 @@ ext {
     mockitoVersion = '3.11.2'
     slf4jVersion = '2.0.0-alpha2'
     commonsLang3Version = '3.12.0'
-    grpcVersion = '1.40.1'
+    grpcVersion = '1.41.0'
 }
 
 dependencies {
