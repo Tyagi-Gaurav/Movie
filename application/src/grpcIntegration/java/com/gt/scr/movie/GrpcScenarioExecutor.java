@@ -9,6 +9,8 @@ import com.gt.scr.movie.grpc.LoginServiceGrpc;
 import com.gt.scr.movie.grpc.MovieGrpcCreateRequestDTO;
 import com.gt.scr.movie.grpc.MovieServiceGrpc;
 import io.grpc.ManagedChannel;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,6 +21,7 @@ public class GrpcScenarioExecutor {
     private MovieServiceGrpc.MovieServiceBlockingStub movieServiceBlockingStub;
     private Object lastResponse;
     private String normalUserToken;
+    private Exception lastException;
 
     public GrpcScenarioExecutor(ManagedChannel managedChannel) {
         accountServiceBlockingStub = CreateAccountServiceGrpc.newBlockingStub(managedChannel);
@@ -64,7 +67,18 @@ public class GrpcScenarioExecutor {
     public GrpcScenarioExecutor createMovieWith(MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO) {
         movieServiceBlockingStub = MovieServiceGrpc.newBlockingStub(managedChannel)
                 .withCallCredentials(new IntegrationAuthenticationCallCredentials(normalUserToken));
-        lastResponse = movieServiceBlockingStub.createMovie(movieGrpcCreateRequestDTO);
+        try {
+            lastResponse = movieServiceBlockingStub.createMovie(movieGrpcCreateRequestDTO);
+        } catch(Exception e) {
+            lastException = e;
+        }
+        return this;
+    }
+
+    public GrpcScenarioExecutor errorIsReturnedWithStatus(Status status) {
+        assertThat(lastException).isInstanceOf(StatusRuntimeException.class);
+        var statusException = (StatusRuntimeException)lastException;
+        assertThat(statusException.getStatus().getCode()).isEqualTo(status.getCode());
         return this;
     }
 }

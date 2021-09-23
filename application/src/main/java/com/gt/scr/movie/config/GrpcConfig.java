@@ -2,6 +2,7 @@ package com.gt.scr.movie.config;
 
 import com.gt.scr.movie.grpc_resource.AuthorizationInterceptor;
 import com.gt.scr.movie.grpc_resource.CreateAccountGrpcResource;
+import com.gt.scr.movie.grpc_resource.ExceptionHandlerInterceptor;
 import com.gt.scr.movie.grpc_resource.LoginGrpcResource;
 import com.gt.scr.movie.grpc_resource.MovieGrpcResource;
 import com.gt.scr.movie.service.MovieService;
@@ -44,15 +45,22 @@ public class GrpcConfig {
         return new MovieGrpcResource(movieService);
     }
 
+    @Bean
+    public ExceptionHandlerInterceptor exceptionHandlerInterceptor() {
+        return new ExceptionHandlerInterceptor();
+    }
+
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Server server(CreateAccountGrpcResource createAccountGrpcResource,
                          LoginGrpcResource loginGrpcResource,
                          MovieGrpcResource movieGrpcResource,
-                         AuthorizationInterceptor authorizationInterceptor) {
+                         AuthorizationInterceptor authorizationInterceptor,
+                         ExceptionHandlerInterceptor exceptionHandlerInterceptor) {
         return ServerBuilder.forPort(8900)
                 .addService(createAccountGrpcResource)
                 .addService(loginGrpcResource)
                 .addService(ServerInterceptors.intercept(movieGrpcResource, authorizationInterceptor))
+                .intercept(exceptionHandlerInterceptor)
                 .build();
     }
 }
