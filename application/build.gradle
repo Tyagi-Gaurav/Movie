@@ -10,7 +10,7 @@ ext {
     springVersion = '5.3.10'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.9'
-    slf4jVersion = '2.0.0-alpha2'
+    slf4jVersion = '2.0.0-alpha5'
     jacksonVersion = '2.12.5'
     jsonWebTokenVersion = '0.11.2'
     embeddedRedisVersion = '0.7.3'
