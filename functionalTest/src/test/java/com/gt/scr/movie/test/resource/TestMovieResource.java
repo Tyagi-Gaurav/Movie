@@ -6,10 +6,10 @@ import com.gt.scr.movie.grpc.MovieServiceGrpc;
 import com.gt.scr.movie.test.auth.TestAuthenticationCallCredentials;
 import com.gt.scr.movie.test.config.MovieAppConfig;
 import com.gt.scr.movie.test.config.TestEnvironment;
-import com.gt.scr.movie.test.domain.TestLoginRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieUpdateRequestDTO;
 import io.grpc.ManagedChannel;
+import io.grpc.StatusRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -48,10 +48,14 @@ public class TestMovieResource extends AbstractResource {
         MovieServiceGrpc.MovieServiceBlockingStub movieServiceBlockingStub =
                 MovieServiceGrpc.newBlockingStub(managedChannel)
                 .withCallCredentials(new TestAuthenticationCallCredentials(responseHolder.getToken()));
-        Empty movie = movieServiceBlockingStub.createMovie(createRequestDTO);
-        if (movie != null) {
-            responseHolder.setResponse(ResponseEntity.status(204).build());
-        } else {
+        try {
+            Empty movie = movieServiceBlockingStub.createMovie(createRequestDTO);
+            if (movie != null) {
+                responseHolder.setResponse(ResponseEntity.status(204).build());
+            }
+        } catch(StatusRuntimeException e) {
+            responseHolder.setResponse(ResponseEntity.status(403).build());
+        }catch (Exception e) {
             responseHolder.setResponse(ResponseEntity.status(500).build());
         }
     }

@@ -5,6 +5,7 @@ import com.gt.scr.movie.grpc.LoginGrpcRequestDTO;
 import com.gt.scr.movie.grpc.MovieGrpcCreateRequestDTO;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static com.gt.scr.movie.TestBuilder.*;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -49,17 +52,8 @@ class GRPCIntegrationTest {
     @Test
     @DisplayName("Account Create and Login")
     public void runScenario1() {
-        AccountCreateGrpcRequestDTO requestDTO = AccountCreateGrpcRequestDTO.newBuilder()
-                .setFirstName("testFirstName")
-                .setLastName("testLastName")
-                .setPassword("testPassword")
-                .setUserName("testUserName")
-                .setRole("ADMIN").build();
-
-        LoginGrpcRequestDTO loginGrpcRequestDTO = LoginGrpcRequestDTO.newBuilder()
-                .setUserName("testUserName")
-                .setPassword("testPassword")
-                .build();
+        AccountCreateGrpcRequestDTO requestDTO = accountCreate();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate();
 
         grpcScenarioExecutor
                 .createUserWith(requestDTO)
@@ -73,23 +67,9 @@ class GRPCIntegrationTest {
     @Test
     @DisplayName("Account Create, Login and Create Movie Entry")
     public void runScenario2() {
-        AccountCreateGrpcRequestDTO requestDTO = AccountCreateGrpcRequestDTO.newBuilder()
-                .setFirstName("testFirstName")
-                .setLastName("testLastName")
-                .setPassword("testPassword")
-                .setUserName("testUserName")
-                .setRole("ADMIN").build();
-
-        LoginGrpcRequestDTO loginGrpcRequestDTO = LoginGrpcRequestDTO.newBuilder()
-                .setUserName("testUserName")
-                .setPassword("testPassword")
-                .build();
-
-        MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = MovieGrpcCreateRequestDTO.newBuilder()
-                .setName("TestMovieName")
-                .setRating(10.0)
-                .setYearProduced(2020)
-                .build();
+        AccountCreateGrpcRequestDTO requestDTO = accountCreate();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate();
+        MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = movieCreate();
 
         grpcScenarioExecutor
                 .createUserWith(requestDTO)
@@ -101,5 +81,26 @@ class GRPCIntegrationTest {
                 .then()
                 .createMovieWith(movieGrpcCreateRequestDTO)
                 .and().resultIsReturned();
+    }
+
+    @Test
+    @DisplayName("Account Create, Login and Create Movie Entry twice to return error")
+    public void runScenario3() {
+        AccountCreateGrpcRequestDTO requestDTO = accountCreate();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate();
+        MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = movieCreate();
+
+        grpcScenarioExecutor
+                .createUserWith(requestDTO)
+                .and().resultIsReturned()
+                .then()
+                .loginUserWith(loginGrpcRequestDTO)
+                .then()
+                .loginResponseShouldHaveCorrectDetails()
+                .then()
+                .createMovieWith(movieGrpcCreateRequestDTO)
+                .then().resultIsReturned()
+                .createMovieWith(movieGrpcCreateRequestDTO)
+                .and().errorIsReturnedWithStatus(Status.ALREADY_EXISTS);
     }
 }
