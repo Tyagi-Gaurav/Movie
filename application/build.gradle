@@ -134,6 +134,24 @@ dependencies {
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
 }
 
+scmVersion {
+    tag { prefix = project.name + "-" }
+    checks {
+        uncommittedChanges = true
+        snapshotDependencies = true
+        aheadOfRemote = false
+    }
+    useHighestVersion true
+    versionIncrementer 'incrementMinor'
+
+    hooks {
+        pre 'fileUpdate', [file: 'README.MD', pattern: {v,p -> /(version.) $v/}, replacement: {v, p -> "\$1 $v"}]
+        pre 'commit'
+    }
+}
+
+project.version = scmVersion.version
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
