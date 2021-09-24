@@ -3,6 +3,9 @@
 
 ## Movie API
 
+### Current Version
+version* x.x.x
+
 ### Functionality
 
 A REST API that allows users to update movie ratings
