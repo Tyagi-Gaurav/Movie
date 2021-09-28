@@ -30,7 +30,7 @@ public class TestConfiguration {
 
     @Bean
     public ManagedChannel managedChannel() {
-        return ManagedChannelBuilder.forTarget("localhost:8900")
+        return ManagedChannelBuilder.forTarget("localhost:9900")
                 .usePlaintext().build();
     }
 }

@@ -4,12 +4,12 @@ spring:
     changeLog: classpath:db.changelog/dbchangelog.sql
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:9090}
   servlet:
     context-path: /api
 
 management:
-  server.port: ${SERVER_MGT_PORT:8081}
+  server.port: ${SERVER_MGT_PORT:9091}
   endpoint:
     health:
       show-details: always

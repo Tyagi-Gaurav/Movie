@@ -25,6 +25,7 @@ jar{
 
 ext {
     springBootVersion = '2.5.5'
+    springBootSecurity = '2.5.2'
     springVersion = '5.3.10'
     cucumberVersion = '6.10.4'
     junitVersion = '5.8.1'
@@ -45,10 +46,11 @@ dependencies {
     testImplementation project(":grpcService")
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     testImplementation "org.springframework:spring-webmvc:${springVersion}"
     testImplementation "org.springframework:spring-web:${springVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    testImplementation "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootSecurity}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.junit.platform:junit-platform-commons:${junitPlatformVersion}"

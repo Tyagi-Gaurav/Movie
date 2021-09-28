@@ -1,0 +1,39 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.5'
+    id 'war'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.8.1'
+    jqueryVersion = '3.6.0'
+    boostrapVersion = '5.1.1'
+    webjarsLocatorCoreVersion = '0.48'
+    springBootVersion = '2.5.5'
+    springOAuthVersion = '2.5.2'
+    jsCookieVersion = '2.2.1'
+}
+
+dependencies {
+    implementation "org.webjars:jquery:${jqueryVersion}"
+    implementation "org.webjars:bootstrap:${boostrapVersion}"
+    implementation "org.webjars:webjars-locator-core:${webjarsLocatorCoreVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client:${springBootVersion}"
+    implementation "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springOAuthVersion}"
+    implementation "org.webjars:js-cookie:${jsCookieVersion}"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+jar {
+    enabled = false
+}
+
+test {
+    useJUnitPlatform()
+}

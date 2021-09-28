@@ -27,6 +27,7 @@ ext {
     mockitoVersion = '3.12.4'
     reactorVersion = '3.4.10'
     grpcVersion = '1.41.0'
+    springOAuthVersion = '2.5.2'
 }
 
 repositories {
@@ -89,6 +90,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}") {
         exclude group: "org.slf4j", module: "slf4j-api"
     }
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client:${springBootVersion}"
+    implementation "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springOAuthVersion}"
     implementation "org.springframework:spring-jdbc:${springVersion}"
     implementation "org.springframework:spring-core:${springVersion}"
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
@@ -150,7 +153,7 @@ scmVersion {
     }
 }
 
-project.version = scmVersion.version
+project.version = "DEV"
 
 test {
     useJUnitPlatform()

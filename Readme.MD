@@ -36,6 +36,13 @@ The application current runs on Java 16.
 To access the application, users need a valid `userId` and `password` to login. Once they login, they would be provided
 a security token ([JWT](https://jwt.io/))
 
+### User Registration with Google, Github credentials
+The application also supports login to App via Google and Github credentials. When the `ui` container
+is running locally, the page can be accessed via 
+```
+http://localhost:8080/ui/index.html
+```
+
 ### Testing
 
 There are three categories of tests available to execute.

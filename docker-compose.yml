@@ -7,17 +7,33 @@ services:
     build:
       context: application
     ports:
-      - "8080:8080"
-      - "8900:8900"
+      - "9090:9090"
+      - "9900:9900"
       - "8443:8443"
     environment:
       - "SPRING_PROFILES_ACTIVE=prod"
-      - "SERVER_PORT=8080"
-      - "SERVER_MGT_PORT=8081"
+      - "SERVER_PORT=9090"
+      - "SERVER_MGT_PORT=9091"
       - "MYSQL_HOST=local.mysql"
       - "MYSQL_PWD=password"
       - "MYSQL_USER=root"
       - "MYSQL_DB_NAME=movieMetadata"
+    networks:
+      - overlay
+
+  ui-app:
+    container_name: local.ui-app
+    depends_on:
+      - movie-app
+    build:
+      context: ui
+    ports:
+      - "8080:8080"
+    environment:
+      - "OAUTH_CLIENT_ID_GITHUB=${OAUTH_CLIENT_ID_GITHUB}"
+      - "OAUTH_CLIENT_SECRET_GITHUB=${OAUTH_CLIENT_SECRET_GITHUB}"
+      - "OAUTH_CLIENT_ID_GOOGLE=${OAUTH_CLIENT_ID_GOOGLE}"
+      - "OAUTH_CLIENT_SECRET_GOOGLE=${OAUTH_CLIENT_SECRET_GOOGLE}"
     networks:
       - overlay
 
