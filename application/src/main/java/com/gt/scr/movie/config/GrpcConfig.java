@@ -56,7 +56,7 @@ public class GrpcConfig {
                          MovieGrpcResource movieGrpcResource,
                          AuthorizationInterceptor authorizationInterceptor,
                          ExceptionHandlerInterceptor exceptionHandlerInterceptor) {
-        return ServerBuilder.forPort(8900)
+        return ServerBuilder.forPort(9900)
                 .addService(createAccountGrpcResource)
                 .addService(loginGrpcResource)
                 .addService(ServerInterceptors.intercept(movieGrpcResource, authorizationInterceptor))

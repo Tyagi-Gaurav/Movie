@@ -1,0 +1,28 @@
+spring:
+  active: prod
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${OAUTH_CLIENT_ID_GITHUB:github_client_id}
+            clientSecret: ${OAUTH_CLIENT_SECRET_GITHUB:github_client_secret}
+          google:
+            clientId: ${OAUTH_CLIENT_ID_GOOGLE:google_client_id}
+            clientSecret: ${OAUTH_CLIENT_SECRET_GOOGLE:google_client_secret}
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /ui
+
+management:
+  server.port: ${SERVER_MGT_PORT:8081}
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure.include: health, mappings, metrics
+      path-mapping:
+        health: healthcheck

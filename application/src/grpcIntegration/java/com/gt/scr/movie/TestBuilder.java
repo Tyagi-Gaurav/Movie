@@ -3,21 +3,22 @@ package com.gt.scr.movie;
 import com.gt.scr.movie.grpc.AccountCreateGrpcRequestDTO;
 import com.gt.scr.movie.grpc.LoginGrpcRequestDTO;
 import com.gt.scr.movie.grpc.MovieGrpcCreateRequestDTO;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class TestBuilder {
     public static AccountCreateGrpcRequestDTO accountCreate() {
         return AccountCreateGrpcRequestDTO.newBuilder()
                 .setFirstName("testFirstName")
                 .setLastName("testLastName")
-                .setPassword("testPassword")
-                .setUserName("testUserName")
+                .setPassword(RandomStringUtils.randomAlphanumeric(7))
+                .setUserName(RandomStringUtils.randomAlphanumeric(7))
                 .setRole("ADMIN").build();
     }
 
-    public static LoginGrpcRequestDTO loginCreate() {
+    public static LoginGrpcRequestDTO loginCreate(AccountCreateGrpcRequestDTO accountCreateGrpcRequestDTO) {
         return LoginGrpcRequestDTO.newBuilder()
-                .setUserName("testUserName")
-                .setPassword("testPassword")
+                .setUserName(accountCreateGrpcRequestDTO.getUserName())
+                .setPassword(accountCreateGrpcRequestDTO.getPassword())
                 .build();
     }
 

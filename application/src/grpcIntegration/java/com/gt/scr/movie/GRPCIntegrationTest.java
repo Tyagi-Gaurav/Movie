@@ -39,7 +39,7 @@ class GRPCIntegrationTest {
 
     @BeforeAll
     static void setUp() {
-        managedChannel = ManagedChannelBuilder.forTarget("localhost:8900")
+        managedChannel = ManagedChannelBuilder.forTarget("localhost:9900")
                 .usePlaintext().build();
         grpcScenarioExecutor = new GrpcScenarioExecutor(managedChannel);
     }
@@ -53,7 +53,7 @@ class GRPCIntegrationTest {
     @DisplayName("Account Create and Login")
     public void runScenario1() {
         AccountCreateGrpcRequestDTO requestDTO = accountCreate();
-        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate(requestDTO);
 
         grpcScenarioExecutor
                 .createUserWith(requestDTO)
@@ -68,7 +68,7 @@ class GRPCIntegrationTest {
     @DisplayName("Account Create, Login and Create Movie Entry")
     public void runScenario2() {
         AccountCreateGrpcRequestDTO requestDTO = accountCreate();
-        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate(requestDTO);
         MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = movieCreate();
 
         grpcScenarioExecutor
@@ -87,7 +87,7 @@ class GRPCIntegrationTest {
     @DisplayName("Account Create, Login and Create Movie Entry twice to return error")
     public void runScenario3() {
         AccountCreateGrpcRequestDTO requestDTO = accountCreate();
-        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate(requestDTO);
         MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = movieCreate();
 
         grpcScenarioExecutor

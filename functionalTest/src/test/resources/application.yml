@@ -3,4 +3,4 @@ spring:
 
 movie-app:
   host: ${MOVIE_APP_HOST:localhost}
-  port: ${MOVIE_APP_PORT:8080}
+  port: ${MOVIE_APP_PORT:9090}

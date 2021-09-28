@@ -28,6 +28,11 @@ jobs:
       run: ./gradlew clean check build
 
     - name: Build the docker-compose stack
+      env:
+        OAUTH_CLIENT_ID_GITHUB: ${{ secrets.OAUTH_CLIENT_ID_GITHUB }}
+        OAUTH_CLIENT_SECRET_GITHUB: ${{ secrets.OAUTH_CLIENT_SECRET_GITHUB }}
+        OAUTH_CLIENT_ID_GOOGLE: ${{ secrets.OAUTH_CLIENT_ID_GOOGLE }}
+        OAUTH_CLIENT_SECRET_GOOGLE: ${{ secrets.OAUTH_CLIENT_SECRET_GOOGLE }}
       run: docker-compose up -d
 
     - name: Sleep
