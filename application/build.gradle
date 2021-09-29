@@ -27,7 +27,7 @@ ext {
     mockitoVersion = '3.12.4'
     reactorVersion = '3.4.10'
     grpcVersion = '1.41.0'
-    springOAuthVersion = '2.5.2'
+    springOAuthVersion = '2.5.5'
 }
 
 repositories {
