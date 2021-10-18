@@ -4,7 +4,6 @@ import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,8 +14,11 @@ import java.util.UUID;
 @Service
 public class MovieServiceImpl implements MovieService {
 
-    @Autowired
     private MovieRepository movieRepository;
+
+    public MovieServiceImpl(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
 
     @Override
     public void addMovie(UUID userId, Movie movie) {

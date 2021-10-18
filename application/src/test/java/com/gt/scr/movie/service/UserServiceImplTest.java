@@ -3,11 +3,11 @@ package com.gt.scr.movie.service;
 import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -17,14 +17,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = UserServiceImpl.class)
+@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
-    @Autowired
     private UserService userService;
 
-    @MockBean
-    @Qualifier("mysql")
+    @Mock
     private UserRepository repository;
+
+    @BeforeEach
+    void setUp() {
+        userService = new UserServiceImpl(repository);
+    }
 
     @Test
     void shouldAddUser() {

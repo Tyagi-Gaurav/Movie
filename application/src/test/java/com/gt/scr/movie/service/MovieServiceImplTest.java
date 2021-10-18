@@ -4,12 +4,12 @@ import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.util.MovieBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,14 +22,17 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest(classes = MovieServiceImpl.class)
 class MovieServiceImplTest {
 
-    @Autowired
+    @Mock
+    private MovieRepository movieRepository;
+
     private MovieService movieService;
 
-    @MockBean
-    private MovieRepository movieRepository;
+    @BeforeEach
+    void setUp() {
+        movieService = new MovieServiceImpl(movieRepository);
+    }
 
     @Test
     void shouldAddMovie() {

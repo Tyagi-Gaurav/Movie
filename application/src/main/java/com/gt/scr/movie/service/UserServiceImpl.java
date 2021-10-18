@@ -3,7 +3,6 @@ package com.gt.scr.movie.service;
 import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,9 +13,11 @@ import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    @Qualifier(value = "mysql")
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(@Qualifier(value = "mysql") UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void add(User user) {
