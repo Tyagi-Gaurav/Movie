@@ -3,4 +3,5 @@ include 'functionalTest'
 include 'application'
 include 'grpcService'
 include 'ui'
+include 'testOauth'
 

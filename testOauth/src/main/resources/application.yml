@@ -1,0 +1,13 @@
+server:
+  port: 10081
+  servlet:
+    context-path: /auth
+
+user:
+  oauth:
+    clientId: ${OAUTH_CLIENT_ID_TEST:test_client_id}
+    clientSecret: ${OAUTH_CLIENT_SECRET_TEST:test_client_secret}
+    redirectUris: http://localhost:8082/login/oauth2/code/
+    user:
+      username: test
+      password: abcd123

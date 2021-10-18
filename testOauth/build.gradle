@@ -1,0 +1,27 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.5'
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.8.1'
+    springBootVersion = '2.5.5'
+    springOAuthVersion = '2.5.2'
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+    implementation "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springOAuthVersion}"
+    implementation "org.springframework.security.oauth.boot:spring-security-oauth2-authorization-server:${springOAuthVersion}"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
