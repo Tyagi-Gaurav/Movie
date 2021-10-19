@@ -221,17 +221,6 @@ spotbugsGrpcIntegration {
     }
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "Tyagi-Gaurav_Movie"
-        property "sonar.organization", "tyagi-gaurav"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.dynamicAnalysis", "reuseReports"
-        property "sonar.jacoco.reportPath", "$buildDir/jacoco"
-    }
-}
-
 pmd {
     consoleOutput = true
     toolVersion = "6.37.0"
