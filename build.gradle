@@ -12,16 +12,6 @@ plugins {
     id "org.sonarqube" version "3.3"
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "Tyagi-Gaurav_Movie"
-        property "sonar.organization", "tyagi-gaurav"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.dynamicAnalysis", "reuseReports"
-    }
-}
-
 apply from: 'gradle/root.gradle'
 
 defaultTasks 'clean', 'check', 'build'
