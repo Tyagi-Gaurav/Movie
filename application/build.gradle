@@ -23,7 +23,7 @@ ext {
     junitVersion = '5.8.1'
     assertJVersion = '3.21.0'
     h2DbVersion = '1.4.200'
-    testContainerVersion = '1.16.0'
+    testContainerVersion = '1.16.1'
     mockitoVersion = '4.0.0'
     reactorVersion = '3.4.11'
     grpcVersion = '1.41.0'
