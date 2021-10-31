@@ -5,6 +5,7 @@ import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
@@ -42,5 +43,9 @@ public class TestObjectBuilder {
                 randomAlphabetic(4), randomAlphabetic(6)
                 , randomAlphabetic(7), randomAlphabetic(7),
                 "ADMIN");
+    }
+
+    public static LoginRequestDTO invalidPasswordLoginRequestUsing(AccountCreateRequestDTO accountCreateRequestDTO) {
+        return new LoginRequestDTO(accountCreateRequestDTO.userName(), UUID.randomUUID().toString());
     }
 }

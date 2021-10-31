@@ -2,25 +2,22 @@ package com.gt.scr.movie.functions;
 
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 public class AdminUserDelete
-        implements Interaction<MockMvc, LoginResponseDTO, String, MvcResult> {
+        implements Interaction<WebTestClient, LoginResponseDTO, String, WebTestClient.ResponseSpec> {
 
     @Override
-    public MvcResult apply(MockMvc mockMvc,
+    public WebTestClient.ResponseSpec apply(WebTestClient webTestClient,
                            LoginResponseDTO loginResponseDTO,
                            String userId) {
 
         try {
-            return mockMvc.perform(delete("/user/manage")
-                    .param("userId", userId)
+            return webTestClient.delete()
+                    .uri(uriBuilder -> uriBuilder.path("/user/manage").queryParam("userId", userId).build())
                     .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", loginResponseDTO.token()))
-                    .contentType("application/vnd.user.delete.v1+json"))
-                    .andReturn();
+                    .header(HttpHeaders.CONTENT_TYPE, "application/vnd.user.delete.v1+json")
+                    .exchange();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

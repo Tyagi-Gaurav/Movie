@@ -2,11 +2,11 @@ spring:
   active: prod
   liquibase:
     changeLog: classpath:db.changelog/dbchangelog.sql
+  webflux:
+    base-path: /api
 
 server:
   port: ${SERVER_PORT:9090}
-  servlet:
-    context-path: /api
 
 management:
   server.port: ${SERVER_MGT_PORT:9091}

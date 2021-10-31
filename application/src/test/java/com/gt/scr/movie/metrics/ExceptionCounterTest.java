@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ExceptionCounterTest {
-    private MeterRegistry meterRegistry = new SimpleMeterRegistry();
+    private final MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
-    private ExceptionCounter exceptionCounter = new ExceptionCounter(meterRegistry);
+    private final ExceptionCounter exceptionCounter = new ExceptionCounter(meterRegistry);
 
     @Test
     void shouldIncrementExceptionMetricWhenItOccurs() {

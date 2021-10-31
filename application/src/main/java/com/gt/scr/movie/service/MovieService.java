@@ -2,18 +2,19 @@ package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.security.access.prepost.PreAuthorize;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface MovieService {
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    void addMovie(UUID userId, Movie movie);
+    Mono<Void> addMovie(UUID userId, Movie movie);
 
-    List<Movie> getMoviesFor(UUID userId);
+    Flux<Movie> getMoviesFor(UUID userId);
 
-    void updateMovie(Movie movie);
+    Mono<Void> updateMovie(Movie movie);
 
-    void deleteMovie(UUID id);
+    Mono<Void> deleteMovie(UUID id);
 }
 

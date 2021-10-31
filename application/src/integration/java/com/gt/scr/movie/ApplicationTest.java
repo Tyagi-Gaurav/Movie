@@ -4,23 +4,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@AutoConfigureMockMvc
 @SpringBootTest(classes = Application.class,
         properties = {
                 "management.endpoint.health.enabled=true",
@@ -34,13 +30,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("ApplicationTest")
 class ApplicationTest {
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private ReactiveWebApplicationContext webApplicationContext;
 
     @LocalServerPort
     private int port;
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
     @Test
     void shouldLoadApplication() {
@@ -48,13 +44,12 @@ class ApplicationTest {
     }
 
     @Test
-    void shouldReturnStatusAsOK() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/status")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+    void shouldReturnStatusAsOK() {
+        WebTestClient.BodyContentSpec bodyContentSpec = webTestClient.get().uri("/status")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+                .exchange()
+                .expectStatus().isOk().expectBody();
 
-        assertThat(mvcResult).isNotNull();
-        assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo("OK");
+        assertThat(bodyContentSpec).isNotNull();
     }
 }

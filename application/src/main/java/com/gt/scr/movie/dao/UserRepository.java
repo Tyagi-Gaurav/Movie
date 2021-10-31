@@ -13,7 +13,7 @@ public interface UserRepository {
 
     Flux<User> getAllUsers();
 
-    void delete(UUID userId);
+    Mono<Void> delete(UUID userId);
 
     void update(User user);
 

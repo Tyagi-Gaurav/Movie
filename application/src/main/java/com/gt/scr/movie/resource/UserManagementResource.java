@@ -7,37 +7,41 @@ import com.gt.scr.movie.resource.domain.UserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/user/manage")
 public class UserManagementResource {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public UserManagementResource(PasswordEncoder passwordEncoder, UserService userService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+    }
 
     @PostMapping(consumes = "application/vnd.user.add.v1+json",
             produces = "application/vnd.user.add.v1+json")
-    public ResponseEntity<Void> createUser(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public Mono<Void> createUser(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
         User user = new User(UUID.randomUUID(),
                 accountCreateRequestDTO.firstName(),
                 accountCreateRequestDTO.lastName(),
@@ -45,39 +49,38 @@ public class UserManagementResource {
                 passwordEncoder.encode(accountCreateRequestDTO.password()),
                 Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())));
 
-        userService.add(user);
-
-        return ResponseEntity.noContent().build();
+        return userService.add(user);
     }
 
     @GetMapping(consumes = "application/vnd.user.read.v1+json",
             produces = "application/vnd.user.read.v1+json")
-    public ResponseEntity<UserListResponseDTO> listUsers() {
-        Flux<User> allUsers = userService.getAllUsers();
-
-        List<UserDetailsResponse> userDetailsResponses = allUsers.toStream()
+    @ResponseStatus(code = HttpStatus.OK)
+    public Mono<UserListResponseDTO> listUsers() {
+        return userService.getAllUsers()
                 .map(user -> new UserDetailsResponse(user.getUsername(), user.firstName(), user.lastName(),
-                        user.getRole(), user.id())).toList();
-
-        return ResponseEntity.ok(new UserListResponseDTO(userDetailsResponses));
+                        user.getRole(), user.id()))
+                .collectList()
+                .map(UserListResponseDTO::new);
     }
 
     @DeleteMapping(consumes = "application/vnd.user.delete.v1+json",
             produces = "application/vnd.user.delete.v1+json")
-    public ResponseEntity<Void> deleteUser(@RequestParam("userId") UUID userId,
-                                           @RequestAttribute("userProfile") UserProfile userProfile) {
-
-        if (!userProfile.id().equals(userId)) {
-            userService.deleteUser(userId);
-        }
-
-        return ResponseEntity.ok().build();
+    @ResponseStatus(code = HttpStatus.OK)
+    public Mono<Void> deleteUser(@RequestParam("userId") UUID userId) {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(SecurityContext::getAuthentication)
+                .map(Authentication::getPrincipal)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new IllegalAccessException("UserProfile not found"))))
+                .map(UserProfile.class::cast)
+                .filter(up -> !up.id().equals(userId))
+                .flatMap(up -> userService.deleteUser(userId));
     }
 
     @PutMapping(consumes = "application/vnd.user.update.v1+json",
             produces = "application/vnd.user.update.v1+json")
-    public ResponseEntity<Void> updateUser(@RequestParam("userId") UUID userId,
-                                           @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
+    @ResponseStatus(code = HttpStatus.OK)
+    public Mono<Void> updateUser(@RequestParam("userId") UUID userId,
+                                 @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
 
         User user = new User(userId,
                 accountUpdateRequestDTO.firstName(),
@@ -88,6 +91,6 @@ public class UserManagementResource {
 
         userService.update(user);
 
-        return ResponseEntity.ok().build();
+        return Mono.empty();
     }
 }

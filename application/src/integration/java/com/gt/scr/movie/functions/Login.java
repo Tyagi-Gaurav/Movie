@@ -2,23 +2,22 @@ package com.gt.scr.movie.functions;
 
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.util.TestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.function.BiFunction;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 public class Login
-        implements BiFunction<MockMvc, LoginRequestDTO, MvcResult> {
+        implements BiFunction<WebTestClient, LoginRequestDTO, WebTestClient.ResponseSpec> {
 
     @Override
-    public MvcResult apply(MockMvc mockMvc, LoginRequestDTO loginRequestDTO) {
+    public WebTestClient.ResponseSpec apply(WebTestClient webTestClient, LoginRequestDTO loginRequestDTO) {
         try {
-            return mockMvc.perform(post("/user/login")
-                    .content(TestUtils.asJsonString(loginRequestDTO))
-                    .contentType("application/vnd.login.v1+json"))
-                    .andReturn();
+            return webTestClient.post()
+                    .uri("/user/login")
+                    .bodyValue(TestUtils.asJsonString(loginRequestDTO))
+                    .header(HttpHeaders.CONTENT_TYPE, "application/vnd.login.v1+json")
+                    .exchange();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

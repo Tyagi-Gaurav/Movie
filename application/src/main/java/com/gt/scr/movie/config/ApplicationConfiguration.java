@@ -1,22 +1,21 @@
 package com.gt.scr.movie.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gt.scr.movie.filter.LoggingInterceptor;
+import com.gt.scr.movie.filter.LoggingFilter;
 import com.gt.scr.movie.filter.MetricsInterceptor;
-import com.gt.scr.movie.filter.RequestIdInterceptor;
+import com.gt.scr.movie.filter.RequestIdFilter;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.sql.DataSource;
@@ -25,30 +24,28 @@ import java.beans.PropertyVetoException;
 import java.security.Key;
 
 @Configuration
-@EnableWebMvc
-public class ApplicationConfiguration implements WebMvcConfigurer  {
+@EnableWebFlux
+public class ApplicationConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfiguration.class);
 
     @Autowired
-    private LoggingInterceptor loggingInterceptor;
+    private LoggingFilter loggingFilter;
 
     @Autowired
-    private RequestIdInterceptor requestIdInterceptor;
+    private RequestIdFilter requestIdFilter;
 
     @Autowired
     private MetricsInterceptor metricsInterceptor;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(requestIdInterceptor);
-        registry.addInterceptor(loggingInterceptor);
-        registry.addInterceptor(metricsInterceptor);
-    }
 
     @Bean
     @ConfigurationProperties("database")
     public DatabaseConfig databaseConfig() {
         return ModifiableDatabaseConfig.create();
+    }
+
+    @Bean
+    public WebFluxProperties webFluxProperties(){
+        return new WebFluxProperties();
     }
 
     @Bean

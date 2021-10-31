@@ -9,12 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
 import static com.gt.scr.movie.util.UserBuilder.aUser;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,20 +34,23 @@ class UserServiceImplTest {
         when(repository.findUserBy(user.getUsername())).thenReturn(Mono.empty());
 
         //when
-        userService.add(user);
+        Mono<Void> add = userService.add(user);
 
         //then
+        StepVerifier.create(add).verifyComplete();
         verify(repository).create(user);
     }
 
     @Test
     void shouldDeleteUser() {
         User user = aUser().build();
+        when(repository.delete(user.id())).thenReturn(Mono.empty());
 
         //when
-        userService.deleteUser(user.id());
+        Mono<Void> deleteMono = userService.deleteUser(user.id());
 
         //then
+        StepVerifier.create(deleteMono).verifyComplete();
         verify(repository).delete(user.id());
     }
 
@@ -79,9 +81,10 @@ class UserServiceImplTest {
         User user = aUser().build();
 
         //when
-        userService.update(user);
+        Mono<Void> update = userService.update(user);
 
         //then
+        StepVerifier.create(update).verifyComplete();
         verify(repository).update(user);
     }
 
@@ -94,11 +97,11 @@ class UserServiceImplTest {
         userService.add(userA);
 
         //when
-        Throwable throwable = catchThrowable(() -> userService.add(userB));
+        Mono<Void> add = userService.add(userB);
 
         //then
-        assertThat(throwable).isNotNull();
-        assertThat(throwable).isInstanceOf(DuplicateRecordException.class);
+        StepVerifier.create(add)
+                .expectError(DuplicateRecordException.class);
         verify(repository, times(2)).findUserBy(userA.getUsername());
     }
 }

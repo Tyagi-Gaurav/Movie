@@ -2,24 +2,19 @@ package com.gt.scr.movie.functions;
 
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.function.BiFunction;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-public class RetrieveAllUserMovies implements BiFunction<MockMvc, LoginResponseDTO, MvcResult> {
+public class RetrieveAllUserMovies implements BiFunction<WebTestClient, LoginResponseDTO, WebTestClient.ResponseSpec> {
 
     @Override
-    public MvcResult apply(MockMvc mockMvc, LoginResponseDTO loginResponseDTO) {
+    public WebTestClient.ResponseSpec apply(WebTestClient webTestClient, LoginResponseDTO loginResponseDTO) {
         try {
-            return mockMvc.perform(get("/user/movie")
+            return webTestClient.get().uri("/user/movie")
                     .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", loginResponseDTO.token()))
-                    .contentType("application/vnd.movie.read.v1+json"))
-                    .andExpect(status().isOk())
-                    .andReturn();
+                    .header(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.read.v1+json")
+                    .exchange().expectStatus().isOk();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

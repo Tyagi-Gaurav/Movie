@@ -92,12 +92,13 @@ public class UserMySQLRepository implements UserRepository {
     }
 
     @Override
-    public void delete(UUID userId) {
+    public Mono<Void> delete(UUID userId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "DELETE FROM USER where ID = ?")) {
             preparedStatement.setString(1, userId.toString());
             preparedStatement.execute();
+            return Mono.empty();
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
         }

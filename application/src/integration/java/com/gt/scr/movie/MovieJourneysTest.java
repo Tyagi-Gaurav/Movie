@@ -3,6 +3,7 @@ package com.gt.scr.movie;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,13 +11,15 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebFlux;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 
 @EnableAutoConfiguration
@@ -24,14 +27,24 @@ import java.util.Collections;
 @SpringBootTest(classes = Application.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = Initializer.class)
-@AutoConfigureMockMvc
+@AutoConfigureWebFlux
 @ActiveProfiles("MovieJourneysTest")
 public class MovieJourneysTest {
-    @Autowired
     private ScenarioExecutor scenarioExecutor;
+    private WebTestClient webTestClient;
+
+    @LocalServerPort
+    private int serverPort;
 
     @Autowired
-    private MockMvc mockMvc;
+    private DataSource dataSource;
+
+    @BeforeEach
+    void setUp() {
+        String baseUrl = "http://localhost:" + serverPort + "/api";
+        webTestClient = WebTestClient.bindToServer().baseUrl(baseUrl).build();
+        scenarioExecutor = new ScenarioExecutor(webTestClient, dataSource);
+    }
 
     @ParameterizedTest
     @NullSource
@@ -69,13 +82,20 @@ public class MovieJourneysTest {
                 .when().userIsCreatedWith(adminAccountCreateRequestDTO)
                 .and().statusIs(204)
                 .and().adminUserLoginsWith(adminLoginRequestDTO)
+                .and().statusIs(200)
                 .when().userIsCreatedWith(userAccountCreateRequestDTO)
+                .and().statusIs(204)
                 .and().userLoginsWith(userLoginRequestDTO)
+                .and().statusIs(200)
                 .and().userCreatesAMovieWith(movieCreateRequestDTO)
+                .and().statusIs(204)
                 .when().userRetrievesAllMovies()
-                .then().theResponseShouldHaveFollowingMoviesInAnyOrder(
-                Collections.singletonList(movieCreateRequestDTO.name()))
+                .and().statusIs(200)
+                .then()
+                .theResponseShouldHaveFollowingMoviesInAnyOrder(
+                        Collections.singletonList(movieCreateRequestDTO.name()))
                 .and().adminUserDeletesTheUser()
+                .and().statusIs(200)
                 .then().verifyNoMoviesExistForTheNormalUserInDatabase();
     }
 }

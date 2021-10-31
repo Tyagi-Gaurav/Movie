@@ -13,9 +13,9 @@ public interface MovieRepository {
 
     Flux<Movie> getAllMoviesForUser(UUID id);
 
-    void delete(UUID movieId);
+    Mono<Void> delete(UUID movieId);
 
-    void update(Movie updatedMovie);
+    Mono<Void> update(Movie updatedMovie);
 
-    void create(UUID userId, Movie movie);
+    Mono<Void> create(UUID userId, Movie movie);
 }

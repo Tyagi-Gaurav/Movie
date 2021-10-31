@@ -5,42 +5,43 @@ import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class MovieServiceImpl implements MovieService {
 
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     public MovieServiceImpl(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
 
     @Override
-    public void addMovie(UUID userId, Movie movie) {
-        Optional<Movie> movieExists = movieRepository.findMovieBy(userId, movie.name()).blockOptional();
-
-        if (movieExists.filter(m -> m.yearProduced() == movie.yearProduced()).isEmpty()) {
-            movieRepository.create(userId, movie);
-        } else {
-            throw new DuplicateRecordException("Movie already exists");
-        }
+    public Mono<Void> addMovie(UUID userId, Movie movie) {
+        return movieRepository.findMovieBy(userId, movie.name())
+                .flatMap(m -> {
+                    if (m.yearProduced() == movie.yearProduced()) {
+                        return Mono.error(new DuplicateRecordException("duplicate"));
+                    } else {
+                        return Mono.empty();
+                    }
+                })
+                .switchIfEmpty(Mono.defer(() -> movieRepository.create(userId, movie)))
+                .then();
     }
 
     @Override
-    public List<Movie> getMoviesFor(UUID userId) {
-        return movieRepository.getAllMoviesForUser(userId).collectList().block();
+    public Flux<Movie> getMoviesFor(UUID userId) {
+        return movieRepository.getAllMoviesForUser(userId);
     }
 
     @Override
-    public void updateMovie(Movie movie) {
-        Optional<Movie> oldMovie = movieRepository.findMovieBy(movie.id()).blockOptional();
-
-        oldMovie.ifPresent(om -> {
+    public Mono<Void> updateMovie(Movie movie) {
+        return movieRepository.findMovieBy(movie.id()).doOnNext(om -> {
             Movie newMovieToUpdate =
                     new Movie(om.id(),
                             StringUtils.isBlank(movie.name()) ? om.name() : movie.name(),
@@ -49,11 +50,11 @@ public class MovieServiceImpl implements MovieService {
                             om.creationTimeStamp());
 
             movieRepository.update(newMovieToUpdate);
-        });
+        }).then();
     }
 
     @Override
-    public void deleteMovie(UUID movieId) {
-        movieRepository.delete(movieId);
+    public Mono<Void> deleteMovie(UUID movieId) {
+        return movieRepository.delete(movieId);
     }
 }

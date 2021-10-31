@@ -1,6 +1,8 @@
 package com.gt.scr.movie.dao;
 
 import com.gt.scr.movie.service.domain.Movie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -17,6 +19,8 @@ import java.util.UUID;
 
 @Repository
 public class MovieMySQLRepository implements MovieRepository {
+    private static final Logger LOG = LoggerFactory.getLogger(MovieMySQLRepository.class);
+
     @Autowired
     private DataSource dataSource;
 
@@ -86,7 +90,7 @@ public class MovieMySQLRepository implements MovieRepository {
     }
 
     @Override
-    public void delete(UUID movieId) {
+    public Mono<Void> delete(UUID movieId) {
         try (var connection = dataSource.getConnection();
              var preparedStatement = connection.prepareStatement(
                      "DELETE FROM MOVIE where id = ?")) {
@@ -95,10 +99,12 @@ public class MovieMySQLRepository implements MovieRepository {
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
         }
+
+        return Mono.empty();
     }
 
     @Override
-    public void update(Movie updatedMovie) {
+    public Mono<Void> update(Movie updatedMovie) {
         try (Connection connection = dataSource.getConnection();
              var preparedStatement = connection.prepareStatement(
                      "UPDATE MOVIE SET NAME = ?, " +
@@ -115,10 +121,12 @@ public class MovieMySQLRepository implements MovieRepository {
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
         }
+
+        return Mono.empty();
     }
 
     @Override
-    public void create(UUID userId, Movie movie) {
+    public Mono<Void> create(UUID userId, Movie movie) {
         try (Connection connection = dataSource.getConnection();
              var preparedStatement = connection.prepareStatement(
                      "INSERT INTO MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) " +
@@ -134,6 +142,8 @@ public class MovieMySQLRepository implements MovieRepository {
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
         }
+
+        return Mono.empty();
     }
 
     private Movie extractMovieFrom(ResultSet resultSet) throws SQLException {

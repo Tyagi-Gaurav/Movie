@@ -7,18 +7,16 @@ import com.gt.scr.movie.util.MovieBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 import static com.gt.scr.movie.util.MovieBuilder.aMovie;
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,11 +38,13 @@ class MovieServiceImplTest {
         UUID userId = UUID.randomUUID();
         Movie movie = aMovie().build();
         when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Mono.empty());
+        when(movieRepository.create(userId, movie)).thenReturn(Mono.empty());
 
         //when
-        movieService.addMovie(userId, movie);
+        Mono<Void> voidMono = movieService.addMovie(userId, movie);
 
         //then
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieRepository).create(userId, movie);
     }
 
@@ -57,11 +57,11 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Mono.just(movie));
 
         //when
-        DuplicateRecordException duplicateRecordException =
-                catchThrowableOfType(() -> movieService.addMovie(userId, movie), DuplicateRecordException.class);
+        Mono<Void> voidMono = movieService.addMovie(userId, movie);
 
-        //then
-        assertThat(duplicateRecordException).isNotNull();
+        StepVerifier.create(voidMono)
+                .expectError(DuplicateRecordException.class)
+                .verify();
     }
 
     @Test
@@ -72,12 +72,13 @@ class MovieServiceImplTest {
         Movie remakeOfMovieA = MovieBuilder.copyOf(movieA).withYearProduced(2021).build();
 
         when(movieRepository.findMovieBy(userId, movieA.name())).thenReturn(Mono.just(movieA));
+        when(movieRepository.create(userId, remakeOfMovieA)).thenReturn(Mono.empty());
 
         //when
-        Throwable throwable = catchThrowable(() -> movieService.addMovie(userId, remakeOfMovieA));
+        Mono<Void> voidMono = movieService.addMovie(userId, remakeOfMovieA);
 
         //then
-        assertThat(throwable).isNull();
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieRepository).create(userId, remakeOfMovieA);
     }
 
@@ -90,21 +91,27 @@ class MovieServiceImplTest {
         when(movieRepository.getAllMoviesForUser(userId)).thenReturn(Flux.just(aMovie, bMovie));
 
         //when
-        List<Movie> movies = movieService.getMoviesFor(userId);
+        Flux<Movie> movies = movieService.getMoviesFor(userId);
 
         //then
-        assertThat(movies).containsExactlyInAnyOrderElementsOf(List.of(aMovie, bMovie));
+        StepVerifier.create(movies)
+                .expectNext(aMovie)
+                .expectNext(bMovie)
+                .verifyComplete();
     }
 
     @Test
     void shouldDeleteMovieForAUser() {
         //given
         Movie movie = aMovie().build();
+        when(movieRepository.delete(movie.id())).thenReturn(Mono.empty());
 
         //when
-        movieService.deleteMovie(movie.id());
+        Mono<Void> voidMono = movieService.deleteMovie(movie.id());
 
         //then
+        StepVerifier.create(voidMono)
+                .verifyComplete();
         verify(movieRepository).delete(movie.id());
     }
 
@@ -116,9 +123,10 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(movieNew);
 
         //then
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieRepository).update(movieOld);
     }
 
@@ -130,9 +138,10 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(movieNew);
 
         //then
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieRepository).update(movieOld);
     }
 
@@ -144,9 +153,10 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(movieNew);
 
         //then
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieRepository).update(movieNew);
     }
 
@@ -158,9 +168,10 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(movieNew);
 
         //then
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieRepository).update(movieNew);
     }
 
@@ -172,9 +183,10 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(movieNew);
 
         //then
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieRepository).update(movieNew);
     }
 
