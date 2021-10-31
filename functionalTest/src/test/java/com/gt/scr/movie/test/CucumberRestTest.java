@@ -2,6 +2,7 @@ package com.gt.scr.movie.test;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
@@ -11,5 +12,10 @@ import org.junit.runner.RunWith;
         glue = {"com.gt.scr.movie.test.steps"},
         monochrome = true
 )
-public class CucumberRestTest { }
+public class CucumberRestTest {
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        System.clearProperty("protocol");
+    }
+}
 

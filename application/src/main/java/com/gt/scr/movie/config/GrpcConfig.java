@@ -13,7 +13,6 @@ import io.grpc.ServerInterceptors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.Key;
@@ -28,10 +27,11 @@ public class GrpcConfig {
     }
 
     @Bean
-    public LoginGrpcResource loginGrpcResource(AuthenticationManager authenticationManager,
+    public LoginGrpcResource loginGrpcResource(UserService userService,
                                                AuthConfig authConfig,
-                                               Key signingKey) {
-        return new LoginGrpcResource(authenticationManager, authConfig, signingKey);
+                                               Key signingKey,
+                                               PasswordEncoder passwordEncoder) {
+        return new LoginGrpcResource(userService, authConfig, signingKey, passwordEncoder);
     }
 
     @Bean

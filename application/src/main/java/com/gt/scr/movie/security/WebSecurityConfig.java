@@ -1,63 +1,69 @@
 package com.gt.scr.movie.security;
 
-import com.gt.scr.movie.filter.AuthenticationFilter;
+import com.gt.scr.movie.config.AuthenticationManager;
+import com.gt.scr.movie.config.SecurityContextRepository;
 import com.gt.scr.movie.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
+
+import java.security.Key;
 
 @Configuration
-@EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableWebFluxSecurity
+public class WebSecurityConfig {
 
-	@Autowired
-	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	@Autowired
-	private UserService jwtUserDetailsService;
+    @Autowired
+    @Qualifier("signingKey")
+    private Key signingKey;
 
-	@Autowired
-	private AuthenticationFilter authenticationFilter;
+    @Autowired
+    private UserService userDetailsService;
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
-	}
+    @Bean
+    public UserDetailsRepositoryReactiveAuthenticationManager userDetailsRepositoryReactiveAuthenticationManager() {
+        return new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity httpSecurity) {
+        return httpSecurity
+                .csrf().disable()
+                //.addFilterBefore(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .authorizeExchange()
+                .pathMatchers(HttpMethod.POST, "/user/login").permitAll()
+                .pathMatchers("/status").permitAll()
+                .pathMatchers("/actuator/**").permitAll()
+                .pathMatchers(HttpMethod.POST, "/user/account/create").permitAll()
+                .pathMatchers("/user/manage").hasAuthority("ADMIN")
+                .pathMatchers(HttpMethod.GET, "/user/movie\\?userId=.+").hasAuthority("ADMIN")
+                .anyExchange().authenticated().and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                .securityContextRepository(new SecurityContextRepository(
+                        new AuthenticationManager(userDetailsService, signingKey)
+                ))
+                .build();
+    }
 
-	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity
-			.csrf().disable()
-			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.authorizeRequests()
-			.antMatchers("/user/login").permitAll()
-			.antMatchers("/status").permitAll()
-			.antMatchers("/actuator/**").permitAll()
-			.antMatchers("/user/account/create").permitAll()
-			.antMatchers("/user/manage").hasAuthority("ADMIN")
-			.regexMatchers("/user/movie\\?userId=.+").hasAuthority("ADMIN")
-			.anyRequest().authenticated().and()
-			.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-	}
 }

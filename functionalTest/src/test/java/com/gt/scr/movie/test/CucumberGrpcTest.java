@@ -2,6 +2,8 @@ package com.gt.scr.movie.test;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
@@ -12,5 +14,15 @@ import org.junit.runner.RunWith;
         tags = "@grpc",
         monochrome = true
 )
-public class CucumberGrpcTest { }
+public class CucumberGrpcTest {
+    @BeforeClass
+    public static void beforeClass() {
+        System.setProperty("protocol", "grpc");
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        System.clearProperty("protocol");
+    }
+}
 

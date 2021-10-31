@@ -1,26 +1,25 @@
 package com.gt.scr.movie.functions;
 
+import com.google.common.net.HttpHeaders;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.util.TestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.function.BiFunction;
 
 public class UserCreate
-        implements BiFunction<MockMvc, AccountCreateRequestDTO, MvcResult> {
+        implements BiFunction<WebTestClient, AccountCreateRequestDTO, WebTestClient.ResponseSpec> {
 
     @Override
-    public MvcResult apply(MockMvc mockMvc,
-                              AccountCreateRequestDTO accountCreateRequestDTO) {
+    public WebTestClient.ResponseSpec apply(WebTestClient webClient,
+                                            AccountCreateRequestDTO accountCreateRequestDTO) {
 
         try {
-            return mockMvc.perform(MockMvcRequestBuilders.post("/user/account/create")
-                    .content(TestUtils.asJsonString(accountCreateRequestDTO))
-                    .contentType("application/vnd+account.create.v1+json")
-                    .accept("application/vnd+account.create.v1+json"))
-                    .andReturn();
+            return webClient.post().uri("/user/account/create")
+                    .header(HttpHeaders.CONTENT_TYPE, "application/vnd+account.create.v1+json")
+                    .header(HttpHeaders.ACCEPT, "application/vnd+account.create.v1+json")
+                    .bodyValue(TestUtils.asJsonString(accountCreateRequestDTO))
+                    .exchange();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

@@ -4,26 +4,23 @@ import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.util.TestUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 public class MovieCreate
-        implements Interaction<MockMvc,
+        implements Interaction<WebTestClient,
                 LoginResponseDTO,
-                MovieCreateRequestDTO, MvcResult> {
+                MovieCreateRequestDTO, WebTestClient.ResponseSpec> {
 
     @Override
-    public MvcResult apply(MockMvc mockMvc,
+    public WebTestClient.ResponseSpec apply(WebTestClient webTestClient,
                            LoginResponseDTO loginResponseDTO,
                            MovieCreateRequestDTO movieCreateRequestDTO) {
         try {
-            return mockMvc.perform(post("/user/movie")
-                    .content(TestUtils.asJsonString(movieCreateRequestDTO))
+            return webTestClient.post().uri("/user/movie")
+                    .bodyValue(TestUtils.asJsonString(movieCreateRequestDTO))
                     .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", loginResponseDTO.token()))
-                    .contentType("application/vnd.movie.add.v1+json"))
-                    .andReturn();
+                    .header(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.add.v1+json")
+                    .exchange();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

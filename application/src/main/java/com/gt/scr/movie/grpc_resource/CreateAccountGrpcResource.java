@@ -32,10 +32,8 @@ public class CreateAccountGrpcResource extends CreateAccountServiceGrpc.CreateAc
                 passwordEncoder.encode(accountCreateRequestDTO.getPassword()),
                 Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.getRole())));
 
-        userService.add(user);
-
-        responseObserver.onNext(Empty.newBuilder()
-                .build());
+        userService.add(user).block();
+        responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
     }
 }

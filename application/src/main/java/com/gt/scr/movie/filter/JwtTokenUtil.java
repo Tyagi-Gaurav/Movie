@@ -41,9 +41,8 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpired() {
-        final var expiration = getExpirationDateFromToken();
-        return expiration.before(new Date());
+    public Boolean isTokenExpired() {
+        return getExpirationDateFromToken().before(new Date());
     }
 
     public static String generateToken(User user, Duration tokenDuration, Key signingKey) {

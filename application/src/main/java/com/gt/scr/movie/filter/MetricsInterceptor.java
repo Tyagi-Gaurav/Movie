@@ -1,20 +1,22 @@
 package com.gt.scr.movie.filter;
 
-import com.gt.scr.movie.metrics.EndpointRequestCounter;
 import com.gt.scr.movie.metrics.EndpointHistogram;
+import com.gt.scr.movie.metrics.EndpointRequestCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.Instant;
 
 @Component
-public class MetricsInterceptor implements HandlerInterceptor {
+public class MetricsInterceptor implements WebFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetricsInterceptor.class);
 
@@ -25,23 +27,21 @@ public class MetricsInterceptor implements HandlerInterceptor {
     private EndpointHistogram endpointHistogram;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String method = request.getMethod();
-        String path = request.getRequestURI();
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
 
-        request.setAttribute("StartTime", Instant.now());
-        endpointRequestCounter.increment(method, path);
+        HttpMethod method = request.getMethod();
+        String path = request.getURI().getPath();
+        endpointRequestCounter.increment(String.valueOf(method), path);
+        Instant startTime = Instant.now();
 
-        return true;
-    }
+        Mono<Void> result = chain.filter(exchange);
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        Instant startTime = (Instant)request.getAttribute("StartTime");
         long duration = Instant.now().toEpochMilli() - startTime.toEpochMilli();
 
         LOG.info("Duration of request was : {} milli seconds", duration);
-
         endpointHistogram.observe(duration);
+
+        return result;
     }
 }

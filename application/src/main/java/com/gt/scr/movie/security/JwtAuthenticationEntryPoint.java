@@ -1,21 +1,19 @@
 package com.gt.scr.movie.security;
 
-import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class JwtAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
 
 	@Override
-	public void commence(HttpServletRequest request, HttpServletResponse response,
-						 AuthenticationException authException) throws IOException {
-
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, StringEscapeUtils.escapeHtml4(authException.getMessage()));
+	public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
+		exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+		exchange.getResponse().writeWith(Mono.error(ex));
+		return exchange.getResponse().setComplete();
 	}
 }

@@ -28,6 +28,7 @@ ext {
     reactorVersion = '3.4.11'
     grpcVersion = '1.41.0'
     springOAuthVersion = '2.5.5'
+    springWebFluxSecurityVersion = '5.0.0.M5'
 }
 
 repositories {
@@ -44,7 +45,7 @@ sourceSets {
         runtimeClasspath += output + compileClasspath
     }
     grpcIntegration {
-        java.srcDir "$projectDir/src/grpc-integration/java"
+        java.srcDir "$projectDir/src/grpcIntegration/java"
         compileClasspath += sourceSets.main.output + sourceSets.test.output
         runtimeClasspath += output + compileClasspath
     }
@@ -82,10 +83,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
         exclude group: "ch.qos.logback"
     }
-    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+//    implementation "org.springframework.security:spring-security-webflux:${springWebFluxSecurityVersion}"
     implementation("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}") {
         exclude group: "org.slf4j", module: "slf4j-api"
     }
@@ -249,8 +250,8 @@ tasks.register('grpcIntegrationTest', Test) {
     description = 'Runs GRPC integration tests.'
     group = 'verification'
 
-    testClassesDirs = sourceSets.integration.output.classesDirs
-    classpath += sourceSets.integration.runtimeClasspath
+    testClassesDirs = sourceSets.grpcIntegration.output.classesDirs
+    classpath += sourceSets.grpcIntegration.runtimeClasspath
 
     useJUnitPlatform()
 
