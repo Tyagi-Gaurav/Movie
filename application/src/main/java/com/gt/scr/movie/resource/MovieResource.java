@@ -33,10 +33,13 @@ import java.util.UUID;
 public class MovieResource {
     private final MovieService movieService;
     private static final Logger LOG = LoggerFactory.getLogger(MovieResource.class);
-    private final Mono<SecurityContext> securityContextMono = ReactiveSecurityContextHolder.getContext();
+    //private final Mono<SecurityContext> securityContextMono = ReactiveSecurityContextHolder.getContext();
+    private final SecurityContextHolder securityContextHolder;
 
-    public MovieResource(MovieService movieService) {
+    public MovieResource(MovieService movieService,
+                         SecurityContextHolder securityContextHolder) {
         this.movieService = movieService;
+        this.securityContextHolder = securityContextHolder;
     }
 
     @PostMapping(consumes = "application/vnd.movie.add.v1+json",
@@ -44,12 +47,7 @@ public class MovieResource {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public Mono<Void> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
                                   @RequestParam(value = "userId", required = false) String userId) {
-        return securityContextMono
-                .filter(ctx -> Objects.nonNull(ctx.getAuthentication()))
-                .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal)
-                .switchIfEmpty(Mono.defer(() -> Mono.error(new IllegalAccessException("UserProfile not found"))))
-                .map(UserProfile.class::cast)
+        return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.addMovie(determineUserId(userId, up.id()), new Movie(UUID.randomUUID(),
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
@@ -63,11 +61,7 @@ public class MovieResource {
     @ResponseStatus(code = HttpStatus.OK)
     public Mono<MoviesDTO> getMovie(@RequestParam(value = "userId", required = false) String userId) {
         LOG.info("Inside get resource with userId: {}", userId);
-        return ReactiveSecurityContextHolder.getContext()
-                .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal)
-                .switchIfEmpty(Mono.defer(() -> Mono.error(new IllegalAccessException("UserProfile not found"))))
-                .map(UserProfile.class::cast)
+        return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.getMoviesFor(determineUserId(userId, up.id())).collectList())
                 .map(movie -> movie.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
                         mv.yearProduced(), mv.rating())).toList())

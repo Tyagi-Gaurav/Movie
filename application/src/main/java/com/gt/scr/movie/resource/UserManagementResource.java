@@ -8,10 +8,7 @@ import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +29,14 @@ import java.util.UUID;
 public class UserManagementResource {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final SecurityContextHolder securityContextHolder;
 
-    public UserManagementResource(PasswordEncoder passwordEncoder, UserService userService) {
+    public UserManagementResource(PasswordEncoder passwordEncoder,
+                                  UserService userService,
+                                  SecurityContextHolder securityContextHolder) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
+        this.securityContextHolder = securityContextHolder;
     }
 
     @PostMapping(consumes = "application/vnd.user.add.v1+json",
@@ -67,11 +68,7 @@ public class UserManagementResource {
             produces = "application/vnd.user.delete.v1+json")
     @ResponseStatus(code = HttpStatus.OK)
     public Mono<Void> deleteUser(@RequestParam("userId") UUID userId) {
-        return ReactiveSecurityContextHolder.getContext()
-                .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal)
-                .switchIfEmpty(Mono.defer(() -> Mono.error(new IllegalAccessException("UserProfile not found"))))
-                .map(UserProfile.class::cast)
+        return securityContextHolder.getContext(UserProfile.class)
                 .filter(up -> !up.id().equals(userId))
                 .flatMap(up -> userService.deleteUser(userId));
     }

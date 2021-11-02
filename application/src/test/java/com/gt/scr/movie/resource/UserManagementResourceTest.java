@@ -8,7 +8,6 @@ import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.UserBuilder;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,8 +26,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserManagementResourceTest {
@@ -36,11 +36,14 @@ class UserManagementResourceTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private SecurityContextHolder securityContextHolder;
+
     private UserManagementResource userManagementResource;
 
     @BeforeEach
     void setUp() {
-        userManagementResource = new UserManagementResource(passwordEncoder, userService);
+        userManagementResource = new UserManagementResource(passwordEncoder, userService, securityContextHolder);
     }
 
     @Test
@@ -80,11 +83,18 @@ class UserManagementResourceTest {
         assertThat(userDetailsResponse.id()).isEqualTo(user.id());
     }
 
-    @Ignore
+    @Test
     void shouldAllowAdminToDeleteUser() {
         UUID userIdToDelete = UUID.randomUUID();
 
-        userManagementResource.deleteUser(userIdToDelete);
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN");
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
+        when(userService.deleteUser(userIdToDelete)).thenReturn(Mono.empty());
+
+        //when
+        Mono<Void> voidMono = userManagementResource.deleteUser(userIdToDelete);
+
+        StepVerifier.create(voidMono).verifyComplete();
 
         verify(userService).deleteUser(userIdToDelete);
     }
@@ -94,6 +104,7 @@ class UserManagementResourceTest {
         UUID userIdToDelete = UUID.randomUUID();
 
         UserProfile userProfile = new UserProfile(userIdToDelete, "ADMIN");
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 
         userManagementResource.deleteUser(userIdToDelete);
         verifyNoInteractions(userService);
