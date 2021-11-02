@@ -23,11 +23,14 @@ class MovieAdminResourceTest {
     @Mock
     private MovieService movieService;
 
+    @Mock
+    private SecurityContextHolder securityContextHolder;
+
     private MovieResource movieAdminResource;
 
     @BeforeEach
     void setUp() {
-        movieAdminResource = new MovieResource(movieService);
+        movieAdminResource = new MovieResource(movieService, securityContextHolder);
     }
 
     @Test

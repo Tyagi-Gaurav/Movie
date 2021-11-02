@@ -7,8 +7,6 @@ import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +19,6 @@ import java.security.Key;
 
 @RestController
 public class LoginResource {
-    private static final Logger LOG = LoggerFactory.getLogger(LoginResource.class);
-
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final AuthConfig authConfig;

@@ -1,7 +1,9 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
+import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.Movie;
@@ -10,81 +12,97 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MovieResourceTest {
     @Mock
     private MovieService movieService;
 
+    @Mock
+    private SecurityContextHolder securityContextHolder;
+
     private MovieResource movieResource;
 
     @BeforeEach
     void setUp() {
-        movieResource = new MovieResource(movieService);
+        movieResource = new MovieResource(movieService, securityContextHolder);
     }
 
     @Test
-    void shouldAllowUserToCreateMovie() throws Exception {
+    void shouldAllowUserToCreateMovie() {
         MovieCreateRequestDTO movieCreateRequestDTO = new MovieCreateRequestDTO(randomAlphabetic(6),
                 2010, BigDecimal.ONE);
 
         UUID userId = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(userId, "USER");
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
+        when(movieService.addMovie(eq(userProfile.id()), any(Movie.class))).thenReturn(Mono.empty());
 
         //when
-        movieResource.createMovie(movieCreateRequestDTO, null);
+        Mono<Void> movie = movieResource.createMovie(movieCreateRequestDTO, null);
 
-//        verify(movieService).addMovie(eq(userProfile.id()), any(Movie.class));
+        StepVerifier.create(movie)
+                .verifyComplete();
+
+        verify(movieService).addMovie(eq(userProfile.id()), any(Movie.class));
     }
 
     @Test
-    void shouldAllowUserToReadMovies() throws Exception {
+    void shouldAllowUserToReadMovies() {
         UUID id = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(id, "USER");
 
         var expectedReturnObject = new Movie(id, randomAlphabetic(5),
                 2010, BigDecimal.ONE, System.nanoTime());
 
-//        when(movieService.getMoviesFor(id)).thenReturn(Flux.just(expectedReturnObject));
+        when(movieService.getMoviesFor(id)).thenReturn(Flux.just(expectedReturnObject));
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 
         //when
-//        Mono<MoviesDTO> movies = movieResource.getMovie(userProfile, null);
-//
-//        MoviesDTO moviesDTO = movies.block();
-//
-//        StepVerifier.create(moviesDTO.movies())
-//                .expectNext(new MovieDTO(id, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
-//                        expectedReturnObject.rating()))
-//                .verifyComplete();
+        Mono<MoviesDTO> movies = movieResource.getMovie(userProfile.id().toString());
+
+        StepVerifier.create(movies)
+                .expectNext(new MoviesDTO(Collections.singletonList(
+                                    new MovieDTO(id, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
+                                expectedReturnObject.rating()))))
+                .verifyComplete();
     }
 
     @Test
     void shouldAllowUserToDeleteMovies() {
         UUID movieId = UUID.randomUUID();
+        when(movieResource.deleteMovie(movieId.toString())).thenReturn(Mono.empty());
 
         //when
-        movieResource.deleteMovie(movieId.toString());
+        Mono<Void> voidMono = movieResource.deleteMovie(movieId.toString());
 
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieService).deleteMovie(movieId);
     }
 
     @Test
-    void shouldAllowUserToUpdateMovies() throws Exception {
+    void shouldAllowUserToUpdateMovies() {
         MovieUpdateRequestDTO movieUpdateRequestDTO = new MovieUpdateRequestDTO(UUID.randomUUID(),
                 randomAlphabetic(5), BigDecimal.ZERO, 2010);
-
-        var userProfile = new UserProfile(UUID.randomUUID(), "USER");
+        when(movieService.updateMovie(any(Movie.class))).thenReturn(Mono.empty());
 
         //when
-        movieResource.updateMovie(movieUpdateRequestDTO);
+        Mono<Void> voidMono = movieResource.updateMovie(movieUpdateRequestDTO);
 
+        StepVerifier.create(voidMono).verifyComplete();
         verify(movieService).updateMovie(any(Movie.class));
     }
 }
