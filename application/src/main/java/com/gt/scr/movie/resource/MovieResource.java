@@ -10,9 +10,6 @@ import com.gt.scr.movie.service.domain.Movie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -60,7 +56,7 @@ public class MovieResource {
             produces = "application/vnd.movie.read.v1+json")
     @ResponseStatus(code = HttpStatus.OK)
     public Mono<MoviesDTO> getMovie(@RequestParam(value = "userId", required = false) String userId) {
-        LOG.info("Inside get resource with userId: {}", userId);
+        LOG.info("Inside get resource with userId");
         return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.getMoviesFor(determineUserId(userId, up.id())).collectList())
                 .map(movie -> movie.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
