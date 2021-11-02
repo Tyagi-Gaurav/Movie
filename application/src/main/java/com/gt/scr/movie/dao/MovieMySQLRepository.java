@@ -19,8 +19,6 @@ import java.util.UUID;
 
 @Repository
 public class MovieMySQLRepository implements MovieRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(MovieMySQLRepository.class);
-
     @Autowired
     private DataSource dataSource;
 
