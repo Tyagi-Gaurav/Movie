@@ -23,6 +23,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.UUID;
 
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -64,6 +65,23 @@ class AuthenticationManagerTest {
         StepVerifier.create(authenticate)
                 .expectNextCount(0)
                 .verifyComplete();
+    }
+
+    @Test
+    void shouldReturnEmptyWhenTokenIsExpired() throws InterruptedException {
+        String token = JwtTokenUtil.generateToken(user, Duration.ofMillis(1L), signingKey);;
+
+        Thread.sleep(50);
+
+        //when
+        Mono<Authentication> authenticate =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token, ""));
+
+        StepVerifier.create(authenticate)
+                .expectNextCount(0)
+                .verifyComplete();
+
+        verifyNoInteractions(userService);
     }
 
     @Test

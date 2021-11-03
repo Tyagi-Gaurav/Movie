@@ -48,8 +48,7 @@ public class LoginResource {
     private Mono<User> authenticate(LoginRequestDTO request) {
         return userService.findByUsername(request.userName())
                 .onErrorResume(th -> Mono.error(new ApplicationAuthenticationException(th.getMessage(), th)))
-                .filter(user -> passwordEncoder.matches(request.password(), user.getPassword()) &&
-                        request.userName().equals(user.getUsername()))
+                .filter(user -> passwordEncoder.matches(request.password(), user.getPassword()))
                 .map(User.class::cast)
                 .switchIfEmpty(Mono.error(new ApplicationAuthenticationException("Invalid User")));
     }

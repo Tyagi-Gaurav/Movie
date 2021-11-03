@@ -28,8 +28,9 @@ class IllegalArgumentExceptionHandlerTest {
         illegalArgumentExceptionHandler = new IllegalArgumentExceptionHandler(errorResponseHelper);
         when(errorResponseHelper.errorResponse(anyInt(), anyString()))
                 .thenAnswer((Answer<Mono<ErrorResponse>>) invocation -> {
+                    int statusCode = invocation.getArgument(0);
                     String argument = invocation.getArgument(1);
-                    return Mono.just(new ErrorResponse(argument));
+                    return Mono.just(new ErrorResponse(statusCode, argument));
                 });
     }
 
@@ -40,7 +41,7 @@ class IllegalArgumentExceptionHandlerTest {
                 illegalArgumentExceptionHandler.handle(new IllegalArgumentException(exceptionMessage));
 
         StepVerifier.create(errorResponse)
-                .expectNext(new ErrorResponse(exceptionMessage))
+                .expectNext(new ErrorResponse(400, exceptionMessage))
                 .expectComplete();
     }
 }

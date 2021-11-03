@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 public class JwtTokenUtil {
     private final Key signingKey;
-    private String token;
+    private final String token;
 
     public JwtTokenUtil(String jwtToken, Key signingKey) {
         this.token = jwtToken;
@@ -39,10 +39,6 @@ public class JwtTokenUtil {
         return Jwts.parserBuilder().setSigningKey(signingKey)
                 .build()
                 .parseClaimsJws(token).getBody();
-    }
-
-    public Boolean isTokenExpired() {
-        return getExpirationDateFromToken().before(new Date());
     }
 
     public static String generateToken(User user, Duration tokenDuration, Key signingKey) {
@@ -71,7 +67,7 @@ public class JwtTokenUtil {
 
     public Boolean validateToken(UserDetails userDetails) {
         final String username = getUsernameFromToken();
-        return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired());
+        return (username != null && username.equals(userDetails.getUsername()));
     }
 
     public String getUserIdFromToken() {

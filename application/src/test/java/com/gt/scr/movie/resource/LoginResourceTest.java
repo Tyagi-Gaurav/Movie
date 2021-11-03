@@ -38,7 +38,6 @@ class LoginResourceTest {
     @Mock
     private AuthConfig authConfig;
 
-    private Key signingKey;
     private final static String KEY_256_BIT = "8A6872AD13BEC411DAC9746C7FEDB8A6872AD13BEC411DAC9746C7FEDB";
 
     private LoginResource loginResource;
@@ -46,7 +45,7 @@ class LoginResourceTest {
     @BeforeEach
     void setUp() {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(KEY_256_BIT);
-        signingKey =  new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
         loginResource = new LoginResource(passwordEncoder, userService, authConfig, signingKey);
     }
 

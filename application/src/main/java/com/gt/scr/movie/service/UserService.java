@@ -15,8 +15,6 @@ public interface UserService extends ReactiveUserDetailsService {
 
     Mono<Void> deleteUser(UUID userId);
 
-    Mono<User> loadUserBy(String username);
-
     Mono<User> findUserBy(UUID userId);
 
     Mono<Void> update(User user);

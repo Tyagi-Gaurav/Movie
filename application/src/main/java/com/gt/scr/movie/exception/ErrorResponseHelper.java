@@ -18,7 +18,7 @@ public class ErrorResponseHelper {
     }
 
     public Mono<ErrorResponse> errorResponse(int statusCode, String message) {
-        ErrorResponse errorResponse = new ErrorResponse(message);
+        ErrorResponse errorResponse = new ErrorResponse(statusCode, message);
 
         LOG.error("Response with status code {}", statusCode);
 

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -56,13 +58,33 @@ class UserServiceImplTest {
 
     @Test
     void shouldLoadUserByUserName() {
-        String user = "userName";
+        String userName = "userName";
+        User user = aUser().withUserName(userName).build();
+        when(repository.findUserBy(userName)).thenReturn(Mono.just(user));
 
         //when
-        userService.loadUserBy(user);
+        Mono<UserDetails> byUsername = userService.findByUsername(userName);
 
         //then
-        verify(repository).findUserBy(user);
+        StepVerifier.create(byUsername)
+                .expectNext(user)
+                .expectComplete();
+        verify(repository).findUserBy(userName);
+    }
+
+    @Test
+    void shouldReturnErrorWhenNoUserFoundByName() {
+        String userName = "userName";
+        when(repository.findUserBy(userName)).thenReturn(Mono.empty());
+
+        //when
+        Mono<UserDetails> byUsername = userService.findByUsername(userName);
+
+        //then
+        StepVerifier.create(byUsername)
+                .expectError(UsernameNotFoundException.class)
+                .verify();
+        verify(repository).findUserBy(userName);
     }
 
     @Test

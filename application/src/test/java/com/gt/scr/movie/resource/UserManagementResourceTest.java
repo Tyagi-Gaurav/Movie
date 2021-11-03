@@ -106,7 +106,10 @@ class UserManagementResourceTest {
         UserProfile userProfile = new UserProfile(userIdToDelete, "ADMIN");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 
-        userManagementResource.deleteUser(userIdToDelete);
+        Mono<Void> voidMono = userManagementResource.deleteUser(userIdToDelete);
+
+        StepVerifier.create(voidMono).verifyComplete();
+
         verifyNoInteractions(userService);
     }
 
