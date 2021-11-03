@@ -29,7 +29,7 @@ public class SystemExceptionHandler {
         if (LOG.isErrorEnabled()) {
             LOG.error(exception.getMessage(), exception);
         }
-        return errorResponseHelper.errorResponse(400, UNEXPECTED_ERROR_OCCURRED);
+        return errorResponseHelper.errorResponse(400, "Validation error occurred");
     }
 
     @ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR)

@@ -48,7 +48,7 @@ class ErrorResponseHelperTest {
 
         //then
         StepVerifier.create(errorResponseMono)
-                .expectNext(new ErrorResponse("Exception occurred"))
+                .expectNext(new ErrorResponse(statusCode, "Exception occurred"))
                 .verifyComplete();
     }
 }

@@ -31,8 +31,9 @@ class ValueInstantiationExceptionHandlerTest {
         valueInstantiationExceptionHandler = new ValueInstantiationExceptionHandler(errorResponseHelper);
         when(errorResponseHelper.errorResponse(anyInt(), anyString()))
                 .thenAnswer((Answer<Mono<ErrorResponse>>) invocation -> {
+                    int statusCode = invocation.getArgument(0);
                     String argument = invocation.getArgument(1);
-                    return Mono.just(new ErrorResponse(argument));
+                    return Mono.just(new ErrorResponse(statusCode, argument));
                 });
     }
 
@@ -45,7 +46,7 @@ class ValueInstantiationExceptionHandlerTest {
                 valueInstantiationExceptionHandler.handle(ValueInstantiationException.from(parser, message, TypeFactory.unknownType()));
 
         StepVerifier.create(errorResponseMono)
-                .expectNext(new ErrorResponse("Test\n" +
+                .expectNext(new ErrorResponse(400, "Test\n" +
                         " at [Source: (String)\"Test\"; line: 1, column: 0]"))
                 .verifyComplete();
     }

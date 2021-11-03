@@ -42,11 +42,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<User> loadUserBy(String userName) {
-        return userRepository.findUserBy(userName);
-    }
-
-    @Override
     public Mono<User> findUserBy(UUID userId) {
         return userRepository.findUserBy(userId);
     }
@@ -58,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserDetails> findByUsername(String username) throws UsernameNotFoundException {
-        return loadUserBy(username)
+        return userRepository.findUserBy(username)
                 .switchIfEmpty(
                         Mono.defer(() -> Mono.error(() ->
                                 new UsernameNotFoundException("Unable to find User: " + username))))

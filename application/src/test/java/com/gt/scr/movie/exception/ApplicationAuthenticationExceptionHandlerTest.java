@@ -27,8 +27,9 @@ class ApplicationAuthenticationExceptionHandlerTest {
         applicationAuthenticationExceptionHandler = new ApplicationAuthenticationExceptionHandler(errorResponseHelper);
         when(errorResponseHelper.errorResponse(anyInt(), anyString()))
                 .thenAnswer((Answer<Mono<ErrorResponse>>) invocation -> {
+                    int statusCode = invocation.getArgument(0);
                     String argument = invocation.getArgument(1);
-                    return Mono.just(new ErrorResponse(argument));
+                    return Mono.just(new ErrorResponse(statusCode, argument));
                 });
     }
 
@@ -39,7 +40,7 @@ class ApplicationAuthenticationExceptionHandlerTest {
                 new IllegalCallerException()));
 
         StepVerifier.create(handle)
-                .expectNext(new ErrorResponse(exceptionMessage))
+                .expectNext(new ErrorResponse(401, exceptionMessage))
                 .expectComplete();
     }
 }

@@ -3,6 +3,7 @@ package com.gt.scr.movie.config;
 import com.gt.scr.movie.filter.JwtTokenUtil;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -31,9 +32,9 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
     public Mono<Authentication> authenticate(Authentication authentication) {
         String token = authentication.getPrincipal().toString();
         JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(token, signingKey);
-        String userId = jwtTokenUtil.getUserIdFromToken();
+        String userId = getUserIdFromToken(jwtTokenUtil);
 
-        if (userId != null && !jwtTokenUtil.isTokenExpired()) {
+        if (userId != null) {
             LOG.info("Fetch user from repository: {}", userId);
 
             return userService.findUserBy(UUID.fromString(userId))
@@ -59,5 +60,14 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
         }
 
         return Mono.empty();
+    }
+
+    private String getUserIdFromToken(JwtTokenUtil jwtTokenUtil) {
+        try {
+            return jwtTokenUtil.getUserIdFromToken();
+        } catch(ExpiredJwtException e) {
+            LOG.warn("Expired user token found");
+            return null;
+        }
     }
 }

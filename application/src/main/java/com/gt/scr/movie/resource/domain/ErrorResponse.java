@@ -5,4 +5,4 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize
 @JsonDeserialize
-public record ErrorResponse(String message) {}
+public record ErrorResponse(int statusCode, String message) {}

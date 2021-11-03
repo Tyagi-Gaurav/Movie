@@ -148,7 +148,7 @@ scmVersion {
     versionIncrementer 'incrementMinor'
 
     hooks {
-        pre 'fileUpdate', [file: 'README.MD', pattern: {v,p -> /(version.) $v/}, replacement: {v, p -> "\$1 $v"}]
+        pre 'fileUpdate', [file: 'README.MD', pattern: { v, p -> /(version.) $v/ }, replacement: { v, p -> "\$1 $v" }]
         pre 'commit'
     }
 }
@@ -161,7 +161,9 @@ test {
 
     jacoco {
         excludes = ['com/gt/scr/movie/Application.class',
-                    'com/gt/scr/movie/Grace**']
+                    'com/gt/scr/movie/Grace**',
+                    'com/gt/scr/movie/security/WebSecurityConfig.class',
+                    'com/gt/scr/movie/config/**']
     }
 }
 
