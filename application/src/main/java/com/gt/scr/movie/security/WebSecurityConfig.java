@@ -24,13 +24,6 @@ import java.security.Key;
 public class WebSecurityConfig {
 
     @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    @Autowired
-    @Qualifier("signingKey")
-    private Key signingKey;
-
-    @Autowired
     private UserService userDetailsService;
 
     @Bean
@@ -45,7 +38,9 @@ public class WebSecurityConfig {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity httpSecurity) {
+    SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity httpSecurity,
+                                                JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                                                @Qualifier("signingKey") Key signingKey) {
         return httpSecurity
                 .csrf().disable()
                 //.addFilterBefore(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
