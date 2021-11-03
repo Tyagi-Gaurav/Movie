@@ -52,8 +52,8 @@ class GRPCIntegrationTest {
     @Test
     @DisplayName("Account Create and Login")
     public void runScenario1() {
-        AccountCreateGrpcRequestDTO requestDTO = accountCreate();
-        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate(requestDTO);
+        AccountCreateGrpcRequestDTO requestDTO = accountCreateGrpc();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreateGrpc(requestDTO);
 
         grpcScenarioExecutor
                 .createUserWith(requestDTO)
@@ -67,8 +67,8 @@ class GRPCIntegrationTest {
     @Test
     @DisplayName("Account Create, Login and Create Movie Entry")
     public void runScenario2() {
-        AccountCreateGrpcRequestDTO requestDTO = accountCreate();
-        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate(requestDTO);
+        AccountCreateGrpcRequestDTO requestDTO = accountCreateGrpc();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreateGrpc(requestDTO);
         MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = movieCreate();
 
         grpcScenarioExecutor
@@ -86,8 +86,8 @@ class GRPCIntegrationTest {
     @Test
     @DisplayName("Account Create, Login and Create Movie Entry twice to return error")
     public void runScenario3() {
-        AccountCreateGrpcRequestDTO requestDTO = accountCreate();
-        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreate(requestDTO);
+        AccountCreateGrpcRequestDTO requestDTO = accountCreateGrpc();
+        LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreateGrpc(requestDTO);
         MovieGrpcCreateRequestDTO movieGrpcCreateRequestDTO = movieCreate();
 
         grpcScenarioExecutor
