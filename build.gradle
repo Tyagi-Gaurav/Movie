@@ -20,7 +20,7 @@ sonarqube {
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.dynamicAnalysis", "reuseReports"
         property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
-        property "sonar.coverage.exclusions", "com/gt/scr/movie/grpc_resource/**/*.class, com/gt/scr/movie/config/**/*.class"
+        property "sonar.coverage.exclusions", "**/com/gt/scr/movie/grpc_resource/**/*.class, **/com/gt/scr/movie/config/**/*.class"
     }
 }
 
