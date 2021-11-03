@@ -163,7 +163,8 @@ test {
         excludes = ['com/gt/scr/movie/Application.class',
                     'com/gt/scr/movie/Grace**',
                     'com/gt/scr/movie/security/WebSecurityConfig.class',
-                    'com/gt/scr/movie/config/**']
+                    'com/gt/scr/movie/config/**/*.class',
+                    'com/gt/scr/movie/grpc_resource/**/*.class']
     }
 }
 
