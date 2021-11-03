@@ -45,17 +45,7 @@ class SecurityContextRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        String KEY_256_BIT = "8A6872AD13BEC411DAC9746C7FEDB8A6872AD13BEC411DAC9746C7FEDB";
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(KEY_256_BIT);
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
-
         securityContextRepository = new SecurityContextRepository(authenticationManager);
-        when(serverWebExchange.getRequest()).thenReturn(serverHttpRequest);
-        String token = JwtTokenUtil.generateToken(UserBuilder.aUser().build(), Duration.ofMinutes(1L), signingKey);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(token);
-
-        when(serverHttpRequest.getHeaders()).thenReturn(httpHeaders);
     }
 
     @Test
@@ -67,6 +57,17 @@ class SecurityContextRepositoryTest {
     @Test
     void loadShouldLoadUserIntoSecurityContext() {
         String principle = "Principle";
+        String KEY_256_BIT = "8A6872AD13BEC411DAC9746C7FEDB8A6872AD13BEC411DAC9746C7FEDB";
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(KEY_256_BIT);
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+
+        when(serverWebExchange.getRequest()).thenReturn(serverHttpRequest);
+        String token = JwtTokenUtil.generateToken(UserBuilder.aUser().build(), Duration.ofMinutes(1L), signingKey);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(token);
+
+        when(serverHttpRequest.getHeaders()).thenReturn(httpHeaders);
+
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(principle, principle);
         Mono<Authentication> authenticationMono = Mono.just(usernamePasswordAuthenticationToken);
