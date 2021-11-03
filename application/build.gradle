@@ -158,14 +158,6 @@ project.version = "DEV"
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
-
-    jacoco {
-        excludes = ['com/gt/scr/movie/Application.class',
-                    'com/gt/scr/movie/Grace**',
-                    'com/gt/scr/movie/security/WebSecurityConfig.class',
-                    'com/gt/scr/movie/config/**/*.class',
-                    'com/gt/scr/movie/grpc_resource/**/*.class']
-    }
 }
 
 jacocoTestReport {
@@ -176,6 +168,18 @@ jacocoTestReport {
         html.enabled true
         html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/gt/scr/movie/grpc_resource/**/*.class",
+                    "com/gt/scr/movie/Application.class",
+                    "com/gt/scr/movie/Grace**.class",
+                    "com/gt/scr/movie/config/**/*.class",
+                    "com/gt/scr/movie/security/WebSecurityConfig.class"
+            ])
+        }))
+    }
+
     executionData.from = files('build/jacoco/test.exec')
 }
 
