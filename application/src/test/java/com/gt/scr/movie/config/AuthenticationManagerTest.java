@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -71,7 +72,8 @@ class AuthenticationManagerTest {
     void shouldReturnEmptyWhenTokenIsExpired() throws InterruptedException {
         String token = JwtTokenUtil.generateToken(user, Duration.ofMillis(1L), signingKey);;
 
-        Thread.sleep(50);
+        await("Wait for token to Expire").atLeast(Duration.ofMillis(50))
+                .until(() -> true);
 
         //when
         Mono<Authentication> authenticate =
