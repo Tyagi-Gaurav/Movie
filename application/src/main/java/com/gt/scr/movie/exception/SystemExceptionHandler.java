@@ -17,6 +17,7 @@ public class SystemExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(SystemExceptionHandler.class);
 
     private final ErrorResponseHelper errorResponseHelper;
+    private static final String UNEXPECTED_ERROR_OCCURRED = "Unexpected error occurred";
 
     public SystemExceptionHandler(ErrorResponseHelper errorResponseHelper) {
         this.errorResponseHelper = errorResponseHelper;
@@ -28,7 +29,7 @@ public class SystemExceptionHandler {
         if (LOG.isErrorEnabled()) {
             LOG.error(exception.getMessage(), exception);
         }
-        return errorResponseHelper.errorResponse(400, "Unexpected error occurred");
+        return errorResponseHelper.errorResponse(400, UNEXPECTED_ERROR_OCCURRED);
     }
 
     @ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR)
@@ -37,7 +38,7 @@ public class SystemExceptionHandler {
         if (LOG.isErrorEnabled()) {
             LOG.error(exception.getMessage(), exception);
         }
-        return errorResponseHelper.errorResponse(500, "Unexpected error occurred");
+        return errorResponseHelper.errorResponse(500, UNEXPECTED_ERROR_OCCURRED);
     }
 
     @ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR)
@@ -46,6 +47,6 @@ public class SystemExceptionHandler {
         if (LOG.isErrorEnabled()) {
             LOG.error(exception.getMessage(), exception);
         }
-        return errorResponseHelper.errorResponse(500, "Unexpected error occurred");
+        return errorResponseHelper.errorResponse(500, UNEXPECTED_ERROR_OCCURRED);
     }
 }

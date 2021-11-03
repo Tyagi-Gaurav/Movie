@@ -47,7 +47,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 
                         List<Object> authoritiesObjects = (List<Object>) jwtTokenUtil.getClaimFromToken(claims -> claims.get("Authorities"));
 
-                        LinkedHashMap authorities = (LinkedHashMap) authoritiesObjects.get(0);
+                        LinkedHashMap<String, Object> authorities = (LinkedHashMap<String, Object>) authoritiesObjects.get(0);
                         String authority = authorities.get("authority").toString();
                         var userprofile = new UserProfile(ud.id(), authority);
 

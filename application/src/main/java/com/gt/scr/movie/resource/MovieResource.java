@@ -29,7 +29,6 @@ import java.util.UUID;
 public class MovieResource {
     private final MovieService movieService;
     private static final Logger LOG = LoggerFactory.getLogger(MovieResource.class);
-    //private final Mono<SecurityContext> securityContextMono = ReactiveSecurityContextHolder.getContext();
     private final SecurityContextHolder securityContextHolder;
 
     public MovieResource(MovieService movieService,
