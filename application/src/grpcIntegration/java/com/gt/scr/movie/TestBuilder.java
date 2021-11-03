@@ -6,7 +6,7 @@ import com.gt.scr.movie.grpc.MovieGrpcCreateRequestDTO;
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class TestBuilder {
-    public static AccountCreateGrpcRequestDTO accountCreate() {
+    public static AccountCreateGrpcRequestDTO accountCreateGrpc() {
         return AccountCreateGrpcRequestDTO.newBuilder()
                 .setFirstName("testFirstName")
                 .setLastName("testLastName")
@@ -15,7 +15,8 @@ public class TestBuilder {
                 .setRole("ADMIN").build();
     }
 
-    public static LoginGrpcRequestDTO loginCreate(AccountCreateGrpcRequestDTO accountCreateGrpcRequestDTO) {
+
+    public static LoginGrpcRequestDTO loginCreateGrpc(AccountCreateGrpcRequestDTO accountCreateGrpcRequestDTO) {
         return LoginGrpcRequestDTO.newBuilder()
                 .setUserName(accountCreateGrpcRequestDTO.getUserName())
                 .setPassword(accountCreateGrpcRequestDTO.getPassword())
