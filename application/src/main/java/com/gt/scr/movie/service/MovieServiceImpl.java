@@ -1,12 +1,17 @@
 package com.gt.scr.movie.service;
 
+import com.gt.scr.movie.audit.EventMessage;
+import com.gt.scr.movie.audit.EventType;
+import com.gt.scr.movie.audit.MovieCreateEvent;
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -15,9 +20,12 @@ import java.util.UUID;
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
+    private final Sinks.Many<EventMessage> eventSink;
 
-    public MovieServiceImpl(MovieRepository movieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository,
+                            @Qualifier("EventSink") Sinks.Many<EventMessage> eventSink) {
         this.movieRepository = movieRepository;
+        this.eventSink = eventSink;
     }
 
     @Override
@@ -30,7 +38,13 @@ public class MovieServiceImpl implements MovieService {
                         return Mono.empty();
                     }
                 })
-                .switchIfEmpty(Mono.defer(() -> movieRepository.create(userId, movie)))
+                .switchIfEmpty(Mono.defer(() -> {
+                    movieRepository.create(userId, movie);
+                    eventSink.emitNext(new EventMessage(EventType.MOVIE_CREATE,
+                            new MovieCreateEvent(movie.name(), movie.yearProduced(), movie.rating())
+                    ), Sinks.EmitFailureHandler.FAIL_FAST);
+                    return Mono.empty();
+                }))
                 .then();
     }
 
