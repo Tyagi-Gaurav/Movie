@@ -23,3 +23,7 @@ create TABLE IF NOT EXISTS MOVIE (
     PRIMARY KEY (id),
     FOREIGN KEY (USER_ID) REFERENCES USER(id) ON delete CASCADE
 ) ENGINE=INNODB;
+
+--changeset movie:2
+insert INTO USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) values ('dcba7802-2eae-42b2-818e-a27f8f380088', 'admin', 'Gaurav',
+'Tyagi', '{bcrypt}$2a$10$ZiuCPqHY0hU1N4fgAKaV6uwLCN96lU0aD.llqQmX5L8TfQkjTz2XS', 'ADMIN');

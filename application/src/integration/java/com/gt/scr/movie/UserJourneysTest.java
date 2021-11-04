@@ -82,4 +82,25 @@ public class UserJourneysTest {
                 .and().userLoginsWith(loginRequestDTO)
                 .then().statusIs(401);
     }
+
+    @Test
+    public void aNormalUserShouldNotBeAbleToAccessUserManagementEndpoints() {
+        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.userAccountCreateRequestDTO();
+        LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO);
+        scenarioExecutor
+                .when().userIsCreatedWith(accountCreateRequestDTO)
+                .then().statusIs(204)
+                .and().userLoginsWith(loginRequestDTO)
+                .then().statusIs(200)
+                .and().userRetrievesListOfAllUsers()
+                .then().statusIs(403);
+    }
+
+    @Test
+    void regularAccountCreateIsOnlyForNormalUsers() {
+        AccountCreateRequestDTO adminAccountCreateRequestDTO = TestObjectBuilder.adminAccountCreateRequest();
+        scenarioExecutor
+                .when().userIsCreatedWith(adminAccountCreateRequestDTO)
+                .then().statusIs(403);
+    }
 }

@@ -23,6 +23,15 @@ public class SystemExceptionHandler {
         this.errorResponseHelper = errorResponseHelper;
     }
 
+    @ResponseStatus(code= HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = {UnauthorizedException.class})
+    public Mono<ErrorResponse> handleUnAuthorizedException(UnauthorizedException exception) {
+        if (LOG.isErrorEnabled()) {
+            LOG.error(exception.getMessage(), exception);
+        }
+        return errorResponseHelper.errorResponse(403, "Unauthorized");
+    }
+
     @ResponseStatus(code= HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {WebExchangeBindException.class})
     public Mono<ErrorResponse> handleGeneralValidationExceptions(WebExchangeBindException exception) {

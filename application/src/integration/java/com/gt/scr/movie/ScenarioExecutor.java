@@ -5,6 +5,7 @@ import com.gt.scr.movie.functions.Login;
 import com.gt.scr.movie.functions.MovieCreate;
 import com.gt.scr.movie.functions.RetrieveAllUserMovies;
 import com.gt.scr.movie.functions.UserCreate;
+import com.gt.scr.movie.functions.UserManagementReadUsers;
 import com.gt.scr.movie.functions.VerifyNoMoviesAvailableForUser;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
@@ -14,23 +15,18 @@ import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ScenarioExecutor {
-    private MvcResult mvcResult;
     private WebTestClient.ResponseSpec responseSpec;
     private LoginResponseDTO userLoginResponseDTO;
     private LoginResponseDTO adminLoginResponseDTO;
 
     private final WebTestClient webTestClient;
-    private final MockMvc mockMvc = null;
     private final DataSource dataSource;
 
     public ScenarioExecutor(WebTestClient webTestClient,
@@ -104,6 +100,11 @@ public class ScenarioExecutor {
 
     public ScenarioExecutor verifyNoMoviesExistForTheNormalUserInDatabase() {
         new VerifyNoMoviesAvailableForUser().accept(dataSource, userLoginResponseDTO);
+        return this;
+    }
+
+    public ScenarioExecutor userRetrievesListOfAllUsers() {
+        this.responseSpec = new UserManagementReadUsers().apply(webTestClient, userLoginResponseDTO);
         return this;
     }
 }

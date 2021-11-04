@@ -1,5 +1,6 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.movie.exception.UnauthorizedException;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
@@ -13,8 +14,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccountCreateResourceTest {
@@ -33,7 +33,7 @@ class AccountCreateResourceTest {
     }
 
     @Test
-    void shouldCreateAccount() {
+    void shouldCreateAccountForNormalUser() {
         AccountCreateRequestDTO accountCreateRequestDTO =
                 new AccountCreateRequestDTO("userName",
                         "password",
@@ -47,5 +47,22 @@ class AccountCreateResourceTest {
 
         StepVerifier.create(account).verifyComplete();
         verify(userService).add(any(User.class));
+    }
+
+    @Test
+    void shouldFailForCreateAccountOfAdminUser() {
+        AccountCreateRequestDTO accountCreateRequestDTO =
+                new AccountCreateRequestDTO("userName",
+                        "password",
+                        "firstName",
+                        "lastName",
+                        "ADMIN");
+
+        Mono<Void> account = accountCreateResource.createAccount(accountCreateRequestDTO);
+
+        StepVerifier.create(account)
+                .expectError(UnauthorizedException.class)
+                .verify();
+        verifyNoInteractions(userService);
     }
 }

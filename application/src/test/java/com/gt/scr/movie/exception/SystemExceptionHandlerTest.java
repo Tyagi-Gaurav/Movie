@@ -66,4 +66,12 @@ class SystemExceptionHandlerTest {
         StepVerifier.create(errorResponseMono)
                 .expectNext(new ErrorResponse(400, "Validation error occurred"));
     }
+
+    @Test
+    void shouldHandleUnAuthorizedException() {
+        Mono<ErrorResponse> errorResponseMono = systemExceptionHandler.handleException(new UnauthorizedException());
+
+        StepVerifier.create(errorResponseMono)
+                .expectNext(new ErrorResponse(403, "Unauthorized"));
+    }
 }

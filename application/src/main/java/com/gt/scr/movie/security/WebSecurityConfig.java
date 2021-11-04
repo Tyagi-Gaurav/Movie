@@ -43,17 +43,17 @@ public class WebSecurityConfig {
                                                 @Qualifier("signingKey") Key signingKey) {
         return httpSecurity
                 .csrf().disable()
-                //.addFilterBefore(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .pathMatchers("/status").permitAll()
                 .pathMatchers("/actuator/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/user/account/create").permitAll()
-                .pathMatchers("/user/manage").hasAuthority("ADMIN")
                 .pathMatchers(HttpMethod.GET, "/user/movie\\?userId=.+").hasAuthority("ADMIN")
+                .pathMatchers("/user/manage").hasAuthority("ADMIN")
                 .anyExchange().authenticated().and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
                 .securityContextRepository(new SecurityContextRepository(
                         new AuthenticationManager(userDetailsService, signingKey)
                 ))

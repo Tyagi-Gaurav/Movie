@@ -9,11 +9,9 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class JwtAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
-
 	@Override
 	public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
 		exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-		exchange.getResponse().writeWith(Mono.error(ex));
-		return exchange.getResponse().setComplete();
+		return exchange.getResponse().writeWith(Mono.error(ex));
 	}
 }

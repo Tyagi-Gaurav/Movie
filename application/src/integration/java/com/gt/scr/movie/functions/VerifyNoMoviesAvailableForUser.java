@@ -21,7 +21,8 @@ public class VerifyNoMoviesAvailableForUser implements BiConsumer<DataSource, Lo
 
             preparedStatement.setString(1, loginResponseDTO.id().toString());
             ResultSet resultSet = preparedStatement.executeQuery();
-            assertThat(resultSet.next()).describedAs("Did not expect to find any movies for a deleted user.").isFalse();
+            assertThat(resultSet.next())
+                    .describedAs("Did not expect to find any movies for a deleted user.").isFalse();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

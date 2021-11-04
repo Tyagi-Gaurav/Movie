@@ -41,7 +41,6 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
                     .filter(jwtTokenUtil::validateToken)
                     .switchIfEmpty(Mono.defer(Mono::empty))
                     .flatMap(ud -> {
-                        LOG.info("Token validated for user {}", userId);
                         // After setting the Authentication in the context, we specify
                         // that the current user is authenticated. So it passes the
                         // Spring Security Configurations successfully.
@@ -52,7 +51,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
                         String authority = authorities.get("authority").toString();
                         var userprofile = new UserProfile(ud.id(), authority);
 
-                        LOG.info("User authenticated with role: {}", authority);
+                        LOG.info("User {} authenticated with role: {}", userId, authority);
                         UsernamePasswordAuthenticationToken userTokenData =
                                 new UsernamePasswordAuthenticationToken(userprofile, "", ud.authorities());
                         return Mono.just(userTokenData);

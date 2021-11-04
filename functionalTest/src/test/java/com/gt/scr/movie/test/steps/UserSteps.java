@@ -1,5 +1,6 @@
 package com.gt.scr.movie.test.steps;
 
+import com.gt.scr.movie.test.config.AdminCredentials;
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestLoginRequestDTO;
@@ -29,6 +30,9 @@ public class UserSteps implements En {
 
     @Autowired
     private ResponseHolder responseHolder;
+
+    @Autowired
+    private AdminCredentials adminCredentials;
 
     public UserSteps() {
         Given("^a user attempts to create a new account with following details$",
@@ -60,7 +64,7 @@ public class UserSteps implements En {
             TestLoginRequestDTO testLoginRequestDTO = new TestLoginRequestDTO(
                     userCredentialsRequest.userName(),
                     RandomStringUtils.randomAlphabetic(7));
-            testLoginResource.create(testLoginRequestDTO);
+            testLoginResource.doLogin(testLoginRequestDTO);
         });
 
         Given("^a user creates a new account and performs login with user name '(.*)' and role '(.*)'$",
@@ -76,6 +80,14 @@ public class UserSteps implements En {
                     testAccountCreateResource.create(testAccountCreateRequestDTO);
 
                     loginUsing(scenarioContext.getCredentials(role));
+                    assertThat(responseHolder.getResponseCode()).isEqualTo(200);
+                });
+
+        Given("^the global admin user logs into the system$", () -> {
+                    TestLoginRequestDTO testLoginRequestDTO = new TestLoginRequestDTO(
+                            adminCredentials.userName(),
+                            adminCredentials.password());
+                    testLoginResource.doLogin(testLoginRequestDTO);
                     assertThat(responseHolder.getResponseCode()).isEqualTo(200);
                 });
 
@@ -118,6 +130,6 @@ public class UserSteps implements En {
         TestLoginRequestDTO testLoginRequestDTO = new TestLoginRequestDTO(
                 userCredentialsRequest.userName(),
                 userCredentialsRequest.password());
-        testLoginResource.create(testLoginRequestDTO);
+        testLoginResource.doLogin(testLoginRequestDTO);
     }
 }

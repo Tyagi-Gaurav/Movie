@@ -25,7 +25,7 @@ class EnumValidatorTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(strings = {"abc"})
+    @ValueSource(strings = {"abc", "admin", "user", "aDmIn", "uSeR"})
     void shouldNotValidateAndThrowExceptionWhenNonEnumValuesProvided(String value) {
         TestValidEnumAnnotation underTest = new TestValidEnumAnnotation(value);
         Set<ConstraintViolation<TestValidEnumAnnotation>> violations =

@@ -4,5 +4,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConstructorBinding
-@ConfigurationProperties("movie-app")
-public record MovieAppConfig(String host, int port) {}
+@ConfigurationProperties(prefix = "admin-credentials")
+public record AdminCredentials(String userName, String password) { }

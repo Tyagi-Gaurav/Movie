@@ -14,7 +14,8 @@ public class Initializer implements ApplicationContextInitializer<ConfigurableAp
     static MySQLContainer mySQL = new MySQLContainer<>(DockerImageName.parse("mysql"))
             .withUsername("root")
             .withPassword("password")
-            .withDatabaseName("movieMetadata");
+            .withDatabaseName("movieMetadata")
+            .withReuse(true);
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
