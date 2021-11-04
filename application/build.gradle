@@ -17,7 +17,6 @@ ext {
     mysqlVersion = '8.0.27'
     c3p0Version = '0.9.5.5'
     liquibaseVersion = '4.5.0'
-    immutablesVersion = '2.8.8'
     guavaVersion = '31.0.1-jre'
     metricsInterceptor = '1.7.5'
     junitVersion = '5.8.1'
@@ -114,14 +113,8 @@ dependencies {
     implementation "com.mchange:c3p0:${c3p0Version}"
     implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
 
-    //Immutables
-    implementation "org.immutables:value-annotations:${immutablesVersion}"
-    implementation "org.immutables:value:${immutablesVersion}"
-    implementation "org.immutables:builder:${immutablesVersion}"
-    implementation "org.immutables:serial:${immutablesVersion}"
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "io.micrometer:micrometer-core:${metricsInterceptor}"
-    annotationProcessor "org.immutables:value:${immutablesVersion}"
 
     testImplementation "io.projectreactor:reactor-test:$reactorVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"

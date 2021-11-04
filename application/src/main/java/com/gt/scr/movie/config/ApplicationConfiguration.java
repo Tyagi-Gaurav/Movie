@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -25,6 +25,7 @@ import java.security.Key;
 
 @Configuration
 @EnableWebFlux
+@ConfigurationPropertiesScan("com.gt.scr.movie.config")
 public class ApplicationConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfiguration.class);
 
@@ -38,20 +39,8 @@ public class ApplicationConfiguration {
     private MetricsInterceptor metricsInterceptor;
 
     @Bean
-    @ConfigurationProperties("database")
-    public DatabaseConfig databaseConfig() {
-        return ModifiableDatabaseConfig.create();
-    }
-
-    @Bean
     public WebFluxProperties webFluxProperties(){
         return new WebFluxProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties("auth")
-    public AuthConfig authConfig() {
-        return ModifiableAuthConfig.create();
     }
 
     @Bean
@@ -87,11 +76,5 @@ public class ApplicationConfiguration {
         }
 
         return cpds;
-    }
-
-    @Bean
-    @ConfigurationProperties("mysql")
-    public MySQLConfig mySQLConfig() {
-        return ModifiableMySQLConfig.create();
     }
 }

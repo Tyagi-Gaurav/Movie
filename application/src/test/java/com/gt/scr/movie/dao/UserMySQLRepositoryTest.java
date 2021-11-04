@@ -1,7 +1,5 @@
 package com.gt.scr.movie.dao;
 
-import com.gt.scr.movie.config.DatabaseConfig;
-import com.gt.scr.movie.config.ModifiableDatabaseConfig;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.UserBuilder;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -12,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +23,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +32,6 @@ import static com.gt.scr.movie.util.TestUtils.addToDatabase;
 import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = UserMySQLRepository.class)
 @ExtendWith(MockitoExtension.class)
@@ -50,9 +45,6 @@ class UserMySQLRepositoryTest {
     @Autowired
     private DataSource dataSource;
 
-    @MockBean
-    private DatabaseConfig databaseConfig;
-
     private static final String ADD_USER =
             "INSERT INTO USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) values (?, ?, ?, ?, ?, ?)";
 
@@ -63,7 +55,6 @@ class UserMySQLRepositoryTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        when(databaseConfig.duplicateInterval()).thenReturn(Duration.ofMillis(10));
         deleteAllUsers();
     }
 
@@ -314,11 +305,6 @@ class UserMySQLRepositoryTest {
 
     @TestConfiguration
     static class TestMovieRepoContextConfiguration {
-
-        @Bean
-        public DatabaseConfig mySQLTestConfig() {
-            return ModifiableDatabaseConfig.create();
-        }
 
         @Bean
         public DataSource inMemoryDataSource() {

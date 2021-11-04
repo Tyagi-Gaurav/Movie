@@ -1,22 +1,15 @@
 package com.gt.scr.movie.config;
 
-import org.immutables.value.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-@Value.Modifiable
-public interface MySQLConfig {
-    String driver();
-
-    String host();
-
-    int port();
-
-    String database();
-
-    String user();
-
-    String password();
-
-    int minPoolSize();
-
-    int maxPoolSize();
-}
+@ConstructorBinding
+@ConfigurationProperties("mysql")
+public record MySQLConfig(String driver,
+                          String host,
+                          int port,
+                          String database,
+                          String user,
+                          String password,
+                          int minPoolSize,
+                          int maxPoolSize) {}

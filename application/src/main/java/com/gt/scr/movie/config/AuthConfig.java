@@ -1,12 +1,10 @@
 package com.gt.scr.movie.config;
 
-import org.immutables.value.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 import java.time.Duration;
 
-@Value.Modifiable
-public interface AuthConfig {
-    Duration tokenDuration();
-
-    String secret();
-}
+@ConstructorBinding
+@ConfigurationProperties("auth")
+public record AuthConfig(Duration tokenDuration, String secret) { }
