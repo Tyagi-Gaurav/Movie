@@ -20,6 +20,7 @@ import reactor.test.StepVerifier;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -35,9 +36,7 @@ class LoginResourceTest {
     @Mock
     private UserService userService;
 
-    @Mock
-    private AuthConfig authConfig;
-
+    private final AuthConfig authConfig = new AuthConfig(Duration.ofMinutes(1L), "secret");
     private final static String KEY_256_BIT = "8A6872AD13BEC411DAC9746C7FEDB8A6872AD13BEC411DAC9746C7FEDB";
 
     private LoginResource loginResource;
