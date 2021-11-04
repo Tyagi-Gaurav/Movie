@@ -1,5 +1,6 @@
 package com.gt.scr.movie.service;
 
+import com.gt.scr.movie.audit.EventMessage;
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
@@ -25,11 +27,14 @@ class MovieServiceImplTest {
     @Mock
     private MovieRepository movieRepository;
 
+    @Mock
+    private Sinks.Many<EventMessage> eventSink;
+
     private MovieService movieService;
 
     @BeforeEach
     void setUp() {
-        movieService = new MovieServiceImpl(movieRepository);
+        movieService = new MovieServiceImpl(movieRepository, eventSink);
     }
 
     @Test

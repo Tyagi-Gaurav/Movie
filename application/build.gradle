@@ -115,6 +115,7 @@ dependencies {
 
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "io.micrometer:micrometer-core:${metricsInterceptor}"
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
 
     testImplementation "io.projectreactor:reactor-test:$reactorVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
