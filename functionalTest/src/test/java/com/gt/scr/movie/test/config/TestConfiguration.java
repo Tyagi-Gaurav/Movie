@@ -2,7 +2,7 @@ package com.gt.scr.movie.test.config;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,6 +11,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
+@ConfigurationPropertiesScan(basePackages = "com.gt.scr.movie.test")
 @EnableConfigurationProperties
 @ComponentScan(basePackages = "com.gt.scr.movie.test")
 public class TestConfiguration {
@@ -20,12 +21,6 @@ public class TestConfiguration {
         SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
         simpleClientHttpRequestFactory.setConnectTimeout(10000);
         return new RestTemplate(simpleClientHttpRequestFactory);
-    }
-
-    @Bean
-    @ConfigurationProperties("movie-app")
-    public MovieAppConfig movieAppConfig() {
-        return ModifiableMovieAppConfig.create();
     }
 
     @Bean

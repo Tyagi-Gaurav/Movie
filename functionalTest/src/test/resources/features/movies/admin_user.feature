@@ -1,14 +1,15 @@
 Feature: Logged in admin user should be able to access movie records and users
 
-  Scenario: Authenticated admin user should be able to create a new movie
-    Given a user creates a new account and performs login with user name '<random>' and role 'ADMIN'
-    And the authenticated user attempts to create a new movie
-      | name        | yearProduced | rating |
-      | First Blood | 2000         | 7.8    |
-    Then the response should be received with HTTP status code 204
+#  Scenario: Authenticated admin user should be able to create a new movie
+#    Given the global admin user logs into the system
+  # TODO create a new admin user that executes the rest of the steps.
+#    And the authenticated user attempts to create a new movie
+#      | name        | yearProduced | rating |
+#      | First Blood | 2000         | 7.8    |
+#    Then the response should be received with HTTP status code 204
 
   Scenario: Authenticated admin user should be able to read the movie records for all users
-    Given a user creates a new account and performs login with user name '<random>' and role 'ADMIN'
+    Given the global admin user logs into the system
     And a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
@@ -16,7 +17,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | Die Hard    | 1980         | 8.9    |
     Then the response should be received with HTTP status code 204
     And the userId for the user is recorded
-    And the admin user attempts to login again
+    And the global admin user logs into the system
     When the authenticated admin user attempts to read the movies for user
     Then the response should be received with HTTP status code 200
     And the movie read response contains the following records
@@ -25,7 +26,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | Die Hard    | 1980         | 8.9    |
 
   Scenario: Authenticated admin user should be able to delete the movie records for all users
-    Given a user creates a new account and performs login with user name '<random>' and role 'ADMIN'
+    Given the global admin user logs into the system
     And a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
@@ -33,7 +34,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | Die Hard    | 1980         | 8.9    |
     Then the response should be received with HTTP status code 204
     And the userId for the user is recorded
-    And the admin user attempts to login again
+    And the global admin user logs into the system
     When the authenticated admin user attempts to delete all the movies for user
     Then the response should be received with HTTP status code 200
     And the authenticated admin user attempts to read the movies for user
@@ -46,7 +47,7 @@ Feature: Logged in admin user should be able to access movie records and users
   Scenario: Authenticated admin user should be able to add the movie records for other users
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the userId for the user is recorded
-    And a user creates a new account and performs login with user name '<random>' and role 'ADMIN'
+    And the global admin user logs into the system
     And the authenticated user attempts to create a new movie for the regular user
       | name        | yearProduced | rating |
       | First Blood | 1990         | 7.8    |
@@ -61,7 +62,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | Die Hard    | 1980         | 8.9    |
 
   Scenario: Authenticated admin user should be able to edit the movie records for other users
-    Given a user creates a new account and performs login with user name '<random>' and role 'ADMIN'
+    Given the global admin user logs into the system
     And a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
@@ -69,7 +70,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | Die Hard    | 1980         | 8.9    |
     Then the response should be received with HTTP status code 204
     And the userId for the user is recorded
-    And the admin user attempts to login again
+    And the global admin user logs into the system
     When the authenticated admin user attempts to read the movies for user
     Then the response should be received with HTTP status code 200
     When the admin user attempts to update the movie with name: 'First Blood' to

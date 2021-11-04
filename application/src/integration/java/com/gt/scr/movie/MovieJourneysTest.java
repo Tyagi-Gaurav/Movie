@@ -4,7 +4,7 @@ import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -64,7 +64,7 @@ public class MovieJourneysTest {
                 .then().statusIs(400);
     }
 
-    @Test
+    @Disabled
     void deletingUserShouldDeleteUserMovies() {
         AccountCreateRequestDTO adminAccountCreateRequestDTO =
                 TestObjectBuilder.adminAccountCreateRequest();

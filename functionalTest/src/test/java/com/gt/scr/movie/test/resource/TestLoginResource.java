@@ -27,15 +27,15 @@ public class TestLoginResource extends AbstractResource {
     @Autowired
     private ManagedChannel managedChannel;
 
-    public void create(TestLoginRequestDTO testLoginRequestDTO) {
+    public void doLogin(TestLoginRequestDTO testLoginRequestDTO) {
         if (TestEnvironment.isGrpc()) {
-            createUsingGrpc(testLoginRequestDTO);
+            loginUsingGrpc(testLoginRequestDTO);
         } else {
-            createUsingRest(testLoginRequestDTO);
+            loginUsingRest(testLoginRequestDTO);
         }
     }
 
-    public void createUsingRest(TestLoginRequestDTO testLoginRequestDTO) {
+    public void loginUsingRest(TestLoginRequestDTO testLoginRequestDTO) {
         String fullUrl = getFullUrl(movieAppConfig.host().trim(),
                 "/api/user/login", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
@@ -50,7 +50,7 @@ public class TestLoginResource extends AbstractResource {
         }
     }
 
-    public void createUsingGrpc(TestLoginRequestDTO testLoginRequestDTO) {
+    public void loginUsingGrpc(TestLoginRequestDTO testLoginRequestDTO) {
         LoginGrpcRequestDTO loginGrpcRequestDTO = LoginGrpcRequestDTO.newBuilder()
                 .setPassword(testLoginRequestDTO.password())
                 .setUserName(testLoginRequestDTO.userName())

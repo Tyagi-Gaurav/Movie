@@ -4,3 +4,7 @@ spring:
 movie-app:
   host: ${MOVIE_APP_HOST:localhost}
   port: ${MOVIE_APP_PORT:9090}
+
+admin-credentials:
+  userName: admin
+  password: ${ADMIN_PASSWORD:admin123}
