@@ -5,10 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -39,7 +37,8 @@ class SystemExceptionHandlerTest {
         Mono<ErrorResponse> errorResponseMono = systemExceptionHandler.handleException(new RuntimeException());
 
         StepVerifier.create(errorResponseMono)
-                .expectNext(new ErrorResponse(500, "Unexpected error occurred"));
+                .expectNext(new ErrorResponse(500, "Unexpected error occurred"))
+                .verifyComplete();
     }
 
     @Test
@@ -55,23 +54,7 @@ class SystemExceptionHandlerTest {
         Mono<ErrorResponse> errorResponseMono = systemExceptionHandler.handleException(new IllegalCallerException());
 
         StepVerifier.create(errorResponseMono)
-                .expectNext(new ErrorResponse(500, "Unexpected error occurred"));
-    }
-
-    @Test
-    void shouldHandleGeneralValidationException() {
-        WebExchangeBindException webExchangeBindException = Mockito.mock(WebExchangeBindException.class);
-        Mono<ErrorResponse> errorResponseMono = systemExceptionHandler.handleException(webExchangeBindException);
-
-        StepVerifier.create(errorResponseMono)
-                .expectNext(new ErrorResponse(400, "Validation error occurred"));
-    }
-
-    @Test
-    void shouldHandleUnAuthorizedException() {
-        Mono<ErrorResponse> errorResponseMono = systemExceptionHandler.handleException(new UnauthorizedException());
-
-        StepVerifier.create(errorResponseMono)
-                .expectNext(new ErrorResponse(403, "Unauthorized"));
+                .expectNext(new ErrorResponse(500, "Unexpected error occurred"))
+                .verifyComplete();;
     }
 }

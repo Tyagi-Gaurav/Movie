@@ -7,22 +7,23 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Mono;
 
 @ControllerAdvice
 @Component
 @Order(value = 1)
-public class IllegalArgumentExceptionHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(IllegalArgumentExceptionHandler.class);
+public class WebExchangeBindExceptionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(WebExchangeBindExceptionHandler.class);
 
     private final ErrorResponseHelper errorResponseHelper;
 
-    public IllegalArgumentExceptionHandler(ErrorResponseHelper errorResponseHelper) {
+    public WebExchangeBindExceptionHandler(ErrorResponseHelper errorResponseHelper) {
         this.errorResponseHelper = errorResponseHelper;
     }
 
-    @ExceptionHandler(value = {IllegalArgumentException.class})
-    public Mono<ErrorResponse> handle(IllegalArgumentException exception) {
+    @ExceptionHandler(value = {WebExchangeBindException.class})
+    public Mono<ErrorResponse> handle(WebExchangeBindException exception) {
         if (LOG.isErrorEnabled()) {
             LOG.error(exception.getMessage(), exception);
         }
