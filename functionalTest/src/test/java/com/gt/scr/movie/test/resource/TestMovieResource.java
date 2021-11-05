@@ -30,7 +30,7 @@ public class TestMovieResource extends AbstractResource {
     @Autowired
     private ManagedChannel managedChannel;
 
-    public void create(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {
+    public void createMovieFor(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {
         if (TestEnvironment.isGrpc()) {
             createUsingGrpc(testMovieCreateRequestDTO);
         } else {
@@ -131,9 +131,9 @@ public class TestMovieResource extends AbstractResource {
         responseHolder.setResponse(this.delete(fullUrl, requestObject, String.class));
     }
 
-    public void create(TestMovieCreateRequestDTO movieCreateRequestDTO, String regularUserId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
-                "/api/user/movie", movieAppConfig.port()), regularUserId);
+    public void createMovieFor(TestMovieCreateRequestDTO movieCreateRequestDTO, String regularUserId) {
+        String path = String.format("/api/user/%s/movie", regularUserId);
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(), path, movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());

@@ -52,7 +52,7 @@ class MovieResourceTest {
         when(movieService.addMovie(eq(userProfile.id()), any(Movie.class))).thenReturn(Mono.empty());
 
         //when
-        Mono<Void> movie = movieResource.createMovie(movieCreateRequestDTO, null);
+        Mono<Void> movie = movieResource.createMovie(movieCreateRequestDTO);
 
         StepVerifier.create(movie)
                 .verifyComplete();
