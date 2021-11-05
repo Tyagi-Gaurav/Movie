@@ -51,7 +51,7 @@ class MovieAdminResourceTest {
         when(movieService.addMovie(eq(requestedUserId), any(Movie.class))).thenReturn(Mono.empty());
 
         //when
-        Mono<Void> movie = movieAdminResource.createMovie(movieCreateRequestDTO, requestedUserId.toString());
+        Mono<Void> movie = movieAdminResource.createMovieFor(movieCreateRequestDTO, requestedUserId.toString());
 
         StepVerifier.create(movie).verifyComplete();
 

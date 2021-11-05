@@ -48,7 +48,7 @@ public class WebSecurityConfig {
                 .pathMatchers("/status").permitAll()
                 .pathMatchers("/actuator/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/user/account/create").permitAll()
-                .pathMatchers(HttpMethod.GET, "/user/{userid}/movie").hasAuthority("ADMIN")
+                .pathMatchers( "/user/{userid}/movie").hasAuthority("ADMIN")
                 .pathMatchers("/user/manage").hasAuthority("ADMIN")
                 .anyExchange().authenticated().and()
                 .exceptionHandling()

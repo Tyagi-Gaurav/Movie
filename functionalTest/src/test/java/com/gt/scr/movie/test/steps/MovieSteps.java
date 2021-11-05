@@ -34,7 +34,7 @@ public class MovieSteps implements En {
         And("the authenticated user attempts to create a new movie",
                 (DataTable dataTable) -> {
                     List<TestMovieCreateRequestDTO> testMovieCreateRequestDTOS = dataTable.asList(TestMovieCreateRequestDTO.class);
-                    testMovieCreateRequestDTOS.forEach(testMovieResource::create);
+                    testMovieCreateRequestDTOS.forEach(testMovieResource::createMovieFor);
                 });
 
         When("^the authenticated user attempts to read the movies", () -> {
@@ -141,7 +141,7 @@ public class MovieSteps implements En {
             String regularUserId = scenarioContext.getRegularUserId();
             List<TestMovieCreateRequestDTO> testMovieCreateRequestDTO = dataTable.asList(TestMovieCreateRequestDTO.class);
             testMovieCreateRequestDTO.forEach(movieCreateRequestDTO ->
-                    testMovieResource.create(movieCreateRequestDTO, regularUserId));
+                    testMovieResource.createMovieFor(movieCreateRequestDTO, regularUserId));
         });
 
         When("^the admin user attempts to update the movie with name: '(.*)' to$",

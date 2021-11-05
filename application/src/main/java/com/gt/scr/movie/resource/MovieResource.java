@@ -40,10 +40,24 @@ public class MovieResource {
             produces = "application/vnd.movie.add.v1+json",
             path = "/user/movie")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public Mono<Void> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
-                                  @RequestParam(value = "userId", required = false) String userId) {
+    public Mono<Void> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO) {
         return securityContextHolder.getContext(UserProfile.class)
-                .flatMap(up -> movieService.addMovie(determineUserId(userId, up.id()), new Movie(UUID.randomUUID(),
+                .flatMap(up -> movieService.addMovie(up.id(), new Movie(UUID.randomUUID(),
+                        movieCreateRequestDTO.name(),
+                        movieCreateRequestDTO.yearProduced(),
+                        movieCreateRequestDTO.rating(),
+                        System.nanoTime())))
+                .thenEmpty(Mono.empty());
+    }
+
+    @PostMapping(consumes = "application/vnd.movie.add.v1+json",
+            produces = "application/vnd.movie.add.v1+json",
+            path = "/user/{userId}/movie")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public Mono<Void> createMovieFor(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
+                                     @PathVariable(value = "userId") String userId) {
+        return securityContextHolder.getContext(UserProfile.class)
+                .flatMap(up -> movieService.addMovie(UUID.fromString(userId), new Movie(UUID.randomUUID(),
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
@@ -85,10 +99,6 @@ public class MovieResource {
                 System.nanoTime());
 
         return movieService.updateMovie(movie);
-    }
-
-    private UUID determineUserId(String userId, UUID id) {
-        return userId == null ? id : UUID.fromString(userId);
     }
 
     @GetMapping(consumes = "application/vnd.movie.read.v1+json",
