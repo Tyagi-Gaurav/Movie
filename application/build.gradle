@@ -26,7 +26,7 @@ ext {
     testContainerVersion = '1.16.0'
     mockitoVersion = '4.0.0'
     reactorVersion = '3.4.11'
-    grpcVersion = '1.41.0'
+    grpcVersion = '1.42.0'
     springOAuthVersion = '2.5.6'
     springWebFluxSecurityVersion = '5.0.0.M5'
 }
