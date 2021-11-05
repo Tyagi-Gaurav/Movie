@@ -73,7 +73,7 @@ class MovieAdminResourceTest {
         when(movieService.getMoviesFor(requestedUserId)).thenReturn(Flux.just(expectedReturnObject));
 
         //when
-        Mono<MoviesDTO> movie = movieAdminResource.getMovie(requestedUserId.toString());
+        Mono<MoviesDTO> movie = movieAdminResource.getMovieForUser(requestedUserId.toString());
 
         StepVerifier.create(movie)
                 .expectNext(new MoviesDTO(Collections.singletonList(

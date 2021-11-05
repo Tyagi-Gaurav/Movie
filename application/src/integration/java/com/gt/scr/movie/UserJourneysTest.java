@@ -46,8 +46,8 @@ public class UserJourneysTest {
         AccountCreateRequestDTO accountCreateRequestDTO =
                 TestObjectBuilder.userAccountCreateRequestDTO();
         scenarioExecutor
-                .when().userIsCreatedWith(accountCreateRequestDTO)
-                .then().statusIs(204);
+                .when().userIsCreatedFor(accountCreateRequestDTO)
+                .then().expectReturnCode(204);
     }
 
     @Test
@@ -55,8 +55,8 @@ public class UserJourneysTest {
         AccountCreateRequestDTO invalidAccountCreateRequest =
                 TestObjectBuilder.invalidUserAccountCreateRequestDTO();
         scenarioExecutor
-                .when().userIsCreatedWith(invalidAccountCreateRequest)
-                .then().statusIs(400);
+                .when().userIsCreatedFor(invalidAccountCreateRequest)
+                .then().expectReturnCode(400);
     }
 
     @Test
@@ -65,10 +65,8 @@ public class UserJourneysTest {
                 TestObjectBuilder.userAccountCreateRequestDTO();
         LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO);
         scenarioExecutor
-                .when().userIsCreatedWith(accountCreateRequestDTO)
-                .then().statusIs(204)
-                .and().userLoginsWith(loginRequestDTO)
-                .then().statusIs(200);
+                .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
+                .userLoginsWith(loginRequestDTO).expectReturnCode(200);
     }
 
     @Test
@@ -77,10 +75,9 @@ public class UserJourneysTest {
                 TestObjectBuilder.userAccountCreateRequestDTO();
         LoginRequestDTO loginRequestDTO = TestObjectBuilder.invalidPasswordLoginRequestUsing(accountCreateRequestDTO);
         scenarioExecutor
-                .when().userIsCreatedWith(accountCreateRequestDTO)
-                .then().statusIs(204)
-                .and().userLoginsWith(loginRequestDTO)
-                .then().statusIs(401);
+                .when().userIsCreatedFor(accountCreateRequestDTO)
+                .expectReturnCode(204)
+                .userLoginsWith(loginRequestDTO).expectReturnCode(401);
     }
 
     @Test
@@ -88,19 +85,16 @@ public class UserJourneysTest {
         AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.userAccountCreateRequestDTO();
         LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO);
         scenarioExecutor
-                .when().userIsCreatedWith(accountCreateRequestDTO)
-                .then().statusIs(204)
-                .and().userLoginsWith(loginRequestDTO)
-                .then().statusIs(200)
-                .and().userRetrievesListOfAllUsers()
-                .then().statusIs(403);
+                .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
+                .userLoginsWith(loginRequestDTO).expectReturnCode(200)
+                .userRetrievesListOfAllUsers().expectReturnCode(403);
     }
 
     @Test
     void regularAccountCreateIsOnlyForNormalUsers() {
         AccountCreateRequestDTO adminAccountCreateRequestDTO = TestObjectBuilder.adminAccountCreateRequest();
         scenarioExecutor
-                .when().userIsCreatedWith(adminAccountCreateRequestDTO)
-                .then().statusIs(403);
+                .when().userIsCreatedFor(adminAccountCreateRequestDTO)
+                .then().expectReturnCode(403);
     }
 }

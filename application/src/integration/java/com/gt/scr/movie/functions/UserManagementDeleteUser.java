@@ -4,14 +4,13 @@ import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-public class AdminUserDelete
+public class UserManagementDeleteUser
         implements Interaction<WebTestClient, LoginResponseDTO, String, WebTestClient.ResponseSpec> {
 
     @Override
     public WebTestClient.ResponseSpec apply(WebTestClient webTestClient,
                            LoginResponseDTO loginResponseDTO,
                            String userId) {
-
         try {
             return webTestClient.delete()
                     .uri(uriBuilder -> uriBuilder.path("/user/manage").queryParam("userId", userId).build())
