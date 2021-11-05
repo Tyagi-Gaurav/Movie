@@ -79,7 +79,7 @@ public class TestMovieResource extends AbstractResource {
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
     }
 
-    public void readMovies() {
+    public void readMoviesFor() {
         String fullUrl = getFullUrl(movieAppConfig.host().trim(),
                 "/api/user/movie", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
@@ -110,9 +110,9 @@ public class TestMovieResource extends AbstractResource {
         responseHolder.setResponse(this.put(fullUrl, requestObject, String.class));
     }
 
-    public void readMovies(String userId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
-                "/api/user/movie", movieAppConfig.port()), userId);
+    public void readMoviesFor(String userId) {
+        String path = String.format("/api/user/%s/movie", userId);
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(), path, movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.read.v1+json");
         headers.setBearerAuth(responseHolder.getToken());

@@ -4,7 +4,7 @@ import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -58,13 +58,14 @@ public class MovieJourneysTest {
         MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.invalidMovieCreateRequestDTO(movieName);
 
         scenarioExecutor
-                .when().userIsCreatedWith(userAccountCreateRequestDTO)
-                .and().userLoginsWith(userLoginRequestDTO)
-                .and().userCreatesAMovieWith(movieCreateRequestDTO)
-                .then().statusIs(400);
+                .when()
+                .userIsCreatedFor(userAccountCreateRequestDTO)
+                .userLoginsWith(userLoginRequestDTO)
+                .userCreatesAMovieWith(movieCreateRequestDTO)
+                .then().expectReturnCode(400);
     }
 
-    @Disabled
+    @Test
     void deletingUserShouldDeleteUserMovies() {
         AccountCreateRequestDTO adminAccountCreateRequestDTO =
                 TestObjectBuilder.adminAccountCreateRequest();
@@ -79,23 +80,52 @@ public class MovieJourneysTest {
                 TestObjectBuilder.movieCreateRequestDTO();
 
         scenarioExecutor
-                .when().userIsCreatedWith(adminAccountCreateRequestDTO)
-                .and().statusIs(204)
-                .and().adminUserLoginsWith(adminLoginRequestDTO)
-                .and().statusIs(200)
-                .when().userIsCreatedWith(userAccountCreateRequestDTO)
-                .and().statusIs(204)
-                .and().userLoginsWith(userLoginRequestDTO)
-                .and().statusIs(200)
-                .and().userCreatesAMovieWith(movieCreateRequestDTO)
-                .and().statusIs(204)
-                .when().userRetrievesAllMovies()
-                .and().statusIs(200)
-                .then()
+                .when()
+                .globalAdminUserLogins().expectReturnCode(200)
+                .globalAdminUserCreatesUserWith(adminAccountCreateRequestDTO).expectReturnCode(204)
+                .adminUserLoginsWith(adminLoginRequestDTO).expectReturnCode(200)
+                .userIsCreatedFor(userAccountCreateRequestDTO).expectReturnCode(204)
+                .userLoginsWith(userLoginRequestDTO).expectReturnCode(200)
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(204)
+                .userRetrievesAllMovies().expectReturnCode(200)
                 .theResponseShouldHaveFollowingMoviesInAnyOrder(
                         Collections.singletonList(movieCreateRequestDTO.name()))
-                .and().adminUserDeletesTheUser()
-                .and().statusIs(200)
-                .then().verifyNoMoviesExistForTheNormalUserInDatabase();
+                .then().adminUserDeletesTheUser().expectReturnCode(200)
+                .verifyNoMoviesExistForTheNormalUserInDatabase();
+    }
+
+    @Test
+    void userShouldOnlyBeAbleToSeeSelfCreatedMovies() {
+        AccountCreateRequestDTO userA =
+                TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO userB =
+                TestObjectBuilder.userAccountCreateRequestDTO();
+        LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(userA);
+        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+
+        scenarioExecutor
+                .when().userIsCreatedFor(userA).expectReturnCode(204)
+                .userLoginsWith(loginRequestDTO).expectReturnCode(200)
+                .recordCurrentUsersId()
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(204)
+                .userIsCreatedFor(userB).expectReturnCode(204)
+                .userLoginsWith(loginRequestDTO).expectReturnCode(200)
+                .userRetrievesAllMoviesForLastRecordedUserId().expectReturnCode(403);
+    }
+
+    @Test
+    void adminUserShouldOnlyBeAbleToSeeMoviesCreatedByOtherUsers() {
+        AccountCreateRequestDTO userA =
+                TestObjectBuilder.userAccountCreateRequestDTO();
+        LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(userA);
+        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+
+        scenarioExecutor
+                .when().userIsCreatedFor(userA).expectReturnCode(204)
+                .userLoginsWith(loginRequestDTO).expectReturnCode(200)
+                .recordCurrentUsersId()
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(204)
+                .globalAdminUserLogins().expectReturnCode(200)
+                .adminUserRetrievesAllMoviesForLastRecordedUserId().expectReturnCode(200);
     }
 }

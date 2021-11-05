@@ -38,12 +38,12 @@ public class MovieSteps implements En {
                 });
 
         When("^the authenticated user attempts to read the movies", () -> {
-            testMovieResource.readMovies();
+            testMovieResource.readMoviesFor();
         });
 
         And("^the authenticated user attempts to read the movies for the previous user$", () -> {
             String regularUserId = scenarioContext.getRegularUserId();
-            testMovieResource.readMovies(regularUserId);
+            testMovieResource.readMoviesFor(regularUserId);
         });
 
         And("^the authenticated user attempts to create a new movie without passing auth header$",
@@ -67,7 +67,7 @@ public class MovieSteps implements En {
 
         When("^the user attempts to delete the movie with name: '(.*)' , yearProduced: '(\\d+)' and rating: '(.*)'$",
                 (String name, Integer yearProduced, BigDecimal rating) -> {
-                    testMovieResource.readMovies();
+                    testMovieResource.readMoviesFor();
                     TestMoviesDTO testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
                     var movies = testMoviesDTO.movies();
 
@@ -83,7 +83,7 @@ public class MovieSteps implements En {
         When("^the user attempts to update the movie with name: '(.*)' to$",
                 (String name, TestMovieCreateRequestDTO testMovieCreateRequestDTO) -> {
 
-                    testMovieResource.readMovies();
+                    testMovieResource.readMoviesFor();
                     var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
                     var movies = testMoviesDTO.movies();
 
@@ -103,7 +103,7 @@ public class MovieSteps implements En {
 
         When("^the user attempts to update the movie with name: '(.*)' to '(.*)'$",
                 (String fromMovieName, String toMovieName) -> {
-                    testMovieResource.readMovies();
+                    testMovieResource.readMoviesFor();
                     var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
                     var movies = testMoviesDTO.movies();
 
@@ -118,12 +118,12 @@ public class MovieSteps implements En {
 
         When("^the authenticated admin user attempts to read the movies for user$", () -> {
             String regularUserId = scenarioContext.getRegularUserId();
-            testMovieResource.readMovies(regularUserId);
+            testMovieResource.readMoviesFor(regularUserId);
         });
 
         When("^the authenticated admin user attempts to delete all the movies for user$", () -> {
             String regularUserId = scenarioContext.getRegularUserId();
-            testMovieResource.readMovies(regularUserId);
+            testMovieResource.readMoviesFor(regularUserId);
             var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
             var timezones = testMoviesDTO.movies();
 
@@ -147,7 +147,7 @@ public class MovieSteps implements En {
         When("^the admin user attempts to update the movie with name: '(.*)' to$",
                 (String name, TestMovieCreateRequestDTO testMovieCreateRequestDTO) -> {
                     String regularUserId = scenarioContext.getRegularUserId();
-                    testMovieResource.readMovies(regularUserId);
+                    testMovieResource.readMoviesFor(regularUserId);
                     var testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
                     var movies = testMoviesDTO.movies();
 

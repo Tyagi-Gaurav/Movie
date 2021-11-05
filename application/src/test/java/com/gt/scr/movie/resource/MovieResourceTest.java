@@ -72,7 +72,7 @@ class MovieResourceTest {
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 
         //when
-        Mono<MoviesDTO> movies = movieResource.getMovie(userProfile.id().toString());
+        Mono<MoviesDTO> movies = movieResource.getMovie();
 
         StepVerifier.create(movies)
                 .expectNext(new MoviesDTO(Collections.singletonList(
@@ -104,5 +104,26 @@ class MovieResourceTest {
 
         StepVerifier.create(voidMono).verifyComplete();
         verify(movieService).updateMovie(any(Movie.class));
+    }
+
+    @Test
+    void shouldAllowMoviesCreatedByOtherUsersToBeReadByAdmin() { //This test does not verify the security part of requirement.
+        UUID id = UUID.randomUUID();
+        UserProfile userProfile = new UserProfile(id, "ADMIN");
+
+        var expectedReturnObject = new Movie(id, randomAlphabetic(5),
+                2010, BigDecimal.ONE, System.nanoTime());
+
+        when(movieService.getMoviesFor(id)).thenReturn(Flux.just(expectedReturnObject));
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
+
+        //when
+        Mono<MoviesDTO> movies = movieResource.getMovieForUser(userProfile.id().toString());
+
+        StepVerifier.create(movies)
+                .expectNext(new MoviesDTO(Collections.singletonList(
+                        new MovieDTO(id, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
+                                expectedReturnObject.rating()))))
+                .verifyComplete();
     }
 }
