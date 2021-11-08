@@ -1,7 +1,6 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.audit.EventMessage;
-import com.gt.scr.movie.audit.EventType;
 import com.gt.scr.movie.audit.MovieCreateEvent;
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
@@ -40,9 +39,8 @@ public class MovieServiceImpl implements MovieService {
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     movieRepository.create(userId, movie);
-                    eventSink.emitNext(new EventMessage(EventType.MOVIE_CREATE,
-                            new MovieCreateEvent(movie.name(), movie.yearProduced(), movie.rating())
-                    ), Sinks.EmitFailureHandler.FAIL_FAST);
+                    eventSink.emitNext(new MovieCreateEvent(movie.name(), movie.yearProduced(), movie.rating()),
+                            Sinks.EmitFailureHandler.FAIL_FAST);
                     return Mono.empty();
                 }))
                 .then();
