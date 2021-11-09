@@ -105,7 +105,7 @@ public class UserMySQLRepository implements UserRepository {
     }
 
     @Override
-    public void update(User user) {
+    public Mono<Void> update(User user) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE USER SET FIRST_NAME = ?, " +
@@ -123,6 +123,8 @@ public class UserMySQLRepository implements UserRepository {
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
         }
+
+        return Mono.empty();
     }
 
     @Override

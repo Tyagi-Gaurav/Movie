@@ -220,9 +220,10 @@ class UserMySQLRepositoryTest {
 
         //when
         User updatedUser = UserBuilder.copyOf(currentUser).withFirstName("test").build();
-        userRepository.update(updatedUser);
+        Mono<Void> update = userRepository.update(updatedUser);
 
         //then
+        StepVerifier.create(update).verifyComplete();
         Optional<User> user = getUser(currentUser.id());
         assertThat(user).isNotEmpty();
         assertThat(user.get().firstName()).isEqualTo("test");
@@ -293,6 +294,9 @@ class UserMySQLRepositoryTest {
             resultSet.close();
 
             return Optional.empty();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
