@@ -48,16 +48,15 @@ class MovieAdminResourceTest {
 
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
-        when(movieService.addMovie(eq(requestedUserId), any(Movie.class))).thenReturn(Mono.empty());
+        when(movieService.addMovie(eq(requestedUserId), eq(userProfile.id()), any(Movie.class))).thenReturn(Mono.empty());
 
         //when
         Mono<Void> movie = movieAdminResource.createMovieFor(movieCreateRequestDTO, requestedUserId.toString());
 
         StepVerifier.create(movie).verifyComplete();
 
-        verify(movieService).addMovie(eq(requestedUserId), any(Movie.class));
-        verify(movieService, times(0)).addMovie(eq(userProfile.id()),
-                any(Movie.class));
+        verify(movieService).addMovie(eq(requestedUserId), eq(userProfile.id()), any(Movie.class));
+        verifyNoMoreInteractions(movieService);
     }
 
     @Test

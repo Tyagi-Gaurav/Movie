@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 public interface MovieService {
-    Mono<Void> addMovie(UUID userId, Movie movie);
+    Mono<Void> addMovie(UUID ownerUserId, UUID originatorUserId, Movie movie);
 
     Flux<Movie> getMoviesFor(UUID userId);
 

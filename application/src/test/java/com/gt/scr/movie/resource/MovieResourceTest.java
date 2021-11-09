@@ -49,7 +49,7 @@ class MovieResourceTest {
         UUID userId = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(userId, "USER");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
-        when(movieService.addMovie(eq(userProfile.id()), any(Movie.class))).thenReturn(Mono.empty());
+        when(movieService.addMovie(eq(userId), eq(userId), any(Movie.class))).thenReturn(Mono.empty());
 
         //when
         Mono<Void> movie = movieResource.createMovie(movieCreateRequestDTO);
@@ -57,7 +57,7 @@ class MovieResourceTest {
         StepVerifier.create(movie)
                 .verifyComplete();
 
-        verify(movieService).addMovie(eq(userProfile.id()), any(Movie.class));
+        verify(movieService).addMovie(eq(userId), eq(userId), any(Movie.class));
     }
 
     @Test
