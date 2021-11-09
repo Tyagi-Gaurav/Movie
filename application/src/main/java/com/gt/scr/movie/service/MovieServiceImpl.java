@@ -39,7 +39,7 @@ public class MovieServiceImpl implements MovieService {
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     movieRepository.create(userId, movie);
-                    eventSink.emitNext(new MovieCreateEvent(userId, movie.name(), movie.yearProduced(), movie.rating()),
+                    eventSink.emitNext(new MovieCreateEvent(userId, userId, movie.name(), movie.yearProduced(), movie.rating()),
                             Sinks.EmitFailureHandler.FAIL_FAST);
                     return Mono.empty();
                 }))
@@ -53,16 +53,21 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Mono<Void> updateMovie(Movie movie) {
-        return movieRepository.findMovieBy(movie.id()).doOnNext(om -> {
-            Movie newMovieToUpdate =
-                    new Movie(om.id(),
-                            StringUtils.isBlank(movie.name()) ? om.name() : movie.name(),
-                            movie.yearProduced() == 0 ? om.yearProduced() : movie.yearProduced(),
-                            movie.rating() == null || movie.rating().equals(BigDecimal.ZERO) ? om.rating() : movie.rating(),
-                            om.creationTimeStamp());
+        return movieRepository.findMovieBy(movie.id())
+                .doOnNext(om -> {
+                    Movie newMovieToUpdate =
+                            new Movie(om.id(),
+                                    StringUtils.isBlank(movie.name()) ? om.name() : movie.name(),
+                                    movie.yearProduced() == 0 ? om.yearProduced() : movie.yearProduced(),
+                                    movie.rating() == null || movie.rating().equals(BigDecimal.ZERO) ? om.rating() : movie.rating(),
+                                    om.creationTimeStamp());
 
-            movieRepository.update(newMovieToUpdate);
-        }).then();
+                    movieRepository.update(newMovieToUpdate);
+                })
+                .doOnNext(om -> {
+//                    eventSink.emitNext(new MovieUpdateEvent(userId, movie.name(), movie.yearProduced(), movie.rating()),
+//                            Sinks.EmitFailureHandler.FAIL_FAST);
+                }).then();
     }
 
     @Override

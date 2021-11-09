@@ -7,7 +7,8 @@ import java.util.UUID;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "className")
 public interface UserEventMessage {
     UUID eventId();
-    UUID userId();
+    UUID ownerUser();
+    UUID originatorUser();
     long creationTimestamp();
     EventType eventType();
 }
