@@ -1,6 +1,10 @@
 package com.gt.scr.movie;
 
+import com.gt.scr.movie.audit.EventType;
+import com.gt.scr.movie.audit.MovieCreateEvent;
+import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.functions.RetrieveAllUserMoviesForAnotherUser;
+import com.gt.scr.movie.functions.RetrieveEventsForUser;
 import com.gt.scr.movie.functions.UserManagementCreateUser;
 import com.gt.scr.movie.functions.UserManagementDeleteUser;
 import com.gt.scr.movie.functions.Login;
@@ -129,6 +133,20 @@ public class ScenarioExecutor {
 
     public ScenarioExecutor adminUserRetrievesAllMoviesForLastRecordedUserId() {
         this.responseSpec = new RetrieveAllUserMoviesForAnotherUser().apply(webTestClient, adminLoginResponseDTO, lastUserIdRecorded);
+        return this;
+    }
+
+    public ScenarioExecutor movieCreateEventShouldBePublished(MovieCreateRequestDTO movieCreateRequestDTO) {
+        List<UserEventMessage> events = new RetrieveEventsForUser().apply(dataSource, userLoginResponseDTO);
+        assertThat(events).isNotEmpty();
+        assertThat(events.size()).isEqualTo(1);
+        UserEventMessage userEventMessage = events.get(0);
+
+        assertThat(userEventMessage.eventType()).isEqualTo(EventType.MOVIE_CREATE);
+        assertThat(userEventMessage).isInstanceOf(MovieCreateEvent.class);
+        MovieCreateEvent movieCreateEvent = (MovieCreateEvent) userEventMessage;
+        assertThat(movieCreateEvent.originatorUser()).isEqualTo(userLoginResponseDTO.id());
+        assertThat(movieCreateEvent.name()).isEqualTo(movieCreateRequestDTO.name());
         return this;
     }
 }

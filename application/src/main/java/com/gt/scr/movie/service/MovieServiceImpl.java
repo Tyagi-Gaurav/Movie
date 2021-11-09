@@ -1,6 +1,7 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.audit.MovieCreateEvent;
+import com.gt.scr.movie.audit.MovieUpdateEvent;
 import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
@@ -17,7 +18,6 @@ import java.util.UUID;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-
     private final MovieRepository movieRepository;
     private final Sinks.Many<UserEventMessage> eventSink;
 
@@ -39,7 +39,7 @@ public class MovieServiceImpl implements MovieService {
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     movieRepository.create(ownerUserId, movie);
-                    eventSink.emitNext(new MovieCreateEvent(ownerUserId, originatorUserId, movie.name(), movie.yearProduced(), movie.rating()),
+                    eventSink.emitNext(new MovieCreateEvent(ownerUserId, originatorUserId, movie.id(), movie.name(), movie.yearProduced(), movie.rating()),
                             Sinks.EmitFailureHandler.FAIL_FAST);
                     return Mono.empty();
                 }))
@@ -52,7 +52,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Mono<Void> updateMovie(Movie movie) {
+    public Mono<Void> updateMovie(UUID ownerUserId, Movie movie) {
         return movieRepository.findMovieBy(movie.id())
                 .doOnNext(om -> {
                     Movie newMovieToUpdate =
@@ -64,10 +64,9 @@ public class MovieServiceImpl implements MovieService {
 
                     movieRepository.update(newMovieToUpdate);
                 })
-                .doOnNext(om -> {
-//                    eventSink.emitNext(new MovieUpdateEvent(userId, movie.name(), movie.yearProduced(), movie.rating()),
-//                            Sinks.EmitFailureHandler.FAIL_FAST);
-                }).then();
+                .doOnNext(om -> eventSink.emitNext(new MovieUpdateEvent(ownerUserId, ownerUserId, movie.name(), movie.yearProduced(), movie.rating()),
+                        Sinks.EmitFailureHandler.FAIL_FAST))
+                .then();
     }
 
     @Override

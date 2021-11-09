@@ -128,7 +128,7 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        Mono<Void> voidMono = movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
 
         //then
         StepVerifier.create(voidMono).verifyComplete();
@@ -143,7 +143,7 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        Mono<Void> voidMono = movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
 
         //then
         StepVerifier.create(voidMono).verifyComplete();
@@ -158,7 +158,7 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        Mono<Void> voidMono = movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
 
         //then
         StepVerifier.create(voidMono).verifyComplete();
@@ -173,7 +173,7 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        Mono<Void> voidMono = movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
 
         //then
         StepVerifier.create(voidMono).verifyComplete();
@@ -188,7 +188,7 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when
-        Mono<Void> voidMono = movieService.updateMovie(movieNew);
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
 
         //then
         StepVerifier.create(voidMono).verifyComplete();
@@ -203,7 +203,7 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.empty());
 
         //when
-        movieService.updateMovie(movieNew);
+        movieService.updateMovie(UUID.randomUUID(), movieNew);
 
         //then
         verify(movieRepository, times(0)).update(any());

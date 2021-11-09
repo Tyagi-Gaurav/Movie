@@ -95,15 +95,18 @@ class MovieResourceTest {
 
     @Test
     void shouldAllowUserToUpdateMovies() {
+        UUID id = UUID.randomUUID();
+        UserProfile userProfile = new UserProfile(id, "USER");
         MovieUpdateRequestDTO movieUpdateRequestDTO = new MovieUpdateRequestDTO(UUID.randomUUID(),
                 randomAlphabetic(5), BigDecimal.ZERO, 2010);
-        when(movieService.updateMovie(any(Movie.class))).thenReturn(Mono.empty());
+        when(movieService.updateMovie(any(UUID.class), any(Movie.class))).thenReturn(Mono.empty());
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 
         //when
         Mono<Void> voidMono = movieResource.updateMovie(movieUpdateRequestDTO);
 
         StepVerifier.create(voidMono).verifyComplete();
-        verify(movieService).updateMovie(any(Movie.class));
+        verify(movieService).updateMovie(any(UUID.class), any(Movie.class));
     }
 
     @Test

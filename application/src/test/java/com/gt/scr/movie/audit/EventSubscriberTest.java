@@ -24,14 +24,16 @@ class EventSubscriberTest {
 
     @BeforeEach
     void setUp() {
-         eventSubscriber = new EventSubscriber(eventRepository, testSink);
+        eventSubscriber = new EventSubscriber(eventRepository, testSink);
     }
 
     @Test
     void shouldSaveEventToAuditRepository() {
         //when
-        testSink.tryEmitNext(new MovieCreateEvent(UUID.randomUUID(), UUID.randomUUID(), "movieName", 2010,
-                        BigDecimal.valueOf(7)));
+        testSink.tryEmitNext(new MovieCreateEvent(UUID.randomUUID(), UUID.randomUUID(),
+                UUID.randomUUID(),
+                "movieName", 2010,
+                BigDecimal.valueOf(7)));
 
         verify(eventRepository).save(any(UserEventMessage.class));
     }
