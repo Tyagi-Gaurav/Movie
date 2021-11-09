@@ -21,7 +21,7 @@ public record MovieUpdateEvent(
         this(UUID.randomUUID(),
                 ownerUser,
                 originatorUser,
-                EventType.MOVIE_CREATE,
+                EventType.MOVIE_UPDATE,
                 System.nanoTime(),
                 name,
                 yearProduced,

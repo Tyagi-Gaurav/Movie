@@ -11,7 +11,7 @@ public interface MovieService {
 
     Flux<Movie> getMoviesFor(UUID userId);
 
-    Mono<Void> updateMovie(Movie movie);
+    Mono<Void> updateMovie(UUID ownerUserId, Movie movie);
 
     Mono<Void> deleteMovie(UUID id);
 }

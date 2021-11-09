@@ -114,7 +114,7 @@ public class MovieJourneysTest {
     }
 
     @Test
-    void adminUserShouldOnlyBeAbleToSeeMoviesCreatedByOtherUsers() {
+    void adminUserShouldBeAbleToSeeMoviesCreatedByOtherUsers() {
         AccountCreateRequestDTO userA =
                 TestObjectBuilder.userAccountCreateRequestDTO();
         LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(userA);
@@ -127,5 +127,19 @@ public class MovieJourneysTest {
                 .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(204)
                 .globalAdminUserLogins().expectReturnCode(200)
                 .adminUserRetrievesAllMoviesForLastRecordedUserId().expectReturnCode(200);
+    }
+
+    @Test
+    void creatingMoviesShouldSendMovieCreateEvent() {
+        AccountCreateRequestDTO userA =
+                TestObjectBuilder.userAccountCreateRequestDTO();
+        LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(userA);
+        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+
+        scenarioExecutor
+                .when().userIsCreatedFor(userA).expectReturnCode(204)
+                .userLoginsWith(loginRequestDTO).expectReturnCode(200)
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(204)
+                .movieCreateEventShouldBePublished(movieCreateRequestDTO);
     }
 }

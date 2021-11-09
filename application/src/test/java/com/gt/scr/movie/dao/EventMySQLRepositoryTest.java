@@ -54,6 +54,7 @@ class EventMySQLRepositoryTest {
         MovieCreateEvent testMovieEvent = new MovieCreateEvent(
                 UUID.randomUUID(),
                 UUID.randomUUID(),
+                UUID.randomUUID(),
                 "testMovie", 2021
                 , BigDecimal.valueOf(5));
 
@@ -71,7 +72,9 @@ class EventMySQLRepositoryTest {
     @Test
     void shouldCaptureErrorFromDatabase() {
         //given
-        MovieCreateEvent movieWithNullMovieName = new MovieCreateEvent(null, UUID.randomUUID(), "testMovie", 2021
+        MovieCreateEvent movieWithNullMovieName = new MovieCreateEvent(null, UUID.randomUUID(),
+                UUID.randomUUID(),
+                "testMovie", 2021
                 , BigDecimal.valueOf(5));
 
         //when

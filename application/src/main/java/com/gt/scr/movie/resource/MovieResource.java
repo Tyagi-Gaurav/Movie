@@ -7,8 +7,6 @@ import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.Movie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +25,6 @@ import java.util.UUID;
 @RestController
 public class MovieResource {
     private final MovieService movieService;
-    private static final Logger LOG = LoggerFactory.getLogger(MovieResource.class);
     private final SecurityContextHolder securityContextHolder;
 
     public MovieResource(MovieService movieService,
@@ -61,8 +58,7 @@ public class MovieResource {
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
-                        System.nanoTime())))
-                .thenEmpty(Mono.empty());
+                        System.nanoTime())));
     }
 
     @GetMapping(consumes = "application/vnd.movie.read.v1+json",
@@ -70,7 +66,6 @@ public class MovieResource {
             path = "/user/movie")
     @ResponseStatus(code = HttpStatus.OK)
     public Mono<MoviesDTO> getMovie() {
-        LOG.info("Inside get resource with userId");
         return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.getMoviesFor(up.id()).collectList())
                 .map(movie -> movie.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
@@ -91,14 +86,16 @@ public class MovieResource {
             path = "/user/movie")
     @ResponseStatus(code = HttpStatus.OK)
     public Mono<Void> updateMovie(@RequestBody MovieUpdateRequestDTO movieUpdateRequestDTO) {
+        return securityContextHolder.getContext(UserProfile.class)
+                .flatMap(up -> {
+                    Movie movie = new Movie(movieUpdateRequestDTO.id(),
+                            movieUpdateRequestDTO.name(),
+                            movieUpdateRequestDTO.yearProduced(),
+                            movieUpdateRequestDTO.rating(),
+                            System.nanoTime());
 
-        Movie movie = new Movie(movieUpdateRequestDTO.id(),
-                movieUpdateRequestDTO.name(),
-                movieUpdateRequestDTO.yearProduced(),
-                movieUpdateRequestDTO.rating(),
-                System.nanoTime());
-
-        return movieService.updateMovie(movie);
+                    return movieService.updateMovie(up.id(), movie);
+                });
     }
 
     @GetMapping(consumes = "application/vnd.movie.read.v1+json",
