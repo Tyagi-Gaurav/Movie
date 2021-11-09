@@ -15,12 +15,12 @@ public class EventSubscriber {
     private final EventRepository eventRepository;
 
     public EventSubscriber(EventRepository eventRepository,
-                           @Qualifier("EventSink") Sinks.Many<EventMessage> eventSink) {
+                           @Qualifier("EventSink") Sinks.Many<UserEventMessage> eventSink) {
         this.eventRepository = eventRepository;
         eventSink.asFlux().flatMap(this::accept).subscribe();
     }
 
-    private <R> Publisher<? extends R> accept(EventMessage eventMessage) {
+    private <R> Publisher<? extends R> accept(UserEventMessage eventMessage) {
         LOG.info("Event Received: {}", eventMessage);
         eventRepository.save(eventMessage);
         return Flux.empty();

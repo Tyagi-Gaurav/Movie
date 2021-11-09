@@ -1,7 +1,7 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.movie.audit.EventMessage;
 import com.gt.scr.movie.audit.MovieCreateEvent;
+import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
@@ -19,10 +19,10 @@ import java.util.UUID;
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
-    private final Sinks.Many<EventMessage> eventSink;
+    private final Sinks.Many<UserEventMessage> eventSink;
 
     public MovieServiceImpl(MovieRepository movieRepository,
-                            @Qualifier("EventSink") Sinks.Many<EventMessage> eventSink) {
+                            @Qualifier("EventSink") Sinks.Many<UserEventMessage> eventSink) {
         this.movieRepository = movieRepository;
         this.eventSink = eventSink;
     }
@@ -39,7 +39,7 @@ public class MovieServiceImpl implements MovieService {
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     movieRepository.create(userId, movie);
-                    eventSink.emitNext(new MovieCreateEvent(movie.name(), movie.yearProduced(), movie.rating()),
+                    eventSink.emitNext(new MovieCreateEvent(userId, movie.name(), movie.yearProduced(), movie.rating()),
                             Sinks.EmitFailureHandler.FAIL_FAST);
                     return Mono.empty();
                 }))

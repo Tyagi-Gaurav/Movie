@@ -5,14 +5,16 @@ import java.util.UUID;
 
 public record MovieCreateEvent(
         UUID eventId,
+        UUID userId,
         EventType eventType,
         long creationTimestamp,
         String name,
         int yearProduced,
-        BigDecimal rating) implements EventMessage {
+        BigDecimal rating) implements UserEventMessage {
 
-    public MovieCreateEvent(String name, int yearProduced, BigDecimal rating) {
+    public MovieCreateEvent(UUID userId, String name, int yearProduced, BigDecimal rating) {
         this(UUID.randomUUID(),
+                userId,
                 EventType.MOVIE_CREATE,
                 System.nanoTime(),
                 name,

@@ -1,6 +1,6 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.movie.audit.EventMessage;
+import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.dao.MovieRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
@@ -28,7 +28,7 @@ class MovieServiceImplTest {
     private MovieRepository movieRepository;
 
     @Mock
-    private Sinks.Many<EventMessage> eventSink;
+    private Sinks.Many<UserEventMessage> eventSink;
 
     private MovieService movieService;
 

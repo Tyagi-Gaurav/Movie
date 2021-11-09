@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Sinks;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -19,7 +20,7 @@ class EventSubscriberTest {
     private EventRepository eventRepository;
 
     private EventSubscriber eventSubscriber;
-    private Sinks.Many<EventMessage> testSink = Sinks.many().unicast().onBackpressureBuffer();
+    private Sinks.Many<UserEventMessage> testSink = Sinks.many().unicast().onBackpressureBuffer();
 
     @BeforeEach
     void setUp() {
@@ -29,9 +30,9 @@ class EventSubscriberTest {
     @Test
     void shouldSaveEventToAuditRepository() {
         //when
-        testSink.tryEmitNext(new MovieCreateEvent("movieName", 2010,
+        testSink.tryEmitNext(new MovieCreateEvent(UUID.randomUUID(), "movieName", 2010,
                         BigDecimal.valueOf(7)));
 
-        verify(eventRepository).save(any(EventMessage.class));
+        verify(eventRepository).save(any(UserEventMessage.class));
     }
 }

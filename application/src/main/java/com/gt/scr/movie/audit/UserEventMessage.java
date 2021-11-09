@@ -2,12 +2,12 @@ package com.gt.scr.movie.audit;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "className")
-public interface EventMessage {
+public interface UserEventMessage {
     UUID eventId();
+    UUID userId();
     long creationTimestamp();
     EventType eventType();
 }
