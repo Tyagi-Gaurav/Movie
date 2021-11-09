@@ -46,7 +46,7 @@ class MovieServiceImplTest {
         when(movieRepository.create(userId, movie)).thenReturn(Mono.empty());
 
         //when
-        Mono<Void> voidMono = movieService.addMovie(userId, movie);
+        Mono<Void> voidMono = movieService.addMovie(userId, userId, movie);
 
         //then
         StepVerifier.create(voidMono).verifyComplete();
@@ -62,7 +62,7 @@ class MovieServiceImplTest {
         when(movieRepository.findMovieBy(userId, movie.name())).thenReturn(Mono.just(movie));
 
         //when
-        Mono<Void> voidMono = movieService.addMovie(userId, movie);
+        Mono<Void> voidMono = movieService.addMovie(userId, userId, movie);
 
         StepVerifier.create(voidMono)
                 .expectError(DuplicateRecordException.class)
@@ -80,7 +80,7 @@ class MovieServiceImplTest {
         when(movieRepository.create(userId, remakeOfMovieA)).thenReturn(Mono.empty());
 
         //when
-        Mono<Void> voidMono = movieService.addMovie(userId, remakeOfMovieA);
+        Mono<Void> voidMono = movieService.addMovie(userId, userId, remakeOfMovieA);
 
         //then
         StepVerifier.create(voidMono).verifyComplete();

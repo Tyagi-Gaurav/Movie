@@ -42,7 +42,7 @@ public class MovieResource {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public Mono<Void> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO) {
         return securityContextHolder.getContext(UserProfile.class)
-                .flatMap(up -> movieService.addMovie(up.id(), new Movie(UUID.randomUUID(),
+                .flatMap(up -> movieService.addMovie(up.id(), up.id(), new Movie(UUID.randomUUID(),
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
@@ -57,7 +57,7 @@ public class MovieResource {
     public Mono<Void> createMovieFor(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
                                      @PathVariable(value = "userId") String userId) {
         return securityContextHolder.getContext(UserProfile.class)
-                .flatMap(up -> movieService.addMovie(UUID.fromString(userId), new Movie(UUID.randomUUID(),
+                .flatMap(up -> movieService.addMovie(UUID.fromString(userId), up.id(), new Movie(UUID.randomUUID(),
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),

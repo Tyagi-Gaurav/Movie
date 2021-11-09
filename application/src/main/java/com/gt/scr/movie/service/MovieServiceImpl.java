@@ -28,8 +28,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Mono<Void> addMovie(UUID userId, Movie movie) {
-        return movieRepository.findMovieBy(userId, movie.name())
+    public Mono<Void> addMovie(UUID ownerUserId, UUID originatorUserId, Movie movie) {
+        return movieRepository.findMovieBy(ownerUserId, movie.name())
                 .flatMap(m -> {
                     if (m.yearProduced() == movie.yearProduced()) {
                         return Mono.error(new DuplicateRecordException("duplicate"));
@@ -38,8 +38,8 @@ public class MovieServiceImpl implements MovieService {
                     }
                 })
                 .switchIfEmpty(Mono.defer(() -> {
-                    movieRepository.create(userId, movie);
-                    eventSink.emitNext(new MovieCreateEvent(userId, userId, movie.name(), movie.yearProduced(), movie.rating()),
+                    movieRepository.create(ownerUserId, movie);
+                    eventSink.emitNext(new MovieCreateEvent(ownerUserId, originatorUserId, movie.name(), movie.yearProduced(), movie.rating()),
                             Sinks.EmitFailureHandler.FAIL_FAST);
                     return Mono.empty();
                 }))
