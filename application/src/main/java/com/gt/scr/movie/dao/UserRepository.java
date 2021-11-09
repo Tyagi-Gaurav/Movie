@@ -15,7 +15,7 @@ public interface UserRepository {
 
     Mono<Void> delete(UUID userId);
 
-    void update(User user);
+    Mono<Void> update(User user);
 
     default void create(User user) {}
 }
