@@ -65,6 +65,21 @@ class EventMySQLRepositoryTest {
                 .verifyComplete();
     }
 
+    @Test
+    void shouldCaptureErrorFromDatabase() {
+        //given
+        MovieCreateEvent movieWithNullMovieName = new MovieCreateEvent(null, "testMovie", 2021
+                , BigDecimal.valueOf(5));
+
+        //when
+        Mono<Void> returnMono = eventRepository.save(movieWithNullMovieName);
+
+        //then
+        StepVerifier.create(returnMono)
+                .expectError(DatabaseException.class)
+                .verify();
+    }
+
     private Flux<UserEventMessage> getAllEvents() throws SQLException, IOException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_EVENTS)) {
