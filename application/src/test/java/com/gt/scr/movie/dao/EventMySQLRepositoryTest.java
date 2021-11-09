@@ -51,8 +51,11 @@ class EventMySQLRepositoryTest {
     @Test
     void shouldSaveEvent() throws SQLException, IOException {
         //given
-        MovieCreateEvent testMovieEvent = new MovieCreateEvent(UUID.randomUUID(), "testMovie", 2021
-                        , BigDecimal.valueOf(5));
+        MovieCreateEvent testMovieEvent = new MovieCreateEvent(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                "testMovie", 2021
+                , BigDecimal.valueOf(5));
 
         //when
         Mono<Void> returnMono = eventRepository.save(testMovieEvent);
@@ -68,7 +71,7 @@ class EventMySQLRepositoryTest {
     @Test
     void shouldCaptureErrorFromDatabase() {
         //given
-        MovieCreateEvent movieWithNullMovieName = new MovieCreateEvent(null, "testMovie", 2021
+        MovieCreateEvent movieWithNullMovieName = new MovieCreateEvent(null, UUID.randomUUID(), "testMovie", 2021
                 , BigDecimal.valueOf(5));
 
         //when

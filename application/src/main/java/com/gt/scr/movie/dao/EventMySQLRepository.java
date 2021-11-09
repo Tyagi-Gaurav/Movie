@@ -21,7 +21,7 @@ public class EventMySQLRepository implements EventRepository {
     private DataSource dataSource;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String INSERT_SQL = "INSERT INTO EVENTS (ID, USER_ID, TYPE, PAYLOAD, CREATION_TIMESTAMP) VALUES (?, ?, ?, ? ,?)";
+    private static final String INSERT_SQL = "INSERT INTO EVENTS (ID, OWNER_USER, ORIGINATOR_USER, TYPE, PAYLOAD, CREATION_TIMESTAMP) VALUES (?, ?, ?, ?, ? ,?)";
 
     @Override
     public Mono<Void> save(UserEventMessage eventMessage) {
@@ -29,11 +29,12 @@ public class EventMySQLRepository implements EventRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SQL)) {
 
             preparedStatement.setString(1, eventMessage.eventId().toString());
-            preparedStatement.setString(2, eventMessage.userId().toString());
-            preparedStatement.setString(3, eventMessage.eventType().toString());
-            preparedStatement.setBinaryStream(4,
+            preparedStatement.setString(2, eventMessage.ownerUser().toString());
+            preparedStatement.setString(3, eventMessage.originatorUser().toString());
+            preparedStatement.setString(4, eventMessage.eventType().toString());
+            preparedStatement.setBinaryStream(5,
                     new ByteArrayInputStream(objectMapper.writeValueAsString(eventMessage).getBytes()));
-            preparedStatement.setLong(5, eventMessage.creationTimestamp());
+            preparedStatement.setLong(6, eventMessage.creationTimestamp());
 
             preparedStatement.execute();
         } catch (Exception e) {

@@ -30,7 +30,7 @@ class EventSubscriberTest {
     @Test
     void shouldSaveEventToAuditRepository() {
         //when
-        testSink.tryEmitNext(new MovieCreateEvent(UUID.randomUUID(), "movieName", 2010,
+        testSink.tryEmitNext(new MovieCreateEvent(UUID.randomUUID(), UUID.randomUUID(), "movieName", 2010,
                         BigDecimal.valueOf(7)));
 
         verify(eventRepository).save(any(UserEventMessage.class));
