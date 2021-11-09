@@ -1,7 +1,7 @@
 package com.gt.scr.movie.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gt.scr.movie.audit.EventMessage;
+import com.gt.scr.movie.audit.UserEventMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +21,19 @@ public class EventMySQLRepository implements EventRepository {
     private DataSource dataSource;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final String INSERT_SQL = "INSERT INTO EVENTS (ID, USER_ID, TYPE, PAYLOAD, CREATION_TIMESTAMP) VALUES (?, ?, ?, ? ,?)";
 
     @Override
-    public Mono<Void> save(EventMessage eventMessage) {
+    public Mono<Void> save(UserEventMessage eventMessage) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO EVENTS (ID, TYPE, PAYLOAD, CREATION_TIMESTAMP) VALUES (?, ?, ? ,?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SQL)) {
 
             preparedStatement.setString(1, eventMessage.eventId().toString());
-            preparedStatement.setString(2, eventMessage.eventType().toString());
-            preparedStatement.setBinaryStream(3, new ByteArrayInputStream(objectMapper.writeValueAsString(eventMessage).getBytes()));
-            preparedStatement.setLong(4, eventMessage.creationTimestamp());
+            preparedStatement.setString(2, eventMessage.userId().toString());
+            preparedStatement.setString(3, eventMessage.eventType().toString());
+            preparedStatement.setBinaryStream(4,
+                    new ByteArrayInputStream(objectMapper.writeValueAsString(eventMessage).getBytes()));
+            preparedStatement.setLong(5, eventMessage.creationTimestamp());
 
             preparedStatement.execute();
         } catch (Exception e) {

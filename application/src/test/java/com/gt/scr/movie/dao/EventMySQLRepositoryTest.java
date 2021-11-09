@@ -2,8 +2,8 @@ package com.gt.scr.movie.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gt.scr.movie.audit.EventMessage;
 import com.gt.scr.movie.audit.MovieCreateEvent;
+import com.gt.scr.movie.audit.UserEventMessage;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +30,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,7 +51,7 @@ class EventMySQLRepositoryTest {
     @Test
     void shouldSaveEvent() throws SQLException, IOException {
         //given
-        MovieCreateEvent testMovieEvent = new MovieCreateEvent("testMovie", 2021
+        MovieCreateEvent testMovieEvent = new MovieCreateEvent(UUID.randomUUID(), "testMovie", 2021
                         , BigDecimal.valueOf(5));
 
         //when
@@ -58,22 +59,22 @@ class EventMySQLRepositoryTest {
 
         //then
         StepVerifier.create(returnMono).verifyComplete();
-        Flux<EventMessage> eventMessageFlux = getAllEvents();
+        Flux<UserEventMessage> eventMessageFlux = getAllEvents();
         StepVerifier.create(eventMessageFlux)
                 .expectNext(testMovieEvent)
                 .verifyComplete();
     }
 
-    private Flux<EventMessage> getAllEvents() throws SQLException, IOException {
+    private Flux<UserEventMessage> getAllEvents() throws SQLException, IOException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_EVENTS)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<EventMessage> events = new ArrayList<>();
+            List<UserEventMessage> events = new ArrayList<>();
 
             while (resultSet.next()) {
                 InputStream payload = resultSet.getBinaryStream("PAYLOAD");
-                events.add(objectMapper.readValue(payload, EventMessage.class));
+                events.add(objectMapper.readValue(payload, UserEventMessage.class));
                 resultSet.next();
             }
 
