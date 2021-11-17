@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Verify Terraform'
 
 on:
   push:
