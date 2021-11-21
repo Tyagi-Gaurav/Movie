@@ -60,8 +60,8 @@ class MovieMySQLRepositoryTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        deleteAllUsers();
         deleteAllMovies();
+        deleteAllUsers();
     }
 
     @Test
@@ -261,7 +261,7 @@ class MovieMySQLRepositoryTest {
     }
 
     @Test
-    void shouldHandleExceptionWhenDeleteUserFails() throws SQLException {
+    void shouldHandleExceptionWhenDeleteMovieFails() throws SQLException {
         //given
         User user = aUser().build();
         Movie expectedMovieA = aMovie().build();
@@ -287,9 +287,10 @@ class MovieMySQLRepositoryTest {
 
         //when
         Movie updatedMovie = copyOf(expectedMovieA).withName("test").build();
-        movieRepository.update(updatedMovie);
+        Mono<Void> update = movieRepository.update(updatedMovie);
 
         //then
+        StepVerifier.create(update).verifyComplete();
         Optional<Movie> movie = getMovie(updatedMovie.id());
         assertThat(movie).isNotEmpty();
         assertThat(movie.get().name()).isEqualTo("test");
