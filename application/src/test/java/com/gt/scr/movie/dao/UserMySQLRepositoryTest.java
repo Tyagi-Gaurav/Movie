@@ -237,11 +237,12 @@ class UserMySQLRepositoryTest {
 
         //when
         User updatedUser = UserBuilder.copyOf(currentUser).withFirstName("test").build();
-        DatabaseException databaseException =
-                catchThrowableOfType(() -> buggyUserRepository.update(updatedUser), DatabaseException.class);
+        Mono<Void> updateWithException = buggyUserRepository.update(updatedUser);
 
         //then
-        assertThat(databaseException).isNotNull();
+        StepVerifier.create(updateWithException)
+                .expectError(DatabaseException.class)
+                .verify();
     }
 
     @Test
@@ -263,11 +264,12 @@ class UserMySQLRepositoryTest {
         User currentUser = aUser().build();
 
         //when
-        DatabaseException databaseException =
-                catchThrowableOfType(() -> buggyUserRepository.update(currentUser), DatabaseException.class);
+        Mono<Void> updateWithException = buggyUserRepository.update(currentUser);
 
         //then
-        assertThat(databaseException).isNotNull();
+        StepVerifier.create(updateWithException)
+                .expectError(DatabaseException.class)
+                .verify();
     }
 
     private Optional<User> getUser(UUID id) throws SQLException {

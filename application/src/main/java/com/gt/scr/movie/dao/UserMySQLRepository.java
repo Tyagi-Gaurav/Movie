@@ -106,25 +106,29 @@ public class UserMySQLRepository implements UserRepository {
 
     @Override
     public Mono<Void> update(User user) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "UPDATE USER SET FIRST_NAME = ?, " +
-                             "LAST_NAME = ?, " +
-                             "PASSWORD = ?," +
-                             "ROLES = ? where ID = ?")) {
+        return Mono.fromRunnable(() -> {
+            try {
+                try (Connection connection = dataSource.getConnection();
+                     PreparedStatement preparedStatement = connection.prepareStatement(
+                             "UPDATE USER SET FIRST_NAME = ?, " +
+                                     "LAST_NAME = ?, " +
+                                     "PASSWORD = ?," +
+                                     "ROLES = ? where ID = ?")) {
 
-            preparedStatement.setString(1, user.firstName());
-            preparedStatement.setString(2, user.lastName());
-            preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setString(4, user.getRole());
-            preparedStatement.setString(5, user.id().toString());
+                    preparedStatement.setString(1, user.firstName());
+                    preparedStatement.setString(2, user.lastName());
+                    preparedStatement.setString(3, user.getPassword());
+                    preparedStatement.setString(4, user.getRole());
+                    preparedStatement.setString(5, user.id().toString());
 
-            preparedStatement.execute();
-        } catch (Exception e) {
-            throw new DatabaseException(e.getMessage(), e);
-        }
-
-        return Mono.empty();
+                    preparedStatement.execute();
+                } catch (SQLException throwables) {
+                    throw new DatabaseException(throwables);
+                }
+            } catch(Exception e) {
+                throw new DatabaseException(e);
+            }
+        }).then();
     }
 
     @Override
