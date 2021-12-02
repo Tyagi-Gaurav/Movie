@@ -28,7 +28,9 @@ public class TestUtils {
     public static void addToDatabase(User expectedUser,
                                      DataSource dataSource,
                                      String query) throws SQLException {
-        LOG.info("Adding user with Id {}", expectedUser.id());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Adding user with Id {}", expectedUser.id());
+        }
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             preparedStatement.setString(1, expectedUser.id().toString());
@@ -44,7 +46,9 @@ public class TestUtils {
 
     public static void addToDatabase(Movie movie, DataSource dataSource,
                                UUID userId, String query) throws SQLException {
-        LOG.info("Adding movie with Id {}", movie.id());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Adding movie with Id {}", movie.id());
+        }
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             preparedStatement.setString(1, movie.id().toString());
