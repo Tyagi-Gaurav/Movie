@@ -23,7 +23,7 @@ ext {
     assertJVersion = '3.21.0'
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.16.2'
-    mockitoVersion = '4.0.0'
+    mockitoVersion = '4.1.0'
     reactorVersion = '3.4.12'
     grpcVersion = '1.42.1'
     springOAuthVersion = '2.5.6'
