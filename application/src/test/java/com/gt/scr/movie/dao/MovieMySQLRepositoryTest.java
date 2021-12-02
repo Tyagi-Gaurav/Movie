@@ -217,12 +217,10 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenGetAllMoviesFails() throws SQLException {
         //given
         User user = aUser().build();
-        Movie expectedMovieA = aMovie().build();
-        Movie expectedMovieB = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
         UUID userId = user.id();
-        addToDatabase(expectedMovieA, dataSource, userId, ADD_MOVIE);
-        addToDatabase(expectedMovieB, dataSource, userId, ADD_MOVIE);
+        addToDatabase(aMovie().build(), dataSource, userId, ADD_MOVIE);
+        addToDatabase(aMovie().build(), dataSource, userId, ADD_MOVIE);
 
         //when
         DatabaseException databaseException =

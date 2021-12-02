@@ -28,7 +28,7 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public Mono<Movie> findMovieBy(UUID movieId) {
-        try (var connection = dataSource.getConnection();
+        try (var connection = getConnection();
              var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where ID = ?")) {
             preparedStatement.setString(1, movieId.toString());
@@ -45,9 +45,17 @@ public class MovieMySQLRepository implements MovieRepository {
         }
     }
 
+    private Connection getConnection() {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
     @Override
     public Mono<Movie> findMovieBy(UUID userId, String name) {
-        try (var connection = dataSource.getConnection();
+        try (var connection = getConnection();
              var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE where NAME = ? and USER_ID = ?")) {
             preparedStatement.setString(1, name);
@@ -67,7 +75,7 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public Flux<Movie> getAllMoviesForUser(UUID userId) {
-        try (var connection = dataSource.getConnection();
+        try (var connection = getConnection();
              var preparedStatement = connection.prepareStatement(
                      "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM MOVIE WHERE USER_ID = ?")) {
             preparedStatement.setString(1, userId.toString());
@@ -87,7 +95,7 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public Mono<Void> delete(UUID movieId) {
-        try (var connection = dataSource.getConnection();
+        try (var connection = getConnection();
              var preparedStatement = connection.prepareStatement(
                      "DELETE FROM MOVIE where id = ?")) {
             preparedStatement.setString(1, movieId.toString());
@@ -101,7 +109,7 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public Mono<Void> update(Movie updatedMovie) {
-        try (Connection connection = dataSource.getConnection();
+        try (Connection connection = getConnection();
              var preparedStatement = connection.prepareStatement(
                      "UPDATE MOVIE SET NAME = ?, " +
                              "YEAR_PRODUCED = ?, " +
@@ -123,7 +131,7 @@ public class MovieMySQLRepository implements MovieRepository {
 
     @Override
     public Mono<Void> create(UUID userId, Movie movie) {
-        try (Connection connection = dataSource.getConnection();
+        try (Connection connection = getConnection();
              var preparedStatement = connection.prepareStatement(
                      "INSERT INTO MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) " +
                              "VALUES (?, ?, ?, ?, ?, ?)")) {
@@ -144,9 +152,9 @@ public class MovieMySQLRepository implements MovieRepository {
 
     private Movie extractMovieFrom(ResultSet resultSet) throws SQLException {
         return new Movie(UUID.fromString(resultSet.getString(ID)),
-                         resultSet.getString(NAME),
-                        resultSet.getInt(YEAR_PRODUCED),
-                        resultSet.getBigDecimal(RATING).setScale(1, RoundingMode.UNNECESSARY),
-                        resultSet.getLong(CREATION_TIMESTAMP));
+                resultSet.getString(NAME),
+                resultSet.getInt(YEAR_PRODUCED),
+                resultSet.getBigDecimal(RATING).setScale(1, RoundingMode.UNNECESSARY),
+                resultSet.getLong(CREATION_TIMESTAMP));
     }
 }
