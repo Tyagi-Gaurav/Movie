@@ -45,7 +45,7 @@ public class TestUtils {
             preparedStatement.setString(5, expectedUser.getPassword());
             preparedStatement.setString(6,
                     Strings.join(expectedUser.getAuthorities()).with(","));
-            assertThat(preparedStatement.executeUpdate()).isGreaterThan(0);
+            assertThat(preparedStatement.executeUpdate()).isPositive();
         } catch(Exception e) {
             e.printStackTrace();
             throw e;
@@ -65,7 +65,7 @@ public class TestUtils {
             preparedStatement.setBigDecimal(4, movie.rating());
             preparedStatement.setLong(5, movie.creationTimeStamp());
             preparedStatement.setString(6, userId.toString());
-            assertThat(preparedStatement.executeUpdate()).isGreaterThan(0);
+            assertThat(preparedStatement.executeUpdate()).isPositive();
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
