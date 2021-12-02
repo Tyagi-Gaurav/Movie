@@ -53,7 +53,7 @@ class MovieMySQLRepositoryTest {
             "INSERT INTO MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 
     private static final String DELETE_ALL_MOVIES = "DELETE FROM MOVIE";
-    private static final String DELETE_ALL_USERS = "DELETE FROM USER CASCADE";
+    private static final String DELETE_ALL_USERS = "DELETE FROM USER";
 
     private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM "
             + "MOVIE WHERE ID = ?";
