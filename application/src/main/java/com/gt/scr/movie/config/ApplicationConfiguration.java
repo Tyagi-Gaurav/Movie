@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,11 +36,6 @@ public class ApplicationConfiguration {
 
     @Autowired
     private MetricsInterceptor metricsInterceptor;
-
-    @Bean
-    public WebFluxProperties webFluxProperties(){
-        return new WebFluxProperties();
-    }
 
     @Bean
     @Qualifier("signingKey")
