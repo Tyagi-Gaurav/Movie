@@ -57,4 +57,13 @@ class SystemExceptionHandlerTest {
                 .expectNext(new ErrorResponse(500, "Unexpected error occurred"))
                 .verifyComplete();;
     }
+
+    @Test
+    void shouldHandleUnexpectedSystemException() {
+        Mono<ErrorResponse> errorResponseMono = systemExceptionHandler.handleException(new UnexpectedSystemException());
+
+        StepVerifier.create(errorResponseMono)
+                .expectNext(new ErrorResponse(500, "Unexpected error occurred"))
+                .verifyComplete();;
+    }
 }

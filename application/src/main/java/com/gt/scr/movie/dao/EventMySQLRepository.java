@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
+import com.gt.scr.exception.DatabaseException;
 
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;

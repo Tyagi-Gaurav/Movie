@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.sql.DataSource;
@@ -42,6 +43,13 @@ public class ApplicationConfiguration {
     public Key signingKey(AuthConfig authConfig) {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(authConfig.secret());
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+    }
+
+    @Bean
+    public WebClient webClient(UserConfig userConfig) {
+        return WebClient.builder()
+                .baseUrl(String.format("http://%s:%d", userConfig.host(), userConfig.port()))
+                .build();
     }
 
     @Bean

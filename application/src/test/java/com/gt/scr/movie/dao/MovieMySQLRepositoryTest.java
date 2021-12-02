@@ -30,6 +30,7 @@ import static com.gt.scr.movie.util.TestUtils.*;
 import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import com.gt.scr.exception.DatabaseException;
 
 @SpringBootTest(classes = MovieMySQLRepository.class)
 @ExtendWith(MockitoExtension.class)

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +20,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static com.gt.scr.movie.TestBuilder.*;
 
 @ExtendWith(SpringExtension.class)
-@AutoConfigureMockMvc
 @SpringBootTest(classes = Application.class,
         properties = {
                 "management.endpoint.health.enabled=true",
@@ -65,7 +63,7 @@ class GRPCIntegrationTest {
     }
 
     @Test
-    @DisplayName("Account Create, Login and Create Movie Entry")
+    @DisplayName("Create Movie Entry")
     public void runScenario2() {
         AccountCreateGrpcRequestDTO requestDTO = accountCreateGrpc();
         LoginGrpcRequestDTO loginGrpcRequestDTO = loginCreateGrpc(requestDTO);
