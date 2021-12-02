@@ -18,18 +18,14 @@ import reactor.test.StepVerifier;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.gt.scr.movie.util.MovieBuilder.aMovie;
 import static com.gt.scr.movie.util.MovieBuilder.copyOf;
-import static com.gt.scr.movie.util.TestUtils.addToDatabase;
+import static com.gt.scr.movie.util.TestUtils.*;
 import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
@@ -60,8 +56,8 @@ class MovieMySQLRepositoryTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        deleteAllMovies();
-        deleteAllUsers();
+        executeQueryUpdate(dataSource, DELETE_ALL_MOVIES);
+        executeQueryUpdate(dataSource, DELETE_ALL_USERS);
     }
 
     @Test
@@ -255,7 +251,7 @@ class MovieMySQLRepositoryTest {
         movieRepository.delete(expectedMovieA.id());
 
         //then
-        assertThat(getMovie(expectedMovieA.id())).isEmpty();
+        assertThat(getMovie(expectedMovieA.id(), dataSource, SELECT_MOVIE_BY_ID)).isEmpty();
     }
 
     @Test
@@ -289,7 +285,7 @@ class MovieMySQLRepositoryTest {
 
         //then
         StepVerifier.create(update).verifyComplete();
-        Optional<Movie> movie = getMovie(updatedMovie.id());
+        Optional<Movie> movie = getMovie(updatedMovie.id(), dataSource, SELECT_MOVIE_BY_ID);
         assertThat(movie).isNotEmpty();
         assertThat(movie.get().name()).isEqualTo("test");
     }
@@ -322,7 +318,7 @@ class MovieMySQLRepositoryTest {
         movieRepository.create(currentUser.id(), expectedMovie);
 
         //then
-        Optional<Movie> movie = getMovie(expectedMovie.id());
+        Optional<Movie> movie = getMovie(expectedMovie.id(), dataSource, SELECT_MOVIE_BY_ID);
         assertThat(movie).isNotEmpty().hasValue(expectedMovie);
     }
 
@@ -339,41 +335,6 @@ class MovieMySQLRepositoryTest {
 
         //then
         assertThat(databaseException).isNotNull();
-    }
-
-    private Optional<Movie> getMovie(UUID movieId) throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_MOVIE_BY_ID)) {
-            preparedStatement.setString(1, movieId.toString());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                return Optional.of(new Movie(UUID.fromString(resultSet.getString("ID")),
-                        resultSet.getString("NAME"),
-                        resultSet.getInt("YEAR_PRODUCED"),
-                        resultSet.getBigDecimal("RATING").setScale(1, RoundingMode.UNNECESSARY),
-                        resultSet.getLong("CREATION_TIMESTAMP")));
-            }
-
-            resultSet.close();
-
-            return Optional.empty();
-        }
-    }
-
-    private void deleteAllMovies() throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_MOVIES)) {
-            preparedStatement.execute();
-        }
-    }
-
-    private void deleteAllUsers() throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_USERS)) {
-            preparedStatement.execute();
-        }
     }
 
     @TestConfiguration

@@ -8,10 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtils {
     private static final Logger LOG = LoggerFactory.getLogger(TestUtils.class);
@@ -41,6 +46,9 @@ public class TestUtils {
             preparedStatement.setString(6,
                     Strings.join(expectedUser.getAuthorities()).with(","));
             preparedStatement.execute();
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -58,6 +66,39 @@ public class TestUtils {
             preparedStatement.setLong(5, movie.creationTimeStamp());
             preparedStatement.setString(6, userId.toString());
             preparedStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static Optional<Movie> getMovie(UUID movieId, DataSource dataSource, String query) throws SQLException {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, movieId.toString());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return Optional.of(new Movie(UUID.fromString(resultSet.getString("ID")),
+                        resultSet.getString("NAME"),
+                        resultSet.getInt("YEAR_PRODUCED"),
+                        resultSet.getBigDecimal("RATING").setScale(1, RoundingMode.UNNECESSARY),
+                        resultSet.getLong("CREATION_TIMESTAMP")));
+            }
+
+            resultSet.close();
+
+            return Optional.empty();
+        }
+    }
+
+    public static void executeQueryUpdate(DataSource dataSource, String query) throws SQLException {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            assertThat(preparedStatement.executeUpdate())
+                    .describedAs("Could not run query. {}", query)
+                    .isNotNegative();
         }
     }
 }
