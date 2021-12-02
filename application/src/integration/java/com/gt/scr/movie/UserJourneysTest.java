@@ -6,8 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebFlux;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,12 +16,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
 
-@EnableAutoConfiguration
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = Initializer.class)
-@AutoConfigureMockMvc
+@AutoConfigureWebFlux
 @ActiveProfiles("UserJourneysTest")
 public class UserJourneysTest {
     private ScenarioExecutor scenarioExecutor;

@@ -1,6 +1,7 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.exception.UnauthorizedException;
+import com.gt.scr.movie.ext.user.CreateAccountClient;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
@@ -13,11 +14,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccountCreateResourceTest {
+
+    private AccountCreateResource accountCreateResource;
+
+    @Mock
+    private CreateAccountClient createAccountClient;
 
     @Mock
     private UserService userService;
@@ -25,11 +30,9 @@ class AccountCreateResourceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    private AccountCreateResource accountCreateResource;
-
     @BeforeEach
     void setUp() {
-        accountCreateResource = new AccountCreateResource(userService, passwordEncoder);
+        accountCreateResource = new AccountCreateResource(userService, passwordEncoder, createAccountClient);
     }
 
     @Test
@@ -40,12 +43,15 @@ class AccountCreateResourceTest {
                         "firstName",
                         "lastName",
                         "USER");
+
+        when(createAccountClient.createAccount(accountCreateRequestDTO)).thenReturn(Mono.empty());
         when(passwordEncoder.encode("password")).thenReturn("password");
         when(userService.add(any())).thenReturn(Mono.empty());
 
         Mono<Void> account = accountCreateResource.createAccount(accountCreateRequestDTO);
 
         StepVerifier.create(account).verifyComplete();
+        verify(createAccountClient).createAccount(accountCreateRequestDTO);
         verify(userService).add(any(User.class));
     }
 
@@ -63,6 +69,26 @@ class AccountCreateResourceTest {
         StepVerifier.create(account)
                 .expectError(UnauthorizedException.class)
                 .verify();
+        verifyNoInteractions(createAccountClient);
         verifyNoInteractions(userService);
+    }
+
+    @Test
+    void shouldNotFailForCreateAccountWhenUserCallFails() {
+        AccountCreateRequestDTO accountCreateRequestDTO =
+                new AccountCreateRequestDTO("userName",
+                        "password",
+                        "firstName",
+                        "lastName",
+                        "USER");
+
+        when(createAccountClient.createAccount(accountCreateRequestDTO)).thenThrow(new RuntimeException());
+        when(userService.add(any())).thenReturn(Mono.empty());
+
+        Mono<Void> account = accountCreateResource.createAccount(accountCreateRequestDTO);
+
+        StepVerifier.create(account).verifyComplete();
+
+        verify(userService).add(any(User.class));
     }
 }

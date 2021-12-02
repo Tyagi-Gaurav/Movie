@@ -29,6 +29,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.gt.scr.exception.DatabaseException;
+
 import static com.gt.scr.movie.util.TestUtils.addToDatabase;
 import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;

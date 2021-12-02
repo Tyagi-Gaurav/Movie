@@ -1,10 +1,13 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.exception.UnauthorizedException;
+import com.gt.scr.movie.ext.user.CreateAccountClient;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.Role;
 import com.gt.scr.movie.service.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,10 +25,16 @@ import java.util.UUID;
 public class AccountCreateResource {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final CreateAccountClient createAccountClient;
 
-    public AccountCreateResource(UserService userService, PasswordEncoder passwordEncoder) {
+    private static final Logger LOG = LoggerFactory.getLogger(AccountCreateResource.class);
+
+    public AccountCreateResource(UserService userService,
+                                 PasswordEncoder passwordEncoder,
+                                 CreateAccountClient createAccountClient) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.createAccountClient = createAccountClient;
     }
 
     @PostMapping(path = "/user/account/create",
@@ -36,6 +45,14 @@ public class AccountCreateResource {
 
         if (Role.ADMIN.toString().equals(accountCreateRequestDTO.role())) {
             return Mono.error(new UnauthorizedException());
+        }
+
+        try {
+            createAccountClient.createAccount(accountCreateRequestDTO);
+        } catch(Exception e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
         }
 
         return userService.add(new User(UUID.randomUUID(),

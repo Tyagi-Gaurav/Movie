@@ -8,12 +8,33 @@ services:
       context: application
     ports:
       - "9090:9090"
+      - "9091:9091"
       - "9900:9900"
       - "8443:8443"
     environment:
       - "SPRING_PROFILES_ACTIVE=prod"
       - "SERVER_PORT=9090"
       - "SERVER_MGT_PORT=9091"
+      - "MYSQL_HOST=local.mysql"
+      - "MYSQL_PWD=password"
+      - "MYSQL_USER=root"
+      - "MYSQL_DB_NAME=movieMetadata"
+    networks:
+      - overlay
+
+  user-app:
+    container_name: local.user-app
+    depends_on:
+      - mysql
+    build:
+      context: user
+    ports:
+      - "7070:7070"
+      - "7071:7071"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=prod"
+      - "SERVER_PORT=7070"
+      - "SERVER_MGT_PORT=7071"
       - "MYSQL_HOST=local.mysql"
       - "MYSQL_PWD=password"
       - "MYSQL_USER=root"

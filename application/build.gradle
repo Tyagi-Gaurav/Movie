@@ -26,8 +26,8 @@ ext {
     mockitoVersion = '4.0.0'
     reactorVersion = '3.4.12'
     grpcVersion = '1.42.1'
-    springOAuthVersion = '2.5.6'
     springWebFluxSecurityVersion = '5.0.0.M5'
+    wiremockVersion = '2.31.0'
 }
 
 repositories {
@@ -79,18 +79,17 @@ processResources {
 dependencies {
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation project(":grpcService")
+    implementation project(":common")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
         exclude group: "ch.qos.logback"
     }
     implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
-//    implementation "org.springframework.security:spring-security-webflux:${springWebFluxSecurityVersion}"
     implementation("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}") {
         exclude group: "org.slf4j", module: "slf4j-api"
     }
-    implementation "org.springframework.boot:spring-boot-starter-oauth2-client:${springBootVersion}"
-    implementation "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springOAuthVersion}"
+
     implementation "org.springframework:spring-jdbc:${springVersion}"
     implementation "org.springframework:spring-core:${springVersion}"
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
@@ -128,6 +127,7 @@ dependencies {
     testImplementation "com.h2database:h2:${h2DbVersion}"
     testImplementation "org.testcontainers:junit-jupiter:${testContainerVersion}"
     testImplementation "org.testcontainers:mysql:${testContainerVersion}"
+    testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremockVersion}"
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
 }
 

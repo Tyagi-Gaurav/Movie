@@ -23,7 +23,7 @@ public class SystemExceptionHandler {
     }
 
     @ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(value = {RuntimeException.class})
+    @ExceptionHandler(value = {RuntimeException.class, UnexpectedSystemException.class})
     public Mono<ErrorResponse> handleRuntime(RuntimeException exception) {
         if (LOG.isErrorEnabled()) {
             LOG.error(exception.getMessage(), exception);

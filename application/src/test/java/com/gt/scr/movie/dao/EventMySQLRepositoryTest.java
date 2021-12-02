@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.gt.scr.exception.DatabaseException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

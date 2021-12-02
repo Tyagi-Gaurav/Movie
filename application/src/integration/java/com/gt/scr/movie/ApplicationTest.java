@@ -3,7 +3,6 @@ package com.gt.scr.movie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -26,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = Initializer.class)
-@EnableAutoConfiguration
 @ActiveProfiles("ApplicationTest")
 class ApplicationTest {
     @Autowired

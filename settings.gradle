@@ -3,4 +3,7 @@ include 'functionalTest'
 include 'application'
 include 'grpcService'
 include 'ui'
+include 'content'
+include 'user'
+include 'common'
 

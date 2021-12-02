@@ -1,4 +1,4 @@
-package com.gt.scr.movie.dao;
+package com.gt.scr.exception;
 
 public class DatabaseException extends RuntimeException {
     public DatabaseException(String message, Exception cause) {
