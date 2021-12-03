@@ -1,0 +1,19 @@
+name: 'Test Report'
+
+on:
+  workflow_run:
+    workflows:
+      - 'Functional Test'
+    types:
+      - completed
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/test-reporter@v1
+        with:
+          artifact: test-results
+          name: JUnit Tests
+          path: '*.html'
+          reporter: java-junit

@@ -1,5 +1,6 @@
 package com.gt.scr.movie.dao;
 
+import com.gt.scr.exception.DatabaseException;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -30,7 +31,6 @@ import static com.gt.scr.movie.util.TestUtils.*;
 import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
-import com.gt.scr.exception.DatabaseException;
 
 @SpringBootTest(classes = MovieMySQLRepository.class)
 @ExtendWith(MockitoExtension.class)
@@ -216,14 +216,16 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenGetAllMoviesFails() throws SQLException {
         //given
         User user = aUser().build();
+        Movie expectedMovieA = aMovie().build();
+        Movie expectedMovieB = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
-        UUID userId = user.id();
-        addToDatabase(aMovie().build(), dataSource, userId, ADD_MOVIE);
-        addToDatabase(aMovie().build(), dataSource, userId, ADD_MOVIE);
+        addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
+        addToDatabase(expectedMovieB, dataSource, user.id(), ADD_MOVIE);
 
         //when
         DatabaseException databaseException =
-                catchThrowableOfType(() -> buggyMovieRepository.getAllMoviesForUser(userId), DatabaseException.class);
+                catchThrowableOfType(() -> buggyMovieRepository.getAllMoviesForUser(user.id()),
+                        DatabaseException.class);
 
         //then
         assertThat(databaseException).isNotNull();
