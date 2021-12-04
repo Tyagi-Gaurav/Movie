@@ -25,7 +25,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew clean check build
+      run: ./gradlew clean build --info
 
     - name: Build the docker-compose stack
       env:
