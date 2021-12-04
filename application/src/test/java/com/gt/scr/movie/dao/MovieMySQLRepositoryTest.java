@@ -51,8 +51,8 @@ class MovieMySQLRepositoryTest {
     private static final String ADD_MOVIE =
             "INSERT INTO MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 
-    private static final String DELETE_ALL_MOVIES = "TRUNCATE TABLE MOVIE";
-    private static final String DELETE_ALL_USERS = "TRUNCATE TABLE USER";
+    private static final String DELETE_ALL_MOVIES = "DELETE FROM MOVIE";
+    private static final String DELETE_ALL_USERS = "DELETE FROM USER";
 
     private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM "
             + "MOVIE WHERE ID = ?";
@@ -354,9 +354,8 @@ class MovieMySQLRepositoryTest {
                 assertThat(resource).describedAs("Unable to find sql file to create database").isNotNull();
                 String tempFile = resource.toURI().getRawPath();
                 cpds.setDriverClass("org.h2.Driver");
-                String jdbcUrl =
-                        String.format("jdbc:h2:mem:testdb_movie;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
-                                "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", tempFile);
+                String jdbcUrl = String.format("jdbc:h2:mem:testdb_movie;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
+                        "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", tempFile);
                 cpds.setJdbcUrl(jdbcUrl);
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
