@@ -47,7 +47,9 @@ public class TestUtils {
                     Strings.join(expectedUser.getAuthorities()).with(","));
             assertThat(preparedStatement.executeUpdate()).isPositive();
         } catch(Exception e) {
-            e.printStackTrace();
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Exception adding user to database {} with error {}", expectedUser.id(), e.getMessage());
+            }
             throw e;
         }
     }
@@ -67,7 +69,9 @@ public class TestUtils {
             preparedStatement.setString(6, userId.toString());
             assertThat(preparedStatement.executeUpdate()).isPositive();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Exception adding movie to database {} with error {}", movie.id(), e.getMessage());
+            }
             throw e;
         }
     }
