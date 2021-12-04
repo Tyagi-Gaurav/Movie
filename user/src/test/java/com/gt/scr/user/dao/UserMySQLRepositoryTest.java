@@ -324,7 +324,7 @@ class UserMySQLRepositoryTest {
                 String tempFile = resource.toURI().getRawPath();
                 cpds.setDriverClass("org.h2.Driver");
                 String jdbcUrl =
-                        String.format("jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
+                        String.format("jdbc:h2:mem:testdb_user;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
                                 "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", tempFile);
                 cpds.setJdbcUrl(jdbcUrl);
             } catch (Exception e) {
