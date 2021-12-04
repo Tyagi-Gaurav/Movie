@@ -51,8 +51,8 @@ class MovieMySQLRepositoryTest {
     private static final String ADD_MOVIE =
             "INSERT INTO MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 
-    private static final String DELETE_ALL_MOVIES = "DELETE FROM MOVIE";
-    private static final String DELETE_ALL_USERS = "DELETE FROM USER";
+    private static final String DELETE_ALL_MOVIES = "TRUNCATE TABLE MOVIE";
+    private static final String DELETE_ALL_USERS = "TRUNCATE TABLE USER";
 
     private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM "
             + "MOVIE WHERE ID = ?";
@@ -216,10 +216,10 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenGetAllMoviesFails() throws SQLException {
         //given
         User user = aUser().build();
-        Movie expectedMovieA = aMovie().build();
-        Movie expectedMovieB = aMovie().build();
         addToDatabase(user, dataSource, ADD_USER);
+        Movie expectedMovieA = aMovie().build();
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
+        Movie expectedMovieB = aMovie().build();
         addToDatabase(expectedMovieB, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -355,7 +355,7 @@ class MovieMySQLRepositoryTest {
                 String tempFile = resource.toURI().getRawPath();
                 cpds.setDriverClass("org.h2.Driver");
                 String jdbcUrl =
-                        String.format("jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
+                        String.format("jdbc:h2:mem:testdb_movie;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
                                 "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", tempFile);
                 cpds.setJdbcUrl(jdbcUrl);
             } catch (Exception e) {
