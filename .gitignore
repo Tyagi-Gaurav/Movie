@@ -8,3 +8,8 @@ out/
 *.zip
 *.log
 *.log.*
+
+*.trc
+*.txt
+*.dmp
+target/

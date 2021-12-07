@@ -65,7 +65,10 @@ public class ApplicationConfiguration {
 
             cpds.setMinPoolSize(mySQLConfig.minPoolSize());
             cpds.setMaxPoolSize(mySQLConfig.maxPoolSize());
-        } catch (PropertyVetoException e) {
+        } catch (Exception e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error while initializing database: {}", e.getMessage());
+            }
             throw new IllegalArgumentException(e);
         }
 

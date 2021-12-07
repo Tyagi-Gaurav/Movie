@@ -4,6 +4,7 @@ import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.UserBuilder;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,6 +37,7 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 @SpringBootTest(classes = UserMySQLRepository.class)
 @ExtendWith(MockitoExtension.class)
 @Import(UserMySQLRepositoryTest.TestMovieRepoContextConfiguration.class)
+@Disabled
 class UserMySQLRepositoryTest {
     @Autowired
     private UserRepository userRepository;
