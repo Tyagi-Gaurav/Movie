@@ -36,3 +36,4 @@ mysql:
   minPoolSize: 2
   maxPoolSize: 2
   database: ${MYSQL_DB_NAME:movieMetadata}
+  schema: MOVIE_SCHEMA
