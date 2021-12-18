@@ -47,12 +47,12 @@ class UserMySQLRepositoryTest {
     private DataSource dataSource;
 
     private static final String ADD_USER =
-            "INSERT INTO USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) values (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO USER_SCHEMA.USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) values (?, ?, ?, ?, ?, ?)";
 
-    private static final String DELETE_ALL_USERS = "DELETE FROM USER";
+    private static final String DELETE_ALL_USERS = "DELETE FROM USER_SCHEMA.USER";
 
     private static final String SELECT_USER_BY_ID = "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM "
-            + "USER WHERE ID = ?";
+            + "USER_SCHEMA.USER WHERE ID = ?";
 
     @BeforeEach
     void setUp() throws SQLException {
