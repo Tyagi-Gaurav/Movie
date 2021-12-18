@@ -1,6 +1,6 @@
 Feature: Users should be able to create an account
 
-  @grpc
+#  @grpc
   Scenario: User should be able to create a new account
     Given a user attempts to create a new account with following details
       | firstName | lastName | userName | role | password |

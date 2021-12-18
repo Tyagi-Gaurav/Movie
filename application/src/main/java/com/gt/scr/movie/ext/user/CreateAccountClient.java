@@ -1,10 +1,11 @@
 package com.gt.scr.movie.ext.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.HttpHeaders;
 import com.gt.scr.movie.exception.UnexpectedSystemException;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -16,6 +17,8 @@ public class CreateAccountClient {
     public final WebClient webClient;
     private final ObjectMapper objectMapper;
 
+    private static final Logger LOG = LoggerFactory.getLogger(CreateAccountClient.class);
+
     public CreateAccountClient(WebClient webClient,
                                ObjectMapper objectMapper) {
         this.webClient = webClient;
@@ -24,7 +27,8 @@ public class CreateAccountClient {
 
     public Mono<Void> createAccount(AccountCreateRequestDTO accountCreateRequestDTO)  {
         try {
-            return webClient.post().uri("/user/account/create")
+            LOG.info("Making call to create account to User Service");
+            return webClient.post().uri("/api/user/account/create")
                     .header(HttpHeaders.CONTENT_TYPE, "application/vnd+account.create.v1+json")
                     .header(HttpHeaders.ACCEPT, "application/vnd+account.create.v1+json")
                     .bodyValue(objectMapper.writeValueAsString(accountCreateRequestDTO))

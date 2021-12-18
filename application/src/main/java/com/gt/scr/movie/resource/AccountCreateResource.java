@@ -47,19 +47,23 @@ public class AccountCreateResource {
             return Mono.error(new UnauthorizedException());
         }
 
+        Mono<Void> userAccountCreateInUserApp = Mono.empty();
         try {
-            createAccountClient.createAccount(accountCreateRequestDTO);
+            LOG.info("Preparing to create account on User application");
+            userAccountCreateInUserApp = createAccountClient.createAccount(accountCreateRequestDTO);
+            LOG.info("Account call made.");
         } catch(Exception e) {
             if (LOG.isErrorEnabled()) {
+                LOG.error("Account create call errored on User.");
                 LOG.error(e.getMessage(), e);
             }
         }
 
-        return userService.add(new User(UUID.randomUUID(),
+        return userAccountCreateInUserApp.then(userService.add(new User(UUID.randomUUID(),
                 accountCreateRequestDTO.firstName(),
                 accountCreateRequestDTO.lastName(),
                 accountCreateRequestDTO.userName(),
                 passwordEncoder.encode(accountCreateRequestDTO.password()),
-                Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role()))));
+                Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())))));
     }
 }

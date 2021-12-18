@@ -19,6 +19,8 @@ services:
       - "MYSQL_PWD=password"
       - "MYSQL_USER=root"
       - "MYSQL_DB_NAME=movieMetadata"
+      - "USER_HOST=local.user-app"
+      - "USER_PORT=7070"
     networks:
       - overlay
 
