@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 public class RetrieveEventsForUser implements BiFunction<DataSource, LoginResponseDTO, List<UserEventMessage>> {
-    private static final String GET_EVENTS_FOR_USER = "SELECT PAYLOAD FROM EVENTS WHERE OWNER_USER = ?";
+    private static final String GET_EVENTS_FOR_USER = "SELECT PAYLOAD FROM MOVIE_SCHEMA.EVENTS WHERE OWNER_USER = ?";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

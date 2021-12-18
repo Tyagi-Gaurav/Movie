@@ -47,7 +47,7 @@ class EventMySQLRepositoryTest {
     private DataSource dataSource;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String SELECT_ALL_EVENTS = "SELECT PAYLOAD FROM EVENTS";
+    private static final String SELECT_ALL_EVENTS = "SELECT PAYLOAD FROM MOVIE_SCHEMA.EVENTS";
 
     @Test
     void shouldSaveEvent() throws SQLException, IOException {

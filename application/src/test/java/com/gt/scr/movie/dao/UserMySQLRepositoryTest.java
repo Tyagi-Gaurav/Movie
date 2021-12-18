@@ -1,5 +1,6 @@
 package com.gt.scr.movie.dao;
 
+import com.gt.scr.exception.DatabaseException;
 import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.UserBuilder;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -29,8 +30,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.gt.scr.exception.DatabaseException;
-
 import static com.gt.scr.movie.util.TestUtils.addToDatabase;
 import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,12 +49,12 @@ class UserMySQLRepositoryTest {
     private DataSource dataSource;
 
     private static final String ADD_USER =
-            "INSERT INTO USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) values (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO MOVIE_SCHEMA.USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) VALUES (?, ?, ?, ?, ?, ?)";
 
-    private static final String DELETE_ALL_USERS = "DELETE FROM USER";
+    private static final String DELETE_ALL_USERS = "DELETE FROM MOVIE_SCHEMA.USER";
 
     private static final String SELECT_USER_BY_ID = "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM "
-            + "USER WHERE ID = ?";
+            + "MOVIE_SCHEMA.USER WHERE ID = ?";
 
     @BeforeEach
     void setUp() throws SQLException {

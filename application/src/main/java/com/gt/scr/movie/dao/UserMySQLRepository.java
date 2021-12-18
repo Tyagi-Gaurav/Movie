@@ -25,17 +25,39 @@ public class UserMySQLRepository implements UserRepository {
     @Autowired
     private DataSource dataSource;
 
+    private static final String ID = "ID";
     private static final String USER_NAME = "USER_NAME";
     private static final String FIRST_NAME = "FIRST_NAME";
     private static final String LAST_NAME = "LAST_NAME";
     private static final String PASSWORD = "PASSWORD";
     private static final String ROLES = "ROLES";
 
+
+    private static final String SCHEMA = "MOVIE_SCHEMA";
+    private static final String FIND_BY_ID =
+            String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s.USER where ID = ?",
+                    ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES, SCHEMA);
+
+    private static final String FIND_BY_USER_NAME =
+            String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s.USER where USER_NAME = ?",
+                    ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES, SCHEMA);
+
+    private static final String GET_ALL_USERS =
+            String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s.USER",
+                    ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES, SCHEMA);
+
+    private static final String DELETE_USERS = String.format("DELETE FROM %s.USER where ID = ?", SCHEMA);
+
+    private static final String UPDATE_USERS = String.format("UPDATE %s.USER SET %s = ?, " +
+            "%s = ?, %s = ?, %s = ? where %s = ?", SCHEMA, FIRST_NAME, LAST_NAME, PASSWORD, ROLES, ID);
+
+    private static final String INSERT_USERS = String.format("INSERT INTO %s.USER (%s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?)"
+            ,SCHEMA, ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES);
+
     @Override
     public Mono<User> findUserBy(UUID userId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where ID = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID)) {
             preparedStatement.setString(1, userId.toString());
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -53,8 +75,7 @@ public class UserMySQLRepository implements UserRepository {
     @Override
     public Mono<User> findUserBy(String userName) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER where USER_NAME = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_USER_NAME)) {
             preparedStatement.setString(1, userName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -72,8 +93,7 @@ public class UserMySQLRepository implements UserRepository {
     @Override
     public Flux<User> getAllUsers() {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES FROM USER")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_USERS)) {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 List<User> users = new ArrayList<>();
@@ -95,8 +115,7 @@ public class UserMySQLRepository implements UserRepository {
     @Override
     public Mono<Void> delete(UUID userId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "DELETE FROM USER where ID = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USERS)) {
             preparedStatement.setString(1, userId.toString());
             preparedStatement.execute();
             return Mono.empty();
@@ -110,11 +129,7 @@ public class UserMySQLRepository implements UserRepository {
         return Mono.fromRunnable(() -> {
             try {
                 try (Connection connection = dataSource.getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement(
-                             "UPDATE USER SET FIRST_NAME = ?, " +
-                                     "LAST_NAME = ?, " +
-                                     "PASSWORD = ?," +
-                                     "ROLES = ? where ID = ?")) {
+                     PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS)) {
 
                     preparedStatement.setString(1, user.firstName());
                     preparedStatement.setString(2, user.lastName());
@@ -126,7 +141,7 @@ public class UserMySQLRepository implements UserRepository {
                 } catch (SQLException throwables) {
                     throw new DatabaseException(throwables);
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new DatabaseException(e);
             }
         }).then();
@@ -135,9 +150,7 @@ public class UserMySQLRepository implements UserRepository {
     @Override
     public void create(User user) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) " +
-                             "VALUES (?, ?, ?, ?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS)) {
 
             preparedStatement.setString(1, user.id().toString());
             preparedStatement.setString(2, user.getUsername());

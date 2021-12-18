@@ -21,8 +21,10 @@ public class EventMySQLRepository implements EventRepository {
     @Autowired
     private DataSource dataSource;
 
+    private static final String SCHEMA = "MOVIE_SCHEMA";
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String INSERT_SQL = "INSERT INTO EVENTS (ID, OWNER_USER, ORIGINATOR_USER, TYPE, PAYLOAD, CREATION_TIMESTAMP) VALUES (?, ?, ?, ?, ? ,?)";
+    private static final String INSERT_SQL = String.format(
+            "INSERT INTO %s.EVENTS (ID, OWNER_USER, ORIGINATOR_USER, TYPE, PAYLOAD, CREATION_TIMESTAMP) VALUES (?, ?, ?, ?, ? ,?)", SCHEMA);
 
     @Override
     public Mono<Void> save(UserEventMessage eventMessage) {

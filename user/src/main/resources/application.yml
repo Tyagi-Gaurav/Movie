@@ -32,3 +32,4 @@ mysql:
   minPoolSize: 2
   maxPoolSize: 2
   database: ${MYSQL_DB_NAME:userData}
+  schema: USER_SCHEMA
