@@ -7,7 +7,6 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.google.common.net.HttpHeaders;
 import com.gt.scr.movie.exception.UnexpectedSystemException;
-import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -28,22 +27,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-class CreateAccountClientTest {
+class CreateUserClientTest {
     @RegisterExtension
     static WireMockExtension wireMockExtension = WireMockExtension.newInstance()
             .options(wireMockConfig().dynamicPort().dynamicHttpsPort())
             .build();
 
     private final ObjectMapper objectMapper = Mockito.spy(ObjectMapper.class);
-    private CreateAccountClient accountClient;
-    private AccountCreateRequestDTO accountCreateRequestDTO =
-            new AccountCreateRequestDTO("testUserName", "testPassword", "testFirstName",
+    private CreateUserClient accountClient;
+    private final UserCreateRequestDTO userCreateRequestDTO =
+            new UserCreateRequestDTO("testUserName", "testPassword", "testFirstName",
                     "testLastName", "ADMIN");
 
     @BeforeEach
     void setUp() throws JsonProcessingException {
         WireMockRuntimeInfo wireMockRuntimeInfo = wireMockExtension.getRuntimeInfo();
-        accountClient = new CreateAccountClient(WebClient.builder()
+        accountClient = new CreateUserClient(WebClient.builder()
                 .baseUrl(wireMockRuntimeInfo.getHttpBaseUrl())
                 .build(),
                 objectMapper);
@@ -52,13 +51,13 @@ class CreateAccountClientTest {
 
     @Test
     void shouldReturnSuccessWhenAccountCreationSucceeds() throws JsonProcessingException {
-        wireMockExtension.stubFor(post("/user/account/create")
+        wireMockExtension.stubFor(post("/api/user/account/create")
                 .withHeader(HttpHeaders.CONTENT_TYPE, equalTo("application/vnd+account.create.v1+json"))
                 .withHeader(HttpHeaders.ACCEPT, equalTo("application/vnd+account.create.v1+json"))
-                .withRequestBody(equalTo(objectMapper.writeValueAsString(accountCreateRequestDTO)))
+                .withRequestBody(equalTo(objectMapper.writeValueAsString(userCreateRequestDTO)))
                 .willReturn(ok()));
 
-        Mono<Void> account = accountClient.createAccount(accountCreateRequestDTO);
+        Mono<Void> account = accountClient.createUser(userCreateRequestDTO);
 
         StepVerifier.create(account)
                 .verifyComplete();
@@ -67,13 +66,13 @@ class CreateAccountClientTest {
     @ParameterizedTest
     @MethodSource(value = "errorArguments")
     void shouldReturnExceptionWhenAccountCreationFails(ResponseDefinitionBuilder errorResponse, int statusCode) throws JsonProcessingException {
-        wireMockExtension.stubFor(post("/user/account/create")
+        wireMockExtension.stubFor(post("/api/user/account/create")
                 .withHeader(HttpHeaders.CONTENT_TYPE, equalTo("application/vnd+account.create.v1+json"))
                 .withHeader(HttpHeaders.ACCEPT, equalTo("application/vnd+account.create.v1+json"))
-                .withRequestBody(equalTo(objectMapper.writeValueAsString(accountCreateRequestDTO)))
+                .withRequestBody(equalTo(objectMapper.writeValueAsString(userCreateRequestDTO)))
                 .willReturn(errorResponse));
 
-        Mono<Void> account = accountClient.createAccount(accountCreateRequestDTO);
+        Mono<Void> account = accountClient.createUser(userCreateRequestDTO);
 
         StepVerifier.create(account)
                 .consumeErrorWith(throwable -> {
@@ -88,7 +87,7 @@ class CreateAccountClientTest {
     void onJsonExceptionShouldThrowRuntimeException() throws JsonProcessingException {
         when(objectMapper.writeValueAsString(any())).thenThrow(RuntimeException.class);
 
-        Mono<Void> account = accountClient.createAccount(accountCreateRequestDTO);
+        Mono<Void> account = accountClient.createUser(userCreateRequestDTO);
 
         StepVerifier.create(account)
                 .consumeErrorWith(throwable -> {

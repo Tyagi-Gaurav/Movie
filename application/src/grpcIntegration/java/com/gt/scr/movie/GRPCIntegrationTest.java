@@ -8,8 +8,8 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.Status;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,7 +47,7 @@ class GRPCIntegrationTest {
         managedChannel.shutdownNow();
     }
 
-    @Test
+    @Disabled
     @DisplayName("Account Create and Login")
     public void runScenario1() {
         AccountCreateGrpcRequestDTO requestDTO = accountCreateGrpc();
@@ -62,7 +62,7 @@ class GRPCIntegrationTest {
                 .loginResponseShouldHaveCorrectDetails();
     }
 
-    @Test
+    @Disabled
     @DisplayName("Create Movie Entry")
     public void runScenario2() {
         AccountCreateGrpcRequestDTO requestDTO = accountCreateGrpc();
@@ -81,7 +81,7 @@ class GRPCIntegrationTest {
                 .and().resultIsReturned();
     }
 
-    @Test
+    @Disabled
     @DisplayName("Account Create, Login and Create Movie Entry twice to return error")
     public void runScenario3() {
         AccountCreateGrpcRequestDTO requestDTO = accountCreateGrpc();

@@ -1,7 +1,8 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.dao.UserRepository;
-import com.gt.scr.movie.exception.DuplicateRecordException;
+import com.gt.scr.movie.ext.user.CreateUserClient;
+import com.gt.scr.movie.ext.user.UserCreateRequestDTO;
 import com.gt.scr.movie.service.domain.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,20 +16,24 @@ import java.util.function.Function;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final CreateUserClient createUserClient;
     private final UserRepository userRepository;
 
-    public UserServiceImpl(@Qualifier(value = "mysql") UserRepository userRepository) {
+    public UserServiceImpl(CreateUserClient createUserClient,
+                           @Qualifier(value = "mysql") UserRepository userRepository) {
+        this.createUserClient = createUserClient;
         this.userRepository = userRepository;
     }
 
     @Override
     public Mono<Void> add(User user) {
-        return userRepository.findUserBy(user.getUsername())
-                .flatMap(user1 -> Mono.error(() -> new DuplicateRecordException("User already exists.")))
-                .switchIfEmpty(Mono.defer(() -> {
-                    userRepository.create(user);
-                    return Mono.empty();
-                })).then();
+        return createUserClient.createUser(new UserCreateRequestDTO(
+                user.username(),
+                user.password(),
+                user.firstName(),
+                user.lastName(),
+                user.getRole()
+        ));
     }
 
     @Override
