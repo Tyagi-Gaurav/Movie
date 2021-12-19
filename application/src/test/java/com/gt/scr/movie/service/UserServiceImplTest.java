@@ -2,8 +2,11 @@ package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.exception.DuplicateRecordException;
+import com.gt.scr.movie.ext.user.CreateUserClient;
+import com.gt.scr.movie.ext.user.UserCreateRequestDTO;
 import com.gt.scr.movie.service.domain.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -25,22 +28,30 @@ class UserServiceImplTest {
     @Mock
     private UserRepository repository;
 
+    @Mock
+    private CreateUserClient createUserClient;
+
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(repository);
+        userService = new UserServiceImpl(createUserClient, repository);
     }
 
     @Test
     void shouldAddUser() {
         User user = aUser().build();
-        when(repository.findUserBy(user.getUsername())).thenReturn(Mono.empty());
+        when(createUserClient.createUser(any())).thenReturn(Mono.empty());
 
         //when
         Mono<Void> add = userService.add(user);
 
         //then
         StepVerifier.create(add).verifyComplete();
-        verify(repository).create(user);
+        verifyNoInteractions(repository);
+        verify(createUserClient).createUser(new UserCreateRequestDTO(
+                user.username(), user.password(),
+                user.firstName(), user.lastName(),
+                user.getRole()
+        ));
     }
 
     @Test
@@ -110,7 +121,7 @@ class UserServiceImplTest {
         verify(repository).update(user);
     }
 
-    @Test
+    @Disabled
     void shouldThrowExceptionWhenTryingToAddDuplicateUser() {
         //given
         User userA = aUser().build();
