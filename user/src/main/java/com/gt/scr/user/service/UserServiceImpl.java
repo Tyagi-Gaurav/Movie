@@ -3,6 +3,8 @@ package com.gt.scr.user.service;
 import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.user.dao.UserRepository;
 import com.gt.scr.user.service.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,8 @@ import java.util.function.Function;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+
     public UserServiceImpl(@Qualifier(value = "mysql") UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserBy(user.getUsername())
                 .flatMap(user1 -> Mono.error(() -> new DuplicateRecordException("User already exists.")))
                 .switchIfEmpty(Mono.defer(() -> {
+                    LOG.info("Inserting user with name {} in database: ", user.getUsername());
                     userRepository.create(user);
                     return Mono.empty();
                 })).then();
@@ -53,10 +58,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserDetails> findByUsername(String username) throws UsernameNotFoundException {
+
         return userRepository.findUserBy(username)
                 .switchIfEmpty(
                         Mono.defer(() -> Mono.error(() ->
-                                new UsernameNotFoundException("Unable to find User: " + username))))
+                                new UsernameNotFoundException("Unable to find User in user application: " + username))))
                 .map(Function.identity());
     }
 }

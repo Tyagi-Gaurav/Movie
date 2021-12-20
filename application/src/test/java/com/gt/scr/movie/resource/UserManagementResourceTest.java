@@ -1,5 +1,7 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.movie.ext.user.CreateUserByAdminClient;
+import com.gt.scr.movie.ext.user.UserCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.UserDetailsResponse;
@@ -14,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -24,30 +25,33 @@ import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserManagementResourceTest {
     @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @Mock
     private UserService userService;
 
     @Mock
     private SecurityContextHolder securityContextHolder;
 
+    @Mock
+    private CreateUserByAdminClient createUserByAdminClient;
+
     private UserManagementResource userManagementResource;
 
     @BeforeEach
     void setUp() {
-        userManagementResource = new UserManagementResource(passwordEncoder, userService, securityContextHolder);
+        userManagementResource = new UserManagementResource(userService, securityContextHolder,
+                createUserByAdminClient);
     }
 
     @Test
-    void shouldAllowAdminToCreateUser()  {
+    void shouldAllowAdminToCreateUser() {
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
+        when(createUserByAdminClient.createUser(anyString(), any(UserCreateRequestDTO.class))).thenReturn(Mono.empty());
         AccountCreateRequestDTO requestDTO = new AccountCreateRequestDTO(
                 randomAlphabetic(10),
                 randomAlphabetic(10),
@@ -56,38 +60,47 @@ class UserManagementResourceTest {
                 "USER");
 
         //when
-        userManagementResource.createUser(requestDTO);
+        Mono<Void> response = userManagementResource.createUser(requestDTO);
 
-        verify(userService).add(any(User.class));
+        StepVerifier.create(response)
+                .verifyComplete();
+
+        verify(createUserByAdminClient).createUser("token", new UserCreateRequestDTO(
+                requestDTO.userName(), requestDTO.password(),
+                requestDTO.firstName(), requestDTO.lastName(), requestDTO.role()
+        ));
     }
 
     @Test
-    void shouldAllowAdminToReadAllUsers()  {
+    void shouldAllowAdminToReadAllUsers() {
         //given
         User user = UserBuilder.aUser().build();
         given(userService.getAllUsers()).willReturn(Flux.just(user));
 
         //when
-        UserListResponseDTO userListResponseDTO = userManagementResource.listUsers().block();
+        Mono<UserListResponseDTO> userListResponseDTOMono = userManagementResource.listUsers();
 
         verify(userService).getAllUsers();
+        StepVerifier.create(userListResponseDTOMono)
+                .consumeNextWith(userListResponseDTO -> {
+                    List<UserDetailsResponse> userDetailsResponses = userListResponseDTO.userDetails();
+                    assertThat(userDetailsResponses).isNotEmpty();
 
-        List<UserDetailsResponse> userDetailsResponses = userListResponseDTO.userDetails();
-        assertThat(userDetailsResponses).isNotEmpty();
+                    UserDetailsResponse userDetailsResponse = userDetailsResponses.get(0);
 
-        UserDetailsResponse userDetailsResponse = userDetailsResponses.get(0);
-
-        assertThat(userDetailsResponse.userName()).isEqualTo(user.getUsername());
-        assertThat(userDetailsResponse.firstName()).isEqualTo(user.firstName());
-        assertThat(userDetailsResponse.lastName()).isEqualTo(user.lastName());
-        assertThat(userDetailsResponse.id()).isEqualTo(user.id());
+                    assertThat(userDetailsResponse.userName()).isEqualTo(user.getUsername());
+                    assertThat(userDetailsResponse.firstName()).isEqualTo(user.firstName());
+                    assertThat(userDetailsResponse.lastName()).isEqualTo(user.lastName());
+                    assertThat(userDetailsResponse.id()).isEqualTo(user.id());
+                })
+                .verifyComplete();
     }
 
     @Test
     void shouldAllowAdminToDeleteUser() {
         UUID userIdToDelete = UUID.randomUUID();
 
-        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN");
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
         when(userService.deleteUser(userIdToDelete)).thenReturn(Mono.empty());
 
@@ -103,7 +116,7 @@ class UserManagementResourceTest {
     void shouldNotAllowAdminToDeleteSelf() {
         UUID userIdToDelete = UUID.randomUUID();
 
-        UserProfile userProfile = new UserProfile(userIdToDelete, "ADMIN");
+        UserProfile userProfile = new UserProfile(userIdToDelete, "ADMIN", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 
         Mono<Void> voidMono = userManagementResource.deleteUser(userIdToDelete);

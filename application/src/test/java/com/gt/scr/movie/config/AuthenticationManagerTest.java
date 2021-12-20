@@ -64,8 +64,8 @@ class AuthenticationManagerTest {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token, ""));
 
         StepVerifier.create(authenticate)
-                .expectNextCount(0)
-                .verifyComplete();
+                .expectError(IllegalCallerException.class)
+                .verify();
     }
 
     @Test

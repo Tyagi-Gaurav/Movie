@@ -22,7 +22,7 @@ public class LoggingFilter implements WebFilter {
         HttpMethod method = request.getMethod();
         String path = request.getURI().getPath();
 
-        LOG.info("Received request for {} - {}", method, path);
+        LOG.info("Received request for {} - {} with content Type: {}", method, path, request.getHeaders().getContentType());
 
         return chain.filter(exchange);
     }

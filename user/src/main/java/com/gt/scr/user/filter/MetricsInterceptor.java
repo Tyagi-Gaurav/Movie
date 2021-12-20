@@ -39,7 +39,9 @@ public class MetricsInterceptor implements WebFilter {
 
         long duration = Instant.now().toEpochMilli() - startTime.toEpochMilli();
 
-        LOG.info("Duration of request was : {} milli seconds", duration);
+        LOG.info("Duration of request was : {} milli seconds with status code {}", duration,
+                exchange.getResponse().getStatusCode());
+
         endpointHistogram.observe(duration);
 
         return result;

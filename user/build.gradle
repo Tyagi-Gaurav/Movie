@@ -36,6 +36,14 @@ ext {
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
+sourceSets {
+    integration {
+        java.srcDir "$projectDir/src/integration/java"
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
@@ -57,6 +65,11 @@ processResources {
     }
 
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+configurations {
+    integrationImplementation.extendsFrom testImplementation
+    integrationRuntime.extendsFrom testImplementation
 }
 
 dependencies {
@@ -116,7 +129,7 @@ pmd {
     consoleOutput = true
     toolVersion = "6.37.0"
     rulesMinimumPriority = 2
-    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+    ruleSetFiles = files("${projectDir}/gradle/pmd/pmd-rules.xml")
     reportsDir = layout.buildDirectory.dir('pmd').get().asFile
 }
 
@@ -173,3 +186,31 @@ spotbugsTest {
         }
     }
 }
+
+spotbugsIntegration {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/integration/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath += sourceSets.integration.runtimeClasspath
+
+    useJUnitPlatform()
+
+    reports {
+        html.enabled true
+        junitXml.enabled = true
+    }
+    shouldRunAfter test
+}
+
+check.dependsOn(integrationTest)

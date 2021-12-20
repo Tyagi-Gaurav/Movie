@@ -1,8 +1,8 @@
 package com.gt.scr.movie.service;
 
+import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.dao.MovieRepository;
-import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.util.MovieBuilder;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,7 @@
 package com.gt.scr.movie.exception;
 
 
+import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.movie.resource.domain.ErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

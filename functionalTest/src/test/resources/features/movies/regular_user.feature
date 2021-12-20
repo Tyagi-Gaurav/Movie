@@ -7,7 +7,6 @@ Feature: Logged in users should be able to access movie records
       | First Blood | 2000         | 7.8    |
     Then the response should be received with HTTP status code 401
 
-  @grpc
   Scenario: Authenticated user should be able to create a new movie
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
@@ -15,7 +14,6 @@ Feature: Logged in users should be able to access movie records
       | First Blood | 2000         | 7.8    |
     Then the response should be received with HTTP status code 204
 
-  @grpc
   Scenario: Authenticated user should NOT be able to create duplicate movies
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie

@@ -227,7 +227,7 @@ pmd {
     consoleOutput = true
     toolVersion = "6.37.0"
     rulesMinimumPriority = 2
-    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+    ruleSetFiles = files("${projectDir}/gradle/pmd/pmd-rules.xml")
     reportsDir = layout.buildDirectory.dir('pmd').get().asFile
 }
 

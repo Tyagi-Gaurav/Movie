@@ -35,11 +35,11 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
         String userId = getUserIdFromToken(jwtTokenUtil);
 
         if (userId != null) {
-            LOG.info("Fetch user from repository: {}", userId);
+            LOG.info("Fetch user details for: {}", userId);
 
             return userService.findUserBy(UUID.fromString(userId))
                     .filter(jwtTokenUtil::validateToken)
-                    .switchIfEmpty(Mono.defer(Mono::empty))
+                    .switchIfEmpty(Mono.error(() -> new IllegalCallerException(userId)))
                     .flatMap(ud -> {
                         // After setting the Authentication in the context, we specify
                         // that the current user is authenticated. So it passes the
@@ -49,7 +49,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 
                         LinkedHashMap<String, Object> authorities = (LinkedHashMap<String, Object>) authoritiesObjects.get(0);
                         String authority = authorities.get("authority").toString();
-                        var userprofile = new UserProfile(ud.id(), authority);
+                        var userprofile = new UserProfile(ud.id(), authority, token);
 
                         LOG.info("User {} authenticated with role: {}", userId, authority);
                         UsernamePasswordAuthenticationToken userTokenData =

@@ -122,6 +122,9 @@ public class UserSteps implements En {
         And("^the userName is captured$", () -> {
             scenarioContext.setLastUserName(scenarioContext.getUserCredentialsRequest().userName());
         });
+        When("^the authenticated admin user retrieves a list of all users$", () -> {
+            userManagementResource.getAllUsers();
+        });
 
 
     }

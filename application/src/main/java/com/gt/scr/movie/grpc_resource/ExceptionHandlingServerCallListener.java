@@ -1,6 +1,6 @@
 package com.gt.scr.movie.grpc_resource;
 
-import com.gt.scr.movie.exception.DuplicateRecordException;
+import com.gt.scr.exception.DuplicateRecordException;
 import io.grpc.ForwardingServerCallListener;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;

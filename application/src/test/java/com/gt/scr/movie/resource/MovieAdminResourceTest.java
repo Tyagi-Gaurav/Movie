@@ -46,7 +46,7 @@ class MovieAdminResourceTest {
         MovieCreateRequestDTO movieCreateRequestDTO =
                 new MovieCreateRequestDTO(randomAlphabetic(6), 2010, BigDecimal.valueOf(10));
 
-        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN");
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
         when(movieService.addMovie(eq(requestedUserId), eq(userProfile.id()), any(Movie.class))).thenReturn(Mono.empty());
 
@@ -63,7 +63,7 @@ class MovieAdminResourceTest {
     void shouldAllowAdminToReadMovies() {
         UUID requestedUserId = UUID.randomUUID();
         UUID usersOwnId = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN");
+        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN","token");
 
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
         Movie expectedReturnObject = new Movie(usersOwnId, randomAlphabetic(5),
@@ -96,7 +96,7 @@ class MovieAdminResourceTest {
     @Test
     void shouldAllowUserToUpdateMovies() {
         UUID usersOwnId = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN");
+        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN", "token");
         MovieUpdateRequestDTO movieUpdateRequestDTO = new MovieUpdateRequestDTO(UUID.randomUUID(), randomAlphabetic(5),
                 BigDecimal.ZERO, 2010);
         when(movieService.updateMovie(eq(usersOwnId), any(Movie.class))).thenReturn(Mono.empty());

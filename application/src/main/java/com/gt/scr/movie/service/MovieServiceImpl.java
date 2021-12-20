@@ -1,10 +1,10 @@
 package com.gt.scr.movie.service;
 
+import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.movie.audit.MovieCreateEvent;
 import com.gt.scr.movie.audit.MovieUpdateEvent;
 import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.dao.MovieRepository;
-import com.gt.scr.movie.exception.DuplicateRecordException;
 import com.gt.scr.movie.service.domain.Movie;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
