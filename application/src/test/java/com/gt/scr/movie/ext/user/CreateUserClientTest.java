@@ -6,14 +6,17 @@ import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.google.common.net.HttpHeaders;
+import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.movie.exception.UnexpectedSystemException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -27,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class CreateUserClientTest {
     @RegisterExtension
     static WireMockExtension wireMockExtension = WireMockExtension.newInstance()
@@ -70,7 +74,7 @@ class CreateUserClientTest {
                 .withHeader(HttpHeaders.CONTENT_TYPE, equalTo("application/vnd+account.create.v1+json"))
                 .withHeader(HttpHeaders.ACCEPT, equalTo("application/vnd+account.create.v1+json"))
                 .withRequestBody(equalTo(objectMapper.writeValueAsString(userCreateRequestDTO)))
-                .willReturn(errorResponse));
+                .willReturn(errorResponse.withStatus(statusCode)));
 
         Mono<Void> account = accountClient.createUser(userCreateRequestDTO);
 
@@ -80,6 +84,21 @@ class CreateUserClientTest {
                     WebClientResponseException webClientResponseException = (WebClientResponseException) throwable;
                     assertThat(webClientResponseException.getRawStatusCode()).isEqualTo(statusCode);
                 })
+                .verify();
+    }
+
+    @Test
+    void shouldReturnForbiddenExceptionWhenAccountCreationFailsForDuplicate() throws JsonProcessingException {
+        wireMockExtension.stubFor(post("/api/user/account/create")
+                .withHeader(HttpHeaders.CONTENT_TYPE, equalTo("application/vnd+account.create.v1+json"))
+                .withHeader(HttpHeaders.ACCEPT, equalTo("application/vnd+account.create.v1+json"))
+                .withRequestBody(equalTo(objectMapper.writeValueAsString(userCreateRequestDTO)))
+                .willReturn(forbidden()));
+
+        Mono<Void> account = accountClient.createUser(userCreateRequestDTO);
+
+        StepVerifier.create(account)
+                .expectError(DuplicateRecordException.class)
                 .verify();
     }
 

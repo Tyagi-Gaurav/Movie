@@ -31,3 +31,13 @@ Feature: User management by the admin user
     Then the response should be received with HTTP status code 200
     And the regular user attempts to login again
     Then the response should be received with HTTP status code 401
+
+  Scenario: Admin user should be able to view all other users
+    Given the global admin user logs into the system
+    And the authenticated admin user creates another user with user name '<random>' and role 'USER'
+    Then the response should be received with HTTP status code 204
+    And the authenticated admin user creates another user with user name '<random>' and role 'USER'
+    Then the response should be received with HTTP status code 204
+    And the global admin user logs into the system
+    When the authenticated admin user retrieves a list of all users
+    Then the response should be received with HTTP status code 200

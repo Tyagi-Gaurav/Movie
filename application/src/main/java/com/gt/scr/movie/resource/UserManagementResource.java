@@ -1,5 +1,7 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.movie.ext.user.CreateUserByAdminClient;
+import com.gt.scr.movie.ext.user.UserCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.UserDetailsResponse;
@@ -9,7 +11,6 @@ import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,30 +28,29 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/user/manage")
 public class UserManagementResource {
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final SecurityContextHolder securityContextHolder;
+    private final CreateUserByAdminClient createUserByAdminClient;
 
-    public UserManagementResource(PasswordEncoder passwordEncoder,
-                                  UserService userService,
-                                  SecurityContextHolder securityContextHolder) {
-        this.passwordEncoder = passwordEncoder;
+    public UserManagementResource(UserService userService,
+                                  SecurityContextHolder securityContextHolder,
+                                  CreateUserByAdminClient createUserByAdminClient) {
         this.userService = userService;
         this.securityContextHolder = securityContextHolder;
+        this.createUserByAdminClient = createUserByAdminClient;
     }
 
     @PostMapping(consumes = "application/vnd.user.add.v1+json",
             produces = "application/vnd.user.add.v1+json")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public Mono<Void> createUser(@RequestBody AccountCreateRequestDTO accountCreateRequestDTO) {
-        User user = new User(UUID.randomUUID(),
-                accountCreateRequestDTO.firstName(),
-                accountCreateRequestDTO.lastName(),
-                accountCreateRequestDTO.userName(),
-                passwordEncoder.encode(accountCreateRequestDTO.password()),
-                Collections.singletonList(new SimpleGrantedAuthority(accountCreateRequestDTO.role())));
-
-        return userService.add(user);
+        return securityContextHolder.getContext(UserProfile.class)
+                .flatMap(up ->
+                        createUserByAdminClient.createUser(up.token(), new UserCreateRequestDTO(
+                                accountCreateRequestDTO.userName(), accountCreateRequestDTO.password(),
+                                accountCreateRequestDTO.firstName(), accountCreateRequestDTO.lastName(),
+                                accountCreateRequestDTO.role()))
+                );
     }
 
     @GetMapping(consumes = "application/vnd.user.read.v1+json",
@@ -83,7 +83,7 @@ public class UserManagementResource {
                 accountUpdateRequestDTO.firstName(),
                 accountUpdateRequestDTO.lastName(),
                 accountUpdateRequestDTO.userName(),
-                passwordEncoder.encode(accountUpdateRequestDTO.password()),
+                accountUpdateRequestDTO.password(),
                 Collections.singletonList(new SimpleGrantedAuthority(accountUpdateRequestDTO.role())));
 
         userService.update(user);

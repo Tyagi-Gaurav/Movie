@@ -44,21 +44,21 @@ services:
     networks:
       - overlay
 
-  ui-app:
-    container_name: local.ui-app
-    depends_on:
-      - movie-app
-    build:
-      context: ui
-    ports:
-      - "8080:8080"
-    environment:
-      - "OAUTH_CLIENT_ID_GITHUB=${OAUTH_CLIENT_ID_GITHUB}"
-      - "OAUTH_CLIENT_SECRET_GITHUB=${OAUTH_CLIENT_SECRET_GITHUB}"
-      - "OAUTH_CLIENT_ID_GOOGLE=${OAUTH_CLIENT_ID_GOOGLE}"
-      - "OAUTH_CLIENT_SECRET_GOOGLE=${OAUTH_CLIENT_SECRET_GOOGLE}"
-    networks:
-      - overlay
+#  ui-app:
+#    container_name: local.ui-app
+#    depends_on:
+#      - movie-app
+#    build:
+#      context: ui
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - "OAUTH_CLIENT_ID_GITHUB=${OAUTH_CLIENT_ID_GITHUB}"
+#      - "OAUTH_CLIENT_SECRET_GITHUB=${OAUTH_CLIENT_SECRET_GITHUB}"
+#      - "OAUTH_CLIENT_ID_GOOGLE=${OAUTH_CLIENT_ID_GOOGLE}"
+#      - "OAUTH_CLIENT_SECRET_GOOGLE=${OAUTH_CLIENT_SECRET_GOOGLE}"
+#    networks:
+#      - overlay
 
   mysql:
     image: mysql:8.0.19

@@ -2,6 +2,8 @@ package com.gt.scr.movie.test.resource;
 
 import com.gt.scr.movie.test.config.MovieAppConfig;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
+import com.gt.scr.movie.test.domain.TestEmptyRequestDTO;
+import com.gt.scr.movie.test.domain.TestUserListResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,38 +34,18 @@ public class TestUserManagementResource extends AbstractResource {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
-        HttpEntity<TestAccountCreateRequestDTO> requestObject = new HttpEntity<>(headers);
+        HttpEntity<TestEmptyRequestDTO> requestObject = new HttpEntity<>(headers);
         responseHolder.setResponse(this.delete(fullUrl, requestObject, String.class));
     }
 
-//    public void readTimezones() {
-//        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-//                "/api/user/timezone", timeZoneAppConfig.port());
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.read.v1+json");
-//        headers.setBearerAuth(responseHolder.getToken());
-//        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(headers);
-//        responseHolder.setResponse(this.get(fullUrl, requestObject, String.class));
-//    }
-//
-//    public void deleteTimezone(UUID uuid) {
-//        String fullUrl = String.format("%s?id=%s", getFullUrl(timeZoneAppConfig.host().trim(),
-//                "/api/user/timezone", timeZoneAppConfig.port()), uuid.toString());
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.delete.v1+json");
-//        headers.setBearerAuth(responseHolder.getToken());
-//        HttpEntity<TestTimezoneCreateRequestDTO> requestObject = new HttpEntity<>(headers);
-//
-//        responseHolder.setResponse(this.delete(fullUrl, requestObject, String.class));
-//    }
-//
-//    public void updateTimezone(TestTimezoneUpdateRequestDTO updateRequestDTO) {
-//        String fullUrl = getFullUrl(timeZoneAppConfig.host().trim(),
-//                "/api/user/timezone", timeZoneAppConfig.port());
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.timezone.update.v1+json");
-//        headers.setBearerAuth(responseHolder.getToken());
-//        HttpEntity<TestTimezoneUpdateRequestDTO> requestObject = new HttpEntity<>(updateRequestDTO, headers);
-//        responseHolder.setResponse(this.put(fullUrl, requestObject, String.class));
-//    }
+    public void getAllUsers() {
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "/api/user/manage", movieAppConfig.port());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.read.v1+json");
+        headers.set(HttpHeaders.ACCEPT, "application/vnd.user.read.v1+json");
+        headers.setBearerAuth(responseHolder.getToken());
+        HttpEntity<TestEmptyRequestDTO> requestObject = new HttpEntity<>(headers);
+        responseHolder.setResponse(this.get(fullUrl, requestObject, TestUserListResponseDTO.class));
+    }
 }

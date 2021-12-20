@@ -50,6 +50,11 @@ public class UserBuilder {
         return this;
     }
 
+    public UserBuilder withUserPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
     public User build() {
         return new User(this.id,
                 this.firstName,

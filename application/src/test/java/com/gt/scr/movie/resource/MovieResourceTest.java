@@ -47,7 +47,7 @@ class MovieResourceTest {
                 2010, BigDecimal.ONE);
 
         UUID userId = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(userId, "USER");
+        UserProfile userProfile = new UserProfile(userId, "USER", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
         when(movieService.addMovie(eq(userId), eq(userId), any(Movie.class))).thenReturn(Mono.empty());
 
@@ -63,7 +63,7 @@ class MovieResourceTest {
     @Test
     void shouldAllowUserToReadMovies() {
         UUID id = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(id, "USER");
+        UserProfile userProfile = new UserProfile(id, "USER", "token");
 
         var expectedReturnObject = new Movie(id, randomAlphabetic(5),
                 2010, BigDecimal.ONE, System.nanoTime());
@@ -96,7 +96,7 @@ class MovieResourceTest {
     @Test
     void shouldAllowUserToUpdateMovies() {
         UUID id = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(id, "USER");
+        UserProfile userProfile = new UserProfile(id, "USER", "token");
         MovieUpdateRequestDTO movieUpdateRequestDTO = new MovieUpdateRequestDTO(UUID.randomUUID(),
                 randomAlphabetic(5), BigDecimal.ZERO, 2010);
         when(movieService.updateMovie(any(UUID.class), any(Movie.class))).thenReturn(Mono.empty());
@@ -112,7 +112,7 @@ class MovieResourceTest {
     @Test
     void shouldAllowMoviesCreatedByOtherUsersToBeReadByAdmin() { //This test does not verify the security part of requirement.
         UUID id = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(id, "ADMIN");
+        UserProfile userProfile = new UserProfile(id, "ADMIN", "token");
 
         var expectedReturnObject = new Movie(id, randomAlphabetic(5),
                 2010, BigDecimal.ONE, System.nanoTime());

@@ -19,7 +19,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
         String method = request.getMethod();
         String path = Optional.ofNullable(request.getRequestURI()).orElse("");
 
-        LOG.info("Received request for {} - {}", method, path);
+        LOG.info("Received request for {} - {} with content Type: {}", method, path, request.getContentType());
 
         return true;
     }
