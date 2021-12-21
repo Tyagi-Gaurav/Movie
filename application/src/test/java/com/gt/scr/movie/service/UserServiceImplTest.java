@@ -1,7 +1,6 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.exception.DuplicateRecordException;
-import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.ext.user.CreateUserClient;
 import com.gt.scr.movie.ext.user.DeleteUsersClient;
 import com.gt.scr.movie.ext.user.FetchUsersByIdClient;
@@ -14,7 +13,6 @@ import com.gt.scr.movie.resource.SecurityContextHolder;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.domain.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -35,9 +33,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     private UserService userService;
-
-    @Mock
-    private UserRepository repository;
 
     @Mock
     private CreateUserClient createUserClient;
@@ -64,8 +59,7 @@ class UserServiceImplTest {
                 fetchUsersByNameClient,
                 fetchUsersByIdClient,
                 deleteUsersClient,
-                securityContextHolder,
-                repository);
+                securityContextHolder);
     }
 
     @Test
@@ -78,7 +72,6 @@ class UserServiceImplTest {
 
         //then
         StepVerifier.create(add).verifyComplete();
-        verifyNoInteractions(repository);
         verify(createUserClient).createUser(new UserCreateRequestDTO(
                 user.username(), user.password(),
                 user.firstName(), user.lastName(),
@@ -99,7 +92,6 @@ class UserServiceImplTest {
 
         //then
         StepVerifier.create(deleteMono).verifyComplete();
-        verifyNoInteractions(repository);
     }
 
     @Test
@@ -122,7 +114,6 @@ class UserServiceImplTest {
         StepVerifier.create(byUsername)
                 .expectNext(user)
                 .expectComplete();
-        verifyNoInteractions(repository);
         verify(fetchUsersByNameClient).fetchUserBy(userName);
     }
 
@@ -168,7 +159,6 @@ class UserServiceImplTest {
         StepVerifier.create(byUsername)
                 .expectError(UsernameNotFoundException.class)
                 .verify();
-        verifyNoInteractions(repository);
         verify(fetchUsersByNameClient).fetchUserBy(userName);
     }
 
@@ -189,7 +179,6 @@ class UserServiceImplTest {
         userService.findUserBy(userId);
 
         //then
-        verifyNoInteractions(repository);
         verify(fetchUsersByIdClient).fetchUserBy(userId);
     }
 
@@ -202,15 +191,13 @@ class UserServiceImplTest {
 
         //then
         StepVerifier.create(update).verifyComplete();
-        verify(repository).update(user);
     }
 
-    @Disabled
+    @Test
     void shouldThrowExceptionWhenTryingToAddDuplicateUser() {
         //given
         User userA = aUser().build();
         User userB = aUser().withUserName(userA.getUsername()).build();
-        when(repository.findUserBy(userA.getUsername())).thenReturn(Mono.empty()).thenReturn(Mono.just(userA));
         userService.add(userA);
 
         //when
@@ -219,6 +206,6 @@ class UserServiceImplTest {
         //then
         StepVerifier.create(add)
                 .expectError(DuplicateRecordException.class);
-        verify(repository, times(2)).findUserBy(userA.getUsername());
+        verify(createUserClient, times(2)).createUser(any(UserCreateRequestDTO.class));
     }
 }

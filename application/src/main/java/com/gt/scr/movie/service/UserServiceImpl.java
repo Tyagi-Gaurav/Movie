@@ -1,6 +1,5 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.movie.dao.UserRepository;
 import com.gt.scr.movie.ext.user.CreateUserClient;
 import com.gt.scr.movie.ext.user.DeleteUsersClient;
 import com.gt.scr.movie.ext.user.FetchUsersByIdClient;
@@ -12,7 +11,6 @@ import com.gt.scr.movie.ext.user.UserListResponseDTO;
 import com.gt.scr.movie.resource.SecurityContextHolder;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.domain.User;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,22 +30,19 @@ public class UserServiceImpl implements UserService {
     private final FetchUsersByIdClient fetchUsersByIdClient;
     private final DeleteUsersClient deleteUsersClient;
     private final SecurityContextHolder securityContextHolder;
-    private final UserRepository userRepository;
 
     public UserServiceImpl(CreateUserClient createUserClient,
                            ListUsersClient listUsersClient,
                            FetchUsersByNameClient fetchUsersByNameClient,
                            FetchUsersByIdClient fetchUsersByIdClient,
                            DeleteUsersClient deleteUsersClient,
-                           SecurityContextHolder securityContextHolder,
-                           @Qualifier(value = "mysql") UserRepository userRepository) {
+                           SecurityContextHolder securityContextHolder) {
         this.createUserClient = createUserClient;
         this.listUsersClient = listUsersClient;
         this.fetchUsersByNameClient = fetchUsersByNameClient;
         this.fetchUsersByIdClient = fetchUsersByIdClient;
         this.deleteUsersClient = deleteUsersClient;
         this.securityContextHolder = securityContextHolder;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -94,7 +89,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<Void> update(User user) {
-        return Mono.fromRunnable(() -> userRepository.update(user));
+//        return Mono.fromRunnable(() -> userRepository.update(user));
+        return Mono.empty();
     }
 
     @Override
