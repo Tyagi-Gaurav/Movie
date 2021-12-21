@@ -5,7 +5,6 @@ import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.User;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,7 +31,6 @@ import static com.gt.scr.movie.util.UserBuilder.aUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
-@Disabled
 @SpringBootTest(classes = MovieMySQLRepository.class)
 @ExtendWith(MockitoExtension.class)
 @Import(MovieMySQLRepositoryTest.TestMovieRepoContextConfiguration.class)
@@ -52,7 +50,6 @@ class MovieMySQLRepositoryTest {
             "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 
     private static final String DELETE_ALL_MOVIES = "DELETE FROM MOVIE_SCHEMA.MOVIE";
-    private static final String DELETE_ALL_USERS = "DELETE FROM MOVIE_SCHEMA.USER";
 
     private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM "
             + "MOVIE_SCHEMA.MOVIE WHERE ID = ?";
@@ -60,7 +57,6 @@ class MovieMySQLRepositoryTest {
     @BeforeEach
     void setUp() throws SQLException {
         executeQueryUpdate(dataSource, DELETE_ALL_MOVIES);
-        executeQueryUpdate(dataSource, DELETE_ALL_USERS);
     }
 
     @Test
@@ -68,7 +64,6 @@ class MovieMySQLRepositoryTest {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -85,7 +80,6 @@ class MovieMySQLRepositoryTest {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
 
         //when
         Mono<Movie> movie = movieRepository.findMovieBy(expectedMovie.id());
@@ -99,7 +93,6 @@ class MovieMySQLRepositoryTest {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -116,7 +109,6 @@ class MovieMySQLRepositoryTest {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -132,7 +124,6 @@ class MovieMySQLRepositoryTest {
         Movie expectedMovie = aMovie().withRating(BigDecimal.valueOf(7.8)).build();
 
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -149,7 +140,6 @@ class MovieMySQLRepositoryTest {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovie, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -164,7 +154,6 @@ class MovieMySQLRepositoryTest {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
         UUID userId = user.id();
         addToDatabase(expectedMovie, dataSource, userId, ADD_MOVIE);
 
@@ -178,11 +167,10 @@ class MovieMySQLRepositoryTest {
     }
 
     @Test
-    void shouldReturnEmptyMovieWhenNoMovieFoundByName() throws SQLException {
+    void shouldReturnEmptyMovieWhenNoMovieFoundByName() {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
 
         //when
         Mono<Movie> movie = movieRepository.findMovieBy(user.id(), expectedMovie.name());
@@ -198,7 +186,6 @@ class MovieMySQLRepositoryTest {
         User user = aUser().build();
         Movie expectedMovieA = aMovie().build();
         Movie expectedMovieB = aMovie().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
         addToDatabase(expectedMovieB, dataSource, user.id(), ADD_MOVIE);
 
@@ -216,7 +203,6 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenGetAllMoviesFails() throws SQLException {
         //given
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
         Movie expectedMovieA = aMovie().build();
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
         Movie expectedMovieB = aMovie().build();
@@ -235,7 +221,6 @@ class MovieMySQLRepositoryTest {
     void shouldReturnEmptyListWhenNoMoviesFoundForUser() throws SQLException {
         //given
         User user = aUser().build();
-        addToDatabase(user, dataSource, ADD_USER);
 
         //when
         Flux<Movie> allMovies = movieRepository.getAllMoviesForUser(user.id());
@@ -249,7 +234,6 @@ class MovieMySQLRepositoryTest {
         //given
         User user = aUser().build();
         Movie expectedMovieA = aMovie().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -265,7 +249,6 @@ class MovieMySQLRepositoryTest {
         User user = aUser().build();
         Movie expectedMovieA = aMovie().build();
         UUID movieId = expectedMovieA.id();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -281,7 +264,6 @@ class MovieMySQLRepositoryTest {
         //given
         User user = aUser().build();
         Movie expectedMovieA = aMovie().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -300,7 +282,6 @@ class MovieMySQLRepositoryTest {
         //given
         User user = aUser().build();
         Movie expectedMovieA = aMovie().build();
-        addToDatabase(user, dataSource, ADD_USER);
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
@@ -316,7 +297,6 @@ class MovieMySQLRepositoryTest {
     void shouldCreateMovie() throws SQLException {
         //given
         User currentUser = aUser().build();
-        addToDatabase(currentUser, dataSource, ADD_USER);
         Movie expectedMovie = aMovie().build();
 
         //when
@@ -331,7 +311,6 @@ class MovieMySQLRepositoryTest {
     void shouldHandleExceptionWhenCreateUserFails() throws SQLException {
         //given
         User currentUser = aUser().build();
-        addToDatabase(currentUser, dataSource, ADD_USER);
         Movie expectedMovie = aMovie().build();
 
         //when

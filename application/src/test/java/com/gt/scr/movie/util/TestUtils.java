@@ -30,30 +30,6 @@ public class TestUtils {
         }
     }
 
-    public static void addToDatabase(User expectedUser,
-                                     DataSource dataSource,
-                                     String query) throws SQLException {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Adding user with Id {}", expectedUser.id());
-        }
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);) {
-            preparedStatement.setString(1, expectedUser.id().toString());
-            preparedStatement.setString(2, expectedUser.getUsername());
-            preparedStatement.setString(3, expectedUser.firstName());
-            preparedStatement.setString(4, expectedUser.lastName());
-            preparedStatement.setString(5, expectedUser.getPassword());
-            preparedStatement.setString(6,
-                    Strings.join(expectedUser.getAuthorities()).with(","));
-            assertThat(preparedStatement.executeUpdate()).isPositive();
-        } catch(Exception e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Exception adding user to database {} with error {}", expectedUser.id(), e.getMessage());
-            }
-            throw e;
-        }
-    }
-
     public static void addToDatabase(Movie movie, DataSource dataSource,
                                UUID userId, String query) throws SQLException {
         if (LOG.isInfoEnabled()) {
