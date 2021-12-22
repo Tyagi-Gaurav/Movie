@@ -49,7 +49,6 @@ public class UserWebSecurityConfig {
                 .pathMatchers("/actuator/**").permitAll()
                 .pathMatchers( "/user").permitAll()
                 .pathMatchers(HttpMethod.POST, "/user/account/create").permitAll()
-                .pathMatchers( "/user/{userid}/movie").hasAuthority("ADMIN")
                 .pathMatchers("/user/manage").hasAuthority("ADMIN")
                 .anyExchange().authenticated().and()
                 .exceptionHandling()

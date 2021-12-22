@@ -1,8 +1,8 @@
 package com.gt.scr.movie.dao;
 
-import com.gt.scr.spc.domain.User;
 import com.gt.scr.exception.DatabaseException;
 import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.spc.domain.User;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +28,7 @@ import static com.gt.scr.movie.util.MovieBuilder.aMovie;
 import static com.gt.scr.movie.util.MovieBuilder.copyOf;
 import static com.gt.scr.movie.util.TestUtils.*;
 import static com.gt.scr.movie.util.UserBuilder.aUser;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(classes = MovieMySQLRepository.class)
 @ExtendWith(MockitoExtension.class)
@@ -76,7 +75,7 @@ class MovieMySQLRepositoryTest {
     }
 
     @Test
-    void shouldReturnEmptyMovieWhenNoMovieFoundById() throws SQLException {
+    void shouldReturnEmptyMovieWhenNoMovieFoundById() {
         //given
         Movie expectedMovie = aMovie().build();
         User user = aUser().build();
@@ -204,21 +203,18 @@ class MovieMySQLRepositoryTest {
         //given
         User user = aUser().build();
         Movie expectedMovieA = aMovie().build();
-        addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
+        UUID userId = user.id();
+        addToDatabase(expectedMovieA, dataSource, userId, ADD_MOVIE);
         Movie expectedMovieB = aMovie().build();
-        addToDatabase(expectedMovieB, dataSource, user.id(), ADD_MOVIE);
+        addToDatabase(expectedMovieB, dataSource, userId, ADD_MOVIE);
 
-        //when
-        DatabaseException databaseException =
-                catchThrowableOfType(() -> buggyMovieRepository.getAllMoviesForUser(user.id()),
-                        DatabaseException.class);
-
-        //then
-        assertThat(databaseException).isNotNull();
+        //when & then
+        assertThatThrownBy(() -> buggyMovieRepository.getAllMoviesForUser(userId))
+                .isInstanceOf(DatabaseException.class);
     }
 
     @Test
-    void shouldReturnEmptyListWhenNoMoviesFoundForUser() throws SQLException {
+    void shouldReturnEmptyListWhenNoMoviesFoundForUser() {
         //given
         User user = aUser().build();
 
@@ -308,7 +304,7 @@ class MovieMySQLRepositoryTest {
     }
 
     @Test
-    void shouldHandleExceptionWhenCreateUserFails() throws SQLException {
+    void shouldHandleExceptionWhenCreateUserFails() {
         //given
         User currentUser = aUser().build();
         Movie expectedMovie = aMovie().build();

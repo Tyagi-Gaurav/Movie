@@ -20,7 +20,7 @@ sonarqube {
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.dynamicAnalysis", "reuseReports"
         property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
-        property "sonar.coverage.exclusions", "**/com/gt/scr/movie/grpc_resource/**, **/com/gt/scr/movie/config/**, **/com/gt/scr/movie/security/WebSecurityConfig**, **/com/gt/scr/movie/resource/SecurityContextHolder**, **/com/gt/scr/movie/filter/LoggingFilter**"
+        property "sonar.coverage.exclusions", "**/com/gt/scr/movie/grpc_resource/**, **/com/gt/scr/*/config/**, **/com/gt/scr/*/security/WebSecurityConfig**, **/com/gt/scr/*/resource/SecurityContextHolder**, **/com/gt/scr/*/filter/LoggingFilter**"
     }
 }
 
