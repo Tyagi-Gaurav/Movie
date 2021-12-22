@@ -1,0 +1,117 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '4.7.10'
+    id 'pmd'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springBootVersion = '2.6.1'
+    commonsLang3Version = '3.12.0'
+    commonsTextVersion = '1.9'
+    slf4jVersion = '2.0.0-alpha5'
+    jacksonVersion = '2.13.0'
+    metricsInterceptor = '1.8.0'
+    junitVersion = '5.8.1'
+    assertJVersion = '3.21.0'
+    mockitoVersion = '4.0.0'
+    reactorVersion = '3.4.12'
+    jsonWebTokenVersion = '0.11.2'
+    springSecurityCoreVersion = '5.6.0'
+}
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
+
+jacoco {
+    toolVersion = "0.8.6"
+}
+
+dependencies {
+    implementation project(":common")
+    implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+    implementation "org.apache.commons:commons-text:${commonsTextVersion}"
+    implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+
+    implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+    implementation "org.springframework.security:spring-security-core:${springSecurityCoreVersion}"
+
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
+
+    implementation "io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}"
+    implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
+    implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
+
+    implementation "io.micrometer:micrometer-core:${metricsInterceptor}"
+
+    testImplementation "io.projectreactor:reactor-test:$reactorVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation "org.assertj:assertj-core:${assertJVersion}"
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
+}
+
+pmd {
+    consoleOutput = true
+    toolVersion = "6.37.0"
+    rulesMinimumPriority = 2
+    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+    reportsDir = layout.buildDirectory.dir('pmd').get().asFile
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+        html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/gt/scr/movie/grpc_resource/**/*.class",
+                    "com/gt/scr/movie/Application.class",
+                    "com/gt/scr/movie/Grace**.class",
+                    "com/gt/scr/movie/config/**/*.class",
+                    "com/gt/scr/movie/security/WebSecurityConfig.class"
+            ])
+        }))
+    }
+
+    executionData.from = files('build/jacoco/test.exec')
+}
+
+spotbugs {
+    toolVersion = '4.2.3'
+    ignoreFailures = false
+    excludeFilter = file("gradle/spotbugs/exclusions.xml")
+}
+
+spotbugsMain {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}

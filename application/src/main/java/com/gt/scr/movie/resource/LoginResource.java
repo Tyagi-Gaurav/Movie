@@ -1,8 +1,8 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.exception.ApplicationAuthenticationException;
+import com.gt.scr.spc.domain.User;
 import com.gt.scr.movie.config.AuthConfig;
-import com.gt.scr.movie.exception.ApplicationAuthenticationException;
 import com.gt.scr.movie.filter.JwtTokenUtil;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;

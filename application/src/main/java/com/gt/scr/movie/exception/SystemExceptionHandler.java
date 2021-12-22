@@ -1,6 +1,7 @@
 package com.gt.scr.movie.exception;
 
-import com.gt.scr.movie.resource.domain.ErrorResponse;
+import com.gt.scr.domain.ErrorResponse;
+import com.gt.scr.exception.ErrorResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

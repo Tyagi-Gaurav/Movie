@@ -1,7 +1,7 @@
 package com.gt.scr.user.resource;
 
-import com.gt.scr.domain.User;
-import com.gt.scr.user.exception.UnauthorizedException;
+import com.gt.scr.spc.domain.User;
+import com.gt.scr.exception.UnauthorizedException;
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,12 +1,12 @@
 package com.gt.scr.user.resource;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
+import com.gt.scr.spc.util.JwtTokenUtil;
 import com.gt.scr.user.config.AuthConfig;
-import com.gt.scr.user.exception.ApplicationAuthenticationException;
+import com.gt.scr.exception.ApplicationAuthenticationException;
 import com.gt.scr.user.resource.domain.LoginRequestDTO;
 import com.gt.scr.user.resource.domain.LoginResponseDTO;
 import com.gt.scr.user.service.UserService;
-import com.gt.scr.util.JwtTokenUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;

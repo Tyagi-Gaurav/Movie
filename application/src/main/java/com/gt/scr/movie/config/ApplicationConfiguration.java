@@ -1,11 +1,14 @@
 package com.gt.scr.movie.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gt.scr.exception.ErrorResponseHelper;
+import com.gt.scr.metrics.ExceptionCounter;
 import com.gt.scr.movie.filter.LoggingFilter;
 import com.gt.scr.movie.filter.MetricsInterceptor;
 import com.gt.scr.movie.filter.RequestIdFilter;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,16 @@ public class ApplicationConfiguration {
         return WebClient.builder()
                 .baseUrl(String.format("http://%s:%d", userConfig.host(), userConfig.port()))
                 .build();
+    }
+
+    @Bean
+    public ErrorResponseHelper errorResponseHelper(ExceptionCounter exceptionCounter) {
+        return new ErrorResponseHelper(exceptionCounter);
+    }
+
+    @Bean
+    public ExceptionCounter exceptionCounter(MeterRegistry meterRegistry) {
+        return new ExceptionCounter(meterRegistry);
     }
 
     @Bean

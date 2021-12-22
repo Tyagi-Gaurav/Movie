@@ -1,6 +1,6 @@
 package com.gt.scr.movie.resource;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import com.gt.scr.movie.ext.user.CreateUserByAdminClient;
 import com.gt.scr.movie.ext.user.UserCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;

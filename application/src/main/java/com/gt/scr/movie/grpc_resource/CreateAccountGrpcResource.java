@@ -1,6 +1,6 @@
 package com.gt.scr.movie.grpc_resource;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import com.gt.scr.movie.grpc.AccountCreateGrpcRequestDTO;
 import com.gt.scr.movie.grpc.CreateAccountServiceGrpc;
 import com.gt.scr.movie.grpc.Empty;

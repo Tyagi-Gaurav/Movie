@@ -1,8 +1,8 @@
 package com.gt.scr.user.config;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
+import com.gt.scr.spc.util.JwtTokenUtil;
 import com.gt.scr.user.service.UserService;
-import com.gt.scr.util.JwtTokenUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

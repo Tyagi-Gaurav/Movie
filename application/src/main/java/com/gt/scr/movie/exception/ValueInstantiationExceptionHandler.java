@@ -1,7 +1,8 @@
 package com.gt.scr.movie.exception;
 
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
-import com.gt.scr.movie.resource.domain.ErrorResponse;
+import com.gt.scr.domain.ErrorResponse;
+import com.gt.scr.exception.ErrorResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;

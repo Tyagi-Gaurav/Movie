@@ -1,6 +1,6 @@
 package com.gt.scr.user.dao;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +15,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository("mysql")
 public class UserMySQLRepository implements UserRepository {
@@ -128,23 +128,27 @@ public class UserMySQLRepository implements UserRepository {
     public Mono<Void> update(User user) {
         return Mono.fromRunnable(() -> {
             try {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS)) {
-
-                    preparedStatement.setString(1, user.firstName());
-                    preparedStatement.setString(2, user.lastName());
-                    preparedStatement.setString(3, user.getPassword());
-                    preparedStatement.setString(4, user.getRole());
-                    preparedStatement.setString(5, user.id().toString());
-
-                    preparedStatement.execute();
-                } catch (SQLException throwables) {
-                    throw new DatabaseException(throwables);
-                }
+                performUpdate(user);
             } catch (Exception e) {
                 throw new DatabaseException(e);
             }
         }).then();
+    }
+
+    private void performUpdate(User user) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS)) {
+
+            preparedStatement.setString(1, user.firstName());
+            preparedStatement.setString(2, user.lastName());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getRole());
+            preparedStatement.setString(5, user.id().toString());
+
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throw new DatabaseException(throwables);
+        }
     }
 
     @Override
@@ -172,7 +176,7 @@ public class UserMySQLRepository implements UserRepository {
                 resultSet.getString(LAST_NAME),
                 resultSet.getString(USER_NAME),
                 resultSet.getString(PASSWORD),
-                Arrays.stream(resultSet.getString(ROLES).split(","))
+                Stream.of(resultSet.getString(ROLES).split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
 }

@@ -1,6 +1,6 @@
 package com.gt.scr.movie.service;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.movie.ext.user.CreateUserClient;
 import com.gt.scr.movie.ext.user.DeleteUsersClient;

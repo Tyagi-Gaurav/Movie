@@ -1,6 +1,6 @@
 package com.gt.scr.movie.util;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
