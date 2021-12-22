@@ -2,8 +2,8 @@ package com.gt.scr.movie.resource.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gt.scr.movie.validator.MaxLength;
-import com.gt.scr.movie.validator.MinLength;
+import com.gt.scr.validator.MaxLength;
+import com.gt.scr.validator.MinLength;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
