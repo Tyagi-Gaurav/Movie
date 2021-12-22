@@ -1,6 +1,6 @@
 package com.gt.scr.movie.filter;
 
-import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,6 +1,6 @@
 package com.gt.scr.movie.dao;
 
-import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.domain.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

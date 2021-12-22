@@ -1,7 +1,7 @@
 package com.gt.scr.movie.service;
 
 
-import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.domain.User;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

@@ -1,10 +1,10 @@
 package com.gt.scr.user.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.user.exception.UnauthorizedException;
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.user.service.UserService;
 import com.gt.scr.user.service.domain.Role;
-import com.gt.scr.user.service.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -1,9 +1,9 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.exception.UnauthorizedException;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

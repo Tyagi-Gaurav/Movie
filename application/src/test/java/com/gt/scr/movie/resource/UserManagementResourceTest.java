@@ -1,5 +1,6 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.ext.user.CreateUserByAdminClient;
 import com.gt.scr.movie.ext.user.UserCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
@@ -8,7 +9,6 @@ import com.gt.scr.movie.resource.domain.UserDetailsResponse;
 import com.gt.scr.movie.resource.domain.UserListResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.User;
 import com.gt.scr.movie.util.UserBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.gt.scr.user.service.domain;
+package com.gt.scr.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

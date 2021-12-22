@@ -1,12 +1,12 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.config.AuthConfig;
 import com.gt.scr.movie.exception.ApplicationAuthenticationException;
 import com.gt.scr.movie.filter.JwtTokenUtil;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;

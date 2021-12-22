@@ -1,8 +1,8 @@
 package com.gt.scr.user.service;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.user.dao.UserRepository;
-import com.gt.scr.user.service.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

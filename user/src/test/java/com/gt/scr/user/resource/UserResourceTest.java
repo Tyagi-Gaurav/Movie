@@ -1,8 +1,8 @@
 package com.gt.scr.user.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.gt.scr.user.service.UserService;
-import com.gt.scr.user.service.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserResourceTest {
+class UserResourceTest {
     private UserResource userResource;
 
     @Mock

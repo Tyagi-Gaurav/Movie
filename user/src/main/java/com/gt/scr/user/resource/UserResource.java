@@ -1,8 +1,8 @@
 package com.gt.scr.user.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.gt.scr.user.service.UserService;
-import com.gt.scr.user.service.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -32,7 +32,7 @@ public class UserResource {
     @ResponseStatus(code = HttpStatus.OK)
     public Mono<UserDetailsResponseDTO> getByName(@RequestParam String userName) {
         return userService.findByUsername(userName)
-                .map(userDetails -> (User) userDetails)
+                .map(User.class::cast)
                 .map(user -> new UserDetailsResponseDTO(user.username(),
                         user.password(), user.firstName(), user.lastName(),
                         user.getRole(), user.id()))

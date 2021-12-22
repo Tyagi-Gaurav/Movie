@@ -1,10 +1,10 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.exception.UnauthorizedException;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.movie.service.domain.Role;
-import com.gt.scr.movie.service.domain.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.PostMapping;

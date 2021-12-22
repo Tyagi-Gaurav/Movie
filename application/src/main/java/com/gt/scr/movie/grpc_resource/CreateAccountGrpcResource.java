@@ -1,10 +1,10 @@
 package com.gt.scr.movie.grpc_resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.grpc.AccountCreateGrpcRequestDTO;
 import com.gt.scr.movie.grpc.CreateAccountServiceGrpc;
 import com.gt.scr.movie.grpc.Empty;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.User;
 import io.grpc.stub.StreamObserver;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;

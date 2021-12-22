@@ -1,8 +1,8 @@
 package com.gt.scr.user.service;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.user.dao.UserRepository;
-import com.gt.scr.user.service.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

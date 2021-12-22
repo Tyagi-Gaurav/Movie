@@ -1,8 +1,8 @@
 package com.gt.scr.movie.grpc_resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.filter.JwtTokenUtil;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.User;
 import io.grpc.Context;
 import io.grpc.Contexts;
 import io.grpc.Metadata;

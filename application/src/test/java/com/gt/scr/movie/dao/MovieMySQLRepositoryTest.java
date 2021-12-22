@@ -1,8 +1,8 @@
 package com.gt.scr.movie.dao;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.exception.DatabaseException;
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.service.domain.User;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
