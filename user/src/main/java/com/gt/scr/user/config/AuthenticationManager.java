@@ -1,8 +1,8 @@
 package com.gt.scr.user.config;
 
+import com.gt.scr.spc.util.JwtTokenUtil;
 import com.gt.scr.user.resource.domain.UserProfile;
 import com.gt.scr.user.service.UserService;
-import com.gt.scr.util.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

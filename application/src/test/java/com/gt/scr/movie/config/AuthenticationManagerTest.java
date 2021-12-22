@@ -1,6 +1,6 @@
 package com.gt.scr.movie.config;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import com.gt.scr.movie.filter.JwtTokenUtil;
 import com.gt.scr.movie.service.UserService;
 import io.jsonwebtoken.SignatureAlgorithm;

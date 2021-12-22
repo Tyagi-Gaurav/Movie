@@ -2,7 +2,7 @@ package com.gt.scr.user.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import org.assertj.core.util.Strings;
 
 import javax.sql.DataSource;

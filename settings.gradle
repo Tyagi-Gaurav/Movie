@@ -6,4 +6,5 @@ include 'ui'
 include 'content'
 include 'user'
 include 'common'
+include 'spring-common'
 

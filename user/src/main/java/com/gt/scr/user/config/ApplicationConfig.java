@@ -29,7 +29,7 @@ import java.security.Key;
 
 @Configuration
 @EnableWebFlux
-@ConfigurationPropertiesScan("com.gt.scr.user.config")
+@ConfigurationPropertiesScan(value = "com.gt.scr.user.config")
 public class ApplicationConfig {
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfig.class);
 

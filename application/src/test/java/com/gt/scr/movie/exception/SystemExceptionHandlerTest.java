@@ -1,6 +1,7 @@
 package com.gt.scr.movie.exception;
 
-import com.gt.scr.movie.resource.domain.ErrorResponse;
+import com.gt.scr.domain.ErrorResponse;
+import com.gt.scr.exception.ErrorResponseHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

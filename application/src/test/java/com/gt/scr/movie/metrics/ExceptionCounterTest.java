@@ -1,5 +1,6 @@
 package com.gt.scr.movie.metrics;
 
+import com.gt.scr.metrics.ExceptionCounter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;

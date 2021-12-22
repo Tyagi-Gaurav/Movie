@@ -1,6 +1,6 @@
 package com.gt.scr.user.resource;
 
-import com.gt.scr.domain.User;
+import com.gt.scr.spc.domain.User;
 import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.gt.scr.user.service.UserService;
 import org.slf4j.Logger;

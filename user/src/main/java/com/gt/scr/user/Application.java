@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.reactive.config.EnableWebFlux;
 
 @SpringBootApplication
-@ComponentScan({"com.gt.scr.user"})
+@ComponentScan({"com.gt.scr.user", "com.gt.scr.spc"})
 @EnableWebFlux
 public class Application {
     public static void main(String[] args) {

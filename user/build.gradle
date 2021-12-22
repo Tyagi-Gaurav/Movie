@@ -76,6 +76,7 @@ dependencies {
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation project(":grpcService")
     implementation project(":common")
+    implementation project(":spring-common")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
         exclude group: "ch.qos.logback"
     }
@@ -149,7 +150,6 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    "com/gt/scr/user/grpc_resource/**/*.class",
                     "com/gt/scr/user/Application.class",
                     "com/gt/scr/user/Grace**.class",
                     "com/gt/scr/user/config/**/*.class",
