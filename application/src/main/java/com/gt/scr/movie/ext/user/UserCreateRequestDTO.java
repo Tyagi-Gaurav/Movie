@@ -3,10 +3,10 @@ package com.gt.scr.movie.ext.user;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gt.scr.movie.service.domain.Role;
-import com.gt.scr.movie.validator.AlphaNumeric;
-import com.gt.scr.movie.validator.MaxLength;
-import com.gt.scr.movie.validator.MinLength;
-import com.gt.scr.movie.validator.ValidEnum;
+import com.gt.scr.validator.AlphaNumeric;
+import com.gt.scr.validator.MaxLength;
+import com.gt.scr.validator.MinLength;
+import com.gt.scr.validator.ValidEnum;
 
 import javax.validation.Valid;
 
