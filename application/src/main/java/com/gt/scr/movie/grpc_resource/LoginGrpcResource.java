@@ -1,5 +1,6 @@
 package com.gt.scr.movie.grpc_resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.config.AuthConfig;
 import com.gt.scr.movie.exception.ApplicationAuthenticationException;
 import com.gt.scr.movie.filter.JwtTokenUtil;
@@ -7,7 +8,6 @@ import com.gt.scr.movie.grpc.LoginGrpcRequestDTO;
 import com.gt.scr.movie.grpc.LoginGrpcResponseDTO;
 import com.gt.scr.movie.grpc.LoginServiceGrpc;
 import com.gt.scr.movie.service.UserService;
-import com.gt.scr.movie.service.domain.User;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.io.JsonEOFException;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.google.common.net.HttpHeaders;
-import com.gt.scr.movie.service.domain.User;
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.util.UserBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.gt.scr.user.util;
 
-import com.gt.scr.user.service.domain.User;
+import com.gt.scr.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

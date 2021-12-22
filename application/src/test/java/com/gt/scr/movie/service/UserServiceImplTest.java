@@ -1,5 +1,6 @@
 package com.gt.scr.movie.service;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.movie.ext.user.CreateUserClient;
 import com.gt.scr.movie.ext.user.DeleteUsersClient;
@@ -11,7 +12,6 @@ import com.gt.scr.movie.ext.user.UserDetailsResponseDTO;
 import com.gt.scr.movie.ext.user.UserListResponseDTO;
 import com.gt.scr.movie.resource.SecurityContextHolder;
 import com.gt.scr.movie.resource.domain.UserProfile;
-import com.gt.scr.movie.service.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,14 +2,13 @@ package com.gt.scr.user.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gt.scr.user.service.domain.User;
+import com.gt.scr.domain.User;
 import org.assertj.core.util.Strings;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.UUID;
 
 public class TestUtils {
     final static ObjectMapper mapper = new ObjectMapper();

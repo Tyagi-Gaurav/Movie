@@ -1,6 +1,6 @@
 package com.gt.scr.user.dao;
 
-import com.gt.scr.user.service.domain.User;
+import com.gt.scr.domain.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

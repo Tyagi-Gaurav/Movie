@@ -1,7 +1,7 @@
 package com.gt.scr.user.dao;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.exception.DatabaseException;
-import com.gt.scr.user.service.domain.User;
 import com.gt.scr.user.util.UserBuilder;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,8 +2,6 @@ package com.gt.scr.movie.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.movie.service.domain.Movie;
-import com.gt.scr.movie.service.domain.User;
-import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

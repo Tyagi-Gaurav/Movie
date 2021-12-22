@@ -1,6 +1,6 @@
 package com.gt.scr.user.dao;
 
-import com.gt.scr.user.service.domain.User;
+import com.gt.scr.domain.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

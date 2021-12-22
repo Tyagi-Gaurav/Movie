@@ -1,12 +1,12 @@
 package com.gt.scr.user.resource;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.user.resource.domain.AccountUpdateRequestDTO;
 import com.gt.scr.user.resource.domain.UserDetailsResponse;
 import com.gt.scr.user.resource.domain.UserListResponseDTO;
 import com.gt.scr.user.resource.domain.UserProfile;
 import com.gt.scr.user.service.UserService;
-import com.gt.scr.user.service.domain.User;
 import com.gt.scr.user.util.UserBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
