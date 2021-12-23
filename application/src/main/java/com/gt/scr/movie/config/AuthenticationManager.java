@@ -22,8 +22,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
     private final UserService userService;
     private final Key signingKey;
 
-    public AuthenticationManager(UserService userService,
-                                 Key signingKey) {
+    public AuthenticationManager(UserService userService, Key signingKey) {
         this.userService = userService;
         this.signingKey = signingKey;
     }
@@ -33,6 +32,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
         String token = authentication.getPrincipal().toString();
         JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(token, signingKey);
         String userId = getUserIdFromToken(jwtTokenUtil);
+        LOG.info("Token: {}", token);
 
         if (userId != null) {
             LOG.info("Fetch user details for: {}", userId);

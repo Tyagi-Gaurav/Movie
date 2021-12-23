@@ -7,6 +7,7 @@ plugins {
 
 ext {
     springBootVersion = '2.6.1'
+    springCloudVersion = '3.1.0'
     springVersion = '5.3.13'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.9'
@@ -129,6 +130,8 @@ dependencies {
     testImplementation "org.testcontainers:junit-jupiter:${testContainerVersion}"
     testImplementation "org.testcontainers:mysql:${testContainerVersion}"
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremockVersion}"
+    testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock:${springCloudVersion}"
+
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
 }
 
