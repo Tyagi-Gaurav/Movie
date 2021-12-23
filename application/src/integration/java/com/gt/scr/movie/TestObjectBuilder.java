@@ -1,10 +1,14 @@
 package com.gt.scr.movie;
 
+import com.gt.scr.movie.ext.user.UserDetailsResponseDTO;
 import com.gt.scr.movie.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.LoginRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.spc.domain.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -17,11 +21,12 @@ public class TestObjectBuilder {
                 "USER");
     }
 
-    public static AccountCreateRequestDTO invalidUserAccountCreateRequestDTO() {
-        return new AccountCreateRequestDTO(
-                randomAlphabetic(2), "abc$123"
-                , randomAlphabetic(7), randomAlphabetic(7),
-                "USER");
+    public static UserDetailsResponseDTO validUserResponseDto(UUID userId, String userName) {
+        return new UserDetailsResponseDTO(userName,
+                randomAlphabetic(7), randomAlphabetic(7),
+                randomAlphabetic(7),
+                "USER",
+                userId);
     }
 
     public static LoginRequestDTO loginRequestUsing(AccountCreateRequestDTO accountCreateRequestDTO) {
@@ -43,9 +48,5 @@ public class TestObjectBuilder {
                 randomAlphabetic(4), randomAlphabetic(6)
                 , randomAlphabetic(7), randomAlphabetic(7),
                 "ADMIN");
-    }
-
-    public static LoginRequestDTO invalidPasswordLoginRequestUsing(AccountCreateRequestDTO accountCreateRequestDTO) {
-        return new LoginRequestDTO(accountCreateRequestDTO.userName(), UUID.randomUUID().toString());
     }
 }

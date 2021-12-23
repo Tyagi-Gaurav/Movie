@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-public class RetrieveEventsForUser implements BiFunction<DataSource, LoginResponseDTO, List<UserEventMessage>> {
+public class RetrieveEventsForUser implements BiFunction<DataSource, String, List<UserEventMessage>> {
     private static final String GET_EVENTS_FOR_USER = "SELECT PAYLOAD FROM MOVIE_SCHEMA.EVENTS WHERE OWNER_USER = ?";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public List<UserEventMessage> apply(DataSource dataSource, LoginResponseDTO loginResponseDTO) {
+    public List<UserEventMessage> apply(DataSource dataSource, String userId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_EVENTS_FOR_USER)) {
 
-            preparedStatement.setString(1, loginResponseDTO.id().toString());
+            preparedStatement.setString(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<UserEventMessage> events = new ArrayList<>();
 
