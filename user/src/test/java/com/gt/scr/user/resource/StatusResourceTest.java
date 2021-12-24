@@ -9,7 +9,7 @@ class StatusResourceTest {
     @Test
     void shouldReturnHelloWorldWithTime() {
         StepVerifier.create(statusResource.status())
-                .expectNext("OK")
+                .expectNext("UP")
                 .verifyComplete();
     }
 }

@@ -14,6 +14,6 @@ public class StatusResource {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.OK)
     public Mono<String> status() {
-        return Mono.just("OK");
+        return Mono.just("UP");
     }
 }
