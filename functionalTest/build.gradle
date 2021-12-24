@@ -26,7 +26,7 @@ jar{
 ext {
     springBootVersion = '2.6.0'
     springBootSecurity = '2.6.1'
-    springVersion = '5.3.13'
+    springVersion = '5.3.14'
     cucumberVersion = '7.1.0'
     junitVersion = '5.8.1'
     junitPlatformVersion = '1.8.1'
