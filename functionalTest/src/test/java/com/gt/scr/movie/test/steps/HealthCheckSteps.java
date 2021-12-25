@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HealthCheckSteps implements En {
+    private static final String UP_STATUS = "UP";
+
     @Autowired
     private TestHealthCheckResource testHealthCheckResource;
 
@@ -28,11 +30,11 @@ public class HealthCheckSteps implements En {
         And("^the response for movie healthcheck should be a success response$", () -> {
             String healthCheckResponse = responseHolder.readResponse(String.class);
             DocumentContext jsonParser = JsonPath.parse(healthCheckResponse);
-            assertThat("UP").isEqualTo(jsonParser.read("$.status"));
-            assertThat("UP").isEqualTo(jsonParser.read("$.components.db.status"));
-            assertThat("UP").isEqualTo(jsonParser.read("$.components.diskSpace.status"));
-            assertThat("UP").isEqualTo(jsonParser.read("$.components.ping.status"));
-            assertThat("UP").isEqualTo(jsonParser.read("$.components.userApp.status"));
+            assertThat(jsonParser.read("$.status").toString()).isEqualTo(UP_STATUS);
+            assertThat(jsonParser.read("$.components.db.status").toString()).isEqualTo(UP_STATUS));
+            assertThat(jsonParser.read("$.components.diskSpace.status").toString()).isEqualTo(UP_STATUS);
+            assertThat(jsonParser.read("$.components.ping.status").toString()).isEqualTo(UP_STATUS);
+            assertThat(jsonParser.read("$.components.userApp.status").toString()).isEqualTo(UP_STATUS);
         });
 
         When("^the healthcheck endpoint for user is invoked$", () -> {
@@ -42,10 +44,10 @@ public class HealthCheckSteps implements En {
         And("^the response for user healthcheck should be a success response$", () -> {
             String healthCheckResponse = responseHolder.readResponse(String.class);
             DocumentContext jsonParser = JsonPath.parse(healthCheckResponse);
-            assertThat("UP").isEqualTo(jsonParser.read("$.status"));
-            assertThat("UP").isEqualTo(jsonParser.read("$.components.db.status"));
-            assertThat("UP").isEqualTo(jsonParser.read("$.components.diskSpace.status"));
-            assertThat("UP").isEqualTo(jsonParser.read("$.components.ping.status"));
+            assertThat(jsonParser.read("$.status").toString()).isEqualTo(UP_STATUS);
+            assertThat(jsonParser.read("$.components.db.status").toString()).isEqualTo(UP_STATUS));
+            assertThat(jsonParser.read("$.components.diskSpace.status").toString()).isEqualTo(UP_STATUS);
+            assertThat(jsonParser.read("$.components.ping.status").toString()).isEqualTo(UP_STATUS);
         });
     }
 }
