@@ -12,9 +12,8 @@ ext {
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.9'
     slf4jVersion = '2.0.0-alpha5'
-    jacksonVersion = '2.13.0'
+    jacksonVersion = '2.13.1'
     jsonWebTokenVersion = '0.11.2'
-    embeddedRedisVersion = '0.7.3'
     mysqlVersion = '8.0.27'
     c3p0Version = '0.9.5.5'
     liquibaseVersion = '4.6.1'
@@ -88,9 +87,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
-    implementation("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}") {
-        exclude group: "org.slf4j", module: "slf4j-api"
-    }
 
     implementation "org.springframework:spring-jdbc:${springVersion}"
     implementation "org.springframework:spring-core:${springVersion}"
@@ -106,9 +102,6 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}"
     implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
     implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
-    implementation("it.ozimov:embedded-redis:${embeddedRedisVersion}") {
-        exclude group: "org.slf4j", module: "slf4j-simple"
-    }
 
     implementation "mysql:mysql-connector-java:${mysqlVersion}"
     implementation "com.mchange:c3p0:${c3p0Version}"
