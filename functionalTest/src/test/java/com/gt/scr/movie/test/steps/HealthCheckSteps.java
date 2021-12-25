@@ -30,11 +30,11 @@ public class HealthCheckSteps implements En {
         And("^the response for movie healthcheck should be a success response$", () -> {
             String healthCheckResponse = responseHolder.readResponse(String.class);
             DocumentContext jsonParser = JsonPath.parse(healthCheckResponse);
-            assertThat(jsonParser.read("$.status").toString()).isEqualTo(UP_STATUS);
-            assertThat(jsonParser.read("$.components.db.status").toString()).isEqualTo(UP_STATUS));
-            assertThat(jsonParser.read("$.components.diskSpace.status").toString()).isEqualTo(UP_STATUS);
-            assertThat(jsonParser.read("$.components.ping.status").toString()).isEqualTo(UP_STATUS);
-            assertThat(jsonParser.read("$.components.userApp.status").toString()).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.status")).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.components.db.status")).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.components.diskSpace.status")).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.components.ping.status")).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.components.userApp.status")).isEqualTo(UP_STATUS);
         });
 
         When("^the healthcheck endpoint for user is invoked$", () -> {
@@ -44,10 +44,14 @@ public class HealthCheckSteps implements En {
         And("^the response for user healthcheck should be a success response$", () -> {
             String healthCheckResponse = responseHolder.readResponse(String.class);
             DocumentContext jsonParser = JsonPath.parse(healthCheckResponse);
-            assertThat(jsonParser.read("$.status").toString()).isEqualTo(UP_STATUS);
-            assertThat(jsonParser.read("$.components.db.status").toString()).isEqualTo(UP_STATUS));
-            assertThat(jsonParser.read("$.components.diskSpace.status").toString()).isEqualTo(UP_STATUS);
-            assertThat(jsonParser.read("$.components.ping.status").toString()).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.status")).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.components.db.status")).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.components.diskSpace.status")).isEqualTo(UP_STATUS);
+            assertThat(getValue(jsonParser, "$.components.ping.status")).isEqualTo(UP_STATUS);
         });
+    }
+
+    private String getValue(DocumentContext jsonParser, String path) {
+        return jsonParser.read(path);
     }
 }
