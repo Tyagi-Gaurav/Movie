@@ -6,7 +6,7 @@ plugins {
 }
 
 ext {
-    springBootVersion = '2.6.1'
+    springBootVersion = '2.6.2'
     springCloudVersion = '3.1.0'
     springVersion = '5.3.13'
     commonsLang3Version = '3.12.0'
@@ -23,7 +23,7 @@ ext {
     assertJVersion = '3.21.0'
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.16.2'
-    mockitoVersion = '4.0.0'
+    mockitoVersion = '4.2.0'
     reactorVersion = '3.4.12'
     grpcVersion = '1.42.1'
     springWebFluxSecurityVersion = '5.0.0.M5'
