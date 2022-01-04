@@ -21,7 +21,7 @@ ext {
     metricsInterceptor = '1.8.0'
     junitVersion = '5.8.2'
     assertJVersion = '3.21.0'
-    h2DbVersion = '1.4.200'
+    h2DbVersion = '2.0.204'
     testContainerVersion = '1.16.2'
     mockitoVersion = '4.2.0'
     reactorVersion = '3.4.12'
