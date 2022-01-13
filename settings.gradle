@@ -7,4 +7,5 @@ include 'content'
 include 'user'
 include 'common'
 include 'spring-common'
+include 'api-gateway'
 

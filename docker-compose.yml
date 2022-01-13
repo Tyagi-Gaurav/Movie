@@ -44,6 +44,17 @@ services:
     networks:
       - overlay
 
+  api-gateway:
+    container_name: local.api-gateway
+    depends_on:
+      - movie-app
+    build:
+      context: api-gateway
+    ports:
+      - "80:80"
+    networks:
+      - overlay
+
 #  ui-app:
 #    container_name: local.ui-app
 #    depends_on:
