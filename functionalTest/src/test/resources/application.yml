@@ -2,8 +2,9 @@ spring:
   active: local
 
 movie-app:
-  host: ${MOVIE_APP_HOST:localhost}
-  port: ${MOVIE_APP_PORT:9090}
+  host: ${MOVIE_APP_HOST:api.movie.com}
+  port: ${MOVIE_APP_PORT:8080}
+  path: /content
   mgtPort: ${MOVIE_MGT_PORT:9091}
 
 user-app:

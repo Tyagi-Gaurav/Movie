@@ -35,7 +35,7 @@ public class TestAccountCreateResource extends AbstractResource {
 
     private void createUsingRest(TestAccountCreateRequestDTO accountCreateRequestDTO) {
         String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                "/api/user/account/create", movieAppConfig.port());
+                "/content/api/user/account/create", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd+account.create.v1+json");
         HttpEntity<TestAccountCreateRequestDTO> request = new HttpEntity<>(accountCreateRequestDTO, headers);

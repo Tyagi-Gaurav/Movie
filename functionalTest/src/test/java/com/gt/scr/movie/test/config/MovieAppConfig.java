@@ -5,4 +5,4 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConstructorBinding
 @ConfigurationProperties("movie-app")
-public record MovieAppConfig(String host, int port, int mgtPort) {}
+public record MovieAppConfig(String host, int port, String path, int mgtPort) {}

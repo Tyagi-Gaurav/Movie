@@ -51,7 +51,7 @@ services:
     build:
       context: api-gateway
     ports:
-      - "80:80"
+      - "8080:8080"
     networks:
       - overlay
 
