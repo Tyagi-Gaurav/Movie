@@ -17,18 +17,19 @@ import org.springframework.web.client.RestTemplate;
 public class AbstractResource {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractResource.class);
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     protected RestTemplate restTemplate;
 
-    protected String getFullUrl(String hostName, String path, int port) {
+    protected String getFullUrl(String hostName, String contextPath, String path, int port) {
         StringBuilder fullUrl = new StringBuilder("http://" + hostName);
 
         if (port != 0) {
             fullUrl.append(":").append(port);
         }
 
+        fullUrl.append(contextPath);
         fullUrl.append(path);
 
         return fullUrl.toString();

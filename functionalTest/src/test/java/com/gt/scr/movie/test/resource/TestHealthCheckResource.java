@@ -5,7 +5,6 @@ import com.gt.scr.movie.test.config.UserAppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,19 +21,22 @@ public class TestHealthCheckResource extends AbstractResource {
 
     public void invokeStatus() {
         String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                movieAppConfig.contextPath(),
                 "/api/status", movieAppConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 
     public void invokeMovieHealthcheck() {
         String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                "/actuator/healthcheck", movieAppConfig.mgtPort());
+                movieAppConfig.contextPath(),
+                "/actuator/healthcheck", movieAppConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 
     public void invokeUserHealthcheck() {
         String fullUrl = getFullUrl(userAppConfig.host().trim(),
-                "/actuator/healthcheck", userAppConfig.mgtPort());
+                movieAppConfig.contextPath(),
+                "/actuator/healthcheck", userAppConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 }

@@ -37,6 +37,7 @@ public class TestLoginResource extends AbstractResource {
 
     public void loginUsingRest(TestLoginRequestDTO testLoginRequestDTO) {
         String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                movieAppConfig.contextPath(),
                 "/api/user/login", movieAppConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.login.v1+json");
