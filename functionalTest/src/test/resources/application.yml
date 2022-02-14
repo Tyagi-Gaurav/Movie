@@ -4,16 +4,12 @@ spring:
 api-gateway:
   host: ${API_GATEWAY_HOST:localhost}
   port: ${API_GATEWAY_PORT:8080}
-  contextPath: /content/upload/
+  contentUploadContextPath: /content/upload
+  userContextPath: /user
 
 movie-app:
   host: localhost
   port: 9090
-
-user-app:
-  host: ${USER_APP_HOST:localhost}
-  port: ${USER_APP_PORT:7070}
-  mgtPort: ${USER_MGT_PORT:7071}
 
 admin-credentials:
   userName: admin

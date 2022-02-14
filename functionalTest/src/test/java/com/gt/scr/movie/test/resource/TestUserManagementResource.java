@@ -20,8 +20,8 @@ public class TestUserManagementResource extends AbstractResource {
 
     public void create(TestAccountCreateRequestDTO testAccountCreateRequestDTO) {
         String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
-                apiGatewayConfig.contextPath(),
-                "/api/user/manage", apiGatewayConfig.port());
+                apiGatewayConfig.userContextPath(),
+                "/manage", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -31,8 +31,8 @@ public class TestUserManagementResource extends AbstractResource {
 
     public void delete(String regularUserId) {
         String fullUrl = String.format("%s?userId=%s", getFullUrl(apiGatewayConfig.host().trim(),
-                apiGatewayConfig.contextPath(),
-                "/api/user/manage", apiGatewayConfig.port()), regularUserId);
+                apiGatewayConfig.userContextPath(),
+                "/manage", apiGatewayConfig.port()), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -42,8 +42,8 @@ public class TestUserManagementResource extends AbstractResource {
 
     public void getAllUsers() {
         String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
-                apiGatewayConfig.contextPath(),
-                "/api/user/manage", apiGatewayConfig.port());
+                apiGatewayConfig.userContextPath(),
+                "/manage", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.read.v1+json");
         headers.set(HttpHeaders.ACCEPT, "application/vnd.user.read.v1+json");
