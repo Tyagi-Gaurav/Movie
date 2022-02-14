@@ -1,6 +1,0 @@
-syntax = "proto3";
-package com.gt.scr.movie.grpc;
-
-option java_multiple_files = true;
-
-message Empty {}

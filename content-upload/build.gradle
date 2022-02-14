@@ -25,7 +25,6 @@ ext {
     testContainerVersion = '1.16.2'
     mockitoVersion = '4.2.0'
     reactorVersion = '3.4.14'
-    grpcVersion = '1.43.2'
     springWebFluxSecurityVersion = '5.0.0.M5'
     wiremockVersion = '2.32.0'
 }
@@ -40,11 +39,6 @@ targetCompatibility = JavaVersion.VERSION_16
 sourceSets {
     integration {
         java.srcDir "$projectDir/src/integration/java"
-        compileClasspath += sourceSets.main.output + sourceSets.test.output
-        runtimeClasspath += output + compileClasspath
-    }
-    grpcIntegration {
-        java.srcDir "$projectDir/src/grpcIntegration/java"
         compileClasspath += sourceSets.main.output + sourceSets.test.output
         runtimeClasspath += output + compileClasspath
     }
@@ -77,8 +71,6 @@ processResources {
 }
 
 dependencies {
-    implementation "io.grpc:grpc-stub:${grpcVersion}"
-    implementation project(":grpcService")
     implementation project(":common")
     implementation project(":spring-common")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
@@ -162,7 +154,6 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    "com/gt/scr/movie/grpc_resource/**/*.class",
                     "com/gt/scr/movie/Application.class",
                     "com/gt/scr/movie/Grace**.class",
                     "com/gt/scr/movie/config/**/*.class",
@@ -210,16 +201,6 @@ spotbugsIntegration {
     }
 }
 
-spotbugsGrpcIntegration {
-    reports {
-        html {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/grpcIntegration/spotbugs.html")
-            stylesheet = 'fancy-hist.xsl'
-        }
-    }
-}
-
 pmd {
     consoleOutput = true
     toolVersion = "6.37.0"
@@ -244,20 +225,4 @@ tasks.register('integrationTest', Test) {
     shouldRunAfter test
 }
 
-tasks.register('grpcIntegrationTest', Test) {
-    description = 'Runs GRPC integration tests.'
-    group = 'verification'
-
-    testClassesDirs = sourceSets.grpcIntegration.output.classesDirs
-    classpath += sourceSets.grpcIntegration.runtimeClasspath
-
-    useJUnitPlatform()
-
-    reports {
-        html.enabled true
-        junitXml.enabled = true
-    }
-    shouldRunAfter test
-}
-
-check.dependsOn(integrationTest, grpcIntegrationTest)
+check.dependsOn(integrationTest)

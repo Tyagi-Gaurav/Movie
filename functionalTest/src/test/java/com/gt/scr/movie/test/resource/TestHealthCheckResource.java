@@ -21,21 +21,21 @@ public class TestHealthCheckResource extends AbstractResource {
 
     public void invokeStatus() {
         String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
-                apiGatewayConfig.contextPath(),
+                apiGatewayConfig.contentUploadContextPath(),
                 "/api/status", apiGatewayConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 
     public void invokeMovieHealthcheck() {
         String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
-                apiGatewayConfig.contextPath(),
+                apiGatewayConfig.contentUploadContextPath(),
                 "/actuator/healthcheck", apiGatewayConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 
     public void invokeUserHealthcheck() {
         String fullUrl = getFullUrl(userAppConfig.host().trim(),
-                apiGatewayConfig.contextPath(),
+                apiGatewayConfig.contentUploadContextPath(),
                 "/actuator/healthcheck", userAppConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }

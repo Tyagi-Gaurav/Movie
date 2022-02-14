@@ -43,7 +43,6 @@ dependencies {
     testImplementation "io.grpc:grpc-stub:${grpcVersion}"
     testImplementation "io.grpc:grpc-protobuf:${grpcVersion}"
     testImplementation "io.grpc:grpc-netty-shaded:${grpcVersion}"
-    testImplementation project(":grpcService")
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"

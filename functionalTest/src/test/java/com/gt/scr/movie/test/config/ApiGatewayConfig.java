@@ -5,4 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConstructorBinding
 @ConfigurationProperties("api-gateway")
-public record ApiGatewayConfig(String host, int port, String contextPath) {}
+public record ApiGatewayConfig(String host,
+                               int port,
+                               String contentUploadContextPath,
+                               String userContextPath) {}
