@@ -16,4 +16,4 @@ done
 MEM_FLAGS="-Xms512m -Xmx1024m"
 GCFLAGS="-XX:+PrintGCDetails"
 
-java $MEM_FLAGS -jar /data/application.jar
+java $MEM_FLAGS -jar /data/content-upload.jar

@@ -1,14 +1,12 @@
 version: "3.7"
 services:
-  movie-app:
-    container_name: local.movie-app
+  content-upload-app:
+    container_name: local.content-upload-app
     depends_on:
       - mysql
     build:
-      context: application
+      context: content-upload
     ports:
-      - "9090:9090"
-      - "9091:9091"
       - "9900:9900"
       - "8443:8443"
     environment:
@@ -41,6 +39,17 @@ services:
       - "MYSQL_PWD=password"
       - "MYSQL_USER=root"
       - "MYSQL_DB_NAME=movieMetadata"
+    networks:
+      - overlay
+
+  api-gateway:
+    container_name: local.api-gateway
+    depends_on:
+      - content-upload-app
+    build:
+      context: api-gateway
+    ports:
+      - "8080:8080"
     networks:
       - overlay
 

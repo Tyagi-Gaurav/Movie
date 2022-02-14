@@ -1,10 +1,10 @@
 rootProject.name = 'Movie'
 include 'functionalTest'
-include 'application'
+include 'content-upload'
 include 'grpcService'
 include 'ui'
-include 'content'
 include 'user'
 include 'common'
 include 'spring-common'
+include 'api-gateway'
 

@@ -1,6 +1,6 @@
 package com.gt.scr.movie.test.resource;
 
-import com.gt.scr.movie.test.config.MovieAppConfig;
+import com.gt.scr.movie.test.config.ApiGatewayConfig;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestEmptyRequestDTO;
 import com.gt.scr.movie.test.domain.TestUserListResponseDTO;
@@ -13,14 +13,15 @@ import org.springframework.stereotype.Component;
 public class TestUserManagementResource extends AbstractResource {
 
     @Autowired
-    private MovieAppConfig movieAppConfig;
+    private ApiGatewayConfig apiGatewayConfig;
 
     @Autowired
     private ResponseHolder responseHolder;
 
     public void create(TestAccountCreateRequestDTO testAccountCreateRequestDTO) {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                "/api/user/manage", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/manage", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -29,8 +30,9 @@ public class TestUserManagementResource extends AbstractResource {
     }
 
     public void delete(String regularUserId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
-                "/api/user/manage", movieAppConfig.port()), regularUserId);
+        String fullUrl = String.format("%s?userId=%s", getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/manage", apiGatewayConfig.port()), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -39,8 +41,9 @@ public class TestUserManagementResource extends AbstractResource {
     }
 
     public void getAllUsers() {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                "/api/user/manage", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/manage", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.user.read.v1+json");
         headers.set(HttpHeaders.ACCEPT, "application/vnd.user.read.v1+json");

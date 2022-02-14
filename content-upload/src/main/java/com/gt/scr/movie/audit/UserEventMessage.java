@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.UUID;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, property = "className")
 public interface UserEventMessage {
     UUID eventId();
     UUID ownerUser();
