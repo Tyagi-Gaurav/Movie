@@ -4,7 +4,7 @@ import com.gt.scr.movie.grpc.Empty;
 import com.gt.scr.movie.grpc.MovieGrpcCreateRequestDTO;
 import com.gt.scr.movie.grpc.MovieServiceGrpc;
 import com.gt.scr.movie.test.auth.TestAuthenticationCallCredentials;
-import com.gt.scr.movie.test.config.MovieAppConfig;
+import com.gt.scr.movie.test.config.ApiGatewayConfig;
 import com.gt.scr.movie.test.config.TestEnvironment;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieUpdateRequestDTO;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class TestMovieResource extends AbstractResource {
 
     @Autowired
-    private MovieAppConfig movieAppConfig;
+    private ApiGatewayConfig apiGatewayConfig;
 
     @Autowired
     private ResponseHolder responseHolder;
@@ -61,9 +61,9 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public void createUsingRest(TestMovieCreateRequestDTO movieCreateRequestDTO) {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/movie", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/movie", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -72,9 +72,9 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public void createWithoutToken(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/movie", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/movie", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.add.v1+json");
         HttpEntity<TestMovieCreateRequestDTO> requestObject = new HttpEntity<>(testMovieCreateRequestDTO, headers);
@@ -82,9 +82,9 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public void readMoviesFor() {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/movie", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/movie", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.read.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -93,9 +93,9 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public void deleteMovie(UUID uuid) {
-        String fullUrl = String.format("%s?id=%s", getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/movie", movieAppConfig.port()), uuid.toString());
+        String fullUrl = String.format("%s?id=%s", getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/movie", apiGatewayConfig.port()), uuid.toString());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -105,9 +105,9 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public void updateMovie(TestMovieUpdateRequestDTO updateRequestDTO) {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/movie", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/movie", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.update.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -117,7 +117,7 @@ public class TestMovieResource extends AbstractResource {
 
     public void readMoviesFor(String userId) {
         String path = String.format("/api/user/%s/movie", userId);
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(), movieAppConfig.contextPath(), path, movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(), apiGatewayConfig.contextPath(), path, apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.read.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -126,9 +126,9 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public void deleteMovie(UUID movieId, String regularUserId) {
-        String fullUrl = String.format("%s?id=%s&userId=%s", getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/movie", movieAppConfig.port()), movieId.toString(), regularUserId);
+        String fullUrl = String.format("%s?id=%s&userId=%s", getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/movie", apiGatewayConfig.port()), movieId.toString(), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.delete.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -139,8 +139,8 @@ public class TestMovieResource extends AbstractResource {
 
     public void createMovieFor(TestMovieCreateRequestDTO movieCreateRequestDTO, String regularUserId) {
         String path = String.format("/api/user/%s/movie", regularUserId);
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(), movieAppConfig.contextPath(),
-                path, movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(), apiGatewayConfig.contextPath(),
+                path, apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
@@ -149,9 +149,9 @@ public class TestMovieResource extends AbstractResource {
     }
 
     public void updateMovie(TestMovieUpdateRequestDTO updateRequestDTO, String regularUserId) {
-        String fullUrl = String.format("%s?userId=%s", getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/movie", movieAppConfig.port()), regularUserId);
+        String fullUrl = String.format("%s?userId=%s", getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/movie", apiGatewayConfig.port()), regularUserId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.update.v1+json");
         headers.setBearerAuth(responseHolder.getToken());

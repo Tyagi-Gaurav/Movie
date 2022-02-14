@@ -84,12 +84,12 @@ public class UserSteps implements En {
                 });
 
         Given("^the global admin user logs into the system$", () -> {
-                    TestLoginRequestDTO testLoginRequestDTO = new TestLoginRequestDTO(
-                            adminCredentials.userName(),
-                            adminCredentials.password());
-                    testLoginResource.doLogin(testLoginRequestDTO);
-                    assertThat(responseHolder.getResponseCode()).isEqualTo(200);
-                });
+            TestLoginRequestDTO testLoginRequestDTO = new TestLoginRequestDTO(
+                    adminCredentials.userName(),
+                    adminCredentials.password());
+            testLoginResource.doLogin(testLoginRequestDTO);
+            assertThat(responseHolder.getResponseCode()).isEqualTo(200);
+        });
 
         And("^the admin user attempts to login again$", () -> {
             loginUsing(scenarioContext.getAdminCredentialsRequest());
@@ -125,6 +125,26 @@ public class UserSteps implements En {
         When("^the authenticated admin user retrieves a list of all users$", () -> {
             userManagementResource.getAllUsers();
         });
+
+        Given("^a user attempts to create a new account with following details using movie service directly$",
+                (TestAccountCreateRequestDTO testAccountCreateRequestDTO) -> {
+                    String userNameValue = testAccountCreateRequestDTO.userName();
+
+                    if ("<captured>".equals(userNameValue)) {
+                        userNameValue = scenarioContext.getLastUserName();
+                    }
+
+                    testAccountCreateRequestDTO = new TestAccountCreateRequestDTO(
+                            actualOrRandom(userNameValue, 6),
+                            actualOrRandom(testAccountCreateRequestDTO.password(), 6),
+                            testAccountCreateRequestDTO.firstName(),
+                            testAccountCreateRequestDTO.lastName(),
+                            testAccountCreateRequestDTO.role()
+                    );
+
+                    scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
+                    testAccountCreateResource.createUsingMovieServiceDirectly(testAccountCreateRequestDTO);
+                });
 
 
     }

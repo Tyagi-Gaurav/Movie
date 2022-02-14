@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
@@ -82,7 +83,12 @@ public class AbstractResource {
             HttpMessageConversionException exception = (HttpMessageConversionException) e;
             exception.printStackTrace();
             throw new RuntimeException(exception);
-        } else {
+        } else if (e instanceof ResourceAccessException) {
+            ResourceAccessException resourceAccessException = (ResourceAccessException) e;
+            return ResponseEntity.status(404)
+                    .body(null);
+        }
+        else {
             throw new RuntimeException(e);
         }
     }

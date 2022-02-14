@@ -1,6 +1,6 @@
 package com.gt.scr.movie.test.resource;
 
-import com.gt.scr.movie.test.config.MovieAppConfig;
+import com.gt.scr.movie.test.config.ApiGatewayConfig;
 import com.gt.scr.movie.test.config.UserAppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class TestHealthCheckResource extends AbstractResource {
 
     @Autowired
-    private MovieAppConfig movieAppConfig;
+    private ApiGatewayConfig apiGatewayConfig;
 
     @Autowired
     private UserAppConfig userAppConfig;
@@ -20,22 +20,22 @@ public class TestHealthCheckResource extends AbstractResource {
     private ResponseHolder responseHolder;
 
     public void invokeStatus() {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/status", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/status", apiGatewayConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 
     public void invokeMovieHealthcheck() {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/actuator/healthcheck", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/actuator/healthcheck", apiGatewayConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }
 
     public void invokeUserHealthcheck() {
         String fullUrl = getFullUrl(userAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
+                apiGatewayConfig.contextPath(),
                 "/actuator/healthcheck", userAppConfig.port());
         responseHolder.setResponse(this.get(fullUrl, new HttpEntity(HttpHeaders.EMPTY), String.class));
     }

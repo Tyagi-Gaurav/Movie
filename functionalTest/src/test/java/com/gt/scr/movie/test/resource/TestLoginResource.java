@@ -3,7 +3,7 @@ package com.gt.scr.movie.test.resource;
 import com.gt.scr.movie.grpc.LoginGrpcRequestDTO;
 import com.gt.scr.movie.grpc.LoginGrpcResponseDTO;
 import com.gt.scr.movie.grpc.LoginServiceGrpc;
-import com.gt.scr.movie.test.config.MovieAppConfig;
+import com.gt.scr.movie.test.config.ApiGatewayConfig;
 import com.gt.scr.movie.test.config.TestEnvironment;
 import com.gt.scr.movie.test.domain.TestLoginRequestDTO;
 import com.gt.scr.movie.test.domain.TestLoginResponseDTO;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class TestLoginResource extends AbstractResource {
 
     @Autowired
-    private MovieAppConfig movieAppConfig;
+    private ApiGatewayConfig apiGatewayConfig;
 
     @Autowired
     private ResponseHolder responseHolder;
@@ -36,9 +36,9 @@ public class TestLoginResource extends AbstractResource {
     }
 
     public void loginUsingRest(TestLoginRequestDTO testLoginRequestDTO) {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(),
-                "/api/user/login", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(),
+                "/api/user/login", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.login.v1+json");
         HttpEntity<TestLoginRequestDTO> request = new HttpEntity<>(testLoginRequestDTO, headers);

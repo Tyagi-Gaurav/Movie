@@ -3,8 +3,9 @@ package com.gt.scr.movie.test.resource;
 import com.gt.scr.movie.grpc.AccountCreateGrpcRequestDTO;
 import com.gt.scr.movie.grpc.CreateAccountServiceGrpc;
 import com.gt.scr.movie.grpc.Empty;
-import com.gt.scr.movie.test.config.TestEnvironment;
 import com.gt.scr.movie.test.config.MovieAppConfig;
+import com.gt.scr.movie.test.config.TestEnvironment;
+import com.gt.scr.movie.test.config.ApiGatewayConfig;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
 import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TestAccountCreateResource extends AbstractResource {
+
+    @Autowired
+    private ApiGatewayConfig apiGatewayConfig;
 
     @Autowired
     private MovieAppConfig movieAppConfig;
@@ -34,8 +38,8 @@ public class TestAccountCreateResource extends AbstractResource {
     }
 
     private void createUsingRest(TestAccountCreateRequestDTO accountCreateRequestDTO) {
-        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
-                movieAppConfig.contextPath(), "/api/user/account/create", movieAppConfig.port());
+        String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
+                apiGatewayConfig.contextPath(), "/api/user/account/create", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd+account.create.v1+json");
         HttpEntity<TestAccountCreateRequestDTO> request = new HttpEntity<>(accountCreateRequestDTO, headers);
@@ -59,5 +63,14 @@ public class TestAccountCreateResource extends AbstractResource {
         } else {
             responseHolder.setResponse(ResponseEntity.status(500).build());
         }
+    }
+
+    public void createUsingMovieServiceDirectly(TestAccountCreateRequestDTO testAccountCreateRequestDTO) {
+        String fullUrl = getFullUrl(movieAppConfig.host().trim(),
+                "", "/api/user/account/create", movieAppConfig.port());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd+account.create.v1+json");
+        HttpEntity<TestAccountCreateRequestDTO> request = new HttpEntity<>(testAccountCreateRequestDTO, headers);
+        responseHolder.setResponse(this.post(fullUrl, request, String.class));
     }
 }

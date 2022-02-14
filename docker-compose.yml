@@ -7,8 +7,6 @@ services:
     build:
       context: content-upload
     ports:
-      - "9090:9090"
-      - "9091:9091"
       - "9900:9900"
       - "8443:8443"
     environment:

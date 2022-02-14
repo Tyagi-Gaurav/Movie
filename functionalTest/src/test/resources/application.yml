@@ -1,11 +1,14 @@
 spring:
   active: local
 
-movie-app:
-  host: ${MOVIE_APP_HOST:api.movie.com}
-  port: ${MOVIE_APP_PORT:8080}
+api-gateway:
+  host: ${API_GATEWAY_HOST:api.movie.com}
+  port: ${API_GATEWAY_PORT:8080}
   contextPath: /content/upload/
-  mgtPort: ${MOVIE_MGT_PORT:8080}
+
+movie-app:
+  host: localhost
+  port: 9090
 
 user-app:
   host: ${USER_APP_HOST:localhost}
