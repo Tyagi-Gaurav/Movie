@@ -3,7 +3,7 @@ spring:
   liquibase:
     changeLog: classpath:db.changelog/dbchangelog.sql
   webflux:
-    base-path: /api/content
+    base-path: /api
 
 server:
   port: ${SERVER_PORT:9090}

@@ -46,7 +46,7 @@ public class MovieJourneysTest {
 
     @BeforeEach
     void setUp() {
-        String baseUrl = "http://localhost:" + serverPort + "/api/content";
+        String baseUrl = "http://localhost:" + serverPort + "/api";
         WebTestClient webTestClient = WebTestClient.bindToServer().baseUrl(baseUrl).build();
         scenarioExecutor = new ScenarioExecutor(webTestClient, dataSource);
     }
