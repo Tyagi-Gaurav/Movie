@@ -1,7 +1,6 @@
 rootProject.name = 'Movie'
 include 'functionalTest'
 include 'content-upload'
-include 'grpcService'
 include 'ui'
 include 'user'
 include 'common'

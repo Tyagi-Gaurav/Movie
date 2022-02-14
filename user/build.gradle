@@ -28,7 +28,6 @@ ext {
     testContainerVersion = '1.16.2'
     mockitoVersion = '4.0.0'
     reactorVersion = '3.4.12'
-    grpcVersion = '1.42.1'
     springWebFluxSecurityVersion = '5.0.0.M5'
 }
 
@@ -72,8 +71,6 @@ configurations {
 }
 
 dependencies {
-    implementation "io.grpc:grpc-stub:${grpcVersion}"
-    implementation project(":grpcService")
     implementation project(":common")
     implementation project(":spring-common")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {

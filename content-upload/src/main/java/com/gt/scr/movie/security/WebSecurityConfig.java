@@ -9,12 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import java.security.Key;
@@ -32,11 +29,6 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity httpSecurity,
                                                 JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
@@ -44,11 +36,8 @@ public class WebSecurityConfig {
         return httpSecurity
                 .csrf().disable()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.POST, "/user/login").permitAll()
-                .pathMatchers(HttpMethod.POST, "/user/account/create").permitAll()
                 .pathMatchers("/status", "/actuator/**").permitAll()
                 .pathMatchers( "/user/{userid}/movie").hasAuthority("ADMIN")
-                .pathMatchers("/user/manage").hasAuthority("ADMIN")
                 .anyExchange().authenticated().and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
