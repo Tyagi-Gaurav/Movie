@@ -2,7 +2,7 @@ spring:
   active: local
 
 api-gateway:
-  host: ${API_GATEWAY_HOST:api.movie.com}
+  host: ${API_GATEWAY_HOST:localhost}
   port: ${API_GATEWAY_PORT:8080}
   contextPath: /content/upload/
 
