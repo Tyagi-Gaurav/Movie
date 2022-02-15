@@ -1,5 +1,7 @@
 package com.gt.scr.movie.ext.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +23,7 @@ class UserStatusClientTest {
             .build();
 
     private UserStatusClient userStatusClient;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
@@ -32,16 +35,20 @@ class UserStatusClientTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"UP", "DOWN"})
-    void shouldReturnAppropriateStatusBasedOnAppStatus(String status) {
+    void shouldReturnAppropriateStatusBasedOnAppStatus(String status) throws JsonProcessingException {
+        StatusResponseDTO statusResponseDTO = new StatusResponseDTO(status);
+        String expectedBody = objectMapper.writeValueAsString(statusResponseDTO);
+
         wireMockExtension.stubFor(get("/api/status")
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withBody(status)));
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(expectedBody)));
 
-        Mono<String> statusResponse = userStatusClient.status();
+        Mono<StatusResponseDTO> statusResponse = userStatusClient.status();
 
         StepVerifier.create(statusResponse)
-                .expectNext(status)
+                .expectNext(new StatusResponseDTO(status))
                 .verifyComplete();
     }
 }

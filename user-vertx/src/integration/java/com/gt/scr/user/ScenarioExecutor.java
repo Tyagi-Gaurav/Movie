@@ -4,7 +4,7 @@ import com.gt.scr.user.functions.DeleteUser;
 import com.gt.scr.user.functions.FindUserById;
 import com.gt.scr.user.functions.FindUserByName;
 import com.gt.scr.user.functions.Login;
-import com.gt.scr.user.functions.Interaction;
+import com.gt.scr.user.functions.StatusCheck;
 import com.gt.scr.user.functions.UserCreate;
 import com.gt.scr.user.functions.UserManagementCreateUser;
 import com.gt.scr.user.functions.UserManagementReadUsers;
@@ -16,6 +16,7 @@ import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.gt.scr.utils.DataEncoder;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bouncycastle.util.encoders.HexEncoder;
+import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
@@ -149,5 +150,16 @@ public class ScenarioExecutor {
     public ScenarioExecutor userShouldNotExistInDatabase() {
         new VerifyUserDoesNotExist().accept(dataSource, userLoginResponseDTO);
         return this;
+    }
+
+    public ScenarioExecutor checkStatusOfApplication() {
+        this.responseSpec = new StatusCheck().apply(webTestClient);
+        return this;
+    }
+
+    public void expectBodyToBeEqualTo(String expectedBodyAsString) {
+        String actualResult = this.responseSpec.returnResult(String.class)
+                .getResponseBody().blockFirst();
+        assertThat(actualResult).isEqualTo(expectedBodyAsString);
     }
 }

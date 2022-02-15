@@ -55,6 +55,25 @@ public class UserJourneysTest {
 
     @Test
     @Timeout(value = 5, timeUnit = TimeUnit.SECONDS)
+    void statusCheckTest() {
+        scenarioExecutor
+                .checkStatusOfApplication()
+                .then().expectReturnCode(200)
+                .then().expectBodyToBeEqualTo(
+                        "{" +
+                                "\"status\":\"UP\"," +
+                                "\"checks\":" +
+                                "[{" +
+                                    "\"id\":\"status\"," +
+                                    "\"status\":\"UP\"" +
+                                "}]," +
+                                "\"outcome\":\"UP" +
+                                "\"}"
+                );
+    }
+
+    @Test
+    @Timeout(value = 5, timeUnit = TimeUnit.SECONDS)
     void createUserTest() {
         AccountCreateRequestDTO accountCreateRequestDTO =
                 TestObjectBuilder.userAccountCreateRequestDTO();

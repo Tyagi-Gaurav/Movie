@@ -1,5 +1,6 @@
 package com.gt.scr.movie.system;
 
+import com.gt.scr.movie.ext.user.StatusResponseDTO;
 import com.gt.scr.movie.ext.user.UserStatusClient;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -17,9 +18,10 @@ public class UserAppHealthCheck implements HealthIndicator {
 
     @Override
     public Health health() {
-        String result = userStatusClient.status()
-                .onErrorResume(throwable -> Mono.just(throwable.getMessage()))
+        StatusResponseDTO result = userStatusClient.status()
+                .onErrorResume(throwable -> Mono.just(new StatusResponseDTO(throwable.getMessage())))
                 .block();
-        return "UP".equals(result) ? Health.up().build() : Health.down(new RuntimeException(result)).build();
+        return "UP".equals(result.status()) ? Health.up().build() :
+                Health.down(new RuntimeException(result.status())).build();
     }
 }

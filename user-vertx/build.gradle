@@ -34,7 +34,7 @@ ext {
     testContainerVersion = '1.16.2'
     mockitoVersion = '4.0.0'
     reactorVersion = '3.4.12'
-    vertxVersion = '4.2.3'
+    vertxVersion = '4.2.4'
     micronautVersion = '3.3.0'
     postgresVersion = '42.3.1'
     embeddedPostgresVersion = '1.0.0.RC2'
@@ -87,6 +87,7 @@ dependencies {
     implementation "io.vertx:vertx-config:${vertxVersion}"
     implementation "io.vertx:vertx-pg-client:${vertxVersion}"
     implementation "io.vertx:vertx-auth-jwt:${vertxVersion}"
+    implementation "io.vertx:vertx-health-check:${vertxVersion}"
     implementation "io.micronaut:micronaut-inject:${micronautVersion}"
     implementation "io.micronaut:micronaut-inject-java:${micronautVersion}"
     annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"

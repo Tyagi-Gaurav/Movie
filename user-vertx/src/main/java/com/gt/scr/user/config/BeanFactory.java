@@ -15,6 +15,9 @@ import com.gt.scr.utils.DataEncoder;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.micronaut.context.annotation.Factory;
 import io.vertx.core.Vertx;
+import io.vertx.ext.healthchecks.HealthCheckHandler;
+import io.vertx.ext.healthchecks.HealthChecks;
+import io.vertx.ext.healthchecks.Status;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.bouncycastle.util.encoders.HexEncoder;
@@ -101,6 +104,13 @@ public class BeanFactory {
     }
 
     @Singleton
+    public HealthCheckHandler healthCheckHandler() {
+        HealthChecks healthChecks = HealthChecks.create(vertx);
+        healthChecks.register("status", promise -> promise.complete(Status.OK()));
+        return HealthCheckHandler.createWithHealthChecks(healthChecks);
+    }
+
+    @Singleton
     public HttpServerVerticle httpServerVerticle(AccountResourceHandler accountResourceHandler,
                                                  AuthenticationHandler authenticationHandler,
                                                  Validator validator,
@@ -109,7 +119,8 @@ public class BeanFactory {
                                                  SecurityHandler securityHandler,
                                                  UserGetByNameHandler userGetByNameHandler,
                                                  UserDeleteHandler userDeleteHandler,
-                                                 UserGetByIdHandler userGetByIdHandler) {
+                                                 UserGetByIdHandler userGetByIdHandler,
+                                                 HealthCheckHandler healthCheckHandler) {
         return new HttpServerVerticle(
                 accountResourceHandler,
                 authenticationHandler,
@@ -119,6 +130,7 @@ public class BeanFactory {
                 securityHandler,
                 userGetByNameHandler,
                 userDeleteHandler,
-                userGetByIdHandler);
+                userGetByIdHandler,
+                healthCheckHandler);
     }
 }

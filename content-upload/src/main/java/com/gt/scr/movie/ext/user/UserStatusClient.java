@@ -19,12 +19,17 @@ public class UserStatusClient {
         this.webClient = webClient;
     }
 
-    public Mono<String> status() {
+    public Mono<StatusResponseDTO> status() {
         try {
             return webClient.get().uri("/api/status")
                     .retrieve()
                     .onStatus(HttpStatus::isError, ClientResponse::createException)
-                    .bodyToMono(String.class);
+                    .bodyToMono(StatusResponseDTO.class)
+                    .doOnSuccess(statusResponseDTO ->
+                       LOG.info("Got response {}", statusResponseDTO)
+                    )
+                    .doOnError(throwable ->
+                        LOG.error("Error Occurred: " + throwable.getMessage(), throwable));
         } catch (Exception e) {
             LOG.error("Exception occurred while invoking service");
             return Mono.error(new UnexpectedSystemException(e));

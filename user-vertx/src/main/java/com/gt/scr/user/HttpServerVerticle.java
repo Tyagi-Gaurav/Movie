@@ -14,6 +14,7 @@ import com.gt.scr.user.service.domain.Role;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
+import io.vertx.ext.healthchecks.HealthCheckHandler;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.ResponseContentTypeHandler;
@@ -36,6 +37,7 @@ public class HttpServerVerticle extends AbstractVerticle {
     private final UserGetByNameHandler userGetByNameHandler;
     private final UserDeleteHandler userDeleteHandler;
     private final UserGetByIdHandler userGetByIdHandler;
+    private final HealthCheckHandler statusHandler;
 
     public HttpServerVerticle(AccountResourceHandler accountResourceHandler,
                               AuthenticationHandler authenticationHandler,
@@ -45,7 +47,8 @@ public class HttpServerVerticle extends AbstractVerticle {
                               SecurityHandler securityHandler,
                               UserGetByNameHandler userGetByNameHandler,
                               UserDeleteHandler userDeleteHandler,
-                              UserGetByIdHandler userGetByIdHandler) {
+                              UserGetByIdHandler userGetByIdHandler,
+                              HealthCheckHandler statusHandler) {
         this.accountResourceHandler = accountResourceHandler;
         this.authenticationHandler = authenticationHandler;
         this.validator = validator;
@@ -55,6 +58,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         this.userGetByNameHandler = userGetByNameHandler;
         this.userDeleteHandler = userDeleteHandler;
         this.userGetByIdHandler = userGetByIdHandler;
+        this.statusHandler = statusHandler;
     }
 
     @Override
@@ -64,7 +68,10 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         Router mainRouter = Router.router(vertx);
         Router restAPI = Router.router(vertx);
+        Router privateAdminApi = Router.router(vertx);
         Router adminUserManageAPI = Router.router(vertx);
+
+        privateAdminApi.get("/status").handler(statusHandler);
 
         restAPI.post("/account/create")
                 .consumes("application/vnd+account.create.v1+json")
@@ -121,6 +128,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         mainRouter.mountSubRouter("/api/user", restAPI);
         mainRouter.mountSubRouter("/api/user/manage", adminUserManageAPI);
+        mainRouter.mountSubRouter("/api", privateAdminApi);
 
         httpServer.requestHandler(mainRouter).listen(port, ar -> {
             if (ar.succeeded()) {
