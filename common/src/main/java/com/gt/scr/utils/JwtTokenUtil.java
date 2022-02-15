@@ -1,5 +1,6 @@
 package com.gt.scr.utils;
 
+import com.gt.scr.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -33,6 +34,11 @@ public class JwtTokenUtil {
         return claimsResolver.apply(claims);
     }
 
+    public Boolean validateToken(User userDetails) {
+        final String username = getUsernameFromToken();
+        return (username != null && username.equals(userDetails.username()));
+    }
+
     private Claims getAllClaimsFromToken() {
         return Jwts.parserBuilder().setSigningKey(signingKey)
                 .build()
@@ -56,12 +62,10 @@ public class JwtTokenUtil {
         return Map.of("Authorities", authorities);
     }
 
-    public static String generateTokenV2(String userName,
-                                         UUID userId,
-                                         Collection<String> authorities,
+    public static String generateTokenV2(User user,
                                          Duration tokenDuration, Key signingKey) {
-        Map<String, Object> claims = addClaimsV2(authorities);
-        return doGenerateToken(claims, userName, userId, tokenDuration, signingKey);
+        Map<String, Object> claims = addClaimsV2(user.authorities());
+        return doGenerateToken(claims, user.username(), user.id(), tokenDuration, signingKey);
     }
 
     public String getUserIdFromToken() {

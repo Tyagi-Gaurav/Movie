@@ -32,7 +32,7 @@ public class AdminUserAddHandler implements Handler<RoutingContext> {
                         accountCreateRequestDTO.lastName(),
                         accountCreateRequestDTO.userName(),
                         encode(accountCreateRequestDTO.password()),
-                        Collections.emptyList()))
+                        Collections.singletonList(accountCreateRequestDTO.role())))
                 .onFailure(throwable -> {
                     if (throwable instanceof ReplyException) {
                         routingContext.response().setStatusCode(403);

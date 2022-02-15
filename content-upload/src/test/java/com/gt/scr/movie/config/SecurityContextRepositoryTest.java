@@ -1,7 +1,7 @@
 package com.gt.scr.movie.config;
 
-import com.gt.scr.movie.filter.JwtTokenUtil;
 import com.gt.scr.movie.util.UserBuilder;
+import com.gt.scr.utils.JwtTokenUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,7 +62,7 @@ class SecurityContextRepositoryTest {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
 
         when(serverWebExchange.getRequest()).thenReturn(serverHttpRequest);
-        String token = JwtTokenUtil.generateToken(UserBuilder.aUser().build(), Duration.ofMinutes(1L), signingKey);
+        String token = JwtTokenUtil.generateTokenV2(UserBuilder.aUser().build(), Duration.ofMinutes(1L), signingKey);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(token);
 

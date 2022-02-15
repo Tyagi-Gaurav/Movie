@@ -36,8 +36,7 @@ public class AuthenticationHandler implements Handler<RoutingContext> {
                     User user = event.mapTo(User.class);
                     if (user.password().equals(encode(loginRequestDTO.password()))) {
                         JsonObject response = JsonObject.mapFrom(new LoginResponseDTO(
-                                JwtTokenUtil.generateTokenV2(user.username(),
-                                        user.id(), user.authorities(), Duration.ofMinutes(10),
+                                JwtTokenUtil.generateTokenV2(user, Duration.ofMinutes(10),
                                         key),
                                 user.id()));
                         routingContext.response().setChunked(true);

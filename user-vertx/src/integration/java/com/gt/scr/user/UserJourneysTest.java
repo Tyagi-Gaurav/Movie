@@ -42,7 +42,7 @@ public class UserJourneysTest {
                 .put("auth.token.key", "19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676")
                 .put("http.port", 5050);
 
-        String baseUrl = "http://localhost:" + 5050;
+        String baseUrl = "http://localhost:" + 5050 + "/api/";
         WebTestClient webTestClient = WebTestClient.bindToServer().baseUrl(baseUrl).build();
         scenarioExecutor = new ScenarioExecutor(webTestClient, embeddedPostgres.getPostgresDatabase());
 

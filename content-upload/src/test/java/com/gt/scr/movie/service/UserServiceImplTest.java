@@ -1,22 +1,25 @@
 package com.gt.scr.movie.service;
 
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.ext.user.FetchUsersByIdClient;
 import com.gt.scr.movie.ext.user.FetchUsersByNameClient;
 import com.gt.scr.movie.ext.user.UserDetailsResponseDTO;
-import com.gt.scr.spc.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static com.gt.scr.movie.util.UserBuilder.aUser;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,7 +58,13 @@ class UserServiceImplTest {
 
         //then
         StepVerifier.create(byUsername)
-                .expectNext(user)
+                .consumeNextWith(userDetails -> {
+                    assertThat(userDetails.getUsername()).isEqualTo(user.username());
+                    assertThat(userDetails.getPassword()).isEqualTo(user.password());
+                    assertThat(userDetails.getAuthorities()).isNotEmpty();
+                    assertThat(userDetails.getAuthorities()).isEqualTo(
+                            Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
+                })
                 .expectComplete();
         verify(fetchUsersByNameClient).fetchUserBy(userName);
     }

@@ -1,6 +1,6 @@
 FROM openjdk:16
 
-ADD build/libs/user-all.jar /data/user.jar
+ADD build/libs/user-vertx-all.jar /data/user.jar
 
 COPY ./startup.sh /data/startup.sh
 

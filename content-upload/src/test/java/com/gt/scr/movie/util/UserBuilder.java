@@ -1,8 +1,6 @@
 package com.gt.scr.movie.util;
 
-import com.gt.scr.spc.domain.User;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import com.gt.scr.domain.User;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,8 +15,8 @@ public class UserBuilder {
     private String username = randomAlphabetic(10);
     private String firstName = randomAlphabetic(10);
     private String lastName = randomAlphabetic(10);
-    private Collection<GrantedAuthority> authorities =
-            Collections.singletonList(new SimpleGrantedAuthority("USER"));
+    private Collection<String> authorities =
+            Collections.singletonList("USER");
 
     private UserBuilder() {
     }
@@ -31,7 +29,7 @@ public class UserBuilder {
         UserBuilder userBuilder = new UserBuilder();
 
         userBuilder.id = currentUser.id();
-        userBuilder.username = currentUser.getUsername();
+        userBuilder.username = currentUser.username();
         userBuilder.firstName = currentUser.firstName();
         userBuilder.lastName = currentUser.lastName();
         userBuilder.password = currentUser.password();

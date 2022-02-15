@@ -119,8 +119,8 @@ public class HttpServerVerticle extends AbstractVerticle {
                 .handler(securityHandler)
                 .handler(adminUserGetUsersHandler);
 
-        mainRouter.mountSubRouter("/user", restAPI);
-        mainRouter.mountSubRouter("/user/manage", adminUserManageAPI);
+        mainRouter.mountSubRouter("/api/user", restAPI);
+        mainRouter.mountSubRouter("/api/user/manage", adminUserManageAPI);
 
         httpServer.requestHandler(mainRouter).listen(port, ar -> {
             if (ar.succeeded()) {
