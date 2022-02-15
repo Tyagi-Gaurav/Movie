@@ -157,14 +157,12 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "com/gt/scr/user/Application.class",
-                    "com/gt/scr/user/Grace**.class",
-                    "com/gt/scr/user/config/**/*.class",
-                    "com/gt/scr/user/security/WebSecurityConfig.class"
+                    "com/gt/scr/user/config/**/*.class"
             ])
         }))
     }
 
-    executionData.from = files('build/jacoco/test.exec')
+    executionData.from = files('build/jacoco/test.exec', 'build/jacoco/integrationTest.exec')
 }
 
 spotbugs {
