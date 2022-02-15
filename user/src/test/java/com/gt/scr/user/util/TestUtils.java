@@ -1,6 +1,5 @@
 package com.gt.scr.user.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.spc.domain.User;
 import org.assertj.core.util.Strings;
@@ -21,15 +20,12 @@ public class TestUtils {
         }
     }
 
-    public static <T> T readFromString(String json, Class<T> clazz) throws JsonProcessingException {
-        return mapper.readValue(json, clazz);
-    }
-
     public static void addToDatabase(User expectedUser,
                                      DataSource dataSource,
                                      String query) throws SQLException {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setString(1, expectedUser.id().toString());
             preparedStatement.setString(2, expectedUser.getUsername());
             preparedStatement.setString(3, expectedUser.firstName());
@@ -37,6 +33,7 @@ public class TestUtils {
             preparedStatement.setString(5, expectedUser.getPassword());
             preparedStatement.setString(6,
                     Strings.join(expectedUser.getAuthorities()).with(","));
+
             preparedStatement.execute();
         }
     }

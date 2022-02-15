@@ -1,9 +1,7 @@
-package com.gt.scr.spc.util;
+package com.gt.scr.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Key;
 import java.time.Duration;
@@ -41,18 +39,6 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token).getBody();
     }
 
-    public static String generateToken(String userName,
-                                       UUID userId,
-                                       Collection<GrantedAuthority> authorities,
-                                       Duration tokenDuration, Key signingKey) {
-        Map<String, Object> claims = addClaims(authorities);
-        return doGenerateToken(claims, userName, userId, tokenDuration, signingKey);
-    }
-
-    private static Map<String, Object> addClaims(Collection<GrantedAuthority> authorities) {
-        return Map.of("Authorities", authorities);
-    }
-
     private static String doGenerateToken(Map<String, Object> claims, String subject, UUID id,
                                           Duration tokenDuration,
                                           Key signingKey) {
@@ -76,11 +62,6 @@ public class JwtTokenUtil {
                                          Duration tokenDuration, Key signingKey) {
         Map<String, Object> claims = addClaimsV2(authorities);
         return doGenerateToken(claims, userName, userId, tokenDuration, signingKey);
-    }
-
-    public Boolean validateToken(UserDetails userDetails) {
-        final String username = getUsernameFromToken();
-        return (username != null && username.equals(userDetails.getUsername()));
     }
 
     public String getUserIdFromToken() {
