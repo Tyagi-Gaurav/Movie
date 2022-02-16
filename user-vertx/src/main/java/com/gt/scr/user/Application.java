@@ -1,9 +1,10 @@
 package com.gt.scr.user;
 
-import com.gt.scr.user.config.BeanFactory;
 import com.gt.scr.user.dao.ChangeLogVerticle;
 import com.gt.scr.user.dao.UserDaoHandler;
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.Factory;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.DeploymentOptions;
@@ -20,7 +21,7 @@ public class Application extends AbstractVerticle {
     @Override
     public void start(Promise<Void> startPromise) {
         beanContext.registerSingleton(vertx);
-        beanContext.getBean(BeanFactory.class);
+        beanContext.getBeanDefinitions(Qualifiers.byStereotype(Factory.class));
 
         PgConnectOptions pgConnectOptions = getPgConnectOptions(config());
         Future<String> changeLogVerticle = vertx.deployVerticle(new ChangeLogVerticle(pgConnectOptions),

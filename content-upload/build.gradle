@@ -223,6 +223,7 @@ tasks.register('integrationTest', Test) {
         junitXml.enabled = true
     }
     shouldRunAfter test
+    finalizedBy jacocoTestReport
 }
 
 check.dependsOn(integrationTest)

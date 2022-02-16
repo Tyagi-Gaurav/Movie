@@ -1,6 +1,5 @@
 package com.gt.scr.user.config;
 
-import com.gt.scr.user.HttpServerVerticle;
 import com.gt.scr.user.handler.AccountResourceHandler;
 import com.gt.scr.user.handler.AdminUserAddHandler;
 import com.gt.scr.user.handler.AdminUserGetUsersHandler;
@@ -108,29 +107,5 @@ public class BeanFactory {
         HealthChecks healthChecks = HealthChecks.create(vertx);
         healthChecks.register("status", promise -> promise.complete(Status.OK()));
         return HealthCheckHandler.createWithHealthChecks(healthChecks);
-    }
-
-    @Singleton
-    public HttpServerVerticle httpServerVerticle(AccountResourceHandler accountResourceHandler,
-                                                 AuthenticationHandler authenticationHandler,
-                                                 Validator validator,
-                                                 AdminUserAddHandler adminUserAddHandler,
-                                                 AdminUserGetUsersHandler adminUserGetUsersHandler,
-                                                 SecurityHandler securityHandler,
-                                                 UserGetByNameHandler userGetByNameHandler,
-                                                 UserDeleteHandler userDeleteHandler,
-                                                 UserGetByIdHandler userGetByIdHandler,
-                                                 HealthCheckHandler healthCheckHandler) {
-        return new HttpServerVerticle(
-                accountResourceHandler,
-                authenticationHandler,
-                validator,
-                adminUserAddHandler,
-                adminUserGetUsersHandler,
-                securityHandler,
-                userGetByNameHandler,
-                userDeleteHandler,
-                userGetByIdHandler,
-                healthCheckHandler);
     }
 }
