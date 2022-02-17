@@ -1,6 +1,7 @@
 package com.gt.scr.user.handler;
 
 import com.gt.scr.domain.User;
+import com.gt.scr.user.exception.SystemException;
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.user.service.UserServiceV2;
 import com.gt.scr.utils.DataEncoder;
@@ -35,20 +36,16 @@ public class AdminUserAddHandler implements Handler<RoutingContext> {
                         Collections.singletonList(accountCreateRequestDTO.role())))
                 .onFailure(throwable -> {
                     if (throwable instanceof ReplyException) {
-                        routingContext.response().setStatusCode(403);
-                        routingContext.response().end();
+                        routingContext.response().setStatusCode(403).end();
                     }
-                }).onSuccess(event -> {
-                    routingContext.response().setStatusCode(204);
-                    routingContext.response().end();
-                });
+                }).onSuccess(event -> routingContext.response().setStatusCode(204).end());
     }
 
     private String encode(String password) {
         try {
             return dataEncoder.encode(password);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SystemException(e);
         }
     }
 }

@@ -14,6 +14,7 @@ import com.gt.scr.user.resource.domain.LoginRequestDTO;
 import com.gt.scr.user.resource.domain.LoginResponseDTO;
 import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.gt.scr.utils.DataEncoder;
+import com.gt.scr.utils.DataEncoderImpl;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bouncycastle.util.encoders.HexEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -42,7 +43,7 @@ public class ScenarioExecutor {
     }
 
     public void addAdminUser(DataSource dataSource) {
-        DataEncoder dataEncoder = new DataEncoder(new HexEncoder());
+        DataEncoder dataEncoder = new DataEncoderImpl(new HexEncoder());
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement =
                      connection.prepareStatement("INSERT INTO USER_SCHEMA.USER_TABLE (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) values (?, ?, ?, ?, ?, ?)")) {

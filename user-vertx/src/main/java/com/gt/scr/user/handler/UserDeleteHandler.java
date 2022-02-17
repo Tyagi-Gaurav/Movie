@@ -18,13 +18,7 @@ public class UserDeleteHandler implements Handler<RoutingContext> {
         String userId = routingContext.request().getParam("userId");
 
         userServiceV2.delete(UUID.fromString(userId))
-                .onFailure(throwable -> {
-                    routingContext.response().setStatusCode(500);
-                    routingContext.response().end();
-                })
-                .onSuccess(jsonObject -> {
-                    routingContext.response().setStatusCode(200);
-                    routingContext.response().end();
-                });
+                .onFailure(throwable -> routingContext.response().setStatusCode(500).end())
+                .onSuccess(jsonObject -> routingContext.response().setStatusCode(200).end());
     }
 }

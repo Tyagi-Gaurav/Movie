@@ -54,15 +54,11 @@ public class SecurityHandler implements Handler<RoutingContext> {
                         User user = jsonObject.mapTo(User.class);
                         if (!roles.contains(Role.ALL.toString().toLowerCase(Locale.ROOT))
                                 && !roles.contains(user.getRole().toLowerCase())) {
-                            event.response().setStatusCode(403);
-                            event.end();
+                            event.response().setStatusCode(403).end();
                         } else {
                             event.next();
                         }
-                    }).onFailure(th -> {
-                        event.response().setStatusCode(401);
-                        event.end();
-                    });
+                    }).onFailure(th -> event.response().setStatusCode(401).end());
         }
     }
 }

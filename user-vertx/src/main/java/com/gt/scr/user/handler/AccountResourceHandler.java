@@ -2,6 +2,7 @@ package com.gt.scr.user.handler;
 
 import com.gt.scr.domain.User;
 import com.gt.scr.user.exception.ExceptionMapper;
+import com.gt.scr.user.exception.SystemException;
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.user.service.UserServiceV2;
 import com.gt.scr.user.service.domain.Role;
@@ -44,10 +45,7 @@ public class AccountResourceHandler implements Handler<RoutingContext> {
                             Collections.singleton(accountCreateRequestDTO.role())))
                     .onFailure(throwable ->
                             exceptionMapper.mapException(routingContext, throwable, ReplyException.class, 403, 500)
-                    ).onSuccess(event -> {
-                        routingContext.response().setStatusCode(204);
-                        routingContext.response().end();
-                    });
+                    ).onSuccess(event -> routingContext.response().setStatusCode(204).end());
         }
     }
 
@@ -55,7 +53,7 @@ public class AccountResourceHandler implements Handler<RoutingContext> {
         try {
             return dataEncoder.encode(password);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SystemException(e);
         }
     }
 }

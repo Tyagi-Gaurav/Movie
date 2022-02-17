@@ -37,9 +37,6 @@ public class AdminUserGetUsersHandler implements Handler<RoutingContext> {
                     routingContext.response().write(new JsonObject().put("userList", new JsonArray(jsonNodes)).toBuffer());
                     routingContext.response().end();
                 })
-                .onFailure(th -> {
-                    routingContext.response().setStatusCode(404);
-                    routingContext.response().end();
-                });
+                .onFailure(th -> routingContext.response().setStatusCode(404).end());
     }
 }

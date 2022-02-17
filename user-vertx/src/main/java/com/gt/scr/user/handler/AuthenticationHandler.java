@@ -1,6 +1,7 @@
 package com.gt.scr.user.handler;
 
 import com.gt.scr.domain.User;
+import com.gt.scr.user.exception.SystemException;
 import com.gt.scr.user.resource.domain.LoginRequestDTO;
 import com.gt.scr.user.resource.domain.LoginResponseDTO;
 import com.gt.scr.user.service.UserServiceV2;
@@ -54,7 +55,7 @@ public class AuthenticationHandler implements Handler<RoutingContext> {
         try {
             return dataEncoder.encode(password);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SystemException(e);
         }
     }
 }

@@ -12,6 +12,7 @@ import com.gt.scr.user.handler.UserGetByNameHandler;
 import com.gt.scr.user.service.UserServiceV2;
 import com.gt.scr.user.service.UserServiceVertxImpl;
 import com.gt.scr.utils.DataEncoder;
+import com.gt.scr.utils.DataEncoderImpl;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.micronaut.context.annotation.Factory;
 import io.vertx.core.Vertx;
@@ -35,7 +36,7 @@ public class BeanFactory {
 
     @Singleton
     public DataEncoder dataEncoder() {
-        return new DataEncoder(new HexEncoder());
+        return new DataEncoderImpl(new HexEncoder());
     }
 
     @Singleton

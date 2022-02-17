@@ -26,10 +26,11 @@ public class ValidationHandler<T> implements Handler<RoutingContext>  {
         Set<ConstraintViolation<T>> validate =
                 validator.validate(event.getBody().toJsonObject().mapTo(clazz));
         LOG.debug("Validation Result {}", validate);
+
         if (!validate.isEmpty()) {
-            event.response().setStatusCode(400);
-            event.response().end();
+            event.response().setStatusCode(400).end();
         }
+
         event.next();
     }
 }
