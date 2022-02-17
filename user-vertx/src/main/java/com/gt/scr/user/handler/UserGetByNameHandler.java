@@ -1,6 +1,7 @@
 package com.gt.scr.user.handler;
 
 import com.gt.scr.domain.User;
+import com.gt.scr.user.exception.ExceptionMapper;
 import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.gt.scr.user.service.UserServiceV2;
 import io.vertx.core.Handler;
@@ -9,9 +10,12 @@ import io.vertx.ext.web.RoutingContext;
 
 public class UserGetByNameHandler implements Handler<RoutingContext> {
     private final UserServiceV2 userServiceV2;
+    private final ExceptionMapper exceptionMapper;
 
-    public UserGetByNameHandler(UserServiceV2 userServiceV2) {
+    public UserGetByNameHandler(UserServiceV2 userServiceV2,
+                                ExceptionMapper exceptionMapper) {
         this.userServiceV2 = userServiceV2;
+        this.exceptionMapper = exceptionMapper;
     }
 
     @Override
@@ -29,8 +33,7 @@ public class UserGetByNameHandler implements Handler<RoutingContext> {
                     routingContext.response().end();
                 })
                 .onFailure(th -> {
-                    routingContext.response().setStatusCode(404);
-                    routingContext.response().end();
+                    exceptionMapper.mapException(routingContext, 404);
                 });
     }
 }

@@ -1,6 +1,7 @@
 package com.gt.scr.user.handler;
 
 import com.gt.scr.domain.User;
+import com.gt.scr.user.exception.ExceptionMapper;
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.user.service.UserServiceV2;
 import com.gt.scr.user.service.domain.Role;
@@ -16,11 +17,14 @@ import java.util.UUID;
 public class AccountResourceHandler implements Handler<RoutingContext> {
     private final UserServiceV2 userService;
     private final DataEncoder dataEncoder;
+    private final ExceptionMapper exceptionMapper;
 
     public AccountResourceHandler(UserServiceV2 userService,
-                                  DataEncoder dataEncoder) {
+                                  DataEncoder dataEncoder,
+                                  ExceptionMapper exceptionMapper) {
         this.userService = userService;
         this.dataEncoder = dataEncoder;
+        this.exceptionMapper = exceptionMapper;
     }
 
     @Override
@@ -38,12 +42,9 @@ public class AccountResourceHandler implements Handler<RoutingContext> {
                             accountCreateRequestDTO.userName(),
                             encode(accountCreateRequestDTO.password()),
                             Collections.singleton(accountCreateRequestDTO.role())))
-                    .onFailure(throwable -> {
-                        if (throwable instanceof ReplyException) {
-                            routingContext.response().setStatusCode(403);
-                            routingContext.response().end();
-                        }
-                    }).onSuccess(event -> {
+                    .onFailure(throwable ->
+                            exceptionMapper.mapException(routingContext, throwable, ReplyException.class, 403, 500)
+                    ).onSuccess(event -> {
                         routingContext.response().setStatusCode(204);
                         routingContext.response().end();
                     });

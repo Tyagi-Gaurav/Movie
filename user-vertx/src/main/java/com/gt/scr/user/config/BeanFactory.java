@@ -1,5 +1,6 @@
 package com.gt.scr.user.config;
 
+import com.gt.scr.user.exception.ExceptionMapper;
 import com.gt.scr.user.handler.AccountResourceHandler;
 import com.gt.scr.user.handler.AdminUserAddHandler;
 import com.gt.scr.user.handler.AdminUserGetUsersHandler;
@@ -43,13 +44,15 @@ public class BeanFactory {
     }
 
     @Singleton
-    public UserGetByNameHandler userGetByNameHandler(UserServiceV2 userServiceV2) {
-        return new UserGetByNameHandler(userServiceV2);
+    public UserGetByNameHandler userGetByNameHandler(UserServiceV2 userServiceV2,
+                                                     ExceptionMapper exceptionMapper) {
+        return new UserGetByNameHandler(userServiceV2, exceptionMapper);
     }
 
     @Singleton
-    public UserGetByIdHandler userGetByIdHandler(UserServiceV2 userServiceV2) {
-        return new UserGetByIdHandler(userServiceV2);
+    public UserGetByIdHandler userGetByIdHandler(UserServiceV2 userServiceV2,
+                                                 ExceptionMapper exceptionMapper) {
+        return new UserGetByIdHandler(userServiceV2, exceptionMapper);
     }
 
     @Singleton
@@ -69,9 +72,15 @@ public class BeanFactory {
     }
 
     @Singleton
+    public ExceptionMapper exceptionMapper() {
+        return new ExceptionMapper();
+    }
+
+    @Singleton
     public AccountResourceHandler accountResourceHandler(UserServiceV2 userService,
-                                                         DataEncoder dataEncoder) {
-        return new AccountResourceHandler(userService, dataEncoder);
+                                                         DataEncoder dataEncoder,
+                                                         ExceptionMapper exceptionMapper) {
+        return new AccountResourceHandler(userService, dataEncoder, exceptionMapper);
     }
 
     @Singleton
