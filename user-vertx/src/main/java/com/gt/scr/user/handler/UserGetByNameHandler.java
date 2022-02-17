@@ -32,8 +32,6 @@ public class UserGetByNameHandler implements Handler<RoutingContext> {
                     routingContext.response().write(responseBody.toBuffer());
                     routingContext.response().end();
                 })
-                .onFailure(th -> {
-                    exceptionMapper.mapException(routingContext, 404);
-                });
+                .onFailure(th -> exceptionMapper.mapException(routingContext, 404));
     }
 }

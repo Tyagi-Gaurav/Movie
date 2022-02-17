@@ -9,7 +9,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AdminUserGetUsersHandler implements Handler<RoutingContext> {
 

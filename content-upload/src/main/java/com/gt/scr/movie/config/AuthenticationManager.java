@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono;
 import java.security.Key;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class AuthenticationManager implements ReactiveAuthenticationManager {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationManager.class);
