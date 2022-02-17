@@ -93,13 +93,36 @@ public class UserJourneysTest {
     }
 
     @Test
-    void createUserAndLoginTest() {
+    void createUserAndLogin() {
         AccountCreateRequestDTO accountCreateRequestDTO =
                 TestObjectBuilder.userAccountCreateRequestDTO();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
                 .userLoginsWith(accountCreateRequestDTO).expectReturnCode(200);
+    }
+
+    @Test
+    void requestIdShouldBeGeneratedWhenItsNotThere() {
+        AccountCreateRequestDTO accountCreateRequestDTO =
+                TestObjectBuilder.userAccountCreateRequestDTO();
+
+        scenarioExecutor
+                .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
+                .userLoginsWith(accountCreateRequestDTO).expectReturnCode(200)
+                .expectRequestIdIsReturnedInResponse();
+    }
+
+    @Test
+    void requestIdShouldNotBeGeneratedWhenItsAlreadyThere() {
+        AccountCreateRequestDTO accountCreateRequestDTO =
+                TestObjectBuilder.userAccountCreateRequestDTO();
+        UUID requestId = UUID.randomUUID();
+
+        scenarioExecutor
+                .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
+                .userLoginsWithCustomRequestId(accountCreateRequestDTO, requestId).expectReturnCode(200)
+                .expectRequestIdIsReturnedInResponseIs(requestId.toString());
     }
 
     @Test

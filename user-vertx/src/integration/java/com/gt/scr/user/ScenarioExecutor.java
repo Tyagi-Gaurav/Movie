@@ -16,7 +16,6 @@ import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.gt.scr.utils.DataEncoder;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bouncycastle.util.encoders.HexEncoder;
-import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
@@ -91,6 +90,13 @@ public class ScenarioExecutor {
         return this;
     }
 
+    public ScenarioExecutor userLoginsWith(LoginRequestDTO loginRequestDTO, UUID requestId) {
+        this.responseSpec = new Login(requestId).apply(webTestClient, loginRequestDTO);
+        this.userLoginResponseDTO = this.responseSpec.returnResult(LoginResponseDTO.class)
+                .getResponseBody().blockFirst();
+        return this;
+    }
+
     public ScenarioExecutor regularUserRetrievesListOfAllUsers() {
         this.responseSpec = new UserManagementReadUsers().apply(webTestClient, userLoginResponseDTO);
         return this;
@@ -157,9 +163,28 @@ public class ScenarioExecutor {
         return this;
     }
 
-    public void expectBodyToBeEqualTo(String expectedBodyAsString) {
+    public ScenarioExecutor expectBodyToBeEqualTo(String expectedBodyAsString) {
         String actualResult = this.responseSpec.returnResult(String.class)
                 .getResponseBody().blockFirst();
         assertThat(actualResult).isEqualTo(expectedBodyAsString);
+        return this;
+    }
+
+    public ScenarioExecutor expectRequestIdIsReturnedInResponse() {
+        this.responseSpec.expectHeader().exists("requestId");
+        return this;
+    }
+
+    public ScenarioExecutor userLoginsWithCustomRequestId(AccountCreateRequestDTO accountCreateRequestDTO,
+                                                          UUID requestId) {
+        LoginRequestDTO loginRequestDTO = TestObjectBuilder.loginRequestUsing(accountCreateRequestDTO);
+        this.responseSpec = new Login(requestId).apply(webTestClient, loginRequestDTO);
+        this.userLoginResponseDTO = this.responseSpec.returnResult(LoginResponseDTO.class)
+                .getResponseBody().blockFirst();
+        return this;
+    }
+
+    public void expectRequestIdIsReturnedInResponseIs(String requestId) {
+        this.responseSpec.expectHeader().valueEquals("requestId", requestId);
     }
 }

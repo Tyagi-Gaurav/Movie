@@ -39,16 +39,16 @@ public class AuthenticationHandler implements Handler<RoutingContext> {
                                 JwtTokenUtil.generateTokenV2(user, Duration.ofMinutes(10),
                                         key),
                                 user.id()));
-                        routingContext.response().setChunked(true);
-                        routingContext.response().setStatusCode(200);
-                        routingContext.response().write(response.toBuffer());
+                        routingContext.response()
+                                .setChunked(true)
+                                .setStatusCode(200)
+                                .write(response.toBuffer());
                     } else {
                         routingContext.response().setStatusCode(401);
                     }
                     routingContext.response().end();
                 }).onFailure(th -> {
-                    routingContext.response().setStatusCode(401);
-                    routingContext.response().end();
+                    routingContext.response().setStatusCode(401).end();
                 });
     }
 
