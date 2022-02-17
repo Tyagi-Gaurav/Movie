@@ -47,7 +47,7 @@ class UserAppHealthCheckTest {
         Health health = userAppHealthCheck.health();
 
         //then
-        assertThat(health).isEqualTo(Health.down(new RuntimeException("DOWN")).build());
+        assertThat(health).isEqualTo(Health.down(new RuntimeException("health check failed")).build());
     }
 
     @Test
@@ -59,6 +59,6 @@ class UserAppHealthCheckTest {
         Health health = userAppHealthCheck.health();
 
         //then
-        assertThat(health).isEqualTo(Health.down(new RuntimeException("error")).build());
+        assertThat(health).isEqualTo(Health.down(new RuntimeException("health check failed")).build());
     }
 }

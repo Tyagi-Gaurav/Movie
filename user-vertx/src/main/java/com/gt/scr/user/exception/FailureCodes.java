@@ -1,8 +1,8 @@
 package com.gt.scr.user.exception;
 
 public enum FailureCodes {
-    DatabaseFailure(1),
-    NoRecordFound(2);
+    DATABASE_FAILURE(1),
+    NO_RECORD_FOUND(2);
 
     private final int failureCode;
 

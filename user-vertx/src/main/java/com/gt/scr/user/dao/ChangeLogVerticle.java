@@ -29,11 +29,11 @@ public class ChangeLogVerticle extends AbstractVerticle {
                 pgConnectOptions.getUser(),
                 pgConnectOptions.getPassword());
 
-        //Class.forName("");
         Database correctDatabaseImplementation = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(
                 new JdbcConnection(DriverManager.getConnection(jdbcUrl)));
-        Liquibase liquibase = new Liquibase("db.changelog/userchangelog.sql", new ClassLoaderResourceAccessor(), correctDatabaseImplementation);
-        liquibase.update(new Contexts());
+        try(Liquibase liquibase = new Liquibase("db.changelog/userchangelog.sql", new ClassLoaderResourceAccessor(), correctDatabaseImplementation)) {
+            liquibase.update(new Contexts());
+        }
         startPromise.complete();
     }
 }

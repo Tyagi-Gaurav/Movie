@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.gt.scr.user.config.EventBusAddress.*;
-import static com.gt.scr.user.exception.FailureCodes.DatabaseFailure;
-import static com.gt.scr.user.exception.FailureCodes.NoRecordFound;
+import static com.gt.scr.user.exception.FailureCodes.DATABASE_FAILURE;
+import static com.gt.scr.user.exception.FailureCodes.NO_RECORD_FOUND;
 
 public class UserDaoHandler extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(UserDaoHandler.class);
@@ -86,7 +86,7 @@ public class UserDaoHandler extends AbstractVerticle {
                         }
                     }
 
-                    tMessage.fail(NoRecordFound.getFailureCode(), "No users found");
+                    tMessage.fail(NO_RECORD_FOUND.getFailureCode(), "No users found");
                 });
     }
 
@@ -101,7 +101,7 @@ public class UserDaoHandler extends AbstractVerticle {
                     } else {
                         Throwable cause = ar.cause();
                         LOG.error(cause.getMessage(), cause);
-                        tMessage.fail(DatabaseFailure.getFailureCode(), cause.getMessage());
+                        tMessage.fail(DATABASE_FAILURE.getFailureCode(), cause.getMessage());
                     }
                 });
     }
@@ -128,7 +128,7 @@ public class UserDaoHandler extends AbstractVerticle {
                         }
                     }
 
-                    tMessage.fail(NoRecordFound.getFailureCode(), "No user found");
+                    tMessage.fail(NO_RECORD_FOUND.getFailureCode(), "No user found");
                 });
     }
 
@@ -154,7 +154,7 @@ public class UserDaoHandler extends AbstractVerticle {
                         }
                     }
 
-                    tMessage.fail(NoRecordFound.getFailureCode(), "No user found");
+                    tMessage.fail(NO_RECORD_FOUND.getFailureCode(), "No user found");
                 });
     }
 
@@ -175,7 +175,7 @@ public class UserDaoHandler extends AbstractVerticle {
                     } else {
                         Throwable cause = ar.cause();
                         LOG.error(cause.getMessage(), cause);
-                        userMessage.fail(DatabaseFailure.getFailureCode(), cause.getMessage());
+                        userMessage.fail(DATABASE_FAILURE.getFailureCode(), cause.getMessage());
                     }
                 });
     }

@@ -21,7 +21,7 @@ public class UserAppHealthCheck implements HealthIndicator {
         StatusResponseDTO result = userStatusClient.status()
                 .onErrorResume(throwable -> Mono.just(new StatusResponseDTO(throwable.getMessage())))
                 .block();
-        return "UP".equals(result.status()) ? Health.up().build() :
-                Health.down(new RuntimeException(result.status())).build();
+        return result != null && "UP".equals(result.status()) ? Health.up().build() :
+                Health.down(new RuntimeException("health check failed")).build();
     }
 }
