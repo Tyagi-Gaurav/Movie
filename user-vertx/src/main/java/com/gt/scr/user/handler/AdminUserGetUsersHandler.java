@@ -31,7 +31,7 @@ public class AdminUserGetUsersHandler implements Handler<RoutingContext> {
                             .map(user -> new UserDetailsResponseDTO(user.username(), user.password(), user.firstName(),
                                     user.lastName(), user.getRole(), user.id()))
                             .map(JsonObject::mapFrom)
-                            .collect(Collectors.toList());
+                            .toList();
 
                     routingContext.response().setStatusCode(200);
                     routingContext.response().write(new JsonObject().put("userList", new JsonArray(jsonNodes)).toBuffer());

@@ -47,9 +47,7 @@ public class AuthenticationHandler implements Handler<RoutingContext> {
                         routingContext.response().setStatusCode(401);
                     }
                     routingContext.response().end();
-                }).onFailure(th -> {
-                    routingContext.response().setStatusCode(401).end();
-                });
+                }).onFailure(th -> routingContext.response().setStatusCode(401).end());
     }
 
     private String encode(String password) {

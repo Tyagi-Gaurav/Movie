@@ -69,18 +69,16 @@ public class UserDaoHandler extends AbstractVerticle {
                         if (rowSet.rowCount() > 0) {
                             List<User> users = new ArrayList<>();
                             rowSet.iterator().forEachRemaining(
-                                    row -> {
-                                        users.add(new User(UUID.fromString(row.getString(ID.toLowerCase())),
-                                                row.getString(FIRST_NAME.toLowerCase()),
-                                                row.getString(LAST_NAME.toLowerCase()),
-                                                row.getString(USER_NAME.toLowerCase()),
-                                                row.getString(PASSWORD.toLowerCase()),
-                                                Stream.of(row.getString(ROLES.toLowerCase()).split(","))
-                                                        .collect(Collectors.toList())));
-                                    }
+                                    row -> users.add(new User(UUID.fromString(row.getString(ID.toLowerCase())),
+                                            row.getString(FIRST_NAME.toLowerCase()),
+                                            row.getString(LAST_NAME.toLowerCase()),
+                                            row.getString(USER_NAME.toLowerCase()),
+                                            row.getString(PASSWORD.toLowerCase()),
+                                            Stream.of(row.getString(ROLES.toLowerCase()).split(","))
+                                                    .toList()))
                             );
 
-                            List<JsonObject> jsonObjectList = users.stream().map(JsonObject::mapFrom).collect(Collectors.toList());
+                            List<JsonObject> jsonObjectList = users.stream().map(JsonObject::mapFrom).toList();
                             tMessage.reply(new JsonObject().put("userList", new JsonArray(jsonObjectList)));
                             return;
                         }
@@ -123,7 +121,7 @@ public class UserDaoHandler extends AbstractVerticle {
                                             row.getString(USER_NAME.toLowerCase()),
                                             row.getString(PASSWORD.toLowerCase()),
                                             Stream.of(row.getString(ROLES.toLowerCase()).split(","))
-                                                    .collect(Collectors.toList()))));
+                                                    .toList())));
                             return;
                         }
                     }
@@ -149,7 +147,7 @@ public class UserDaoHandler extends AbstractVerticle {
                                             row.getString(USER_NAME.toLowerCase()),
                                             row.getString(PASSWORD.toLowerCase()),
                                             Stream.of(row.getString(ROLES.toLowerCase()).split(","))
-                                                    .collect(Collectors.toList()))));
+                                                    .toList())));
                             return;
                         }
                     }

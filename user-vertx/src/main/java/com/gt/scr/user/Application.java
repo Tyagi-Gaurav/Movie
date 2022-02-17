@@ -59,9 +59,4 @@ public class Application extends AbstractVerticle {
 
         return PgPool.pool(vertx, pgConnectOptions, poolOptions);
     }
-
-    @Override
-    public void stop(Promise<Void> stopPromise) throws Exception {
-        super.stop(stopPromise);
-    }
 }

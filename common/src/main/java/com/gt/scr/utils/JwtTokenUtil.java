@@ -72,7 +72,7 @@ public class JwtTokenUtil {
         return getClaimFromToken(Claims::getId);
     }
 
-    public Boolean isTokenValid() {
+    public boolean isTokenValid() {
         try {
             getUsernameFromToken();
             return true;

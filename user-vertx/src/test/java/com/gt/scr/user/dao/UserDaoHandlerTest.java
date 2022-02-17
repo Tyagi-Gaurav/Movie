@@ -82,7 +82,7 @@ class UserDaoHandlerTest {
                     ctx.verify(() -> assertThat(user.firstName()).isEqualTo(expectedUser.firstName()));
                     ctx.verify(() -> assertThat(user.id()).isEqualTo(expectedUser.id()));
                     ctx.verify(() -> assertThat(user.password()).isEqualTo(expectedUser.password()));
-                    ctx.verify(() -> assertThat(user.getRole()).isEqualTo(""));
+                    ctx.verify(() -> assertThat(user.getRole()).isEmpty());
                     ctx.completeNow();
                 });
     }
