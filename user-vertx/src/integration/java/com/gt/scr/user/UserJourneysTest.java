@@ -169,6 +169,16 @@ public class UserJourneysTest {
     }
 
     @Test
+    void adminUserShouldNotBeAbleToCreateDuplicateUsers() {
+        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.adminAccountCreateRequest();
+
+        scenarioExecutor
+                .when().globalAdminUserLogins().expectReturnCode(200)
+                .adminUserCreatesARegularUserFor(accountCreateRequestDTO).expectReturnCode(204)
+                .adminUserCreatesARegularUserFor(accountCreateRequestDTO).expectReturnCode(403);
+    }
+
+    @Test
     void aNormalUserShouldNotBeAbleToAccessUserManagementEndpoints() {
         AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.userAccountCreateRequestDTO();
 
@@ -179,7 +189,7 @@ public class UserJourneysTest {
     }
 
     @Test
-    void adminUserShouldBeAbleToListAlTheUsersOfTheSystem() {
+    void adminUserShouldBeAbleToListAllTheUsersOfTheSystem() {
         scenarioExecutor
                 .when().globalAdminUserLogins().expectReturnCode(200)
                 .adminUserRetrievesListOfAllUsers().expectReturnCode(200);
