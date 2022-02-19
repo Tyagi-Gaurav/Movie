@@ -25,7 +25,7 @@ subprojects {
                 property "sonar.java.coveragePlugin", "jacoco"
                 property "sonar.dynamicAnalysis", "reuseReports"
                 property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
-                property "sonar.coverage.exclusions", "**/com/gt/scr/movie/Application**, **/com/gt/scr/*/config/**, **/com/gt/scr/*/security/WebSecurityConfig**, **/com/gt/scr/*/resource/SecurityContextHolder**, **/com/gt/scr/*/filter/LoggingFilter**,**/com/gt/scr/user/resource/domain/**, **/com/gt/scr/user/config/**,**/com/gt/scr/user/ConfigVerticle/**,**/com/gt/scr/movie/Graceful**"
+                property "sonar.coverage.exclusions", "**/com/gt/scr/movie/Application**, **/com/gt/scr/*/config/**, **/com/gt/scr/*/security/WebSecurityConfig**, **/com/gt/scr/*/resource/SecurityContextHolder**, **/com/gt/scr/*/filter/LoggingFilter**,**/com/gt/scr/user/resource/domain/**, **/com/gt/scr/user/config/**,**/com/gt/scr/user/Application**,**/com/gt/scr/user/ConfigVerticle**,**/com/gt/scr/utils/JwtTokenUtil**,**/com/gt/scr/movie/Graceful**"
             }
         }
     }
