@@ -13,10 +13,6 @@ subprojects {
     apply plugin: "idea"
 
     configure(subprojects.findAll {it.name != 'api-gateway'}) {
-        plugins {
-            id "org.sonarqube" version "3.3"
-        }
-
         sonarqube {
             properties {
                 property "sonar.projectKey", "Tyagi-Gaurav_Movie"
