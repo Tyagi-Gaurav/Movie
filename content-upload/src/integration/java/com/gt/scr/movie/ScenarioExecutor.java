@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ScenarioExecutor {
     private WebTestClient.ResponseSpec responseSpec;
-    private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwic3ViIjoiQ3JjYWlnIiwianRpIjoiNjliZDE3YjgtNTM3OS00OTJlLWI0MTAtMTc1MGNiMmYxN2UzIiwiaWF0IjoxNjQwMjQ0NTg1LCJleHAiOjE5NTU2MDQ1ODV9.Yyqwnblk4Qo_lQw1MkwLgAyXtZAKVEO8RAjJDbE6ces";
+    private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJBRE1JTiJdLCJzdWIiOiJDcmNhaWciLCJqdGkiOiI2OWJkMTdiOC01Mzc5LTQ5MmUtYjQxMC0xNzUwY2IyZjE3ZTMiLCJpYXQiOjE2NDQ5NDI5MzYsImV4cCI6MTk2MDMwMjkzNn0.uVN9etpicGwftAvIdlxkq8c0SkG7_keHAqfjbPl6YtI";
     private static final String TEST_USER_ID = "69bd17b8-5379-492e-b410-1750cb2f17e3";
     private static final String TEST_USER_NAME = "Crcaig";
 

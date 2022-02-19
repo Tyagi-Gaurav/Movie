@@ -25,20 +25,29 @@ services:
   user-app:
     container_name: local.user-app
     depends_on:
-      - mysql
+      - postgres
     build:
-      context: user
+      context: user-vertx
     ports:
       - "7070:7070"
-      - "7071:7071"
     environment:
-      - "SPRING_PROFILES_ACTIVE=prod"
-      - "SERVER_PORT=7070"
-      - "SERVER_MGT_PORT=7071"
-      - "MYSQL_HOST=local.mysql"
-      - "MYSQL_PWD=password"
-      - "MYSQL_USER=root"
-      - "MYSQL_DB_NAME=movieMetadata"
+      - "http.port=7070"
+      - "db.host=local.postgres"
+      - "db.user=user"
+      - "db.password=password"
+      - "db.name=testUserDB"
+    networks:
+      - overlay
+
+  postgres:
+    image: postgres:14.1
+    container_name: local.postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_USER=user"
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_DB=testUserDB"
     networks:
       - overlay
 

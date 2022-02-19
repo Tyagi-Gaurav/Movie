@@ -1,18 +1,18 @@
 package com.gt.scr.movie.config;
 
-import com.gt.scr.movie.filter.JwtTokenUtil;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.UserService;
+import com.gt.scr.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import reactor.core.publisher.Mono;
 
 import java.security.Key;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,13 +47,16 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 
                         List<Object> authoritiesObjects = (List<Object>) jwtTokenUtil.getClaimFromToken(claims -> claims.get("Authorities"));
 
-                        LinkedHashMap<String, Object> authorities = (LinkedHashMap<String, Object>) authoritiesObjects.get(0);
-                        String authority = authorities.get("authority").toString();
+                        LOG.info("Authorities Object {}", authoritiesObjects);
+
+                        String authority = (String) authoritiesObjects.get(0);
                         var userprofile = new UserProfile(ud.id(), authority, token);
 
                         LOG.info("User {} authenticated with role: {}", userId, authority);
                         UsernamePasswordAuthenticationToken userTokenData =
-                                new UsernamePasswordAuthenticationToken(userprofile, "", ud.authorities());
+                                new UsernamePasswordAuthenticationToken(userprofile, "",
+                                        ud.authorities().stream().map(SimpleGrantedAuthority::new)
+                                                .toList());
                         return Mono.just(userTokenData);
                     });
         }

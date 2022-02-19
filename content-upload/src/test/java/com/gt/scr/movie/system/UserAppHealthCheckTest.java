@@ -1,5 +1,6 @@
 package com.gt.scr.movie.system;
 
+import com.gt.scr.movie.ext.user.StatusResponseDTO;
 import com.gt.scr.movie.ext.user.UserStatusClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class UserAppHealthCheckTest {
     @Test
     void shouldReturnSuccessWhenHealthIsOk() {
         //given
-        when(userStatusClient.status()).thenReturn(Mono.just("UP"));
+        when(userStatusClient.status()).thenReturn(Mono.just(new StatusResponseDTO("UP")));
 
         //when
         Health health = userAppHealthCheck.health();
@@ -40,13 +41,13 @@ class UserAppHealthCheckTest {
     @Test
     void shouldReturnFailureWhenHealthIsNotOK() {
         //given
-        when(userStatusClient.status()).thenReturn(Mono.just("DOWN"));
+        when(userStatusClient.status()).thenReturn(Mono.just(new StatusResponseDTO("DOWN")));
 
         //when
         Health health = userAppHealthCheck.health();
 
         //then
-        assertThat(health).isEqualTo(Health.down(new RuntimeException("DOWN")).build());
+        assertThat(health).isEqualTo(Health.down(new RuntimeException("health check failed")).build());
     }
 
     @Test
@@ -58,6 +59,6 @@ class UserAppHealthCheckTest {
         Health health = userAppHealthCheck.health();
 
         //then
-        assertThat(health).isEqualTo(Health.down(new RuntimeException("error")).build());
+        assertThat(health).isEqualTo(Health.down(new RuntimeException("health check failed")).build());
     }
 }

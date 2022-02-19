@@ -1,8 +1,8 @@
 package com.gt.scr.movie.config;
 
-import com.gt.scr.spc.domain.User;
-import com.gt.scr.movie.filter.JwtTokenUtil;
+import com.gt.scr.domain.User;
 import com.gt.scr.movie.service.UserService;
+import com.gt.scr.utils.JwtTokenUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -26,7 +25,6 @@ import java.util.UUID;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
-
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationManagerTest {
@@ -43,7 +41,7 @@ class AuthenticationManagerTest {
             "TestLastName",
             "TestUserName",
             "",
-            Collections.singletonList(new SimpleGrantedAuthority("ADMIN")));
+            Collections.singletonList("ADMIN"));
     private final static String KEY_256_BIT = "8A6872AD13BEC411DAC9746C7FEDB8A6872AD13BEC411DAC9746C7FEDB";
 
     @BeforeEach
@@ -55,7 +53,7 @@ class AuthenticationManagerTest {
 
     @Test
     void shouldReturnEmptyWhenNoUserFound() {
-        String token = JwtTokenUtil.generateToken(user, Duration.ofMinutes(1L), signingKey);;
+        String token = JwtTokenUtil.generateTokenV2(user, Duration.ofMinutes(1L), signingKey);;
 
         when(userService.findUserBy(user.id())).thenReturn(Mono.empty());
 
@@ -70,7 +68,7 @@ class AuthenticationManagerTest {
 
     @Test
     void shouldReturnEmptyWhenTokenIsExpired() throws InterruptedException {
-        String token = JwtTokenUtil.generateToken(user, Duration.ofMillis(1L), signingKey);;
+        String token = JwtTokenUtil.generateTokenV2(user, Duration.ofMillis(1L), signingKey);;
 
         await("Wait for token to Expire").atLeast(Duration.ofMillis(50))
                 .until(() -> true);
@@ -88,7 +86,7 @@ class AuthenticationManagerTest {
 
     @Test
     void shouldReturnResponseWhenUserFound() {
-        String token = JwtTokenUtil.generateToken(user, Duration.ofMinutes(1L), signingKey);;
+        String token = JwtTokenUtil.generateTokenV2(user, Duration.ofMinutes(1L), signingKey);;
 
         when(userService.findUserBy(user.id())).thenReturn(Mono.just(user));
 

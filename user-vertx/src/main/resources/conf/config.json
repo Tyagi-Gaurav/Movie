@@ -1,0 +1,9 @@
+{
+  "http.port": 8080,
+  "db.host": "localhost",
+  "db.port": 5432,
+  "db.name": "testDB",
+  "db.user": "postgres",
+  "db.password": "secret",
+  "auth.token.key": "19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676"
+}

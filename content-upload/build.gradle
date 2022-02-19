@@ -162,7 +162,7 @@ jacocoTestReport {
         }))
     }
 
-    executionData.from = files('build/jacoco/test.exec')
+    executionData.from = files('build/jacoco/test.exec','build/jacoco/integrationTest.exec')
 }
 
 spotbugs {
@@ -223,6 +223,7 @@ tasks.register('integrationTest', Test) {
         junitXml.enabled = true
     }
     shouldRunAfter test
+    finalizedBy jacocoTestReport
 }
 
 check.dependsOn(integrationTest)
