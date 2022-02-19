@@ -12,18 +12,8 @@ subprojects {
     apply plugin: "java"
     apply plugin: "idea"
 
-    configure(subprojects.findAll {it.name != 'api-gateway'}) {
-        sonarqube {
-            properties {
-                property "sonar.projectKey", "Tyagi-Gaurav_Movie"
-                property "sonar.organization", "tyagi-gaurav"
-                property "sonar.host.url", "https://sonarcloud.io"
-                property "sonar.java.coveragePlugin", "jacoco"
-                property "sonar.dynamicAnalysis", "reuseReports"
-                property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
-                property "sonar.coverage.exclusions", "**/com/gt/scr/movie/Application**, **/com/gt/scr/*/config/**, **/com/gt/scr/*/security/WebSecurityConfig**, **/com/gt/scr/*/resource/SecurityContextHolder**, **/com/gt/scr/*/filter/LoggingFilter**,**/com/gt/scr/user/resource/domain/**, **/com/gt/scr/user/config/**,**/com/gt/scr/user/Application**,**/com/gt/scr/user/ConfigVerticle**,**/com/gt/scr/utils/JwtTokenUtil**,**/com/gt/scr/movie/Graceful**"
-            }
-        }
+    plugins {
+        id "org.sonarqube" version "3.3"
     }
 
     sourceCompatibility = JavaVersion.VERSION_16
@@ -32,6 +22,42 @@ subprojects {
 
     project.ext {
         springBootVersion = '2.5.3'
+    }
+
+    sonarqube {
+        properties {
+            property "sonar.projectKey", "Tyagi-Gaurav_Movie"
+            property "sonar.organization", "tyagi-gaurav"
+            property "sonar.host.url", "https://sonarcloud.io"
+            property "sonar.java.coveragePlugin", "jacoco"
+            property "sonar.dynamicAnalysis", "reuseReports"
+            property "sonar.sourceEncoding", "UTF-8"
+            property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
+        }
+    }
+
+    project(":content-upload") {
+        sonarqube {
+            properties {
+                property "sonar.coverage.exclusions", "**/com/gt/scr/movie/Application**, **/com/gt/scr/*/config/**, **/com/gt/scr/*/security/WebSecurityConfig**, **/com/gt/scr/*/resource/SecurityContextHolder**, **/com/gt/scr/*/filter/LoggingFilter**"
+            }
+        }
+    }
+
+    project(":user-vertx") {
+        sonarqube {
+            properties {
+                property "sonar.coverage.exclusions", "**/com/gt/scr/*/config/**, **/com/gt/scr/user/resource/domain/**, **/com/gt/scr/user/config/**,**/com/gt/scr/user/Application**,**/com/gt/scr/user/ConfigVerticle**,**/com/gt/scr/utils/JwtTokenUtil**"
+            }
+        }
+    }
+
+    project(":common") {
+        sonarqube {
+            properties {
+                property "sonar.coverage.exclusions", "**/com/gt/scr/utils/JwtTokenUtil**"
+            }
+        }
     }
 
     jar {
