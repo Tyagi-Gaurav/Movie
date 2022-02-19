@@ -9,6 +9,19 @@ buildscript {
 
 plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.13.3'
+    id "org.sonarqube" version "2.7"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "Tyagi-Gaurav_Movie"
+        property "sonar.organization", "tyagi-gaurav"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.dynamicAnalysis", "reuseReports"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
+    }
 }
 
 apply from: 'gradle/root.gradle'

@@ -4,6 +4,10 @@ allprojects {
     }
 }
 
+def javaProjects() {
+    return subprojects.findAll { it.name != 'functional-tests' }
+}
+
 subprojects {
     repositories {
         mavenCentral()
@@ -11,10 +15,6 @@ subprojects {
 
     apply plugin: "java"
     apply plugin: "idea"
-
-    plugins {
-        id "org.sonarqube" version "3.3"
-    }
 
     sourceCompatibility = JavaVersion.VERSION_16
     targetCompatibility = JavaVersion.VERSION_16
@@ -24,17 +24,19 @@ subprojects {
         springBootVersion = '2.5.3'
     }
 
-    sonarqube {
-        properties {
-            property "sonar.projectKey", "Tyagi-Gaurav_Movie"
-            property "sonar.organization", "tyagi-gaurav"
-            property "sonar.host.url", "https://sonarcloud.io"
-            property "sonar.java.coveragePlugin", "jacoco"
-            property "sonar.dynamicAnalysis", "reuseReports"
-            property "sonar.sourceEncoding", "UTF-8"
-            property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
-        }
-    }
+//    configure(subprojects.findAll { it.name != 'api-gateway' }) {
+//        sonarqube {
+//            properties {
+//                property "sonar.projectKey", "Tyagi-Gaurav_Movie"
+//                property "sonar.organization", "tyagi-gaurav"
+//                property "sonar.host.url", "https://sonarcloud.io"
+//                property "sonar.java.coveragePlugin", "jacoco"
+//                property "sonar.dynamicAnalysis", "reuseReports"
+//                property "sonar.sourceEncoding", "UTF-8"
+//                property "sonar.jacoco.reportPath", "$projectDir/application/build/jacoco"
+//            }
+//        }
+//    }
 
     project(":content-upload") {
         sonarqube {
@@ -57,6 +59,12 @@ subprojects {
             properties {
                 property "sonar.coverage.exclusions", "**/com/gt/scr/utils/JwtTokenUtil**"
             }
+        }
+    }
+
+    project(":api-gateway") {
+        sonarqube {
+            skipProject = true
         }
     }
 
