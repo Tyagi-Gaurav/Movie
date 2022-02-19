@@ -31,24 +31,27 @@ public class AuthenticationHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext routingContext) {
         LoginRequestDTO loginRequestDTO = routingContext.getBodyAsJson().mapTo(LoginRequestDTO.class);
-
-        userServiceV2.findByUsername(loginRequestDTO.userName())
-                .onSuccess(event -> {
-                    User user = event.mapTo(User.class);
-                    if (user.password().equals(encode(loginRequestDTO.password()))) {
-                        JsonObject response = JsonObject.mapFrom(new LoginResponseDTO(
-                                JwtTokenUtil.generateTokenV2(user, Duration.ofMinutes(10),
-                                        key),
-                                user.id()));
-                        routingContext.response()
-                                .setChunked(true)
-                                .setStatusCode(200)
-                                .write(response.toBuffer());
-                    } else {
-                        routingContext.response().setStatusCode(401);
-                    }
-                    routingContext.response().end();
-                }).onFailure(th -> routingContext.response().setStatusCode(401).end());
+        try {
+            userServiceV2.findByUsername(loginRequestDTO.userName())
+                    .onSuccess(event -> {
+                        User user = event.mapTo(User.class);
+                        if (user.password().equals(encode(loginRequestDTO.password()))) {
+                            JsonObject response = JsonObject.mapFrom(new LoginResponseDTO(
+                                    JwtTokenUtil.generateTokenV2(user, Duration.ofMinutes(10),
+                                            key),
+                                    user.id()));
+                            routingContext.response()
+                                    .setChunked(true)
+                                    .setStatusCode(200)
+                                    .write(response.toBuffer());
+                        } else {
+                            routingContext.response().setStatusCode(401);
+                        }
+                        routingContext.response().end();
+                    }).onFailure(th -> routingContext.response().setStatusCode(401).end());
+        } catch(Exception e) {
+            routingContext.response().setStatusCode(500).end();
+        }
     }
 
     private String encode(String password) {

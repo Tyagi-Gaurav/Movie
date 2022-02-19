@@ -10,6 +10,8 @@ import com.gt.scr.utils.DataEncoder;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -19,6 +21,8 @@ public class AccountResourceHandler implements Handler<RoutingContext> {
     private final UserServiceV2 userService;
     private final DataEncoder dataEncoder;
     private final ExceptionMapper exceptionMapper;
+
+    private static final Logger LOG = LoggerFactory.getLogger(AccountResourceHandler.class);
 
     public AccountResourceHandler(UserServiceV2 userService,
                                   DataEncoder dataEncoder,
@@ -37,15 +41,20 @@ public class AccountResourceHandler implements Handler<RoutingContext> {
             routingContext.response().setStatusCode(403);
             routingContext.response().end();
         } else {
-            userService.add(new User(UUID.randomUUID(),
-                            accountCreateRequestDTO.firstName(),
-                            accountCreateRequestDTO.lastName(),
-                            accountCreateRequestDTO.userName(),
-                            encode(accountCreateRequestDTO.password()),
-                            Collections.singleton(accountCreateRequestDTO.role())))
-                    .onFailure(throwable ->
-                            exceptionMapper.mapException(routingContext, throwable, ReplyException.class, 403, 500)
-                    ).onSuccess(event -> routingContext.response().setStatusCode(204).end());
+            try {
+                userService.add(new User(UUID.randomUUID(),
+                                accountCreateRequestDTO.firstName(),
+                                accountCreateRequestDTO.lastName(),
+                                accountCreateRequestDTO.userName(),
+                                encode(accountCreateRequestDTO.password()),
+                                Collections.singleton(accountCreateRequestDTO.role())))
+                        .onFailure(throwable ->
+                                exceptionMapper.mapException(routingContext, throwable, ReplyException.class, 403, 500)
+                        ).onSuccess(event -> routingContext.response().setStatusCode(204).end());
+            } catch(Exception e) {
+                LOG.error(e.getMessage(), e);
+                routingContext.response().setStatusCode(500).end();
+            }
         }
     }
 

@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 .map(Function.identity());
     }
 
-    public UserDetails toUserDetails(UserDetailsResponseDTO user) {
+    private UserDetails toUserDetails(UserDetailsResponseDTO user) {
         return new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
