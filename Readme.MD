@@ -1,5 +1,10 @@
 [![Java CI with Gradle](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/functionalTest.yml/badge.svg)](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/functionalTest.yml)
 [![Sonar](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/sonar.yml/badge.svg)](https://github.com/Tyagi-Gaurav/Movie/actions/workflows/sonar.yml)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Tyagi-Gaurav_Movie&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Tyagi-Gaurav_Movie)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Tyagi-Gaurav_Movie&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Tyagi-Gaurav_Movie)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Tyagi-Gaurav_Movie&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=Tyagi-Gaurav_Movie)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Tyagi-Gaurav_Movie&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Tyagi-Gaurav_Movie)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Tyagi-Gaurav_Movie&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=Tyagi-Gaurav_Movie)
 
 ## Movie API
 
