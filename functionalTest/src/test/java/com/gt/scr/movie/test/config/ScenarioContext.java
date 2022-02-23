@@ -10,7 +10,7 @@ public class ScenarioContext {
     private TestAccountCreateRequestDTO adminCredentialsRequest;
     private String regularUserId;
     private String lastUserName;
-
+    private String lastMovieId;
 
     public String getLastUserName() {
         return lastUserName;

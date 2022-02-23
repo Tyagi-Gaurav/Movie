@@ -2,6 +2,7 @@ package com.gt.scr.movie.test.steps;
 
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
+import com.gt.scr.movie.test.domain.TestMovieCreateResponseDTO;
 import com.gt.scr.movie.test.domain.TestMovieDTO;
 import com.gt.scr.movie.test.domain.TestMovieUpdateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMoviesDTO;
@@ -163,5 +164,15 @@ public class MovieSteps implements En {
 
                     testMovieResource.updateMovie(updateRequestDTO, regularUserId);
                 });
+
+        And("^the movie-id of the movie is recorded$", () -> {
+            //scenarioContext.setMovieId()
+        });
+
+        And("^the response should contain a movieId in a UUID format$", () -> {
+            TestMovieCreateResponseDTO testMovieCreateResponseDTO =
+                    responseHolder.readResponse(TestMovieCreateResponseDTO.class);
+            assertThat(testMovieCreateResponseDTO.movieId()).isNotNull();
+        });
     }
 }

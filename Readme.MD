@@ -8,8 +8,43 @@
 
 ## Movie API
 
-### Current Version
-version* x.x.x
+### Engineering Principles
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Content-Upload</th>
+            <th>User</th>
+            <th>Issue#</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Clearly documented interfaces</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td>#212</td>
+        </tr>
+        <tr rowspan="2">
+            <td>
+                    Resilience libraries configured for any downstream<br>
+                    <li>Circuit breaker correctly configured for downstreams</li>
+                    <li>Timeouts for downstreams</li>
+                    <li>Bulkhead per endpoint</li>
+            </td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td>#194</td>
+        </tr>
+        <tr>
+            <td>Intra service communication via GRPC</td>
+            <td>(x)</td>
+            <td>NA</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
 ### Functionality
 

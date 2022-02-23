@@ -9,7 +9,7 @@ Feature: Logged in admin user should be able to access movie records and users
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
       | First Blood | 2000         | 7.8    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
 
   Scenario: Authenticated admin user should be able to read the movie records for all users
     Given the global admin user logs into the system
@@ -18,7 +18,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | name        | yearProduced | rating |
       | First Blood | 1990         | 7.8    |
       | Die Hard    | 1980         | 8.9    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
     And the userId for the user is recorded
     And the global admin user logs into the system
     When the authenticated admin user attempts to read the movies for user
@@ -35,7 +35,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | name        | yearProduced | rating |
       | First Blood | 1990         | 7.8    |
       | Die Hard    | 1980         | 8.9    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
     And the userId for the user is recorded
     And the global admin user logs into the system
     When the authenticated admin user attempts to delete all the movies for user
@@ -55,7 +55,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | name        | yearProduced | rating |
       | First Blood | 1990         | 7.8    |
       | Die Hard    | 1980         | 8.9    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
     And the regular user attempts to login again
     And the authenticated user attempts to read the movies
     Then the response should be received with HTTP status code 200
@@ -71,7 +71,7 @@ Feature: Logged in admin user should be able to access movie records and users
       | name        | yearProduced | rating |
       | First Blood | 1990         | 7.8    |
       | Die Hard    | 1980         | 8.9    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
     And the userId for the user is recorded
     And the global admin user logs into the system
     When the authenticated admin user attempts to read the movies for user

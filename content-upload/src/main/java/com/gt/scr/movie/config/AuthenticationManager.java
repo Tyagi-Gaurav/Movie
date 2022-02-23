@@ -32,7 +32,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
         String token = authentication.getPrincipal().toString();
         JwtTokenUtil jwtTokenUtil = new JwtTokenUtil(token, signingKey);
         String userId = getUserIdFromToken(jwtTokenUtil);
-        LOG.info("Token: {}", token);
+        LOG.debug("Token: {}", token);
 
         if (userId != null) {
             LOG.info("Fetch user details for: {}", userId);

@@ -1,6 +1,7 @@
 package com.gt.scr.movie;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class,
@@ -66,9 +69,29 @@ public class MovieJourneysTest {
     void creatingMoviesShouldSendMovieCreateEvent() {
         MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
 
-        scenarioExecutor
+        scenarioExecutor.
+                noEventsExistInTheSystem().then()
                 .givenUserIsLoggedIn().when()
-                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(204)
-                .movieCreateEventShouldBePublished(movieCreateRequestDTO);
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(200)
+                .thenAssertThat(movieCreateResponseDTO -> {
+                    assertThat(movieCreateResponseDTO).isNotNull();
+                    assertThat(movieCreateResponseDTO.movieId()).isNotNull();
+                }, MovieCreateResponseDTO.class)
+                .movieCreateEventShouldBePublishedForNormalUser(movieCreateRequestDTO);
+    }
+
+    @Test
+    void whenAdminIsCreatingMoviesForUserShouldSendMovieCreateEvent() {
+        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+
+        scenarioExecutor
+                .noEventsExistInTheSystem().then()
+                .givenAdminUserIsLoggedIn().when()
+                .adminUserCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(200)
+                .thenAssertThat(movieCreateResponseDTO -> {
+                    assertThat(movieCreateResponseDTO).isNotNull();
+                    assertThat(movieCreateResponseDTO.movieId()).isNotNull();
+                }, MovieCreateResponseDTO.class)
+                .movieCreateEventShouldBePublishedForAdminUser(movieCreateRequestDTO);
     }
 }

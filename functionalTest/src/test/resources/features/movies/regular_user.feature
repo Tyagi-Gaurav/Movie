@@ -12,14 +12,15 @@ Feature: Logged in users should be able to access movie records
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
       | First Blood | 2000         | 7.8    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
+    And the response should contain a movieId in a UUID format
 
   Scenario: Authenticated user should NOT be able to create duplicate movies
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
       | First Blood | 2000         | 7.8    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
       | First Blood | 2000         | 7.8    |
@@ -99,7 +100,7 @@ Feature: Logged in users should be able to access movie records
       | First Blood   | 1990         | 7.8    |
       | Die Hard      | 1980         | 8.9    |
       | The President | 2001         | 6.3    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
     And the userId for the user is recorded
     And a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
@@ -107,6 +108,6 @@ Feature: Logged in users should be able to access movie records
       | Second Blood       | 1990         | 7.8    |
       | Die Easy           | 1980         | 8.9    |
       | The Prime Minister | 2001         | 6.3    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
     And the authenticated user attempts to read the movies for the previous user
     Then the response should be received with HTTP status code 403

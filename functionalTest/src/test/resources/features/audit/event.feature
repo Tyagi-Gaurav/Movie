@@ -5,5 +5,5 @@ Feature: Audit events should be generated and be accessible to admin users only
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating |
       | First Blood | 2000         | 7.8    |
-    Then the response should be received with HTTP status code 204
+    Then the response should be received with HTTP status code 200
 

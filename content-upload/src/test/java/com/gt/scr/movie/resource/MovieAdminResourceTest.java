@@ -1,6 +1,7 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -51,9 +53,38 @@ class MovieAdminResourceTest {
         when(movieService.addMovie(eq(requestedUserId), eq(userProfile.id()), any(Movie.class))).thenReturn(Mono.empty());
 
         //when
-        Mono<Void> movie = movieAdminResource.createMovieFor(movieCreateRequestDTO, requestedUserId.toString());
+        Mono<MovieCreateResponseDTO> movie = movieAdminResource.createMovieFor(movieCreateRequestDTO, requestedUserId.toString());
 
-        StepVerifier.create(movie).verifyComplete();
+        StepVerifier.create(movie)
+                .consumeNextWith(movieCreateResponseDTO -> {
+                    assertThat(movieCreateResponseDTO.movieId()).isNotNull();
+                })
+                .verifyComplete();
+
+        verify(movieService).addMovie(eq(requestedUserId), eq(userProfile.id()), any(Movie.class));
+        verifyNoMoreInteractions(movieService);
+    }
+
+    @Test
+    void shouldHandleFailureWhenAdminMovieCreateFails() {
+        UUID requestedUserId = UUID.randomUUID();
+        MovieCreateRequestDTO movieCreateRequestDTO =
+                new MovieCreateRequestDTO(randomAlphabetic(6), 2010, BigDecimal.valueOf(10));
+
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
+        when(movieService.addMovie(eq(requestedUserId), eq(userProfile.id()), any(Movie.class)))
+                .thenReturn(Mono.error(new RuntimeException()));
+
+        //when
+        Mono<MovieCreateResponseDTO> movie = movieAdminResource.createMovieFor(movieCreateRequestDTO,
+                requestedUserId.toString());
+
+        StepVerifier.create(movie)
+                .consumeErrorWith(throwable -> {
+                    assertThat(throwable).isNotNull();
+                })
+                .verify();
 
         verify(movieService).addMovie(eq(requestedUserId), eq(userProfile.id()), any(Movie.class));
         verifyNoMoreInteractions(movieService);

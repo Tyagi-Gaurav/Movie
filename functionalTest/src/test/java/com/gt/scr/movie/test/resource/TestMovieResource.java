@@ -24,18 +24,15 @@ public class TestMovieResource extends AbstractResource {
     private ManagedChannel managedChannel;
 
     public void createMovieFor(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {
-        createUsingRest(testMovieCreateRequestDTO);
-    }
-
-    public void createUsingRest(TestMovieCreateRequestDTO movieCreateRequestDTO) {
         String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
                 apiGatewayConfig.contentUploadContextPath(),
                 "/api/user/movie", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
-        HttpEntity<TestMovieCreateRequestDTO> requestObject = new HttpEntity<>(movieCreateRequestDTO, headers);
+        HttpEntity<TestMovieCreateRequestDTO> requestObject = new HttpEntity<>(testMovieCreateRequestDTO, headers);
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
+
     }
 
     public void createWithoutToken(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {
