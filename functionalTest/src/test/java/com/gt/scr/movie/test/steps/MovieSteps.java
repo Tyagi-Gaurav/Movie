@@ -1,18 +1,28 @@
 package com.gt.scr.movie.test.steps;
 
 import com.gt.scr.movie.test.config.ScenarioContext;
+import com.gt.scr.movie.test.domain.TestMovieContentUploadRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateResponseDTO;
 import com.gt.scr.movie.test.domain.TestMovieDTO;
 import com.gt.scr.movie.test.domain.TestMovieUpdateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMoviesDTO;
 import com.gt.scr.movie.test.resource.ResponseHolder;
+import com.gt.scr.movie.test.resource.TestMovieContentUploadResource;
 import com.gt.scr.movie.test.resource.TestMovieResource;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java8.En;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,10 +35,15 @@ public class MovieSteps implements En {
     private TestMovieResource testMovieResource;
 
     @Autowired
+    private TestMovieContentUploadResource testMovieContentUploadResource;
+
+    @Autowired
     private ResponseHolder responseHolder;
 
     @Autowired
     private ScenarioContext scenarioContext;
+
+    private static final String VIDEO_FILE = "/data/SmallVideo.ts";
 
     public MovieSteps() {
 
@@ -166,7 +181,7 @@ public class MovieSteps implements En {
                 });
 
         And("^the movie-id of the movie is recorded$", () -> {
-            //scenarioContext.setMovieId()
+            scenarioContext.setMovieId(responseHolder.getMovieId());
         });
 
         And("^the response should contain a movieId in a UUID format$", () -> {
@@ -174,5 +189,27 @@ public class MovieSteps implements En {
                     responseHolder.readResponse(TestMovieCreateResponseDTO.class);
             assertThat(testMovieCreateResponseDTO.movieId()).isNotNull();
         });
+
+        When("^the user attempts to upload video for the movie$", () -> {
+            testMovieContentUploadResource.uploadContentFor(new TestMovieContentUploadRequestDTO(
+                    scenarioContext.getMovieId(), readFromFile(VIDEO_FILE)));
+        });
+    }
+
+    private byte[] readFromFile(String videoFile) throws IOException, URISyntaxException {
+        URL resource = MovieSteps.class.getResource(videoFile);
+        File file = new File(resource.toURI());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        InputStream fileInputStream = new FileInputStream(file);
+        int read_size = 1024 * 32;
+        byte[] bytesRead = new byte[read_size];
+
+        while (fileInputStream.available() > 0) {
+            int length = Math.min(fileInputStream.available(), read_size);
+            fileInputStream.read(bytesRead, 0, length);
+            byteArrayOutputStream.writeBytes(bytesRead);
+        }
+
+        return byteArrayOutputStream.toByteArray();
     }
 }

@@ -32,6 +32,7 @@
                     <li>Circuit breaker correctly configured for downstreams</li>
                     <li>Timeouts for downstreams</li>
                     <li>Bulkhead per endpoint</li>
+                    <li>GRPC/HTTP Client timeout</li>
             </td>
             <td>(x)</td>
             <td>(x)</td>
@@ -41,6 +42,24 @@
             <td>Intra service communication via GRPC</td>
             <td>(x)</td>
             <td>NA</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Public API only accessible on HTTPS</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>All public API only accessible via API gateway</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Application should shutdown gracefully</td>
+            <td>(x)</td>
+            <td>(x)</td>
             <td></td>
         </tr>
     </tbody>

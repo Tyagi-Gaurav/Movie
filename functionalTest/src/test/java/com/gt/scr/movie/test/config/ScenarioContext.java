@@ -3,6 +3,8 @@ package com.gt.scr.movie.test.config;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class ScenarioContext {
 
@@ -11,6 +13,7 @@ public class ScenarioContext {
     private String regularUserId;
     private String lastUserName;
     private String lastMovieId;
+    private UUID movieId;
 
     public String getLastUserName() {
         return lastUserName;
@@ -50,5 +53,13 @@ public class ScenarioContext {
         } else {
             return this.adminCredentialsRequest;
         }
+    }
+
+    public void setMovieId(UUID movieId) {
+        this.movieId = movieId;
+    }
+
+    public UUID getMovieId() {
+        return this.movieId;
     }
 }

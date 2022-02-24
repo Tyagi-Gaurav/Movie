@@ -2,7 +2,6 @@ package com.gt.scr.movie.test.resource;
 
 import com.gt.scr.movie.test.config.ApiGatewayConfig;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
-import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +15,6 @@ public class TestAccountCreateResource extends AbstractResource {
 
     @Autowired
     private ResponseHolder responseHolder;
-
-    @Autowired
-    private ManagedChannel managedChannel;
 
     public void create(TestAccountCreateRequestDTO accountCreateRequestDTO) {
         createUsingRest(accountCreateRequestDTO);
