@@ -35,7 +35,7 @@ ext {
     mockitoVersion = '3.11.2'
     slf4jVersion = '2.0.0-alpha6'
     commonsLang3Version = '3.12.0'
-    grpcVersion = '1.43.2'
+    grpcVersion = '1.44.1'
     jsonPathVersion = '2.7.0'
 }
 
