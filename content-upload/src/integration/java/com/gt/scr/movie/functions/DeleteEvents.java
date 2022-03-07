@@ -1,4 +1,4 @@
-package com.gt.scr.user.functions;
+package com.gt.scr.movie.functions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

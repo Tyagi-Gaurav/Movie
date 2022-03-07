@@ -24,6 +24,8 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.sql.DataSource;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 @Configuration
 @EnableWebFlux
@@ -45,6 +47,12 @@ public class ApplicationConfiguration {
     public Key signingKey(AuthConfig authConfig) {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(authConfig.secret());
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+    }
+
+    @Bean
+    @Qualifier("fileContentStoreUUIDProvider")
+    public Supplier<UUID> uuidSupplier() {
+        return UUID::randomUUID;
     }
 
     @Bean

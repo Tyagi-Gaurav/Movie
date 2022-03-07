@@ -13,8 +13,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ValidationExceptionHandlerTest {
-    private final ValidationExceptionHandler validationExceptionHandler = new ValidationExceptionHandler();
+class GlobalExceptionHandlerTest {
+    private final GlobalExceptionHandler validationExceptionHandler = new GlobalExceptionHandler();
 
     @Mock
     private ServerWebExchange serverWebExchange;

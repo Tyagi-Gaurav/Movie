@@ -1,4 +1,4 @@
-package com.gt.scr.user.functions;
+package com.gt.scr.movie.functions;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.util.TestUtils;

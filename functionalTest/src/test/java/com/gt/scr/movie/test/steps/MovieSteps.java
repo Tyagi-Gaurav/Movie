@@ -1,7 +1,8 @@
 package com.gt.scr.movie.test.steps;
 
 import com.gt.scr.movie.test.config.ScenarioContext;
-import com.gt.scr.movie.test.domain.TestMovieContentUploadRequestDTO;
+import com.gt.scr.movie.test.domain.TestByteStreamUploadDTO;
+import com.gt.scr.movie.test.domain.TestByteStreamUploadResponseDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
 import com.gt.scr.movie.test.domain.TestMovieCreateResponseDTO;
 import com.gt.scr.movie.test.domain.TestMovieDTO;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -42,8 +42,6 @@ public class MovieSteps implements En {
 
     @Autowired
     private ScenarioContext scenarioContext;
-
-    private static final String VIDEO_FILE = "/data/SmallVideo.ts";
 
     public MovieSteps() {
 
@@ -190,9 +188,15 @@ public class MovieSteps implements En {
             assertThat(testMovieCreateResponseDTO.movieId()).isNotNull();
         });
 
-        When("^the user attempts to upload video for the movie$", () -> {
-            testMovieContentUploadResource.uploadContentFor(new TestMovieContentUploadRequestDTO(
-                    scenarioContext.getMovieId(), readFromFile(VIDEO_FILE)));
+        When("^the user attempts to upload video for the movie - '(.*)'$", (String videoFile) -> {
+            testMovieContentUploadResource.uploadContentFor(new TestByteStreamUploadDTO(
+                    scenarioContext.getMovieId(), videoFile, readFromFile(videoFile)));
+        });
+
+        And("^the size of video returned should be (\\d+)$", (Long expectedSize) -> {
+            TestByteStreamUploadResponseDTO testByteStreamUploadResponseDTO =
+                    responseHolder.readResponse(TestByteStreamUploadResponseDTO.class);
+            assertThat(testByteStreamUploadResponseDTO.size()).isEqualTo(expectedSize);
         });
     }
 

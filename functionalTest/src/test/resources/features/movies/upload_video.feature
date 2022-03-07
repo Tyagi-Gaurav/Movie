@@ -7,5 +7,6 @@ Feature: User should be able to upload video against a movie
       | First Blood | 2000         | 7.8    |
     And the response should be received with HTTP status code 200
     And the movie-id of the movie is recorded
-    When the user attempts to upload video for the movie
+    When the user attempts to upload video for the movie - '/data/SmallVideo.ts'
     And the response should be received with HTTP status code 200
+    And the size of video returned should be 1744264

@@ -1,4 +1,4 @@
-package com.gt.scr.user.functions;
+package com.gt.scr.movie.functions;
 
 @FunctionalInterface
 public interface Interaction<X, Y, Z, R> {

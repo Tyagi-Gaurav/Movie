@@ -4,12 +4,14 @@ import com.google.common.net.HttpHeaders;
 import com.gt.scr.movie.audit.EventType;
 import com.gt.scr.movie.audit.MovieCreateEvent;
 import com.gt.scr.movie.audit.UserEventMessage;
+import com.gt.scr.movie.functions.ByteStreamUpload;
+import com.gt.scr.movie.resource.domain.ByteStreamUploadResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
-import com.gt.scr.user.functions.AdminMovieCreate;
-import com.gt.scr.user.functions.DeleteEvents;
-import com.gt.scr.user.functions.MovieCreate;
-import com.gt.scr.user.functions.RetrieveEventsForUser;
+import com.gt.scr.movie.functions.AdminMovieCreate;
+import com.gt.scr.movie.functions.DeleteEvents;
+import com.gt.scr.movie.functions.MovieCreate;
+import com.gt.scr.movie.functions.RetrieveEventsForUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
@@ -136,5 +138,18 @@ public class ScenarioExecutor {
     public ScenarioExecutor noEventsExistInTheSystem() {
         new DeleteEvents().accept(dataSource);
         return this;
+    }
+
+    public ScenarioExecutor userUploadsAByteStreamForTheMovie(UUID movieId, String streamName, byte[] byteStream) {
+        this.responseSpec = new ByteStreamUpload(movieId, streamName, byteStream)
+                .apply(NORMAL_USER_TOKEN, webTestClient);
+        this.responses.put(ByteStreamUploadResponseDTO.class,
+                responseSpec.returnResult(ByteStreamUploadResponseDTO.class)
+                .getResponseBody().blockFirst());
+        return this;
+    }
+
+    public MovieCreateResponseDTO returnMovieCreateResponse() {
+        return this.getResponseOfType(MovieCreateResponseDTO.class);
     }
 }
