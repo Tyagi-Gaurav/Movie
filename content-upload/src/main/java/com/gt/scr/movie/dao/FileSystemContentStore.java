@@ -18,6 +18,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @Component
 public class FileSystemContentStore implements ContentStore {
@@ -64,10 +65,11 @@ public class FileSystemContentStore implements ContentStore {
     }
 
     private long getNextSequence(Path movieDirectoryPath) throws IOException {
-        return 1 + Files.walk(movieDirectoryPath)
-                .map(Path::toFile)
-                .filter(f -> !f.isDirectory() && !f.isHidden())
-                .count();
+        try(Stream<Path> fileStream = Files.walk(movieDirectoryPath)) {
+            return 1 + fileStream.map(Path::toFile)
+                    .filter(f -> !f.isDirectory() && !f.isHidden())
+                    .count();
+        }
     }
 
 }
