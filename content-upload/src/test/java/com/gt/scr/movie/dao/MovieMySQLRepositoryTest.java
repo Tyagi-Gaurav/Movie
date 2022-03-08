@@ -42,9 +42,6 @@ class MovieMySQLRepositoryTest {
     @Autowired
     private DataSource dataSource;
 
-    private static final String ADD_USER =
-            "INSERT INTO MOVIE_SCHEMA.USER (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) values (?, ?, ?, ?, ?, ?)";
-
     private static final String ADD_MOVIE =
             "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 

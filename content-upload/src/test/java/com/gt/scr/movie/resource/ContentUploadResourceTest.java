@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +47,7 @@ class ContentUploadResourceTest {
         UUID streamId = UUID.randomUUID();
         when(contentUploadService.saveStream(any(MovieStream.class)))
                 .thenReturn(Mono.just(new MovieStreamMetaData(movieId, streamId, "TestStreamName",
-                        1, byteStream.length, LocalDateTime.now())));
+                        1, byteStream.length, System.nanoTime())));
 
         //when
         Mono<ByteStreamUploadResponseDTO> movie = contentUploadResource.uploadStream(byteStreamUploadDTO);

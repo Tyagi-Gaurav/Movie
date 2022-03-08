@@ -18,8 +18,6 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -63,8 +61,8 @@ class FileSystemContentStoreTest {
                                      int sequence) {
         StepVerifier.create(movieStreamMetaData)
                 .consumeNextWith(result -> {
-                    assertThat(result.uploadDate()).isBetween(LocalDateTime.now().minus(3, ChronoUnit.SECONDS),
-                            LocalDateTime.now());
+                    assertThat(result.creationTimeStamp()).isBetween(System.nanoTime() - 3_000_000_000L,
+                            System.nanoTime());
                     assertThat(result.sequence()).isEqualTo(sequence);
                     assertThat(result.streamName()).isEqualTo("testStreamName");
                     assertThat(result.streamId()).isEqualTo(streamId);

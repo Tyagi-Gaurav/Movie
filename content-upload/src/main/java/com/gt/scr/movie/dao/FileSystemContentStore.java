@@ -56,7 +56,7 @@ public class FileSystemContentStore implements ContentStore {
             Path absoluteFileStreamPath = movieDirectoryPath.resolve(fileName);
             Files.write(absoluteFileStreamPath, movieStream.byteStream());
             return Mono.just(new MovieStreamMetaData(movieStream.movieId(), streamId, movieStream.streamName(),
-                    nextSequence, movieStream.byteStream().length, LocalDateTime.now()));
+                    nextSequence, movieStream.byteStream().length, System.nanoTime()));
 
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);

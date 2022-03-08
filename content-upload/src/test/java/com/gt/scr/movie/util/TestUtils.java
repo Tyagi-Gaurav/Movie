@@ -2,6 +2,7 @@ package com.gt.scr.movie.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.movie.service.domain.MovieStreamMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,31 @@ public class TestUtils {
                         resultSet.getString("NAME"),
                         resultSet.getInt("YEAR_PRODUCED"),
                         resultSet.getBigDecimal("RATING").setScale(1, RoundingMode.UNNECESSARY),
+                        resultSet.getLong("CREATION_TIMESTAMP")));
+            }
+
+            resultSet.close();
+
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<MovieStreamMetaData> getMovieStreamMetaData(UUID streamId, UUID movieId,
+                                                                       DataSource dataSource, String query) throws SQLException {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, streamId.toString());
+            preparedStatement.setString(2, movieId.toString());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return Optional.of(new MovieStreamMetaData(
+                        UUID.fromString(resultSet.getString("MOVIE_ID")),
+                        UUID.fromString(resultSet.getString("ID")),
+                        resultSet.getString("NAME"),
+                        resultSet.getLong("SEQUENCE"),
+                        resultSet.getLong("SIZE_IN_BYTES"),
                         resultSet.getLong("CREATION_TIMESTAMP")));
             }
 

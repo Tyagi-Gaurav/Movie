@@ -1,6 +1,7 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.dao.ContentStore;
+import com.gt.scr.movie.dao.StreamMetaDataRepository;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.MovieStream;
 import com.gt.scr.movie.service.domain.MovieStreamMetaData;
@@ -14,10 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,9 +28,12 @@ class ContentUploadServiceImplTest {
     @Mock
     private ContentStore contentStore;
 
+    @Mock
+    private StreamMetaDataRepository streamMetaDataRepository;
+
     @BeforeEach
     void setUp() {
-        contentUploadService = new ContentUploadServiceImpl(contentStore);
+        contentUploadService = new ContentUploadServiceImpl(contentStore, streamMetaDataRepository);
     }
 
     @Test
@@ -38,7 +42,7 @@ class ContentUploadServiceImplTest {
         MovieStream movieStream = StreamBuilder.aStream().withMovieId(movie.id()).build();
 
         UUID streamId = UUID.randomUUID();
-        LocalDateTime uploadTime = LocalDateTime.now();
+        Long uploadTime = System.nanoTime();
 
         when(contentStore.store(movieStream))
                 .thenReturn(Mono.just(new MovieStreamMetaData(movie.id(), streamId,
@@ -53,7 +57,9 @@ class ContentUploadServiceImplTest {
                     assertThat(movieStreamMetaData.sizeInBytes()).isEqualTo(5);
                     assertThat(movieStreamMetaData.streamName()).isEqualTo(movieStream.streamName());
                     assertThat(movieStreamMetaData.sequence()).isEqualTo(1);
-                    assertThat(movieStreamMetaData.uploadDate()).isEqualTo(uploadTime);
+                    assertThat(movieStreamMetaData.creationTimeStamp()).isEqualTo(uploadTime);
+
+                    verify(streamMetaDataRepository).store(movieStreamMetaData);
                 }).verifyComplete();
     }
 }

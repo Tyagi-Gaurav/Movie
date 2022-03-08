@@ -2,6 +2,8 @@ package com.gt.scr.movie.system;
 
 import com.gt.scr.movie.audit.MovieCreateEvent;
 import com.gt.scr.movie.audit.MovieUpdateEvent;
+import com.gt.scr.movie.audit.UserEventMessage;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -31,32 +33,35 @@ class AnnotationsTest {
 
     private static final Set<Class> exclusions = Set.of(
             MovieCreateEvent.class,
-            MovieUpdateEvent.class
+            MovieUpdateEvent.class,
+            UserEventMessage.class
     );
 
-    @Test
-    void checkAllImplementationsAndResourcesHaveAppropriateAnnotation() {
-        Set<Class> interfaces = new HashSet<>();
-        Set<Class> allClasses = new HashSet<>();
+    private static final Set<Class> allInterfaces = new HashSet<>();
+    private static final Set<Class> implementedInterfaces = new HashSet<>();
+    private static final Set<Class> allClasses = new HashSet<>();
 
+    @BeforeAll
+    static void beforeAll() {
         Arrays.stream(packages).forEach(packageName -> {
-            String dottedPackageName = packageName.replace("/", ".");
+            var dottedPackageName = packageName.replace("/", ".");
             Enumeration<URL> resources = null;
             try {
                 resources = AnnotationsTest.class.getClassLoader().getResources(packageName);
 
-
                 assert resources != null;
                 while (resources.hasMoreElements()) {
                     try (BufferedReader dis = new BufferedReader(new InputStreamReader(resources.nextElement().openStream()))) {
-                        String line = null;
+                        String line;
                         while ((line = dis.readLine()) != null) {
                             if (line.endsWith(".class") && !line.contains("Test")) {
                                 Class<?> classFound = Class.forName(dottedPackageName + "." + line.substring(0, line.lastIndexOf('.')));
-                                if (classFound.isInterface()) {
-                                    interfaces.add(classFound);
-                                } else {
-                                    allClasses.add(classFound);
+                                if (!exclusions.contains(classFound)) {
+                                    if (classFound.isInterface()) {
+                                        allInterfaces.add(classFound);
+                                    } else {
+                                        allClasses.add(classFound);
+                                    }
                                 }
                             }
                         }
@@ -68,33 +73,38 @@ class AnnotationsTest {
                 e.printStackTrace();
             }
         });
+    }
 
+    @Test
+    void checkAllImplementationsAndResourcesHaveAppropriateAnnotation() {
         allClasses.forEach(clazz -> {
             Class[] interfaces1 = clazz.getInterfaces();
 
-            if (!exclusions.contains(clazz)) {
-                Arrays.stream(interfaces1)
-                        .forEach(interfaceClass -> {
-                            if (interfaces.contains(interfaceClass)) {
-                                //Check if class contains annotations
-                                assertThat(Arrays.stream(clazz.getAnnotations())
-                                        .noneMatch(annotation ->
-                                                annotation.annotationType() == Component.class ||
-                                                        annotation.annotationType() == Service.class ||
-                                                        annotation.annotationType() == Repository.class
-                                        )).describedAs(clazz+ " is missing annotation (@Component/@Service/@Repository).").isFalse();
-                            }
-                        });
+            Arrays.stream(interfaces1)
+                    .forEach(interfaceClass -> {
+                        if (allInterfaces.contains(interfaceClass)) {
+                            implementedInterfaces.add(interfaceClass);
+                            //Check if class contains annotations
+                            assertThat(Arrays.stream(clazz.getAnnotations())
+                                    .noneMatch(annotation ->
+                                            annotation.annotationType() == Component.class ||
+                                                    annotation.annotationType() == Service.class ||
+                                                    annotation.annotationType() == Repository.class
+                                    )).describedAs(clazz + " is missing annotation (@Component/@Service/@Repository).").isFalse();
+                        }
+                    });
 
 
-                if (clazz.getName().endsWith("Resource")) {
-                    assertThat(Arrays.stream(clazz.getAnnotations())
-                            .noneMatch(annotation ->
-                                    annotation.annotationType() == RestController.class
-                            )).describedAs(clazz+ " is missing annotation (@RestController).").isFalse();
-                }
+            if (clazz.getName().endsWith("Resource")) {
+                assertThat(Arrays.stream(clazz.getAnnotations())
+                        .noneMatch(annotation ->
+                                annotation.annotationType() == RestController.class
+                        )).describedAs(clazz + " is missing annotation (@RestController).").isFalse();
             }
-
         });
+
+        allInterfaces.removeAll(implementedInterfaces);
+        assertThat(allInterfaces).describedAs("Some interfaces have not been implemented %s", allInterfaces)
+                .isEmpty();
     }
 }
