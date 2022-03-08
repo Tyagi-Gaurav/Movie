@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -30,6 +32,18 @@ class GlobalExceptionHandlerTest {
         Mono<Void> handle = validationExceptionHandler.handle(serverWebExchange, new IllegalArgumentException());
 
         StepVerifier.create(handle).verifyComplete();
+        verify(httpResponse).setComplete();
+    }
+
+    @Test
+    void handleResponseStatusException() {
+        when(serverWebExchange.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.setComplete()).thenReturn(Mono.empty());
+
+        Mono<Void> handle = validationExceptionHandler.handle(serverWebExchange, new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        StepVerifier.create(handle).verifyComplete();
+        verify(httpResponse).setStatusCode(HttpStatus.UNAUTHORIZED);
         verify(httpResponse).setComplete();
     }
 }

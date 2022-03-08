@@ -51,13 +51,44 @@
             <td></td>
         </tr>
         <tr>
-            <td>All public API only accessible via API gateway</td>
+            <td>All Public API only accessible via API gateway</td>
             <td>(x)</td>
             <td>(x)</td>
             <td></td>
         </tr>
         <tr>
             <td>Application should shutdown gracefully</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                    Metrics Available for<br>
+                    <li>Number of Incoming Requests</li>
+                    <li>Number of Outgoing Requests by Upstream</li>
+                    <li>Latency of Upstream Responses</li>
+                    <li>Latency of Application</li>
+                    <li>CPU</li>
+                    <li>Memory</li>
+                    <li>Disk Space</li>
+                    <li>JVM Heap Usage</li>
+                    <li>JVM GC Cycles</li>
+                    <li>Circuit breaker Stats</li>
+                    <li>Error Count by Code</li>
+            </td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Database Call Latency</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Ensure Sensitive fields are not printed to Console or logs. Eg. PII, Password, Secrets etc.</td>
             <td>(x)</td>
             <td>(x)</td>
             <td></td>
