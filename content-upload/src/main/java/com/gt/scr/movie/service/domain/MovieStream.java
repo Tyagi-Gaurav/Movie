@@ -21,4 +21,12 @@ public record MovieStream(UUID movieId, String streamName, byte[] byteStream) {
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(movieId).append(streamName).append(byteStream).toHashCode();
     }
+
+    @Override
+    public String toString() {
+        return "MovieStream{" +
+                "movieId=" + movieId +
+                ", streamName='" + streamName + '\'' +
+                '}';
+    }
 }

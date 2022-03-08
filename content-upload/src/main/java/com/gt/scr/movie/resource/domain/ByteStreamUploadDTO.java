@@ -25,4 +25,12 @@ public record ByteStreamUploadDTO(UUID movieId, String streamName, byte[] byteSt
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(movieId).append(streamName).append(byteStream).toHashCode();
     }
+
+    @Override
+    public String toString() {
+        return "ByteStreamUploadDTO{" +
+                "movieId=" + movieId +
+                ", streamName='" + streamName + '\'' +
+                '}';
+    }
 }
