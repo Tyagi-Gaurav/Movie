@@ -19,9 +19,10 @@ public class TestMovieContentUploadResource extends AbstractResource {
     public void uploadContentFor(TestByteStreamUploadDTO testMovieContentUploadRequestDTO) {
         String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
                 apiGatewayConfig.contentUploadContextPath(),
-                "/user/movie/stream", apiGatewayConfig.port());
+                "/api/user/movie/stream", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.content.add.v1+json");
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.stream.add.v1+json");
+        headers.set(HttpHeaders.ACCEPT, "application/vnd.movie.stream.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
         HttpEntity<TestByteStreamUploadDTO> requestObject = new HttpEntity<>(testMovieContentUploadRequestDTO, headers);
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));

@@ -6,6 +6,9 @@ import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebFlux;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,10 +79,56 @@ public class ContentUploadTest {
                 }, ByteStreamUploadResponseDTO.class);
     }
 
-//    @Test
-//    void shouldHandleErrorWhenUploadingByteStreamToAMovieThatDoesNotExist() {
-//
-//    }
+    @Test
+    void shouldHandleErrorWhenUploadingByteStreamForANullMovie() {
+        byte[] byteStream = {0, 1, 1, 1};
+        String streamName = "Test Stream";
+
+        scenarioExecutor
+                .noEventsExistInTheSystem()
+                .givenUserIsLoggedIn().when()
+                .userUploadsAByteStreamForTheMovie(
+                        null,
+                        streamName,
+                        byteStream)
+                .expectReturnCode(400);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @EmptySource
+    void shouldHandleErrorWhenUploadingANullOrEmptyByteStreamForAMovie(byte[] byteStream) {
+        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+        MovieCreateResponseDTO movieCreateResponseDTO = scenarioExecutor.
+                noEventsExistInTheSystem().then()
+                .givenUserIsLoggedIn().when()
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(200)
+                .returnMovieCreateResponse();
+
+        String streamName = "Test Stream";
+
+        scenarioExecutor
+                .userUploadsAByteStreamForTheMovie(
+                        movieCreateResponseDTO.movieId(),
+                        streamName,
+                        byteStream)
+                .expectReturnCode(400);
+    }
+
+    @Test
+    void shouldHandleErrorWhenUploadingByteStreamForANonExistentMovie() {
+        byte[] byteStream = {0, 1, 1, 1};
+        String streamName = "Test Stream";
+
+        scenarioExecutor
+                .noEventsExistInTheSystem()
+                .givenUserIsLoggedIn().when()
+                .userUploadsAByteStreamForTheMovie(
+                        UUID.randomUUID(),
+                        streamName,
+                        byteStream)
+                .expectReturnCode(500);
+    }
 
 
 //    @Test

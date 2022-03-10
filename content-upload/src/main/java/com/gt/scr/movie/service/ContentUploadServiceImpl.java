@@ -2,6 +2,7 @@ package com.gt.scr.movie.service;
 
 import com.gt.scr.movie.dao.ContentStore;
 import com.gt.scr.movie.dao.StreamMetaDataRepository;
+import com.gt.scr.movie.exception.ContentUploadException;
 import com.gt.scr.movie.service.domain.MovieStream;
 import com.gt.scr.movie.service.domain.MovieStreamMetaData;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class ContentUploadServiceImpl implements ContentUploadService {
     @Override
     public Mono<MovieStreamMetaData> saveStream(MovieStream movieStream) {
         return contentStore.store(movieStream)
-                .doOnSuccess(streamMetaDataRepository::store);
+                .flatMap(movieStreamMetaData -> streamMetaDataRepository.store(movieStreamMetaData)
+                        .then(Mono.just(movieStreamMetaData))
+                        .onErrorMap(throwable -> new ContentUploadException(throwable.getMessage(), throwable)))
+                .onErrorMap(throwable -> new ContentUploadException(throwable.getMessage(), throwable));
     }
 }

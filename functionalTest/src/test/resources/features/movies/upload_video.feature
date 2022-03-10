@@ -9,4 +9,4 @@ Feature: User should be able to upload video against a movie
     And the movie-id of the movie is recorded
     When the user attempts to upload video for the movie - '/data/SmallVideo.ts'
     And the response should be received with HTTP status code 200
-    And the size of video returned should be 1744264
+    And the size of video returned should be 1769472

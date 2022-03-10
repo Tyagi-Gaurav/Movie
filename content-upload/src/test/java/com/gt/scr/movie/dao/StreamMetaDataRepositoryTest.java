@@ -1,5 +1,6 @@
 package com.gt.scr.movie.dao;
 
+import com.gt.scr.exception.DatabaseException;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.MovieStreamMetaData;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -13,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import javax.sql.DataSource;
 import java.net.URL;
@@ -28,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = StreamMetaDataRepositoryImpl.class)
 @ExtendWith(MockitoExtension.class)
 @Import(StreamMetaDataRepositoryTest.TestStreamMetaDataRepoContextConfiguration.class)
-public class StreamMetaDataRepositoryTest {
+class StreamMetaDataRepositoryTest {
 
     @Autowired
     private StreamMetaDataRepository streamMetaDataRepository;
@@ -58,12 +61,31 @@ public class StreamMetaDataRepositoryTest {
                 .build();
 
         //when
-        streamMetaDataRepository.store(expectedMovieStreamMetaData);
+        Mono<Void> response = streamMetaDataRepository.store(expectedMovieStreamMetaData);
 
         //then
+        StepVerifier.create(response)
+                .verifyComplete();
         Optional<MovieStreamMetaData> movieStreamMetaData = getMovieStreamMetaData(expectedMovieStreamMetaData.streamId(),
                 expectedMovieA.id(), dataSource, SELECT_MOVIE_STREAM);
         assertThat(movieStreamMetaData).isNotEmpty().hasValue(expectedMovieStreamMetaData);
+    }
+
+    @Test
+    void shouldHandleException() {
+        //given
+        MovieStreamMetaData expectedMovieStreamMetaData = aMovieStreamMetaDataBuilder()
+                .build();
+
+        //when
+        Mono<Void> response = streamMetaDataRepository.store(expectedMovieStreamMetaData);
+
+        //then
+        StepVerifier.create(response)
+                .consumeErrorWith(throwable -> {
+                    assertThat(throwable).isInstanceOf(DatabaseException.class);
+                })
+                .verify();
     }
 
     @TestConfiguration

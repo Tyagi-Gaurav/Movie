@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,9 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ApplicationTest {
     @Autowired
     private ReactiveWebApplicationContext webApplicationContext;
-
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private WebTestClient webTestClient;

@@ -4,6 +4,7 @@ import com.gt.scr.exception.DatabaseException;
 import com.gt.scr.movie.service.domain.MovieStreamMetaData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -27,7 +28,7 @@ public class StreamMetaDataRepositoryImpl implements StreamMetaDataRepository {
             SCHEMA, ID, MOVIE_ID, NAME, SEQUENCE, SIZE_IN_BYTES, CREATION_TIMESTAMP);
 
     @Override
-    public void store(MovieStreamMetaData movieStreamMetaData) {
+    public Mono<Void> store(MovieStreamMetaData movieStreamMetaData) {
         try (Connection connection = getConnection();
              var preparedStatement = connection.prepareStatement(INSERT_MOVIEMETADATA)) {
 
@@ -39,8 +40,9 @@ public class StreamMetaDataRepositoryImpl implements StreamMetaDataRepository {
             preparedStatement.setLong(6, movieStreamMetaData.creationTimeStamp());
             preparedStatement.execute();
         } catch (Exception e) {
-            throw new DatabaseException(e.getMessage(), e);
+            return Mono.error(() -> new DatabaseException(e.getMessage(), e));
         }
+        return Mono.empty();
     }
 
     private Connection getConnection() {

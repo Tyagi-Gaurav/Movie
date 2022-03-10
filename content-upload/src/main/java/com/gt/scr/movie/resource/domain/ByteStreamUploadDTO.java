@@ -5,11 +5,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @JsonDeserialize
 @JsonSerialize
-public record ByteStreamUploadDTO(UUID movieId, String streamName, byte[] byteStream) {
+public record ByteStreamUploadDTO(@NotNull UUID movieId,
+                                  String streamName,
+                                  @NotNull @NotEmpty byte[] byteStream) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

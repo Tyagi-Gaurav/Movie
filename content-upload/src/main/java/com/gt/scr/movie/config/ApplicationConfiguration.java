@@ -17,7 +17,9 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -30,7 +32,7 @@ import java.util.function.Supplier;
 @Configuration
 @EnableWebFlux
 @ConfigurationPropertiesScan("com.gt.scr.movie.config")
-public class ApplicationConfiguration {
+public class ApplicationConfiguration implements WebFluxConfigurer {
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfiguration.class);
 
     @Autowired
@@ -101,5 +103,10 @@ public class ApplicationConfiguration {
         }
 
         return cpds;
+    }
+
+    @Override
+    public void configureHttpMessageCodecs(ServerCodecConfigurer configurer) {
+        configurer.defaultCodecs().maxInMemorySize(10_000_000);
     }
 }

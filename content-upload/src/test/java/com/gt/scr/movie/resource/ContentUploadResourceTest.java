@@ -1,5 +1,6 @@
 package com.gt.scr.movie.resource;
 
+import com.gt.scr.movie.exception.ContentUploadException;
 import com.gt.scr.movie.resource.domain.ByteStreamUploadDTO;
 import com.gt.scr.movie.resource.domain.ByteStreamUploadResponseDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,22 +65,26 @@ class ContentUploadResourceTest {
                 .verifyComplete();
     }
 
-//    @Test
-//    void nullByteStreamShouldResultInError() {
-//        Movie movie = MovieBuilder.aMovie().build();
-//        MovieStream movieStream = StreamBuilder.aStream()
-//                .with(movie)
-//                .withStream(null)
-//                .build();
-//
-//        Mono<MovieStreamMetaData> movieStreamInputMono = contentUploadService.saveStream(movie, movieStream);
-//
-//        StepVerifier.create(movieStreamInputMono)
-//                .consumeErrorWith(throwable -> {
-//                }).verifyComplete();
-//    }
-//
-//    @Test
-//    void invalidByteStreamShouldResultInError() {
-//    }
+    @Test
+    void handleExceptionThrownFromDatabase() {
+        byte[] byteStream = {0, 1, 2, 3, 4};
+        UUID movieId = UUID.randomUUID();
+        ByteStreamUploadDTO byteStreamUploadDTO = new ByteStreamUploadDTO(movieId,
+                "TestStreamName", byteStream);
+
+        UUID userId = UUID.randomUUID();
+        UserProfile userProfile = new UserProfile(userId, "USER", "token");
+        when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
+        when(contentUploadService.saveStream(any(MovieStream.class)))
+                .thenReturn(Mono.error(new ContentUploadException("exception", new SQLException())));
+
+        //when
+        Mono<ByteStreamUploadResponseDTO> movie = contentUploadResource.uploadStream(byteStreamUploadDTO);
+
+        StepVerifier.create(movie)
+                .consumeErrorWith(throwable -> {
+                    assertThat(throwable).isInstanceOf(ContentUploadException.class);
+                })
+                .verify();
+    }
 }

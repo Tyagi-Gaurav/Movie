@@ -30,6 +30,10 @@ public class TestMovieResource extends AbstractResource {
         HttpEntity<TestMovieCreateRequestDTO> requestObject = new HttpEntity<>(testMovieCreateRequestDTO, headers);
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
 
+        if (responseHolder.getResponseCode() == 200) {
+            TestMovieCreateResponseDTO testMovieCreateResponseDTO = responseHolder.readResponse(TestMovieCreateResponseDTO.class);
+            responseHolder.setMovieId(testMovieCreateResponseDTO.movieId());
+        }
     }
 
     public void createWithoutToken(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {

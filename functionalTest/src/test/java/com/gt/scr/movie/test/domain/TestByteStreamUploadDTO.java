@@ -9,5 +9,12 @@ import java.util.UUID;
 @JsonDeserialize
 public record TestByteStreamUploadDTO(UUID movieId,
                                       String streamName,
-                                      byte[] content) {
+                                      byte[] byteStream) {
+    @Override
+    public String toString() {
+        return "TestByteStreamUploadDTO{" +
+                "movieId=" + movieId +
+                ", streamName='" + streamName + '\'' +
+                '}';
+    }
 }
