@@ -35,13 +35,11 @@ class StreamMetaDataRepositoryTest extends DatabaseTest {
     private static final String ADD_MOVIE =
             "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 
-    private static final String DELETE_ALL_METADATA = "DELETE FROM MOVIE_SCHEMA.MOVIE_STREAM_METADATA";
-
     private static final String SELECT_MOVIE_STREAM = "SELECT * FROM MOVIE_SCHEMA.MOVIE_STREAM_METADATA WHERE ID = ? AND MOVIE_ID = ?";
 
     @BeforeEach
     void setUp() throws SQLException {
-        executeQueryUpdate(dataSource, DELETE_ALL_METADATA);
+        clearDatabase(dataSource);
     }
 
     @Test

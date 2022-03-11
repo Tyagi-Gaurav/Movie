@@ -21,6 +21,9 @@ public class TestUtils {
     private static final Logger LOG = LoggerFactory.getLogger(TestUtils.class);
     final static ObjectMapper mapper = new ObjectMapper();
 
+    private static final String DELETE_ALL_MOVIES = "DELETE FROM MOVIE_SCHEMA.MOVIE";
+    private static final String DELETE_ALL_METADATA = "DELETE FROM MOVIE_SCHEMA.MOVIE_STREAM_METADATA";
+
     public static String asJsonString(final Object obj) {
         try {
             return mapper.writeValueAsString(obj);
@@ -95,6 +98,11 @@ public class TestUtils {
 
             return Optional.empty();
         }
+    }
+
+    public static void clearDatabase(DataSource dataSource) throws SQLException {
+        executeQueryUpdate(dataSource, DELETE_ALL_METADATA);
+        executeQueryUpdate(dataSource, DELETE_ALL_MOVIES);
     }
 
     public static void executeQueryUpdate(DataSource dataSource, String query) throws SQLException {

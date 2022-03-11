@@ -39,14 +39,12 @@ class MovieMySQLRepositoryTest extends DatabaseTest {
     private static final String ADD_MOVIE =
             "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
 
-    private static final String DELETE_ALL_MOVIES = "DELETE FROM MOVIE_SCHEMA.MOVIE";
-
     private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM "
             + "MOVIE_SCHEMA.MOVIE WHERE ID = ?";
 
     @BeforeEach
     void setUp() throws SQLException {
-        executeQueryUpdate(dataSource, DELETE_ALL_MOVIES);
+        clearDatabase(dataSource);
     }
 
     @Test

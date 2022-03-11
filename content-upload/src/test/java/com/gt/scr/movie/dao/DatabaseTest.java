@@ -27,6 +27,7 @@ public abstract class DatabaseTest {
                 assertThat(resource).describedAs("Unable to find sql file to create database").isNotNull();
                 String tempFile = resource.toURI().getRawPath();
                 cpds.setDriverClass("org.h2.Driver");
+                cpds.setAutoCommitOnClose(true);
                 String jdbcUrl = String.format("jdbc:h2:mem:%s;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
                         "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", databaseName, tempFile);
                 cpds.setJdbcUrl(jdbcUrl);
