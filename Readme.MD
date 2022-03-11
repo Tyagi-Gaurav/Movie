@@ -76,13 +76,8 @@
                     <li>JVM GC Cycles</li>
                     <li>Circuit breaker Stats</li>
                     <li>Error Count by Code</li>
+                <li>Database Call Latency</li>
             </td>
-            <td>(x)</td>
-            <td>(x)</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Database Call Latency</td>
             <td>(x)</td>
             <td>(x)</td>
             <td></td>
