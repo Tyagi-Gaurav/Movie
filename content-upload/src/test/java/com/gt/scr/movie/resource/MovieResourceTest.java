@@ -1,6 +1,7 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -52,9 +54,12 @@ class MovieResourceTest {
         when(movieService.addMovie(eq(userId), eq(userId), any(Movie.class))).thenReturn(Mono.empty());
 
         //when
-        Mono<Void> movie = movieResource.createMovie(movieCreateRequestDTO);
+        Mono<MovieCreateResponseDTO> movie = movieResource.createMovie(movieCreateRequestDTO);
 
         StepVerifier.create(movie)
+                .consumeNextWith(movieCreateResponseDTO -> {
+                    assertThat(movieCreateResponseDTO.movieId()).isNotNull();
+                })
                 .verifyComplete();
 
         verify(movieService).addMovie(eq(userId), eq(userId), any(Movie.class));
@@ -76,7 +81,7 @@ class MovieResourceTest {
 
         StepVerifier.create(movies)
                 .expectNext(new MoviesDTO(Collections.singletonList(
-                                    new MovieDTO(id, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
+                        new MovieDTO(id, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
                                 expectedReturnObject.rating()))))
                 .verifyComplete();
     }

@@ -1,6 +1,7 @@
 package com.gt.scr.movie;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -21,18 +21,20 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = Initializer.class)
 @AutoConfigureWebFlux
-@ActiveProfiles("MovieJourneysTest")
+@ActiveProfiles("MovieAddTest")
 @AutoConfigureWireMock(port = 0)
 @TestPropertySource(properties = {
         "user.host=localhost",
         "user.port=${wiremock.server.port}"
 })
-public class MovieJourneysTest {
+public class MovieAddTest {
     private ScenarioExecutor scenarioExecutor;
 
     @LocalServerPort
@@ -40,9 +42,6 @@ public class MovieJourneysTest {
 
     @Autowired
     private DataSource dataSource;
-
-    @Autowired
-    private ConfigurableApplicationContext applicationContext;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +53,7 @@ public class MovieJourneysTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = {"", "abc", "abcde", "efuusidhfauihsdfuhiusdhfaiuhsfiuhiufhs"})
-    public void createMovieWithInvalidData(String movieName) {
+    void createMovieWithInvalidData(String movieName) {
         MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.invalidMovieCreateRequestDTO(movieName);
         scenarioExecutor
                 .givenUserIsLoggedIn().when()
@@ -66,9 +65,29 @@ public class MovieJourneysTest {
     void creatingMoviesShouldSendMovieCreateEvent() {
         MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
 
-        scenarioExecutor
+        scenarioExecutor.
+                noEventsExistInTheSystem().then()
                 .givenUserIsLoggedIn().when()
-                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(204)
-                .movieCreateEventShouldBePublished(movieCreateRequestDTO);
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(200)
+                .thenAssertThat(movieCreateResponseDTO -> {
+                    assertThat(movieCreateResponseDTO).isNotNull();
+                    assertThat(movieCreateResponseDTO.movieId()).isNotNull();
+                }, MovieCreateResponseDTO.class)
+                .movieCreateEventShouldBePublishedForNormalUser(movieCreateRequestDTO);
+    }
+
+    @Test
+    void whenAdminIsCreatingMoviesForUserShouldSendMovieCreateEvent() {
+        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+
+        scenarioExecutor
+                .noEventsExistInTheSystem().then()
+                .givenAdminUserIsLoggedIn().when()
+                .adminUserCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(200)
+                .thenAssertThat(movieCreateResponseDTO -> {
+                    assertThat(movieCreateResponseDTO).isNotNull();
+                    assertThat(movieCreateResponseDTO.movieId()).isNotNull();
+                }, MovieCreateResponseDTO.class)
+                .movieCreateEventShouldBePublishedForAdminUser(movieCreateRequestDTO);
     }
 }

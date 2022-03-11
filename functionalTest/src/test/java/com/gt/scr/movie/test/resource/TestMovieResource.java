@@ -2,8 +2,8 @@ package com.gt.scr.movie.test.resource;
 
 import com.gt.scr.movie.test.config.ApiGatewayConfig;
 import com.gt.scr.movie.test.domain.TestMovieCreateRequestDTO;
+import com.gt.scr.movie.test.domain.TestMovieCreateResponseDTO;
 import com.gt.scr.movie.test.domain.TestMovieUpdateRequestDTO;
-import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,22 +20,20 @@ public class TestMovieResource extends AbstractResource {
     @Autowired
     private ResponseHolder responseHolder;
 
-    @Autowired
-    private ManagedChannel managedChannel;
-
     public void createMovieFor(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {
-        createUsingRest(testMovieCreateRequestDTO);
-    }
-
-    public void createUsingRest(TestMovieCreateRequestDTO movieCreateRequestDTO) {
         String fullUrl = getFullUrl(apiGatewayConfig.host().trim(),
                 apiGatewayConfig.contentUploadContextPath(),
                 "/api/user/movie", apiGatewayConfig.port());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd.movie.add.v1+json");
         headers.setBearerAuth(responseHolder.getToken());
-        HttpEntity<TestMovieCreateRequestDTO> requestObject = new HttpEntity<>(movieCreateRequestDTO, headers);
+        HttpEntity<TestMovieCreateRequestDTO> requestObject = new HttpEntity<>(testMovieCreateRequestDTO, headers);
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
+
+        if (responseHolder.getResponseCode() == 200) {
+            TestMovieCreateResponseDTO testMovieCreateResponseDTO = responseHolder.readResponse(TestMovieCreateResponseDTO.class);
+            responseHolder.setMovieId(testMovieCreateResponseDTO.movieId());
+        }
     }
 
     public void createWithoutToken(TestMovieCreateRequestDTO testMovieCreateRequestDTO) {
@@ -113,6 +111,11 @@ public class TestMovieResource extends AbstractResource {
         headers.setBearerAuth(responseHolder.getToken());
         HttpEntity<TestMovieCreateRequestDTO> requestObject = new HttpEntity<>(movieCreateRequestDTO, headers);
         responseHolder.setResponse(this.post(fullUrl, requestObject, String.class));
+
+        if (responseHolder.getResponseCode() == 200) {
+            TestMovieCreateResponseDTO testMovieCreateResponseDTO = responseHolder.readResponse(TestMovieCreateResponseDTO.class);
+            responseHolder.setMovieId(testMovieCreateResponseDTO.movieId());
+        }
     }
 
     public void updateMovie(TestMovieUpdateRequestDTO updateRequestDTO, String regularUserId) {

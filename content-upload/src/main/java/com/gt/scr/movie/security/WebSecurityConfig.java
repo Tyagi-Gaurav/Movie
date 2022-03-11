@@ -37,7 +37,7 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeExchange()
                 .pathMatchers("/status", "/actuator/**").permitAll()
-                .pathMatchers( "/user/{userid}/movie").hasAuthority("ADMIN")
+                .pathMatchers( "/user/{userId}/movie").hasAuthority("ADMIN")
                 .anyExchange().authenticated().and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)

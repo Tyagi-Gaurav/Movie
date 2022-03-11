@@ -10,6 +10,7 @@ import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class ResponseHolder {
@@ -17,6 +18,7 @@ public class ResponseHolder {
     private ObjectMapper objectMapper = new ObjectMapper();
     private String token;
     private String userId;
+    private UUID movieId;
 
     public void setResponse(ResponseEntity entity) {
         previousResponses.add(0, entity);
@@ -77,5 +79,13 @@ public class ResponseHolder {
 
     public String getUserId() {
         return userId;
+    }
+
+    public void setMovieId(UUID movieId) {
+        this.movieId = movieId;
+    }
+
+    public UUID getMovieId() {
+        return movieId;
     }
 }

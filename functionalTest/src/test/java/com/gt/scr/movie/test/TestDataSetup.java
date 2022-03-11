@@ -35,7 +35,7 @@ public class TestDataSetup {
                     lastNames[i],
                     role);
 
-            System.out.println(payload);
+            //System.out.println(payload);
 
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.CONTENT_TYPE, "application/vnd+account.create.v1+json");

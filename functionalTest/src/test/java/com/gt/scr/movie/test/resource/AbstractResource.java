@@ -95,7 +95,7 @@ public class AbstractResource {
 
     private void log(String url, Object body) {
         try {
-            LOG.info(String.format("\n============ Payload Start ======= \n" +
+            LOG.debug(String.format("\n============ Payload Start ======= \n" +
                             "\tFull URL: %s ,\n " +
                             "\tBody: \n\t%s \n" +
                             "============ Payload End ======= \n", url,

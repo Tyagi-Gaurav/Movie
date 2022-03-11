@@ -8,8 +8,93 @@
 
 ## Movie API
 
-### Current Version
-version* x.x.x
+### Engineering Principles
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Content-Upload</th>
+            <th>User</th>
+            <th>Issue#</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Clearly documented interfaces</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td>#212</td>
+        </tr>
+        <tr rowspan="2">
+            <td>
+                    Resilience libraries configured for any downstream<br>
+                    <li>Circuit breaker correctly configured for downstreams</li>
+                    <li>Timeouts for downstreams</li>
+                    <li>Bulkhead per endpoint</li>
+                    <li>GRPC/HTTP Client timeout</li>
+            </td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td>#194</td>
+        </tr>
+        <tr>
+            <td>Intra service communication via GRPC</td>
+            <td>(x)</td>
+            <td>NA</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Public API only accessible on HTTPS</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>All Public API only accessible via API gateway</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Application should shutdown gracefully</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                    Metrics Available for<br>
+                    <li>Number of Incoming Requests</li>
+                    <li>Number of Outgoing Requests by Upstream</li>
+                    <li>Latency of Upstream Responses</li>
+                    <li>Latency of Application</li>
+                    <li>CPU</li>
+                    <li>Memory</li>
+                    <li>Disk Space</li>
+                    <li>JVM Heap Usage</li>
+                    <li>JVM GC Cycles</li>
+                    <li>Circuit breaker Stats</li>
+                    <li>Error Count by Code</li>
+            </td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Database Call Latency</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Ensure Sensitive fields are not printed to Console or logs. Eg. PII, Password, Secrets etc.</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
 ### Functionality
 

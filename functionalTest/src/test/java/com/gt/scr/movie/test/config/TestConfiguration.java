@@ -1,7 +1,5 @@
 package com.gt.scr.movie.test.config;
 
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -21,11 +19,5 @@ public class TestConfiguration {
         SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
         simpleClientHttpRequestFactory.setConnectTimeout(10000);
         return new RestTemplate(simpleClientHttpRequestFactory);
-    }
-
-    @Bean
-    public ManagedChannel managedChannel() {
-        return ManagedChannelBuilder.forTarget("localhost:9900")
-                .usePlaintext().build();
     }
 }

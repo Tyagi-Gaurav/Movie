@@ -1,6 +1,7 @@
 package com.gt.scr.movie.resource;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
@@ -36,29 +37,32 @@ public class MovieResource {
     @PostMapping(consumes = "application/vnd.movie.add.v1+json",
             produces = "application/vnd.movie.add.v1+json",
             path = "/user/movie")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public Mono<Void> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO) {
+    @ResponseStatus(code = HttpStatus.OK)
+    public Mono<MovieCreateResponseDTO> createMovie(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO) {
+        UUID movieId = UUID.randomUUID();
         return securityContextHolder.getContext(UserProfile.class)
-                .flatMap(up -> movieService.addMovie(up.id(), up.id(), new Movie(UUID.randomUUID(),
+                .flatMap(up -> movieService.addMovie(up.id(), up.id(), new Movie(movieId,
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
                         System.nanoTime())))
-                .thenEmpty(Mono.empty());
+                .thenReturn(new MovieCreateResponseDTO(movieId));
     }
 
     @PostMapping(consumes = "application/vnd.movie.add.v1+json",
             produces = "application/vnd.movie.add.v1+json",
             path = "/user/{userId}/movie")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public Mono<Void> createMovieFor(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
+    @ResponseStatus(code = HttpStatus.OK)
+    public Mono<MovieCreateResponseDTO> createMovieFor(@Valid @RequestBody MovieCreateRequestDTO movieCreateRequestDTO,
                                      @PathVariable(value = "userId") String userId) {
+        UUID movieId = UUID.randomUUID();
         return securityContextHolder.getContext(UserProfile.class)
-                .flatMap(up -> movieService.addMovie(UUID.fromString(userId), up.id(), new Movie(UUID.randomUUID(),
+                .flatMap(up -> movieService.addMovie(UUID.fromString(userId), up.id(), new Movie(movieId,
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
-                        System.nanoTime())));
+                        System.nanoTime())))
+                .thenReturn(new MovieCreateResponseDTO(movieId));
     }
 
     @GetMapping(consumes = "application/vnd.movie.read.v1+json",

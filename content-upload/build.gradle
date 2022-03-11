@@ -157,7 +157,9 @@ jacocoTestReport {
                     "com/gt/scr/movie/Application.class",
                     "com/gt/scr/movie/Grace**.class",
                     "com/gt/scr/movie/config/**/*.class",
-                    "com/gt/scr/movie/security/WebSecurityConfig.class"
+                    "com/gt/scr/movie/security/WebSecurityConfig.class",
+                    "com/gt/scr/movie/resource/domain/ByteStreamUploadDTO.class",
+                    "com/gt/scr/movie/service/domain/MovieStream.class"
             ])
         }))
     }

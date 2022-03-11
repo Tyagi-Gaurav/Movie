@@ -1,8 +1,7 @@
-package com.gt.scr.user.functions;
+package com.gt.scr.movie.functions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.movie.audit.UserEventMessage;
-import com.gt.scr.movie.resource.domain.LoginResponseDTO;
 
 import javax.sql.DataSource;
 import java.io.IOException;
