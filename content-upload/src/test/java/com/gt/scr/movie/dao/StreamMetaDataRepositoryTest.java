@@ -3,22 +3,16 @@ package com.gt.scr.movie.dao;
 import com.gt.scr.exception.DatabaseException;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.MovieStreamMetaData;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import javax.sql.DataSource;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,8 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = StreamMetaDataRepositoryImpl.class)
 @ExtendWith(MockitoExtension.class)
-@Import(StreamMetaDataRepositoryTest.TestStreamMetaDataRepoContextConfiguration.class)
-class StreamMetaDataRepositoryTest {
+class StreamMetaDataRepositoryTest extends DatabaseTest {
 
     @Autowired
     private StreamMetaDataRepository streamMetaDataRepository;
@@ -86,30 +79,5 @@ class StreamMetaDataRepositoryTest {
                     assertThat(throwable).isInstanceOf(DatabaseException.class);
                 })
                 .verify();
-    }
-
-    @TestConfiguration
-    static class TestStreamMetaDataRepoContextConfiguration {
-
-        @Bean
-        public DataSource inMemoryMetaDataDataSource() {
-            ComboPooledDataSource cpds = new ComboPooledDataSource();
-
-            try {
-                String databaseName = RandomStringUtils.randomAlphabetic(6);
-                URL resource = StreamMetaDataRepositoryTest.TestStreamMetaDataRepoContextConfiguration.class.getClassLoader()
-                        .getResource("db.changelog/dbchangelog.sql");
-                assertThat(resource).describedAs("Unable to find sql file to create database").isNotNull();
-                String tempFile = resource.toURI().getRawPath();
-                cpds.setDriverClass("org.h2.Driver");
-                String jdbcUrl = String.format("jdbc:h2:mem:%s;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
-                        "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", databaseName, tempFile);
-                cpds.setJdbcUrl(jdbcUrl);
-            } catch (Exception e) {
-                throw new IllegalArgumentException(e);
-            }
-
-            return cpds;
-        }
     }
 }

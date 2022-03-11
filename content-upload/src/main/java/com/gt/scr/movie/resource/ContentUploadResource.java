@@ -32,15 +32,15 @@ public class ContentUploadResource {
     public Mono<ByteStreamUploadResponseDTO> uploadStream(@Valid @RequestBody ByteStreamUploadDTO byteStreamUploadDTO) {
         return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up ->
-                    contentUploadService.saveStream(new MovieStream(byteStreamUploadDTO.movieId(),
-                            byteStreamUploadDTO.streamName(), byteStreamUploadDTO.byteStream()))
+                        contentUploadService.saveStream(new MovieStream(byteStreamUploadDTO.movieId(),
+                                byteStreamUploadDTO.streamName(), byteStreamUploadDTO.byteStream()))
                 )
-                .map(movieStreamMetaData -> {
-                    return new ByteStreamUploadResponseDTO(byteStreamUploadDTO.movieId(),
-                            movieStreamMetaData.streamId(),
-                            movieStreamMetaData.sequence(),
-                            movieStreamMetaData.sizeInBytes(),
-                            byteStreamUploadDTO.streamName());
-                });
+                .map(movieStreamMetaData ->
+                        new ByteStreamUploadResponseDTO(byteStreamUploadDTO.movieId(),
+                                movieStreamMetaData.streamId(),
+                                movieStreamMetaData.sequence(),
+                                movieStreamMetaData.sizeInBytes(),
+                                byteStreamUploadDTO.streamName())
+                );
     }
 }
