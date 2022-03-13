@@ -91,6 +91,20 @@
     </tbody>
 </table>
 
+### Pipeline Structure
+```mermaid
+flowchart LR;
+    A(Commit) --> B(Compile)
+    B --> C(Unit Test)
+    C --> D(Integration Test)
+    D --> E(Static Analysis)
+    E --> F(Build Image) 
+    F --> G(Deploy Image)
+    G --> H(Remote Functional Tests)
+    H --> I(Load Test)
+    I --> J(Resilience Test 1 - Deployment while running load test)
+```
+
 ### Functionality
 
 A REST API that allows users to update movie ratings
