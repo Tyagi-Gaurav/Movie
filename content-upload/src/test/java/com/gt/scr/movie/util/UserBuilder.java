@@ -2,8 +2,8 @@ package com.gt.scr.movie.util;
 
 import com.gt.scr.domain.User;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -15,7 +15,7 @@ public class UserBuilder {
     private String username = randomAlphabetic(10);
     private String firstName = randomAlphabetic(10);
     private String lastName = randomAlphabetic(10);
-    private Collection<String> authorities =
+    private List<String> authorities =
             Collections.singletonList("USER");
 
     private UserBuilder() {
@@ -33,7 +33,7 @@ public class UserBuilder {
         userBuilder.firstName = currentUser.firstName();
         userBuilder.lastName = currentUser.lastName();
         userBuilder.password = currentUser.password();
-        userBuilder.authorities = currentUser.authorities();
+        userBuilder.authorities = currentUser.authorities().stream().toList();
 
         return userBuilder;
     }

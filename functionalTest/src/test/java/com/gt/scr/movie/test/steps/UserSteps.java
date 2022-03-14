@@ -3,6 +3,7 @@ package com.gt.scr.movie.test.steps;
 import com.gt.scr.movie.test.config.AdminCredentials;
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.TestAccountCreateRequestDTO;
+import com.gt.scr.movie.test.domain.TestGender;
 import com.gt.scr.movie.test.domain.TestLoginRequestDTO;
 import com.gt.scr.movie.test.resource.ResponseHolder;
 import com.gt.scr.movie.test.resource.TestAccountCreateResource;
@@ -48,6 +49,9 @@ public class UserSteps implements En {
                             actualOrRandom(testAccountCreateRequestDTO.password(), 6),
                             testAccountCreateRequestDTO.firstName(),
                             testAccountCreateRequestDTO.lastName(),
+                            testAccountCreateRequestDTO.dateOfBirth(),
+                            testAccountCreateRequestDTO.gender(),
+                            testAccountCreateRequestDTO.homeCountry(),
                             testAccountCreateRequestDTO.role()
                     );
 
@@ -74,7 +78,10 @@ public class UserSteps implements En {
                             RandomStringUtils.randomAlphabetic(6),
                             RandomStringUtils.randomAlphabetic(6),
                             RandomStringUtils.randomAlphabetic(6),
-                            role);
+                            "12/04/1990",
+                            TestGender.MALE,
+                            "AUS"
+                            ,role);
 
                     scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);
                     testAccountCreateResource.create(testAccountCreateRequestDTO);
@@ -109,6 +116,9 @@ public class UserSteps implements En {
                             RandomStringUtils.randomAlphabetic(6),
                             RandomStringUtils.randomAlphabetic(6),
                             RandomStringUtils.randomAlphabetic(6),
+                            "12/04/1990",
+                            TestGender.MALE,
+                            "AUS",
                             role);
 
                     scenarioContext.storeCredentialsRequest(testAccountCreateRequestDTO);

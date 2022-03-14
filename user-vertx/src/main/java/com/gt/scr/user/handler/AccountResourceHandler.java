@@ -47,7 +47,10 @@ public class AccountResourceHandler implements Handler<RoutingContext> {
                                 accountCreateRequestDTO.lastName(),
                                 accountCreateRequestDTO.userName(),
                                 encode(accountCreateRequestDTO.password()),
-                                Collections.singleton(accountCreateRequestDTO.role())))
+                                accountCreateRequestDTO.dateOfBirth(),
+                                accountCreateRequestDTO.gender(),
+                                accountCreateRequestDTO.homeCountry(),
+                                Collections.singletonList(accountCreateRequestDTO.role())))
                         .onFailure(throwable ->
                                 exceptionMapper.mapException(routingContext, throwable, ReplyException.class, 403, 500)
                         ).onSuccess(event -> routingContext.response().setStatusCode(204).end());

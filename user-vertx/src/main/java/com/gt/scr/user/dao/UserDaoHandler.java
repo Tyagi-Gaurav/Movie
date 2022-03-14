@@ -1,5 +1,6 @@
 package com.gt.scr.user.dao;
 
+import com.gt.scr.domain.Gender;
 import com.gt.scr.domain.User;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
@@ -32,11 +33,14 @@ public class UserDaoHandler extends AbstractVerticle {
     private static final String FIRST_NAME = "FIRST_NAME";
     private static final String LAST_NAME = "LAST_NAME";
     private static final String PASSWORD = "PASSWORD";
+    private static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
+    private static final String GENDER = "GENDER";
+    private static final String HOME_COUNTRY = "HOME_COUNTRY";
     private static final String ROLES = "ROLES";
     private static final String SCHEMA = "USER_SCHEMA";
 
-    private static final String INSERT_USERS = String.format("INSERT INTO %s.USER_TABLE (%s, %s, %s, %s, %s, %s) VALUES ($1, $2, $3, $4, $5, $6)"
-            , SCHEMA, ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES);
+    private static final String INSERT_USERS = String.format("INSERT INTO %s.USER_TABLE (%s, %s, %s, %s, %s, %s, %s, %s, %s) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+            , SCHEMA, ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, DATE_OF_BIRTH, GENDER, HOME_COUNTRY, ROLES);
 
     private static final String FETCH_BY_USER_NAME = String.format("SELECT * FROM %s.USER_TABLE WHERE %s = $1", SCHEMA, USER_NAME);
 
@@ -73,6 +77,9 @@ public class UserDaoHandler extends AbstractVerticle {
                                             row.getString(LAST_NAME.toLowerCase()),
                                             row.getString(USER_NAME.toLowerCase()),
                                             row.getString(PASSWORD.toLowerCase()),
+                                            row.getString(DATE_OF_BIRTH.toLowerCase()),
+                                            Gender.valueOf(row.getString(GENDER.toLowerCase())),
+                                            row.getString(HOME_COUNTRY.toLowerCase()),
                                             Stream.of(row.getString(ROLES.toLowerCase()).split(","))
                                                     .toList()))
                             );
@@ -119,6 +126,9 @@ public class UserDaoHandler extends AbstractVerticle {
                                             row.getString(LAST_NAME.toLowerCase()),
                                             row.getString(USER_NAME.toLowerCase()),
                                             row.getString(PASSWORD.toLowerCase()),
+                                            row.getString(DATE_OF_BIRTH.toLowerCase()),
+                                            Gender.valueOf(row.getString(GENDER.toLowerCase())),
+                                            row.getString(HOME_COUNTRY.toLowerCase()),
                                             Stream.of(row.getString(ROLES.toLowerCase()).split(","))
                                                     .toList())));
                             return;
@@ -145,6 +155,9 @@ public class UserDaoHandler extends AbstractVerticle {
                                             row.getString(LAST_NAME.toLowerCase()),
                                             row.getString(USER_NAME.toLowerCase()),
                                             row.getString(PASSWORD.toLowerCase()),
+                                            row.getString(DATE_OF_BIRTH.toLowerCase()),
+                                            Gender.valueOf(row.getString(GENDER.toLowerCase())),
+                                            row.getString(HOME_COUNTRY.toLowerCase()),
                                             Stream.of(row.getString(ROLES.toLowerCase()).split(","))
                                                     .toList())));
                             return;
@@ -165,6 +178,9 @@ public class UserDaoHandler extends AbstractVerticle {
                         user.firstName(),
                         user.lastName(),
                         user.password(),
+                        user.dateOfBirth(),
+                        user.gender(),
+                        user.homeCountry(),
                         StringUtils.join(user.authorities(), ",")
                 ), ar -> {
                     if (ar.succeeded()) {

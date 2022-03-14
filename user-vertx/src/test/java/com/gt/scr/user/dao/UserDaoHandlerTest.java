@@ -1,5 +1,6 @@
 package com.gt.scr.user.dao;
 
+import com.gt.scr.domain.Gender;
 import com.gt.scr.domain.User;
 import com.gt.scr.user.util.UserBuilder;
 import com.opentable.db.postgres.embedded.ConnectionInfo;
@@ -83,6 +84,9 @@ class UserDaoHandlerTest {
                     ctx.verify(() -> assertThat(user.id()).isEqualTo(expectedUser.id()));
                     ctx.verify(() -> assertThat(user.password()).isEqualTo(expectedUser.password()));
                     ctx.verify(() -> assertThat(user.getRole()).isEmpty());
+                    ctx.verify(() -> assertThat(user.dateOfBirth()).isEqualTo(expectedUser.dateOfBirth()));
+                    ctx.verify(() -> assertThat(user.gender()).isEqualTo(expectedUser.gender()));
+                    ctx.verify(() -> assertThat(user.homeCountry()).isEqualTo(expectedUser.homeCountry()));
                     ctx.completeNow();
                 });
     }
@@ -199,14 +203,18 @@ class UserDaoHandlerTest {
                 .forEach(user -> {
                     try (Connection connection = preparedDbExtension.getTestDatabase().getConnection();
                          PreparedStatement preparedStatement = connection.prepareStatement(
-                                 "INSERT INTO USER_SCHEMA.USER_TABLE (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, ROLES) VALUES (?, ?, ?, ?, ?, ?)")) {
+                                 "INSERT INTO USER_SCHEMA.USER_TABLE (ID, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, " +
+                                         "DATE_OF_BIRTH, GENDER, HOME_COUNTRY, ROLES) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
                         preparedStatement.setString(1, user.id().toString());
                         preparedStatement.setString(2, user.username());
                         preparedStatement.setString(3, user.firstName());
                         preparedStatement.setString(4, user.lastName());
                         preparedStatement.setString(5, user.password());
-                        preparedStatement.setString(6, StringUtils.join(user.authorities(), ","));
+                        preparedStatement.setString(6, user.dateOfBirth());
+                        preparedStatement.setString(7, user.gender().toString());
+                        preparedStatement.setString(8, user.homeCountry());
+                        preparedStatement.setString(9, StringUtils.join(user.authorities(), ","));
 
                         preparedStatement.execute();
                     } catch (SQLException e) {
@@ -228,6 +236,9 @@ class UserDaoHandlerTest {
                         resultSet.getString("LAST_NAME"),
                         resultSet.getString("USER_NAME"),
                         resultSet.getString("PASSWORD"),
+                        resultSet.getString("DATE_OF_BIRTH"),
+                        Gender.valueOf(resultSet.getString("GENDER")),
+                        resultSet.getString("HOME_COUNTRY"),
                         Collections.emptyList());
             }
 
