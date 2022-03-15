@@ -15,6 +15,9 @@ public record User(UUID id,
                    String lastName,
                    String username,
                    String password,
+                   String dateOfBirth,
+                   Gender gender,
+                   String homeCountry,
                    Collection<String> authorities) {
 
     public String getRole() {

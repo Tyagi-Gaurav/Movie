@@ -38,6 +38,9 @@ public class AdminUserAddHandler implements Handler<RoutingContext> {
                             accountCreateRequestDTO.lastName(),
                             accountCreateRequestDTO.userName(),
                             encode(accountCreateRequestDTO.password()),
+                            accountCreateRequestDTO.dateOfBirth(),
+                            accountCreateRequestDTO.gender(),
+                            accountCreateRequestDTO.homeCountry(),
                             Collections.singletonList(accountCreateRequestDTO.role())))
                     .onFailure(throwable -> {
                         if (throwable instanceof ReplyException) {

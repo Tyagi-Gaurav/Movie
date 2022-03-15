@@ -1,6 +1,7 @@
 package com.gt.scr.user.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gt.scr.domain.Gender;
 import com.gt.scr.domain.User;
 import com.gt.scr.user.service.domain.Role;
 import com.gt.scr.utils.JwtTokenUtil;
@@ -41,6 +42,7 @@ public class TestCredentialsGenerator {
                 lastName,
                 userName,
                 password,
+                "01/01/1980", Gender.FEMALE, "GBR",
                 Collections.singletonList(role));
         Duration tokenDuration = Duration.ofDays(3650);
 

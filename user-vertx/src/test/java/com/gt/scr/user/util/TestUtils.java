@@ -3,6 +3,7 @@ package com.gt.scr.user.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.domain.User;
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
+import com.gt.scr.domain.Gender;
 import com.gt.scr.user.resource.domain.LoginRequestDTO;
 
 import java.util.Collections;
@@ -25,6 +26,7 @@ public class TestUtils {
         return new AccountCreateRequestDTO(
                 randomAlphabetic(4), randomAlphabetic(6)
                 , randomAlphabetic(7), randomAlphabetic(7),
+                "10/10/2010", Gender.FEMALE, "AUS",
                 "USER");
     }
 
@@ -34,7 +36,7 @@ public class TestUtils {
 
     public static User testUser() {
         return new User(UUID.randomUUID(), randomAlphabetic(6),
-                randomAlphabetic(6), randomAlphabetic(6), randomAlphabetic(6)
-                , Collections.emptyList());
+                randomAlphabetic(6), randomAlphabetic(6), randomAlphabetic(6),
+                "01/01/1980", Gender.FEMALE, "GBR", Collections.emptyList());
     }
 }

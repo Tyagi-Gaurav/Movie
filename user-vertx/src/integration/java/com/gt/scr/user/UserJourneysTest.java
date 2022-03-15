@@ -2,6 +2,7 @@ package com.gt.scr.user;
 
 import com.gt.scr.user.resource.domain.AccountCreateRequestDTO;
 import com.gt.scr.user.resource.domain.LoginRequestDTO;
+import com.gt.scr.user.resource.domain.UserDetailsResponseDTO;
 import com.opentable.db.postgres.embedded.EmbeddedPostgres;
 import com.opentable.db.postgres.junit5.EmbeddedPostgresExtension;
 import com.opentable.db.postgres.junit5.SingleInstancePostgresExtension;
@@ -16,12 +17,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
 public class UserJourneysTest {
@@ -64,8 +69,8 @@ public class UserJourneysTest {
                                 "\"status\":\"UP\"," +
                                 "\"checks\":" +
                                 "[{" +
-                                    "\"id\":\"status\"," +
-                                    "\"status\":\"UP\"" +
+                                "\"id\":\"status\"," +
+                                "\"status\":\"UP\"" +
                                 "}]," +
                                 "\"outcome\":\"UP" +
                                 "\"}"
@@ -75,8 +80,7 @@ public class UserJourneysTest {
     @Test
     @Timeout(value = 5, timeUnit = TimeUnit.SECONDS)
     void createUserTest() {
-        AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .userIsCreatedFor(accountCreateRequestDTO)
@@ -85,8 +89,10 @@ public class UserJourneysTest {
 
     @Test
     void createUserTestWithInvalidData() {
-        AccountCreateRequestDTO invalidAccountCreateRequest =
-                TestObjectBuilder.invalidUserAccountCreateRequestDTO();
+        AccountCreateRequestDTO invalidAccountCreateRequest =  AccountCreateRequestBuilder.accountCreateRequest()
+                .withUserName(randomAlphabetic(2))
+                .build();
+
         scenarioExecutor
                 .when().userIsCreatedFor(invalidAccountCreateRequest)
                 .then().expectReturnCode(400);
@@ -94,18 +100,26 @@ public class UserJourneysTest {
 
     @Test
     void createUserAndLogin() {
-        AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
-                .userLoginsWith(accountCreateRequestDTO).expectReturnCode(200);
+                .userLoginsWith(accountCreateRequestDTO).expectReturnCode(200)
+                .retrieveUserFromDatabase(accountCreateRequestDTO.userName())
+                .thenAssertThat(userDetailsResponse -> {
+                    assertThat(userDetailsResponse.firstName()).isEqualTo(accountCreateRequestDTO.firstName());
+                    assertThat(userDetailsResponse.lastName()).isEqualTo(accountCreateRequestDTO.lastName());
+                    assertThat(userDetailsResponse.userName()).isEqualTo(accountCreateRequestDTO.userName());
+                    assertThat(userDetailsResponse.role()).isEqualTo(accountCreateRequestDTO.role());
+                    assertThat(userDetailsResponse.dateOfBirth()).isEqualTo(accountCreateRequestDTO.dateOfBirth());
+                    assertThat(userDetailsResponse.gender()).isEqualTo(accountCreateRequestDTO.gender());
+                    assertThat(userDetailsResponse.homeCountry()).isEqualTo(accountCreateRequestDTO.homeCountry());
+                }, UserDetailsResponseDTO.class);
     }
 
     @Test
     void requestIdShouldBeGeneratedWhenItsNotThere() {
-        AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
@@ -115,8 +129,7 @@ public class UserJourneysTest {
 
     @Test
     void requestIdShouldNotBeGeneratedWhenItsAlreadyThere() {
-        AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
         UUID requestId = UUID.randomUUID();
 
         scenarioExecutor
@@ -127,9 +140,9 @@ public class UserJourneysTest {
 
     @Test
     void createUserAndLoginWithInvalidPasswordTest() {
-        AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
-        LoginRequestDTO loginRequestDTO = TestObjectBuilder.invalidPasswordLoginRequestUsing(accountCreateRequestDTO);
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
+        LoginRequestDTO loginRequestDTO = LoginRequestBuilder
+                .invalidPasswordLoginRequestUsing(accountCreateRequestDTO);
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO)
@@ -139,9 +152,9 @@ public class UserJourneysTest {
 
     @Test
     void createUserAndLoginWithInvalidUserTest() {
-        AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
-        LoginRequestDTO loginRequestDTO = TestObjectBuilder.invalidUserLoginRequestUsing(accountCreateRequestDTO);
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
+        LoginRequestDTO loginRequestDTO = LoginRequestBuilder
+                .invalidUserLoginRequestUsing(accountCreateRequestDTO);
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO)
@@ -151,7 +164,9 @@ public class UserJourneysTest {
 
     @Test
     void adminUserShouldNotBeAllowedToCreateUsersViaNormalEndpoint() {
-        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.adminAccountCreateRequest();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest()
+                .withRole("ADMIN")
+                .build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO)
@@ -160,7 +175,9 @@ public class UserJourneysTest {
 
     @Test
     void adminUserShouldBeAbleToCreateOtherUsers() {
-        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.adminAccountCreateRequest();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest()
+                .withRole("ADMIN")
+                .build();
 
         scenarioExecutor
                 .when().globalAdminUserLogins().expectReturnCode(200)
@@ -170,7 +187,9 @@ public class UserJourneysTest {
 
     @Test
     void adminUserShouldNotBeAbleToCreateDuplicateUsers() {
-        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.adminAccountCreateRequest();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest()
+                .withRole("ADMIN")
+                .build();
 
         scenarioExecutor
                 .when().globalAdminUserLogins().expectReturnCode(200)
@@ -180,7 +199,7 @@ public class UserJourneysTest {
 
     @Test
     void aNormalUserShouldNotBeAbleToAccessUserManagementEndpoints() {
-        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
@@ -200,7 +219,7 @@ public class UserJourneysTest {
     @NullSource
     void anyUserShouldNotBeAbleToAccessWithAFakeToken(String token) {
         AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
+                AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
@@ -211,7 +230,10 @@ public class UserJourneysTest {
 
     @Test
     void regularAccountCreateIsOnlyForNormalUsers() {
-        AccountCreateRequestDTO adminAccountCreateRequestDTO = TestObjectBuilder.adminAccountCreateRequest();
+        AccountCreateRequestDTO adminAccountCreateRequestDTO =
+                AccountCreateRequestBuilder.accountCreateRequest()
+                        .withRole("ADMIN")
+                        .build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(adminAccountCreateRequestDTO)
@@ -221,26 +243,38 @@ public class UserJourneysTest {
     @Test
     void beAbleToFetchUserDetailsForAGivenUserByNameForRegularUser() {
         AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
+                AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
                 .userLoginsWith(accountCreateRequestDTO).expectReturnCode(200)
                 .retrieveUserByNameForRegularUser(accountCreateRequestDTO.userName()).expectReturnCode(200)
-                .then().retrievedUsersFirstNameIs(accountCreateRequestDTO.firstName())
+                .thenAssertThat(userDetailsResponseDTO -> {
+                    assertThat(userDetailsResponseDTO.firstName()).isEqualTo(accountCreateRequestDTO.firstName());
+                    assertThat(userDetailsResponseDTO.lastName()).isEqualTo(accountCreateRequestDTO.lastName());
+                    assertThat(userDetailsResponseDTO.dateOfBirth()).isEqualTo(accountCreateRequestDTO.dateOfBirth());
+                    assertThat(userDetailsResponseDTO.gender()).isEqualTo(accountCreateRequestDTO.gender());
+                    assertThat(userDetailsResponseDTO.homeCountry()).isEqualTo(accountCreateRequestDTO.homeCountry());
+                }, UserDetailsResponseDTO.class)
                 .expectReturnCode(200);
     }
 
     @Test
     void beAbleToFetchUserDetailsForAGivenUserByNameForAdminUser() {
         AccountCreateRequestDTO accountCreateRequestDTO =
-                TestObjectBuilder.userAccountCreateRequestDTO();
+                AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
                 .when().globalAdminUserLogins().expectReturnCode(200)
                 .retrieveUserByNameForAdminUser(accountCreateRequestDTO.userName()).expectReturnCode(200)
-                .then().retrievedUsersFirstNameIs(accountCreateRequestDTO.firstName())
+                .thenAssertThat(userDetailsResponseDTO -> {
+                    assertThat(userDetailsResponseDTO.firstName()).isEqualTo(accountCreateRequestDTO.firstName());
+                    assertThat(userDetailsResponseDTO.lastName()).isEqualTo(accountCreateRequestDTO.lastName());
+                    assertThat(userDetailsResponseDTO.dateOfBirth()).isEqualTo(accountCreateRequestDTO.dateOfBirth());
+                    assertThat(userDetailsResponseDTO.gender()).isEqualTo(accountCreateRequestDTO.gender());
+                    assertThat(userDetailsResponseDTO.homeCountry()).isEqualTo(accountCreateRequestDTO.homeCountry());
+                }, UserDetailsResponseDTO.class)
                 .expectReturnCode(200);
     }
 
@@ -249,12 +283,14 @@ public class UserJourneysTest {
         scenarioExecutor
                 .when().retrieveUserById(UUID.fromString("dcba7802-2eae-42b2-818e-a27f8f380088"))
                 .expectReturnCode(200)
-                .then().retrievedUsersFirstNameIs("Gaurav");
+                .thenAssertThat(userDetailsResponseDTO ->
+                                assertThat(userDetailsResponseDTO.firstName()).isEqualTo("Gaurav")
+                        , UserDetailsResponseDTO.class);
     }
 
     @Test
     void adminShouldBeAbleToDeleteUser() {
-        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().globalAdminUserLogins().expectReturnCode(200)
@@ -267,10 +303,36 @@ public class UserJourneysTest {
 
     @Test
     void regularUserShouldNotBeAbleToCreateDuplicateAccount() {
-        AccountCreateRequestDTO accountCreateRequestDTO = TestObjectBuilder.userAccountCreateRequestDTO();
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest().build();
 
         scenarioExecutor
                 .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(204)
                 .then().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(403);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"01/01/79", "1/01/1980", "01/1/1980", "01/01/1899", "01/01/2100", "1/03/1972"})
+    @NullSource
+    @EmptySource
+    void accountCreateRequestShouldFailWhenDOBHasIncorrectFormat(String dateOfBirth) {
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest()
+                .withDateOfBirth(dateOfBirth)
+                .build();
+
+        scenarioExecutor
+                .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(400);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"IX", "", "A"})
+    @NullSource
+    @EmptySource
+    void accountCreateRequestShouldFailWhenHomeCountryHasIncorrectFormat(String homeCountry) {
+        AccountCreateRequestDTO accountCreateRequestDTO = AccountCreateRequestBuilder.accountCreateRequest()
+                .withHomeCountry(homeCountry)
+                .build();
+
+        scenarioExecutor
+                .when().userIsCreatedFor(accountCreateRequestDTO).expectReturnCode(400);
     }
 }

@@ -27,7 +27,7 @@ public class ResponseSteps implements En {
         });
 
         And("^the response contains the (.*) header in response$", (String headerName) -> {
-            assertThat(responseHolder.getHeaders().containsKey(headerName)).isTrue();
+            assertThat(responseHolder.getHeaders()).containsKey(headerName);
         });
     }
 }

@@ -28,7 +28,8 @@ public class AdminUserGetUsersHandler implements Handler<RoutingContext> {
                     List<JsonObject> jsonNodes = userList.stream()
                             .map(uo -> uo.mapTo(User.class))
                             .map(user -> new UserDetailsResponseDTO(user.username(), user.password(), user.firstName(),
-                                    user.lastName(), user.getRole(), user.id()))
+                                    user.lastName(), user.getRole(), user.id(),
+                                    user.dateOfBirth(), user.gender(), user.homeCountry()))
                             .map(JsonObject::mapFrom)
                             .toList();
 

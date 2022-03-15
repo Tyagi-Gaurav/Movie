@@ -28,7 +28,7 @@ public class UserGetByNameHandler implements Handler<RoutingContext> {
                     routingContext.response().setStatusCode(200);
                     routingContext.response().setChunked(true);
                     JsonObject responseBody = JsonObject.mapFrom(new UserDetailsResponseDTO(user.username(), user.password(), user.firstName(),
-                            user.lastName(), user.getRole(), user.id()));
+                            user.lastName(), user.getRole(), user.id(), user.dateOfBirth(), user.gender(), user.homeCountry()));
                     routingContext.response().write(responseBody.toBuffer());
                     routingContext.response().end();
                 })
