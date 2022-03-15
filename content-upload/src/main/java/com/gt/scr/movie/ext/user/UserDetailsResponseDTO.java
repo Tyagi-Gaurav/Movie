@@ -26,6 +26,7 @@ public record UserDetailsResponseDTO(String userName,
 
     public User toUser() {
         return new User(id(), firstName(), lastName(), userName(), password(),
+                dateOfBirth(), gender(), homeCountry(),
                 Collections.singletonList(role()));
     }
 }

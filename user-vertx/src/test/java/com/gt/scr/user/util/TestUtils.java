@@ -36,7 +36,7 @@ public class TestUtils {
 
     public static User testUser() {
         return new User(UUID.randomUUID(), randomAlphabetic(6),
-                randomAlphabetic(6), randomAlphabetic(6), randomAlphabetic(6)
-                , Collections.emptyList());
+                randomAlphabetic(6), randomAlphabetic(6), randomAlphabetic(6),
+                "01/01/1980", Gender.FEMALE, "GBR", Collections.emptyList());
     }
 }

@@ -1,5 +1,6 @@
 package com.gt.scr.movie.util;
 
+import com.gt.scr.domain.Gender;
 import com.gt.scr.domain.User;
 
 import java.util.Collections;
@@ -15,6 +16,9 @@ public class UserBuilder {
     private String username = randomAlphabetic(10);
     private String firstName = randomAlphabetic(10);
     private String lastName = randomAlphabetic(10);
+    private String dateOfBirth = "10/10/2010";
+    private Gender gender = Gender.FEMALE;
+    private String homeCountry = "AUS";
     private List<String> authorities =
             Collections.singletonList("USER");
 
@@ -43,22 +47,15 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder withFirstName(String firstName) {
-        this.firstName = firstName;
-        return this;
-    }
-
-    public UserBuilder withUserPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
     public User build() {
         return new User(this.id,
                 this.firstName,
                 this.lastName,
                 this.username,
                 this.password,
+                this.dateOfBirth,
+                this.gender,
+                this.homeCountry,
                 this.authorities);
     }
 }

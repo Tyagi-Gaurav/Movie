@@ -1,5 +1,6 @@
 package com.gt.scr.movie.config;
 
+import com.gt.scr.domain.Gender;
 import com.gt.scr.domain.User;
 import com.gt.scr.movie.service.UserService;
 import com.gt.scr.utils.JwtTokenUtil;
@@ -41,6 +42,9 @@ class AuthenticationManagerTest {
             "TestLastName",
             "TestUserName",
             "",
+            "01/01/1989",
+            Gender.FEMALE,
+            "GBR",
             Collections.singletonList("ADMIN"));
     private final static String KEY_256_BIT = "8A6872AD13BEC411DAC9746C7FEDB8A6872AD13BEC411DAC9746C7FEDB";
 
