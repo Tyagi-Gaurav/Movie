@@ -7,7 +7,7 @@ services:
     build:
       context: content-upload
     ports:
-      - "9900:9900"
+      - "9090:9090"
       - "8443:8443"
     environment:
       - "SPRING_PROFILES_ACTIVE=prod"

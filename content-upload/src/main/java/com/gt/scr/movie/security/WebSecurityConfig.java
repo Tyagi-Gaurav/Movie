@@ -36,8 +36,9 @@ public class WebSecurityConfig {
         return httpSecurity
                 .csrf().disable()
                 .authorizeExchange()
+                .pathMatchers("/swagger-ui**", "/webjars/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .pathMatchers("/status", "/actuator/**").permitAll()
-                .pathMatchers( "/user/{userId}/movie").hasAuthority("ADMIN")
+                .pathMatchers("/user/{userId}/movie").hasAuthority("ADMIN")
                 .anyExchange().authenticated().and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
