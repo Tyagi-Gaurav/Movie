@@ -6,7 +6,7 @@ plugins {
 }
 
 ext {
-    springBootVersion = '2.6.3'
+    springBootVersion = '2.6.4'
     springCloudVersion = '3.1.0'
     springVersion = '5.3.15'
     commonsLang3Version = '3.12.0'
