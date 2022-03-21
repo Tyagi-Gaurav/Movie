@@ -8,6 +8,15 @@
 
 ## Movie API
 
+# Content Upload Swagger
+```
+http://localhost:9090/api/webjars/swagger-ui/index.html
+```
+# Content Upload json Export:
+```
+http://localhost:8080/content/upload/api/v3/api-docs
+```
+
 ### Engineering Principles
 
 <table>
