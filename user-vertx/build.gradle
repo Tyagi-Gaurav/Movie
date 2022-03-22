@@ -16,7 +16,7 @@ vertx {
 }
 
 ext {
-    springBootVersion = '2.6.1'
+    springBootVersion = '2.6.4'
     springVersion = '5.3.13'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.9'
