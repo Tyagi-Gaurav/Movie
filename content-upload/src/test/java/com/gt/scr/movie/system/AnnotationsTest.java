@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -51,7 +52,7 @@ class AnnotationsTest {
 
                 assert resources != null;
                 while (resources.hasMoreElements()) {
-                    try (BufferedReader dis = new BufferedReader(new InputStreamReader(resources.nextElement().openStream()))) {
+                    try (BufferedReader dis = new BufferedReader(new InputStreamReader(resources.nextElement().openStream(), StandardCharsets.UTF_8))) {
                         String line;
                         while ((line = dis.readLine()) != null) {
                             if (line.endsWith(".class") && !line.contains("Test")) {

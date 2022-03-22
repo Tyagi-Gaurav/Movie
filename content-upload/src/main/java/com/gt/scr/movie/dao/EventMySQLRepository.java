@@ -11,6 +11,8 @@ import com.gt.scr.exception.DatabaseException;
 
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -36,7 +38,7 @@ public class EventMySQLRepository implements EventRepository {
             preparedStatement.setString(3, eventMessage.originatorUser().toString());
             preparedStatement.setString(4, eventMessage.eventType().toString());
             preparedStatement.setBinaryStream(5,
-                    new ByteArrayInputStream(objectMapper.writeValueAsString(eventMessage).getBytes()));
+                    new ByteArrayInputStream(objectMapper.writeValueAsString(eventMessage).getBytes(StandardCharsets.UTF_8)));
             preparedStatement.setLong(6, eventMessage.creationTimestamp());
 
             preparedStatement.execute();

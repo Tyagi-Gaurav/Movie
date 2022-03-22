@@ -67,7 +67,6 @@ class MovieMySQLRepositoryTest extends DatabaseTest {
     void shouldReturnEmptyMovieWhenNoMovieFoundById() {
         //given
         Movie expectedMovie = aMovie().build();
-        User user = aUser().build();
 
         //when
         Mono<Movie> movie = movieRepository.findMovieBy(expectedMovie.id());
@@ -295,7 +294,6 @@ class MovieMySQLRepositoryTest extends DatabaseTest {
     @Test
     void shouldHandleExceptionWhenCreateUserFails() {
         //given
-        User currentUser = aUser().build();
         Movie expectedMovie = aMovie().build();
 
         //when

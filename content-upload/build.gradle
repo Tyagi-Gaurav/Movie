@@ -34,8 +34,8 @@ repositories {
     mavenCentral()
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 sourceSets {
     integration {
@@ -54,7 +54,7 @@ configurations {
 }
 
 jacoco {
-    toolVersion = "0.8.6"
+    toolVersion = "0.8.7"
 }
 
 bootJar {
@@ -170,7 +170,6 @@ jacocoTestReport {
 }
 
 spotbugs {
-    toolVersion = '4.2.3'
     ignoreFailures = false
     excludeFilter = file("gradle/spotbugs/exclusions.xml")
 }
@@ -178,8 +177,8 @@ spotbugs {
 spotbugsMain {
     reports {
         html {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            required = true
+            outputLocation = file("$buildDir/reports/spotbugs/main/spotbugs.html")
             stylesheet = 'fancy-hist.xsl'
         }
     }
@@ -188,8 +187,8 @@ spotbugsMain {
 spotbugsTest {
     reports {
         html {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/test/spotbugs.html")
+            required = true
+            outputLocation = file("$buildDir/reports/spotbugs/test/spotbugs.html")
             stylesheet = 'fancy-hist.xsl'
         }
     }
@@ -198,8 +197,8 @@ spotbugsTest {
 spotbugsIntegration {
     reports {
         html {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/integration/spotbugs.html")
+            required = true
+            outputLocation = file("$buildDir/reports/spotbugs/integration/spotbugs.html")
             stylesheet = 'fancy-hist.xsl'
         }
     }

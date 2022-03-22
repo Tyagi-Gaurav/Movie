@@ -137,7 +137,7 @@ affecting rest of the application.
 
 ### Java Version
 
-The application current runs on Java 16.
+The application current runs on Java 17.
 
 #### Application Security
 

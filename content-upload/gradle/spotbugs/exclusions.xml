@@ -1,10 +1,47 @@
 <FindBugsFilter>
     <Match>
+        <Class name="~.*\.WebSecurityConfig.*"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
         <Or>
-            <Class name="~.*\.WebSecurityConfig.*" />
+            <Class name="com.gt.scr.movie.ScenarioExecutor"/>
+            <Class name="com.gt.scr.movie.functions.DeleteEvents"/>
+            <Class name="com.gt.scr.movie.functions.RetrieveEventsForUser"/>
+            <Class name="com.gt.scr.movie.dao.MovieMySQLRepository"/>
+            <Class name="com.gt.scr.movie.util.TestUtils"/>
         </Or>
     </Match>
     <Match>
-
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Class name="com.gt.scr.movie.dao.EventMySQLRepository"/>
+        <Method name="save"/>
+    </Match>
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Class name="com.gt.scr.movie.dao.FileSystemContentStore"/>
+        <Method name="getNextSequence"/>
+    </Match>
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Class name="com.gt.scr.movie.dao.StreamMetaDataRepositoryImpl"/>
+        <Method name="store"/>
+    </Match>
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Class name="com.gt.scr.movie.dao.EventMySQLRepositoryTest"/>
+        <Method name="getAllEvents"/>
+    </Match>
+    <Match>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+        <Class name="com.gt.scr.movie.dao.FileSystemContentStore"/>
+        <Method name="writeToFile"/>
+    </Match>
+    <Match>
+        <Bug pattern="OVERLY_PERMISSIVE_FILE_PERMISSION"/>
+        <Class name="com.gt.scr.movie.dao.FileSystemContentStoreTest"/>
     </Match>
 </FindBugsFilter>
