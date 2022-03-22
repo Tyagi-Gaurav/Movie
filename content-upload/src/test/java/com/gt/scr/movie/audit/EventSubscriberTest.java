@@ -1,7 +1,6 @@
 package com.gt.scr.movie.audit;
 
 import com.gt.scr.movie.dao.EventRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -19,16 +18,11 @@ class EventSubscriberTest {
     @Mock
     private EventRepository eventRepository;
 
-    private EventSubscriber eventSubscriber;
     private Sinks.Many<UserEventMessage> testSink = Sinks.many().unicast().onBackpressureBuffer();
-
-    @BeforeEach
-    void setUp() {
-        eventSubscriber = new EventSubscriber(eventRepository, testSink);
-    }
 
     @Test
     void shouldSaveEventToAuditRepository() {
+        new EventSubscriber(eventRepository, testSink);
         //when
         testSink.tryEmitNext(new MovieCreateEvent(UUID.randomUUID(), UUID.randomUUID(),
                 UUID.randomUUID(),

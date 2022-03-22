@@ -1,4 +1,4 @@
-FROM openjdk:16
+FROM openjdk:17
 
 ADD build/libs/user-vertx-all.jar /data/user.jar
 

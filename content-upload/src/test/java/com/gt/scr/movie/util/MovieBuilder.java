@@ -1,5 +1,6 @@
 package com.gt.scr.movie.util;
 
+import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.service.domain.Movie;
 
 import java.math.BigDecimal;
@@ -59,5 +60,12 @@ public class MovieBuilder {
                 this.yearProduced,
                 this.rating,
                 this.creationTimeStamp);
+    }
+
+    public MovieDTO buildMovieDto() {
+        return new MovieDTO(this.id,
+                this.name,
+                this.yearProduced,
+                this.rating);
     }
 }

@@ -95,7 +95,6 @@ public class ContentUploadTest {
     }
 
     @ParameterizedTest
-    @NullSource
     @EmptySource
     void shouldHandleErrorWhenUploadingANullOrEmptyByteStreamForAMovie(byte[] byteStream) {
         MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();

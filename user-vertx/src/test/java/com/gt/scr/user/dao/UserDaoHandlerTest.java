@@ -221,7 +221,6 @@ class UserDaoHandlerTest {
                         e.printStackTrace();
                     }
                 });
-
     }
 
     private User fetchUser(String id) {

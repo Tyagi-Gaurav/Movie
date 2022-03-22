@@ -3,9 +3,15 @@ package com.gt.scr.movie.service.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public record MovieStream(UUID movieId, String streamName, byte[] byteStream) {
+    @Override
+    public byte[] byteStream() {
+        return Arrays.copyOf(byteStream, byteStream.length);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
