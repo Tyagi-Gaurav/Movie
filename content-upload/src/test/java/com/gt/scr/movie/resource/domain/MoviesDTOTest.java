@@ -23,7 +23,8 @@ class MoviesDTOTest {
         List<MovieDTO> expectedMovies = moviesDTO.movies();
 
         //then
+        MovieDTO newMovie = MovieBuilder.aMovie().buildMovieDto();
         Assertions.assertThatExceptionOfType(UnsupportedOperationException.class)
-                .isThrownBy(() -> expectedMovies.add(MovieBuilder.aMovie().buildMovieDto()));
+                .isThrownBy(() -> expectedMovies.add(newMovie));
     }
 }
