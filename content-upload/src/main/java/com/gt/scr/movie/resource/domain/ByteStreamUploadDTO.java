@@ -21,7 +21,7 @@ public record ByteStreamUploadDTO(@NotNull UUID movieId,
 
     @Override
     public byte[] byteStream() {
-        if (!isNull(byteStream != null)) {
+        if (!isNull(byteStream)) {
             return Arrays.copyOf(byteStream, byteStream.length);
         }
 

@@ -11,7 +11,6 @@ import com.gt.scr.exception.DatabaseException;
 
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
