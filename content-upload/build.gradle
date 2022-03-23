@@ -1,7 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.6.2'
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.4'
+    id 'com.github.spotbugs' version '5.0.6'
     id 'pmd'
 }
 
@@ -18,7 +18,7 @@ ext {
     c3p0Version = '0.9.5.5'
     liquibaseVersion = '4.7.0'
     guavaVersion = '31.0.1-jre'
-    metricsInterceptor = '1.8.2'
+    metricsInterceptor = '1.8.4'
     junitVersion = '5.8.2'
     assertJVersion = '3.22.0'
     h2DbVersion = '2.1.210'
