@@ -54,7 +54,10 @@ public class MovieAddTest {
     @NullSource
     @ValueSource(strings = {"", "abc", "abcde", "efuusidhfauihsdfuhiusdhfaiuhsfiuhiufhs"})
     void createMovieWithInvalidData(String movieName) {
-        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.invalidMovieCreateRequestDTO(movieName);
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest()
+                .withName(movieName)
+                .build();
+
         scenarioExecutor
                 .givenUserIsLoggedIn().when()
                 .userCreatesAMovieWith(movieCreateRequestDTO)
@@ -63,7 +66,7 @@ public class MovieAddTest {
 
     @Test
     void creatingMoviesShouldSendMovieCreateEvent() {
-        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         scenarioExecutor.
                 noEventsExistInTheSystem().then()
@@ -78,7 +81,7 @@ public class MovieAddTest {
 
     @Test
     void whenAdminIsCreatingMoviesForUserShouldSendMovieCreateEvent() {
-        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         scenarioExecutor
                 .noEventsExistInTheSystem().then()

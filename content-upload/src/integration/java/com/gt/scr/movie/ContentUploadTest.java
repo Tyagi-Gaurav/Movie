@@ -54,7 +54,7 @@ public class ContentUploadTest {
 
     @Test
     void shouldBeAbleToUploadByteStreamToAnExistingMovie() {
-        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         MovieCreateResponseDTO movieCreateResponseDTO = scenarioExecutor.
                 noEventsExistInTheSystem().then()
@@ -97,7 +97,7 @@ public class ContentUploadTest {
     @ParameterizedTest
     @EmptySource
     void shouldHandleErrorWhenUploadingANullOrEmptyByteStreamForAMovie(byte[] byteStream) {
-        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
         MovieCreateResponseDTO movieCreateResponseDTO = scenarioExecutor.
                 noEventsExistInTheSystem().then()
                 .givenUserIsLoggedIn().when()
