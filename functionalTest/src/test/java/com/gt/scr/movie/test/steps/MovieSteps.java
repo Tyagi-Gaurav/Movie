@@ -1,5 +1,6 @@
 package com.gt.scr.movie.test.steps;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.TestByteStreamUploadDTO;
 import com.gt.scr.movie.test.domain.TestByteStreamUploadResponseDTO;
@@ -24,12 +25,15 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MovieSteps implements En {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private TestMovieResource testMovieResource;
@@ -47,7 +51,7 @@ public class MovieSteps implements En {
 
         And("the authenticated user attempts to create a new movie",
                 (DataTable dataTable) -> {
-                    List<TestMovieCreateRequestDTO> testMovieCreateRequestDTOS = dataTable.asList(TestMovieCreateRequestDTO.class);
+                    List<TestMovieCreateRequestDTO> testMovieCreateRequestDTOS = from(dataTable);
                     testMovieCreateRequestDTOS.forEach(testMovieResource::createMovieFor);
                 });
 
@@ -66,7 +70,7 @@ public class MovieSteps implements En {
                 });
 
         And("^the movie read response contains the following records$", (DataTable datatable) -> {
-            List<TestMovieCreateRequestDTO> movieCreateRequestDTOS = datatable.asList(TestMovieCreateRequestDTO.class);
+            List<TestMovieCreateRequestDTO> movieCreateRequestDTOS = from(datatable);
             TestMoviesDTO testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
             var movies = testMoviesDTO.movies();
             assertThat(movies).isNotEmpty();
@@ -198,6 +202,12 @@ public class MovieSteps implements En {
                     responseHolder.readResponse(TestByteStreamUploadResponseDTO.class);
             assertThat(testByteStreamUploadResponseDTO.size()).isEqualTo(expectedSize);
         });
+    }
+
+    private List<TestMovieCreateRequestDTO> from(DataTable dataTable) {
+        return dataTable.asList(Map.class)
+                .stream().map(mp -> objectMapper.convertValue(mp, TestMovieCreateRequestDTO.class))
+                .toList();
     }
 
     private byte[] readFromFile(String videoFile) throws IOException, URISyntaxException {

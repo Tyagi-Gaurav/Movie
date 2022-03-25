@@ -9,4 +9,14 @@ import java.math.BigDecimal;
 @JsonDeserialize
 public record TestMovieCreateRequestDTO(String name,
                                         int yearProduced,
-                                        BigDecimal rating) { }
+                                        BigDecimal rating,
+                                        TestGenre genre,
+                                        TestContentType contentType,
+                                        TestAgeRating ageRating,
+                                        boolean isShareable) {
+
+
+    public TestMovieCreateRequestDTO(String name, int yearProduced, BigDecimal rating) {
+        this(name, yearProduced, rating, null, null, null, false);
+    }
+}
