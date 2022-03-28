@@ -8,6 +8,7 @@ import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.movie.util.MovieBuilder;
 import com.gt.scr.movie.util.MovieCreateRequestDTOBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,8 +71,7 @@ class MovieResourceTest {
         UUID id = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(id, "USER", "token");
 
-        var expectedReturnObject = new Movie(id, randomAlphabetic(5),
-                2010, BigDecimal.ONE, System.nanoTime());
+        var expectedReturnObject = MovieBuilder.aMovie().withMovieId(id).build();
 
         when(movieService.getMoviesFor(id)).thenReturn(Flux.just(expectedReturnObject));
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
@@ -82,7 +82,11 @@ class MovieResourceTest {
         StepVerifier.create(movies)
                 .expectNext(new MoviesDTO(Collections.singletonList(
                         new MovieDTO(id, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
-                                expectedReturnObject.rating()))))
+                                expectedReturnObject.rating(),
+                                expectedReturnObject.genre(),
+                                expectedReturnObject.contentType(),
+                                expectedReturnObject.ageRating(),
+                                expectedReturnObject.isShareable()))))
                 .verifyComplete();
     }
 
@@ -119,8 +123,7 @@ class MovieResourceTest {
         UUID id = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(id, "ADMIN", "token");
 
-        var expectedReturnObject = new Movie(id, randomAlphabetic(5),
-                2010, BigDecimal.ONE, System.nanoTime());
+        var expectedReturnObject = MovieBuilder.aMovie().withMovieId(id).build();
 
         when(movieService.getMoviesFor(id)).thenReturn(Flux.just(expectedReturnObject));
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
@@ -131,7 +134,11 @@ class MovieResourceTest {
         StepVerifier.create(movies)
                 .expectNext(new MoviesDTO(Collections.singletonList(
                         new MovieDTO(id, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
-                                expectedReturnObject.rating()))))
+                                expectedReturnObject.rating(),
+                                expectedReturnObject.genre(),
+                                expectedReturnObject.contentType(),
+                                expectedReturnObject.ageRating(),
+                                expectedReturnObject.isShareable()))))
                 .verifyComplete();
     }
 }

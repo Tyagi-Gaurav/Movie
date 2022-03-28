@@ -12,6 +12,7 @@
             <Class name="com.gt.scr.movie.functions.DeleteEvents"/>
             <Class name="com.gt.scr.movie.functions.RetrieveEventsForUser"/>
             <Class name="com.gt.scr.movie.functions.RetrieveMovieFromDatabase"/>
+            <Class name="com.gt.scr.movie.functions.MovieDelete"/>
             <Class name="com.gt.scr.movie.dao.MovieMySQLRepository"/>
             <Class name="com.gt.scr.movie.util.TestUtils"/>
         </Or>

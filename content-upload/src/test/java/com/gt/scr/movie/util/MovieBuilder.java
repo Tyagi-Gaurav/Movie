@@ -1,7 +1,5 @@
 package com.gt.scr.movie.util;
 
-import com.fasterxml.jackson.core.util.JacksonFeature;
-import com.fasterxml.jackson.core.util.JacksonFeatureSet;
 import com.gt.scr.movie.resource.domain.MovieDTO;
 import com.gt.scr.movie.service.domain.AgeRating;
 import com.gt.scr.movie.service.domain.ContentType;
@@ -19,7 +17,7 @@ public class MovieBuilder {
     private BigDecimal rating = BigDecimal.valueOf(9.5);
     private int yearProduced = 2010;
     private long creationTimeStamp = System.nanoTime();
-    private UUID id = UUID.randomUUID();
+    private UUID movieId = UUID.randomUUID();
     private AgeRating ageRating = AgeRating.PG;
     private Genre genre  = Genre.Romance;
     private ContentType contentType  = ContentType.MOVIE;
@@ -38,7 +36,7 @@ public class MovieBuilder {
         movieBuilder.rating = movieA.rating();
         movieBuilder.creationTimeStamp = movieA.creationTimeStamp();
         movieBuilder.yearProduced = movieA.yearProduced();
-        movieBuilder.id = movieA.id();
+        movieBuilder.movieId = movieA.id();
         movieBuilder.ageRating = movieA.ageRating();
         movieBuilder.genre = movieA.genre();
         movieBuilder.isShareable = movieA.isShareable();
@@ -73,7 +71,7 @@ public class MovieBuilder {
     }
 
     public Movie build() {
-        return new Movie(this.id,
+        return new Movie(this.movieId,
                 this.name,
                 this.yearProduced,
                 this.rating,
@@ -85,7 +83,7 @@ public class MovieBuilder {
     }
 
     public MovieDTO buildMovieDto() {
-        return new MovieDTO(this.id,
+        return new MovieDTO(this.movieId,
                 this.name,
                 this.yearProduced,
                 this.rating);
@@ -103,6 +101,11 @@ public class MovieBuilder {
 
     public MovieBuilder withIsShareable(boolean isShareable) {
         this.isShareable = isShareable;
+        return this;
+    }
+
+    public MovieBuilder withMovieId(UUID id) {
+        this.movieId = id;
         return this;
     }
 }

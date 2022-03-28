@@ -81,7 +81,8 @@ public class MovieResource {
         return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.getMoviesFor(up.id()).collectList())
                 .map(movie -> movie.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
-                        mv.yearProduced(), mv.rating())).toList())
+                        mv.yearProduced(), mv.rating(), mv.genre(),
+                        mv.contentType(), mv.ageRating(), mv.isShareable())).toList())
                 .map(MoviesDTO::new);
     }
 
@@ -118,7 +119,9 @@ public class MovieResource {
         return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.getMoviesFor(UUID.fromString(userId)).collectList())
                 .map(movie -> movie.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
-                        mv.yearProduced(), mv.rating())).toList())
+                        mv.yearProduced(), mv.rating(),
+                        mv.genre(),
+                        mv.contentType(), mv.ageRating(), mv.isShareable())).toList())
                 .map(MoviesDTO::new);
     }
 }
