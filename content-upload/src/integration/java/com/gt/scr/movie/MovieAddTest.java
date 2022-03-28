@@ -2,10 +2,13 @@ package com.gt.scr.movie;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
+import com.gt.scr.movie.util.MovieCreateRequestDTOBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -124,5 +129,22 @@ public class MovieAddTest {
                     assertThat(movie.genre()).isEqualTo(movieCreateRequestDTO.genre());
                 })
                 .movieCreateEventShouldBePublishedForAdminUser(movieCreateRequestDTO);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFieldsThatCannotBeNull")
+    void shouldGetErrorWhenRequiredAttributesAreMissingFromRequest(MovieCreateRequestDTO movieCreateRequestDTO) {
+        scenarioExecutor.
+                noEventsExistInTheSystem().then()
+                .givenUserIsLoggedIn().when()
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(400);
+    }
+
+    private static Stream<Arguments> provideFieldsThatCannotBeNull() {
+        return Stream.of(
+                Arguments.of(MovieCreateRequestDTOBuilder.aMovieCreateRequest().withGenre(null).build()),
+                Arguments.of(MovieCreateRequestDTOBuilder.aMovieCreateRequest().withContentType(null).build()),
+                Arguments.of(MovieCreateRequestDTOBuilder.aMovieCreateRequest().withAgeRating(null).build())
+        );
     }
 }

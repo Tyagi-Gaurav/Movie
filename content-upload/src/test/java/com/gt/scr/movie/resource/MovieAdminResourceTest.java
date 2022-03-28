@@ -8,6 +8,7 @@ import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
 import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.movie.util.MovieCreateRequestDTOBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +47,7 @@ class MovieAdminResourceTest {
     void shouldAllowAdminToCreateMovies() {
         UUID requestedUserId = UUID.randomUUID();
         MovieCreateRequestDTO movieCreateRequestDTO =
-                new MovieCreateRequestDTO(randomAlphabetic(6), 2010, BigDecimal.valueOf(10));
+                MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
@@ -69,7 +70,7 @@ class MovieAdminResourceTest {
     void shouldHandleFailureWhenAdminMovieCreateFails() {
         UUID requestedUserId = UUID.randomUUID();
         MovieCreateRequestDTO movieCreateRequestDTO =
-                new MovieCreateRequestDTO(randomAlphabetic(6), 2010, BigDecimal.valueOf(10));
+                MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));

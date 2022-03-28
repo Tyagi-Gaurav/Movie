@@ -1,4 +1,4 @@
-package com.gt.scr.movie;
+package com.gt.scr.movie.util;
 
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.service.domain.AgeRating;
@@ -26,7 +26,22 @@ public class MovieCreateRequestDTOBuilder {
         return this;
     }
 
+    public MovieCreateRequestDTOBuilder withGenre(Genre genre) {
+        this.genre = genre;
+        return this;
+    }
+
     public MovieCreateRequestDTO build() {
         return new MovieCreateRequestDTO(name, yearProduced, rating, genre, contentType, ageRating, isShareable);
+    }
+
+    public MovieCreateRequestDTOBuilder withContentType(ContentType contentType) {
+        this.contentType = contentType;
+        return this;
+    }
+
+    public MovieCreateRequestDTOBuilder withAgeRating(AgeRating ageRating) {
+        this.ageRating = ageRating;
+        return this;
     }
 }

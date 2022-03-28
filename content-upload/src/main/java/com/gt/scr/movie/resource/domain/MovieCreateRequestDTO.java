@@ -9,6 +9,7 @@ import com.gt.scr.validator.MaxLength;
 import com.gt.scr.validator.MinLength;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @JsonSerialize
@@ -17,12 +18,7 @@ import java.math.BigDecimal;
 public record MovieCreateRequestDTO(@MinLength(6) @MaxLength(20) String name,
                                     int yearProduced,
                                     BigDecimal rating,
-                                    Genre genre,
-                                    ContentType contentType,
-                                    AgeRating ageRating,
-                                    boolean isShareable) {
-
-    public MovieCreateRequestDTO(String name, int yearProduced, BigDecimal rating) {
-        this(name, yearProduced, rating, null, null, null, false);
-    }
-}
+                                    @NotNull Genre genre,
+                                    @NotNull ContentType contentType,
+                                    @NotNull AgeRating ageRating,
+                                    boolean isShareable) {}
