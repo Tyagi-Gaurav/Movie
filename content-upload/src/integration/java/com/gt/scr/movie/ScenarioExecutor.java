@@ -5,6 +5,7 @@ import com.gt.scr.movie.audit.EventType;
 import com.gt.scr.movie.audit.MovieCreateEvent;
 import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.functions.ByteStreamUpload;
+import com.gt.scr.movie.functions.RetrieveMovieFromDatabase;
 import com.gt.scr.movie.resource.domain.ByteStreamUploadResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
@@ -12,6 +13,7 @@ import com.gt.scr.movie.functions.AdminMovieCreate;
 import com.gt.scr.movie.functions.DeleteEvents;
 import com.gt.scr.movie.functions.MovieCreate;
 import com.gt.scr.movie.functions.RetrieveEventsForUser;
+import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder.jsonResponse;
@@ -119,6 +122,13 @@ public class ScenarioExecutor {
     public <T> ScenarioExecutor thenAssertThat(Consumer<T> responseSpecConsumer, Class<T> clazz) {
         T response = getResponseOfType(clazz);
         responseSpecConsumer.accept(response);
+        return this;
+    }
+
+    public ScenarioExecutor thenRetrieveMovieFromDatabaseAndAssert(Consumer<Movie> consumer) {
+        MovieCreateResponseDTO movieCreateResponseDTO = getResponseOfType(MovieCreateResponseDTO.class);
+        Movie movie = new RetrieveMovieFromDatabase().apply(movieCreateResponseDTO.movieId(), dataSource);
+        consumer.accept(movie);
         return this;
     }
 

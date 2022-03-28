@@ -3,6 +3,9 @@ package com.gt.scr.movie.service;
 import com.gt.scr.exception.DuplicateRecordException;
 import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.dao.MovieRepository;
+import com.gt.scr.movie.service.domain.AgeRating;
+import com.gt.scr.movie.service.domain.ContentType;
+import com.gt.scr.movie.service.domain.Genre;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.util.MovieBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -185,6 +188,51 @@ class MovieServiceImplTest {
         //given
         Movie movieOld = aMovie().build();
         Movie movieNew = MovieBuilder.copyOf(movieOld).withYearProduced(1900).build();
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
+
+        //when
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
+
+        //then
+        StepVerifier.create(voidMono).verifyComplete();
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldAllowUpdateGenreForMovie() {
+        //given
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withGenre(Genre.Suspense).build();
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
+
+        //when
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
+
+        //then
+        StepVerifier.create(voidMono).verifyComplete();
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldAllowUpdateContentTypeForMovie() {
+        //given
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withContentType(ContentType.TV_SERIES).build();
+        when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
+
+        //when
+        Mono<Void> voidMono = movieService.updateMovie(UUID.randomUUID(), movieNew);
+
+        //then
+        StepVerifier.create(voidMono).verifyComplete();
+        verify(movieRepository).update(movieNew);
+    }
+
+    @Test
+    void shouldAllowUpdateAgeRatingForMovie() {
+        //given
+        Movie movieOld = aMovie().build();
+        Movie movieNew = MovieBuilder.copyOf(movieOld).withAgeRating(AgeRating.EIGHTEEN).build();
         when(movieRepository.findMovieBy(movieOld.id())).thenReturn(Mono.just(movieOld));
 
         //when

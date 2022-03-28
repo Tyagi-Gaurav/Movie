@@ -65,6 +65,29 @@ public class MovieAddTest {
     }
 
     @Test
+    void creatingMoviesShouldSaveAllFields() {
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
+
+        scenarioExecutor.
+                noEventsExistInTheSystem().then()
+                .givenUserIsLoggedIn().when()
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(200)
+                .thenAssertThat(movieCreateResponseDTO -> {
+                    assertThat(movieCreateResponseDTO).isNotNull();
+                    assertThat(movieCreateResponseDTO.movieId()).isNotNull();
+                }, MovieCreateResponseDTO.class)
+                .thenRetrieveMovieFromDatabaseAndAssert(movie -> {
+                    assertThat(movie.name()).isEqualTo(movieCreateRequestDTO.name());
+                    assertThat(movie.rating()).isEqualTo(movieCreateRequestDTO.rating());
+                    assertThat(movie.yearProduced()).isEqualTo(movieCreateRequestDTO.yearProduced());
+                    assertThat(movie.ageRating()).isEqualTo(movieCreateRequestDTO.ageRating());
+                    assertThat(movie.contentType()).isEqualTo(movieCreateRequestDTO.contentType());
+                    assertThat(movie.isShareable()).isEqualTo(movieCreateRequestDTO.isShareable());
+                    assertThat(movie.genre()).isEqualTo(movieCreateRequestDTO.genre());
+                });
+    }
+
+    @Test
     void creatingMoviesShouldSendMovieCreateEvent() {
         MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
@@ -91,6 +114,15 @@ public class MovieAddTest {
                     assertThat(movieCreateResponseDTO).isNotNull();
                     assertThat(movieCreateResponseDTO.movieId()).isNotNull();
                 }, MovieCreateResponseDTO.class)
+                .thenRetrieveMovieFromDatabaseAndAssert(movie -> {
+                    assertThat(movie.name()).isEqualTo(movieCreateRequestDTO.name());
+                    assertThat(movie.rating()).isEqualTo(movieCreateRequestDTO.rating());
+                    assertThat(movie.yearProduced()).isEqualTo(movieCreateRequestDTO.yearProduced());
+                    assertThat(movie.ageRating()).isEqualTo(movieCreateRequestDTO.ageRating());
+                    assertThat(movie.contentType()).isEqualTo(movieCreateRequestDTO.contentType());
+                    assertThat(movie.isShareable()).isEqualTo(movieCreateRequestDTO.isShareable());
+                    assertThat(movie.genre()).isEqualTo(movieCreateRequestDTO.genre());
+                })
                 .movieCreateEventShouldBePublishedForAdminUser(movieCreateRequestDTO);
     }
 }

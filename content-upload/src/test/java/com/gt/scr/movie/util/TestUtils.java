@@ -1,6 +1,9 @@
 package com.gt.scr.movie.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gt.scr.movie.service.domain.AgeRating;
+import com.gt.scr.movie.service.domain.ContentType;
+import com.gt.scr.movie.service.domain.Genre;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.service.domain.MovieStreamMetaData;
 import org.slf4j.Logger;
@@ -33,7 +36,7 @@ public class TestUtils {
     }
 
     public static void addToDatabase(Movie movie, DataSource dataSource,
-                               UUID userId, String query) throws SQLException {
+                                     UUID userId, String query) throws SQLException {
         if (LOG.isInfoEnabled()) {
             LOG.info("Adding movie with Id {}", movie.id());
         }
@@ -44,7 +47,11 @@ public class TestUtils {
             preparedStatement.setInt(3, movie.yearProduced());
             preparedStatement.setBigDecimal(4, movie.rating());
             preparedStatement.setLong(5, movie.creationTimeStamp());
-            preparedStatement.setString(6, userId.toString());
+            preparedStatement.setString(6, movie.ageRating().name());
+            preparedStatement.setString(7, movie.contentType().name());
+            preparedStatement.setBoolean(8, movie.isShareable());
+            preparedStatement.setString(9, movie.genre().name());
+            preparedStatement.setString(10, userId.toString());
             assertThat(preparedStatement.executeUpdate()).isPositive();
         } catch (Exception e) {
             if (LOG.isErrorEnabled()) {
@@ -66,7 +73,12 @@ public class TestUtils {
                         resultSet.getString("NAME"),
                         resultSet.getInt("YEAR_PRODUCED"),
                         resultSet.getBigDecimal("RATING").setScale(1, RoundingMode.UNNECESSARY),
-                        resultSet.getLong("CREATION_TIMESTAMP")));
+                        Genre.valueOf(resultSet.getString("GENRE")),
+                        ContentType.valueOf(resultSet.getString("CONTENT_TYPE")),
+                        AgeRating.valueOf(resultSet.getString("AGE_RATING")),
+                        resultSet.getBoolean("IS_SHAREABLE"),
+                        resultSet.getLong("CREATION_TIMESTAMP")
+                ));
             }
 
             resultSet.close();

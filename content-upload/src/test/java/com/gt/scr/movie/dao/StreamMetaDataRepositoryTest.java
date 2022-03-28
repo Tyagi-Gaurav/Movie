@@ -33,7 +33,8 @@ class StreamMetaDataRepositoryTest extends DatabaseTest {
     private DataSource dataSource;
 
     private static final String ADD_MOVIE =
-            "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, AGE_RATING, CONTENT_TYPE, IS_SHAREABLE, GENRE, USER_ID) " +
+                    "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SELECT_MOVIE_STREAM = "SELECT * FROM MOVIE_SCHEMA.MOVIE_STREAM_METADATA WHERE ID = ? AND MOVIE_ID = ?";
 

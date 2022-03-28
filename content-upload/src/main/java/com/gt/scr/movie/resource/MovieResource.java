@@ -45,6 +45,10 @@ public class MovieResource {
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
+                        movieCreateRequestDTO.genre(),
+                        movieCreateRequestDTO.contentType(),
+                        movieCreateRequestDTO.ageRating(),
+                        movieCreateRequestDTO.isShareable(),
                         System.nanoTime())))
                 .thenReturn(new MovieCreateResponseDTO(movieId));
     }
@@ -61,6 +65,10 @@ public class MovieResource {
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
+                        movieCreateRequestDTO.genre(),
+                        movieCreateRequestDTO.contentType(),
+                        movieCreateRequestDTO.ageRating(),
+                        movieCreateRequestDTO.isShareable(),
                         System.nanoTime())))
                 .thenReturn(new MovieCreateResponseDTO(movieId));
     }

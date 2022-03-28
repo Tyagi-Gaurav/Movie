@@ -15,4 +15,13 @@ public record Movie(UUID id,
                     String name,
                     int yearProduced,
                     BigDecimal rating,
-                    long creationTimeStamp) implements Serializable  {}
+                    Genre genre,
+                    ContentType contentType,
+                    AgeRating ageRating,
+                    boolean isShareable,
+                    long creationTimeStamp) implements Serializable  {
+
+    public Movie(UUID id, String name, int yearProduced, BigDecimal rating, long creationTimeStamp) {
+        this(id, name, yearProduced, rating, null, null, null, false, creationTimeStamp);
+    }
+}
