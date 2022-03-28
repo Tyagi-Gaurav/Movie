@@ -11,4 +11,8 @@ import java.util.UUID;
 public record TestMovieDTO(UUID id,
                            String name,
                            BigDecimal rating,
-                           int yearProduced) { }
+                           int yearProduced,
+                           TestGenre genre,
+                           TestContentType contentType,
+                           TestAgeRating ageRating,
+                           boolean isShareable) { }

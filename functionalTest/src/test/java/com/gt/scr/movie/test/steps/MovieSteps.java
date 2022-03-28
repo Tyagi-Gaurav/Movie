@@ -76,7 +76,8 @@ public class MovieSteps implements En {
             assertThat(movies).isNotEmpty();
 
             List<TestMovieCreateRequestDTO> actual = movies.stream().map(mv ->
-                    new TestMovieCreateRequestDTO(mv.name(), mv.yearProduced(), mv.rating()))
+                    new TestMovieCreateRequestDTO(mv.name(), mv.yearProduced(), mv.rating(),
+                            mv.genre(), mv.contentType(), mv.ageRating(), mv.isShareable()))
                     .collect(Collectors.toList());
 
 
