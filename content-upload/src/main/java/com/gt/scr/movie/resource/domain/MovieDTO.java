@@ -18,9 +18,4 @@ public record MovieDTO(UUID id,
                        Genre genre,
                        ContentType contentType,
                        AgeRating ageRating,
-                       boolean isShareable) {
-
-    public MovieDTO(UUID id, String name, int yearProduced, BigDecimal rating) {
-        this(id, name, yearProduced, rating, null, null, null, false);
-    }
-}
+                       boolean isShareable) {}
