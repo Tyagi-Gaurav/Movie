@@ -11,6 +11,7 @@ import com.gt.scr.movie.service.domain.AgeRating;
 import com.gt.scr.movie.service.domain.ContentType;
 import com.gt.scr.movie.service.domain.Genre;
 import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.movie.util.MovieBuilder;
 import com.gt.scr.movie.util.MovieCreateRequestDTOBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -101,8 +102,7 @@ class MovieAdminResourceTest {
         UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN", "token");
 
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
-        Movie expectedReturnObject = new Movie(usersOwnId, randomAlphabetic(5),
-                2010, BigDecimal.ONE, System.nanoTime());
+        Movie expectedReturnObject = MovieBuilder.aMovie().withMovieId(usersOwnId).build();
 
         when(movieService.getMoviesFor(requestedUserId)).thenReturn(Flux.just(expectedReturnObject));
 
