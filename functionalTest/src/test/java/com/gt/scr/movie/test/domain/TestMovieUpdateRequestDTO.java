@@ -11,9 +11,8 @@ import java.util.UUID;
 public record TestMovieUpdateRequestDTO(UUID id,
                                         String name,
                                         BigDecimal rating,
-                                        int yearProduced) {
-
-    public TestMovieUpdateRequestDTO(UUID id, String name) {
-        this(id, name, BigDecimal.ZERO, 0);
-    }
-}
+                                        int yearProduced,
+                                        TestGenre genre,
+                                        TestContentType contentType,
+                                        TestAgeRating ageRating,
+                                        boolean isShareable) {}

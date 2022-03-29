@@ -105,6 +105,10 @@ public class MovieResource {
                             movieUpdateRequestDTO.name(),
                             movieUpdateRequestDTO.yearProduced(),
                             movieUpdateRequestDTO.rating(),
+                            movieUpdateRequestDTO.genre(),
+                            movieUpdateRequestDTO.contentType(),
+                            movieUpdateRequestDTO.ageRating(),
+                            movieUpdateRequestDTO.isShareable(),
                             System.nanoTime());
 
                     return movieService.updateMovie(up.id(), movie);

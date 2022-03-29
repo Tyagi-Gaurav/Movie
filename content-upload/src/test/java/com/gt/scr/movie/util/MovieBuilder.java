@@ -86,7 +86,11 @@ public class MovieBuilder {
         return new MovieDTO(this.movieId,
                 this.name,
                 this.yearProduced,
-                this.rating);
+                this.rating,
+                this.genre,
+                this.contentType,
+                this.ageRating,
+                this.isShareable);
     }
 
     public MovieBuilder withAgeRating(AgeRating ageRating) {

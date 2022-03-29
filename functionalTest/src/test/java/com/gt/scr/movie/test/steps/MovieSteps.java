@@ -76,8 +76,8 @@ public class MovieSteps implements En {
             assertThat(movies).isNotEmpty();
 
             List<TestMovieCreateRequestDTO> actual = movies.stream().map(mv ->
-                    new TestMovieCreateRequestDTO(mv.name(), mv.yearProduced(), mv.rating(),
-                            mv.genre(), mv.contentType(), mv.ageRating(), mv.isShareable()))
+                            new TestMovieCreateRequestDTO(mv.name(), mv.yearProduced(), mv.rating(),
+                                    mv.genre(), mv.contentType(), mv.ageRating(), mv.isShareable()))
                     .collect(Collectors.toList());
 
 
@@ -110,12 +110,14 @@ public class MovieSteps implements En {
                             .filter(mv -> name.equals(mv.name()))
                             .findFirst().map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
 
-                    var updateRequestDTO =
-                            new TestMovieUpdateRequestDTO(
-                                    uuid, testMovieCreateRequestDTO.name(),
-                                    testMovieCreateRequestDTO.rating(),
-                                    testMovieCreateRequestDTO.yearProduced()
-                            );
+                    var updateRequestDTO = new TestMovieUpdateRequestDTO(uuid,
+                            testMovieCreateRequestDTO.name(),
+                            testMovieCreateRequestDTO.rating(),
+                            testMovieCreateRequestDTO.yearProduced(),
+                            testMovieCreateRequestDTO.genre(),
+                            testMovieCreateRequestDTO.contentType(),
+                            testMovieCreateRequestDTO.ageRating(),
+                            testMovieCreateRequestDTO.isShareable());
 
                     testMovieResource.updateMovie(updateRequestDTO);
                 });
@@ -130,7 +132,14 @@ public class MovieSteps implements En {
                             .filter(mv -> fromMovieName.equals(mv.name()))
                             .findFirst().orElseThrow(IllegalStateException::new);
 
-                    var updateRequestDTO = new TestMovieUpdateRequestDTO(testMovieDTO.id(), toMovieName);
+                    var updateRequestDTO = new TestMovieUpdateRequestDTO(testMovieDTO.id(),
+                            toMovieName,
+                            testMovieDTO.rating(),
+                            testMovieDTO.yearProduced(),
+                            testMovieDTO.genre(),
+                            testMovieDTO.contentType(),
+                            testMovieDTO.ageRating(),
+                            testMovieDTO.isShareable());
 
                     testMovieResource.updateMovie(updateRequestDTO);
                 });
@@ -175,10 +184,14 @@ public class MovieSteps implements En {
                             .findFirst()
                             .map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
 
-                    var updateRequestDTO =
-                            new TestMovieUpdateRequestDTO(uuid, testMovieCreateRequestDTO.name(),
-                                    testMovieCreateRequestDTO.rating(),
-                                    testMovieCreateRequestDTO.yearProduced());
+                    var updateRequestDTO = new TestMovieUpdateRequestDTO(uuid,
+                            testMovieCreateRequestDTO.name(),
+                            testMovieCreateRequestDTO.rating(),
+                            testMovieCreateRequestDTO.yearProduced(),
+                            testMovieCreateRequestDTO.genre(),
+                            testMovieCreateRequestDTO.contentType(),
+                            testMovieCreateRequestDTO.ageRating(),
+                            testMovieCreateRequestDTO.isShareable());
 
                     testMovieResource.updateMovie(updateRequestDTO, regularUserId);
                 });

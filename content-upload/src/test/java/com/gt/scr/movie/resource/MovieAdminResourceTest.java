@@ -7,6 +7,9 @@ import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
+import com.gt.scr.movie.service.domain.AgeRating;
+import com.gt.scr.movie.service.domain.ContentType;
+import com.gt.scr.movie.service.domain.Genre;
 import com.gt.scr.movie.service.domain.Movie;
 import com.gt.scr.movie.util.MovieCreateRequestDTOBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,7 +98,7 @@ class MovieAdminResourceTest {
     void shouldAllowAdminToReadMovies() {
         UUID requestedUserId = UUID.randomUUID();
         UUID usersOwnId = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN","token");
+        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN", "token");
 
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
         Movie expectedReturnObject = new Movie(usersOwnId, randomAlphabetic(5),
@@ -109,7 +112,11 @@ class MovieAdminResourceTest {
         StepVerifier.create(movie)
                 .expectNext(new MoviesDTO(Collections.singletonList(
                         new MovieDTO(usersOwnId, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
-                        expectedReturnObject.rating()))))
+                                expectedReturnObject.rating(),
+                                expectedReturnObject.genre(),
+                                expectedReturnObject.contentType(),
+                                expectedReturnObject.ageRating(),
+                                expectedReturnObject.isShareable()))))
                 .verifyComplete();
 
         verify(movieService).getMoviesFor(requestedUserId);
@@ -130,7 +137,8 @@ class MovieAdminResourceTest {
         UUID usersOwnId = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN", "token");
         MovieUpdateRequestDTO movieUpdateRequestDTO = new MovieUpdateRequestDTO(UUID.randomUUID(), randomAlphabetic(5),
-                BigDecimal.ZERO, 2010);
+                BigDecimal.ZERO, 2010, Genre.Suspense, ContentType.TV_SERIES,
+                AgeRating.EIGHTEEN, true);
         when(movieService.updateMovie(eq(usersOwnId), any(Movie.class))).thenReturn(Mono.empty());
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 
