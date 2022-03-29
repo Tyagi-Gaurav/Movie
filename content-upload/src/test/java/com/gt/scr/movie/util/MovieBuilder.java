@@ -19,7 +19,7 @@ public class MovieBuilder {
     private long creationTimeStamp = System.nanoTime();
     private UUID movieId = UUID.randomUUID();
     private AgeRating ageRating = AgeRating.PG;
-    private Genre genre  = Genre.Romance;
+    private Genre genre  = Genre.ROMANCE;
     private ContentType contentType  = ContentType.MOVIE;
     private boolean isShareable  = true;
 

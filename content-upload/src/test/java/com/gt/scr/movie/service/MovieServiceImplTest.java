@@ -177,7 +177,7 @@ class MovieServiceImplTest {
                 Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withName("NewName").build()),
                 Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withRating(BigDecimal.ONE).build()),
                 Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withYearProduced(1900).build()),
-                Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withGenre(Genre.Suspense).build()),
+                Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withGenre(Genre.SUSPENSE).build()),
                 Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withContentType(ContentType.TV_SERIES).build()),
                 Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withAgeRating(AgeRating.EIGHTEEN).build()),
                 Arguments.of(oldMovie, MovieBuilder.copyOf(oldMovie).withIsShareable(false).build())

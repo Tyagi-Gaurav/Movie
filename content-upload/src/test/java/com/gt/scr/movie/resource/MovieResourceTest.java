@@ -110,7 +110,7 @@ class MovieResourceTest {
         UUID id = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(id, "USER", "token");
         MovieUpdateRequestDTO movieUpdateRequestDTO = new MovieUpdateRequestDTO(UUID.randomUUID(), randomAlphabetic(5),
-                BigDecimal.ZERO, 2010, Genre.Suspense, ContentType.TV_SERIES,
+                BigDecimal.ZERO, 2010, Genre.SUSPENSE, ContentType.TV_SERIES,
                 AgeRating.EIGHTEEN, true);
         when(movieService.updateMovie(any(UUID.class), any(Movie.class))).thenReturn(Mono.empty());
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));

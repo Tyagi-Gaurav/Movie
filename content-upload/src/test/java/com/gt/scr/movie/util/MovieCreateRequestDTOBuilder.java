@@ -12,7 +12,7 @@ public class MovieCreateRequestDTOBuilder {
     private String name = RandomStringUtils.randomAlphabetic(7);
     private int yearProduced = 2010;
     private BigDecimal rating = BigDecimal.valueOf(5.6);
-    private Genre genre = Genre.Action;
+    private Genre genre = Genre.ACTION;
     private ContentType contentType = ContentType.MOVIE;
     private AgeRating ageRating = AgeRating.PG;
     private boolean isShareable = true;

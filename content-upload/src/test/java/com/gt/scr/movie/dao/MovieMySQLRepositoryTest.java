@@ -255,7 +255,7 @@ class MovieMySQLRepositoryTest extends DatabaseTest {
 
         //when
         Movie updatedMovie = copyOf(expectedMovieA).withName("test")
-                .withGenre(Genre.Suspense)
+                .withGenre(Genre.SUSPENSE)
                 .withAgeRating(AgeRating.EIGHTEEN)
                 .withContentType(ContentType.TV_SERIES)
                 .withIsShareable(false)
