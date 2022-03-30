@@ -15,4 +15,8 @@ public record Movie(UUID id,
                     String name,
                     int yearProduced,
                     BigDecimal rating,
+                    Genre genre,
+                    ContentType contentType,
+                    AgeRating ageRating,
+                    boolean isShareable,
                     long creationTimeStamp) implements Serializable  {}

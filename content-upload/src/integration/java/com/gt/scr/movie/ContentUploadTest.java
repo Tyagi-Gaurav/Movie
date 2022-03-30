@@ -3,12 +3,12 @@ package com.gt.scr.movie;
 import com.gt.scr.movie.resource.domain.ByteStreamUploadResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
+import com.gt.scr.movie.util.MovieCreateRequestDTOBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
-import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebFlux;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,7 +54,7 @@ public class ContentUploadTest {
 
     @Test
     void shouldBeAbleToUploadByteStreamToAnExistingMovie() {
-        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         MovieCreateResponseDTO movieCreateResponseDTO = scenarioExecutor.
                 noEventsExistInTheSystem().then()
@@ -97,7 +97,7 @@ public class ContentUploadTest {
     @ParameterizedTest
     @EmptySource
     void shouldHandleErrorWhenUploadingANullOrEmptyByteStreamForAMovie(byte[] byteStream) {
-        MovieCreateRequestDTO movieCreateRequestDTO = TestObjectBuilder.movieCreateRequestDTO();
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
         MovieCreateResponseDTO movieCreateResponseDTO = scenarioExecutor.
                 noEventsExistInTheSystem().then()
                 .givenUserIsLoggedIn().when()

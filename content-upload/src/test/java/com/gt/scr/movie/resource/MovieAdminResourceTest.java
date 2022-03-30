@@ -7,7 +7,12 @@ import com.gt.scr.movie.resource.domain.MovieUpdateRequestDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.resource.domain.UserProfile;
 import com.gt.scr.movie.service.MovieService;
+import com.gt.scr.movie.service.domain.AgeRating;
+import com.gt.scr.movie.service.domain.ContentType;
+import com.gt.scr.movie.service.domain.Genre;
 import com.gt.scr.movie.service.domain.Movie;
+import com.gt.scr.movie.util.MovieBuilder;
+import com.gt.scr.movie.util.MovieCreateRequestDTOBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +51,7 @@ class MovieAdminResourceTest {
     void shouldAllowAdminToCreateMovies() {
         UUID requestedUserId = UUID.randomUUID();
         MovieCreateRequestDTO movieCreateRequestDTO =
-                new MovieCreateRequestDTO(randomAlphabetic(6), 2010, BigDecimal.valueOf(10));
+                MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
@@ -69,7 +74,7 @@ class MovieAdminResourceTest {
     void shouldHandleFailureWhenAdminMovieCreateFails() {
         UUID requestedUserId = UUID.randomUUID();
         MovieCreateRequestDTO movieCreateRequestDTO =
-                new MovieCreateRequestDTO(randomAlphabetic(6), 2010, BigDecimal.valueOf(10));
+                MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "ADMIN", "token");
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
@@ -94,11 +99,10 @@ class MovieAdminResourceTest {
     void shouldAllowAdminToReadMovies() {
         UUID requestedUserId = UUID.randomUUID();
         UUID usersOwnId = UUID.randomUUID();
-        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN","token");
+        UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN", "token");
 
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
-        Movie expectedReturnObject = new Movie(usersOwnId, randomAlphabetic(5),
-                2010, BigDecimal.ONE, System.nanoTime());
+        Movie expectedReturnObject = MovieBuilder.aMovie().withMovieId(usersOwnId).build();
 
         when(movieService.getMoviesFor(requestedUserId)).thenReturn(Flux.just(expectedReturnObject));
 
@@ -108,7 +112,11 @@ class MovieAdminResourceTest {
         StepVerifier.create(movie)
                 .expectNext(new MoviesDTO(Collections.singletonList(
                         new MovieDTO(usersOwnId, expectedReturnObject.name(), expectedReturnObject.yearProduced(),
-                        expectedReturnObject.rating()))))
+                                expectedReturnObject.rating(),
+                                expectedReturnObject.genre(),
+                                expectedReturnObject.contentType(),
+                                expectedReturnObject.ageRating(),
+                                expectedReturnObject.isShareable()))))
                 .verifyComplete();
 
         verify(movieService).getMoviesFor(requestedUserId);
@@ -129,7 +137,8 @@ class MovieAdminResourceTest {
         UUID usersOwnId = UUID.randomUUID();
         UserProfile userProfile = new UserProfile(usersOwnId, "ADMIN", "token");
         MovieUpdateRequestDTO movieUpdateRequestDTO = new MovieUpdateRequestDTO(UUID.randomUUID(), randomAlphabetic(5),
-                BigDecimal.ZERO, 2010);
+                BigDecimal.ZERO, 2010, Genre.SUSPENSE, ContentType.TV_SERIES,
+                AgeRating.EIGHTEEN, true);
         when(movieService.updateMovie(eq(usersOwnId), any(Movie.class))).thenReturn(Mono.empty());
         when(securityContextHolder.getContext(UserProfile.class)).thenReturn(Mono.just(userProfile));
 

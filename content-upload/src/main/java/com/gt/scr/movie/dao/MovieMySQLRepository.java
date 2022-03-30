@@ -1,6 +1,9 @@
 package com.gt.scr.movie.dao;
 
 import com.gt.scr.exception.DatabaseException;
+import com.gt.scr.movie.service.domain.AgeRating;
+import com.gt.scr.movie.service.domain.ContentType;
+import com.gt.scr.movie.service.domain.Genre;
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,24 +30,28 @@ public class MovieMySQLRepository implements MovieRepository {
     private static final String YEAR_PRODUCED = "YEAR_PRODUCED";
     private static final String RATING = "RATING";
     private static final String CREATION_TIMESTAMP = "CREATION_TIMESTAMP";
+    private static final String AGE_RATING = "AGE_RATING";
+    private static final String CONTENT_TYPE = "CONTENT_TYPE";
+    private static final String GENRE = "GENRE";
+    private static final String IS_SHAREABLE = "IS_SHAREABLE";
 
     private static final String SCHEMA = "MOVIE_SCHEMA";
-    private static final String FIND_BY_ID = String.format("SELECT %s, %s, %s, %s, %s FROM %s.MOVIE where ID = ?",
-            ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, SCHEMA);
+    private static final String FIND_BY_ID = String.format("SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s.MOVIE where ID = ?",
+            ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, AGE_RATING, CONTENT_TYPE, GENRE, IS_SHAREABLE, SCHEMA);
 
-    private static final String FIND_BY_ID_NAME = String.format("SELECT %s, %s, %s, %s, %s FROM %s.MOVIE where NAME = ? and USER_ID = ?",
-            ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, SCHEMA);
+    private static final String FIND_BY_ID_NAME = String.format("SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s.MOVIE where NAME = ? and USER_ID = ?",
+            ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, AGE_RATING, CONTENT_TYPE, GENRE, IS_SHAREABLE, SCHEMA);
 
-    private static final String GET_ALL_MOVIES_FOR_USER = String.format("SELECT %s, %s, %s, %s, %s FROM %s.MOVIE where USER_ID = ?",
-            ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, SCHEMA);
+    private static final String GET_ALL_MOVIES_FOR_USER = String.format("SELECT %s, %s, %s, %s, %s,%s, %s, %s, %s FROM %s.MOVIE where USER_ID = ?",
+            ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, AGE_RATING, CONTENT_TYPE, GENRE, IS_SHAREABLE, SCHEMA);
 
     private static final String DELETE_MOVIE = String.format("DELETE FROM %s.MOVIE where id = ?", SCHEMA);
 
-    private static final String UPDATE_MOVIE = String.format("UPDATE %s.MOVIE SET %s = ?, %s = ?, %s = ? WHERE ID = ?",
-            SCHEMA, NAME, YEAR_PRODUCED, RATING);
+    private static final String UPDATE_MOVIE = String.format("UPDATE %s.MOVIE SET %s = ?, %s = ?, %s = ? , %s = ?, %s = ?, %s = ?, %s = ? WHERE ID = ?",
+            SCHEMA, NAME, YEAR_PRODUCED, RATING, GENRE, CONTENT_TYPE, IS_SHAREABLE, AGE_RATING);
 
-    private static final String INSERT_MOVIE = String.format("INSERT INTO %s.MOVIE (%s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?)",
-            SCHEMA, ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID);
+    private static final String INSERT_MOVIE = String.format("INSERT INTO %s.MOVIE (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            SCHEMA, ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, AGE_RATING, CONTENT_TYPE, GENRE, IS_SHAREABLE, USER_ID);
 
     @Override
     public Mono<Movie> findMovieBy(UUID movieId) {
@@ -131,7 +138,11 @@ public class MovieMySQLRepository implements MovieRepository {
             preparedStatement.setString(1, updatedMovie.name());
             preparedStatement.setInt(2, updatedMovie.yearProduced());
             preparedStatement.setBigDecimal(3, updatedMovie.rating());
-            preparedStatement.setString(4, updatedMovie.id().toString());
+            preparedStatement.setString(4, updatedMovie.genre().name());
+            preparedStatement.setString(5, updatedMovie.contentType().name());
+            preparedStatement.setBoolean(6, updatedMovie.isShareable());
+            preparedStatement.setString(7, updatedMovie.ageRating().name());
+            preparedStatement.setString(8, updatedMovie.id().toString());
 
             preparedStatement.execute();
         } catch (Exception e) {
@@ -151,7 +162,11 @@ public class MovieMySQLRepository implements MovieRepository {
             preparedStatement.setInt(3, movie.yearProduced());
             preparedStatement.setBigDecimal(4, movie.rating());
             preparedStatement.setLong(5, movie.creationTimeStamp());
-            preparedStatement.setString(6, userId.toString());
+            preparedStatement.setString(6, movie.ageRating().name());
+            preparedStatement.setString(7, movie.contentType().name());
+            preparedStatement.setString(8, movie.genre().name());
+            preparedStatement.setBoolean(9, movie.isShareable());
+            preparedStatement.setString(10, userId.toString());
             preparedStatement.execute();
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage(), e);
@@ -165,6 +180,10 @@ public class MovieMySQLRepository implements MovieRepository {
                 resultSet.getString(NAME),
                 resultSet.getInt(YEAR_PRODUCED),
                 resultSet.getBigDecimal(RATING).setScale(1, RoundingMode.UNNECESSARY),
+                Genre.valueOf(resultSet.getString(GENRE)),
+                ContentType.valueOf(resultSet.getString(CONTENT_TYPE)),
+                AgeRating.valueOf(resultSet.getString(AGE_RATING)),
+                resultSet.getBoolean(IS_SHAREABLE),
                 resultSet.getLong(CREATION_TIMESTAMP));
     }
 }

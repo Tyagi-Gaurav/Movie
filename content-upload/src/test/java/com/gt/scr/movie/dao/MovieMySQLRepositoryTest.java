@@ -2,6 +2,9 @@ package com.gt.scr.movie.dao;
 
 import com.gt.scr.domain.User;
 import com.gt.scr.exception.DatabaseException;
+import com.gt.scr.movie.service.domain.AgeRating;
+import com.gt.scr.movie.service.domain.ContentType;
+import com.gt.scr.movie.service.domain.Genre;
 import com.gt.scr.movie.service.domain.Movie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,9 +40,9 @@ class MovieMySQLRepositoryTest extends DatabaseTest {
     private DataSource dataSource;
 
     private static final String ADD_MOVIE =
-            "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, USER_ID) values (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO MOVIE_SCHEMA.MOVIE (ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP, AGE_RATING, CONTENT_TYPE, IS_SHAREABLE, GENRE, USER_ID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, CREATION_TIMESTAMP FROM "
+    private static final String SELECT_MOVIE_BY_ID = "SELECT ID, NAME, YEAR_PRODUCED, RATING, AGE_RATING, CONTENT_TYPE, IS_SHAREABLE, GENRE, CREATION_TIMESTAMP FROM "
             + "MOVIE_SCHEMA.MOVIE WHERE ID = ?";
 
     @BeforeEach
@@ -251,7 +254,12 @@ class MovieMySQLRepositoryTest extends DatabaseTest {
         addToDatabase(expectedMovieA, dataSource, user.id(), ADD_MOVIE);
 
         //when
-        Movie updatedMovie = copyOf(expectedMovieA).withName("test").build();
+        Movie updatedMovie = copyOf(expectedMovieA).withName("test")
+                .withGenre(Genre.SUSPENSE)
+                .withAgeRating(AgeRating.EIGHTEEN)
+                .withContentType(ContentType.TV_SERIES)
+                .withIsShareable(false)
+                .build();
         Mono<Void> update = movieRepository.update(updatedMovie);
 
         //then
@@ -259,6 +267,10 @@ class MovieMySQLRepositoryTest extends DatabaseTest {
         Optional<Movie> movie = getMovie(updatedMovie.id(), dataSource, SELECT_MOVIE_BY_ID);
         assertThat(movie).isNotEmpty();
         assertThat(movie.get().name()).isEqualTo("test");
+        assertThat(movie.get().genre()).isEqualTo(updatedMovie.genre());
+        assertThat(movie.get().ageRating()).isEqualTo(updatedMovie.ageRating());
+        assertThat(movie.get().isShareable()).isEqualTo(updatedMovie.isShareable());
+        assertThat(movie.get().contentType()).isEqualTo(updatedMovie.contentType());
     }
 
     @Test

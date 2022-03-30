@@ -5,6 +5,9 @@ import com.gt.scr.movie.audit.EventType;
 import com.gt.scr.movie.audit.MovieCreateEvent;
 import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.functions.ByteStreamUpload;
+import com.gt.scr.movie.functions.MovieDelete;
+import com.gt.scr.movie.functions.MovieRead;
+import com.gt.scr.movie.functions.RetrieveMovieFromDatabase;
 import com.gt.scr.movie.resource.domain.ByteStreamUploadResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateResponseDTO;
@@ -12,6 +15,8 @@ import com.gt.scr.movie.functions.AdminMovieCreate;
 import com.gt.scr.movie.functions.DeleteEvents;
 import com.gt.scr.movie.functions.MovieCreate;
 import com.gt.scr.movie.functions.RetrieveEventsForUser;
+import com.gt.scr.movie.resource.domain.MoviesDTO;
+import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.sql.DataSource;
@@ -122,6 +127,13 @@ public class ScenarioExecutor {
         return this;
     }
 
+    public ScenarioExecutor thenRetrieveMovieFromDatabaseAndAssert(Consumer<Movie> consumer) {
+        MovieCreateResponseDTO movieCreateResponseDTO = getResponseOfType(MovieCreateResponseDTO.class);
+        Movie movie = new RetrieveMovieFromDatabase().apply(movieCreateResponseDTO.movieId(), dataSource);
+        consumer.accept(movie);
+        return this;
+    }
+
     private <T> T getResponseOfType(Class<T> clazz) {
         T response = (T) responses.get(clazz);
         return response;
@@ -151,5 +163,17 @@ public class ScenarioExecutor {
 
     public MovieCreateResponseDTO returnMovieCreateResponse() {
         return this.getResponseOfType(MovieCreateResponseDTO.class);
+    }
+
+    public ScenarioExecutor thenRetrieveMovieUsingApi() {
+        this.responseSpec = new MovieRead().apply(webTestClient, NORMAL_USER_TOKEN);
+        this.responses.put(MoviesDTO.class, responseSpec.returnResult(MoviesDTO.class)
+                .getResponseBody().blockFirst());
+        return this;
+    }
+
+    public void deleteUserState() {
+        new MovieDelete().accept(dataSource, UUID.fromString(TEST_NORMAL_USER_ID));
+        new MovieDelete().accept(dataSource, UUID.fromString(TEST_ADMIN_USER_ID));
     }
 }

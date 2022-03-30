@@ -1,5 +1,6 @@
 package com.gt.scr.movie.test.steps;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gt.scr.movie.test.config.ScenarioContext;
 import com.gt.scr.movie.test.domain.TestByteStreamUploadDTO;
 import com.gt.scr.movie.test.domain.TestByteStreamUploadResponseDTO;
@@ -24,12 +25,15 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MovieSteps implements En {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private TestMovieResource testMovieResource;
@@ -47,7 +51,7 @@ public class MovieSteps implements En {
 
         And("the authenticated user attempts to create a new movie",
                 (DataTable dataTable) -> {
-                    List<TestMovieCreateRequestDTO> testMovieCreateRequestDTOS = dataTable.asList(TestMovieCreateRequestDTO.class);
+                    List<TestMovieCreateRequestDTO> testMovieCreateRequestDTOS = from(dataTable);
                     testMovieCreateRequestDTOS.forEach(testMovieResource::createMovieFor);
                 });
 
@@ -66,13 +70,14 @@ public class MovieSteps implements En {
                 });
 
         And("^the movie read response contains the following records$", (DataTable datatable) -> {
-            List<TestMovieCreateRequestDTO> movieCreateRequestDTOS = datatable.asList(TestMovieCreateRequestDTO.class);
+            List<TestMovieCreateRequestDTO> movieCreateRequestDTOS = from(datatable);
             TestMoviesDTO testMoviesDTO = responseHolder.readResponse(TestMoviesDTO.class);
             var movies = testMoviesDTO.movies();
             assertThat(movies).isNotEmpty();
 
             List<TestMovieCreateRequestDTO> actual = movies.stream().map(mv ->
-                    new TestMovieCreateRequestDTO(mv.name(), mv.yearProduced(), mv.rating()))
+                            new TestMovieCreateRequestDTO(mv.name(), mv.yearProduced(), mv.rating(),
+                                    mv.genre(), mv.contentType(), mv.ageRating(), mv.isShareable()))
                     .collect(Collectors.toList());
 
 
@@ -105,12 +110,14 @@ public class MovieSteps implements En {
                             .filter(mv -> name.equals(mv.name()))
                             .findFirst().map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
 
-                    var updateRequestDTO =
-                            new TestMovieUpdateRequestDTO(
-                                    uuid, testMovieCreateRequestDTO.name(),
-                                    testMovieCreateRequestDTO.rating(),
-                                    testMovieCreateRequestDTO.yearProduced()
-                            );
+                    var updateRequestDTO = new TestMovieUpdateRequestDTO(uuid,
+                            testMovieCreateRequestDTO.name(),
+                            testMovieCreateRequestDTO.rating(),
+                            testMovieCreateRequestDTO.yearProduced(),
+                            testMovieCreateRequestDTO.genre(),
+                            testMovieCreateRequestDTO.contentType(),
+                            testMovieCreateRequestDTO.ageRating(),
+                            testMovieCreateRequestDTO.isShareable());
 
                     testMovieResource.updateMovie(updateRequestDTO);
                 });
@@ -125,7 +132,14 @@ public class MovieSteps implements En {
                             .filter(mv -> fromMovieName.equals(mv.name()))
                             .findFirst().orElseThrow(IllegalStateException::new);
 
-                    var updateRequestDTO = new TestMovieUpdateRequestDTO(testMovieDTO.id(), toMovieName);
+                    var updateRequestDTO = new TestMovieUpdateRequestDTO(testMovieDTO.id(),
+                            toMovieName,
+                            testMovieDTO.rating(),
+                            testMovieDTO.yearProduced(),
+                            testMovieDTO.genre(),
+                            testMovieDTO.contentType(),
+                            testMovieDTO.ageRating(),
+                            testMovieDTO.isShareable());
 
                     testMovieResource.updateMovie(updateRequestDTO);
                 });
@@ -170,10 +184,14 @@ public class MovieSteps implements En {
                             .findFirst()
                             .map(TestMovieDTO::id).orElseThrow(IllegalStateException::new);
 
-                    var updateRequestDTO =
-                            new TestMovieUpdateRequestDTO(uuid, testMovieCreateRequestDTO.name(),
-                                    testMovieCreateRequestDTO.rating(),
-                                    testMovieCreateRequestDTO.yearProduced());
+                    var updateRequestDTO = new TestMovieUpdateRequestDTO(uuid,
+                            testMovieCreateRequestDTO.name(),
+                            testMovieCreateRequestDTO.rating(),
+                            testMovieCreateRequestDTO.yearProduced(),
+                            testMovieCreateRequestDTO.genre(),
+                            testMovieCreateRequestDTO.contentType(),
+                            testMovieCreateRequestDTO.ageRating(),
+                            testMovieCreateRequestDTO.isShareable());
 
                     testMovieResource.updateMovie(updateRequestDTO, regularUserId);
                 });
@@ -198,6 +216,12 @@ public class MovieSteps implements En {
                     responseHolder.readResponse(TestByteStreamUploadResponseDTO.class);
             assertThat(testByteStreamUploadResponseDTO.size()).isEqualTo(expectedSize);
         });
+    }
+
+    private List<TestMovieCreateRequestDTO> from(DataTable dataTable) {
+        return dataTable.asList(Map.class)
+                .stream().map(mp -> objectMapper.convertValue(mp, TestMovieCreateRequestDTO.class))
+                .toList();
     }
 
     private byte[] readFromFile(String videoFile) throws IOException, URISyntaxException {

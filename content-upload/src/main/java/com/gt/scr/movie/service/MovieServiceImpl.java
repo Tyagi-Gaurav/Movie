@@ -60,6 +60,10 @@ public class MovieServiceImpl implements MovieService {
                                     StringUtils.isBlank(movie.name()) ? om.name() : movie.name(),
                                     movie.yearProduced() == 0 ? om.yearProduced() : movie.yearProduced(),
                                     movie.rating() == null || movie.rating().equals(BigDecimal.ZERO) ? om.rating() : movie.rating(),
+                                    movie.genre().equals(om.genre()) ? om.genre() : movie.genre(),
+                                    movie.contentType().equals(om.contentType()) ? om.contentType() : movie.contentType(),
+                                    movie.ageRating().equals(om.ageRating()) ? om.ageRating() : movie.ageRating(),
+                                    movie.isShareable() == om.isShareable() ? om.isShareable() : movie.isShareable(),
                                     om.creationTimeStamp());
 
                     movieRepository.update(newMovieToUpdate);

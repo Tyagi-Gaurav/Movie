@@ -45,6 +45,10 @@ public class MovieResource {
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
+                        movieCreateRequestDTO.genre(),
+                        movieCreateRequestDTO.contentType(),
+                        movieCreateRequestDTO.ageRating(),
+                        movieCreateRequestDTO.isShareable(),
                         System.nanoTime())))
                 .thenReturn(new MovieCreateResponseDTO(movieId));
     }
@@ -61,6 +65,10 @@ public class MovieResource {
                         movieCreateRequestDTO.name(),
                         movieCreateRequestDTO.yearProduced(),
                         movieCreateRequestDTO.rating(),
+                        movieCreateRequestDTO.genre(),
+                        movieCreateRequestDTO.contentType(),
+                        movieCreateRequestDTO.ageRating(),
+                        movieCreateRequestDTO.isShareable(),
                         System.nanoTime())))
                 .thenReturn(new MovieCreateResponseDTO(movieId));
     }
@@ -73,7 +81,8 @@ public class MovieResource {
         return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.getMoviesFor(up.id()).collectList())
                 .map(movie -> movie.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
-                        mv.yearProduced(), mv.rating())).toList())
+                        mv.yearProduced(), mv.rating(), mv.genre(),
+                        mv.contentType(), mv.ageRating(), mv.isShareable())).toList())
                 .map(MoviesDTO::new);
     }
 
@@ -96,6 +105,10 @@ public class MovieResource {
                             movieUpdateRequestDTO.name(),
                             movieUpdateRequestDTO.yearProduced(),
                             movieUpdateRequestDTO.rating(),
+                            movieUpdateRequestDTO.genre(),
+                            movieUpdateRequestDTO.contentType(),
+                            movieUpdateRequestDTO.ageRating(),
+                            movieUpdateRequestDTO.isShareable(),
                             System.nanoTime());
 
                     return movieService.updateMovie(up.id(), movie);
@@ -110,7 +123,9 @@ public class MovieResource {
         return securityContextHolder.getContext(UserProfile.class)
                 .flatMap(up -> movieService.getMoviesFor(UUID.fromString(userId)).collectList())
                 .map(movie -> movie.stream().map(mv -> new MovieDTO(mv.id(), mv.name(),
-                        mv.yearProduced(), mv.rating())).toList())
+                        mv.yearProduced(), mv.rating(),
+                        mv.genre(),
+                        mv.contentType(), mv.ageRating(), mv.isShareable())).toList())
                 .map(MoviesDTO::new);
     }
 }
