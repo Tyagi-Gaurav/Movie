@@ -4,6 +4,6 @@ Feature: Audit events should be generated and be accessible to admin users only
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 2000         | 7.8    | Action | MOVIE       | 12A       | true        |
+      | First Blood | 2000         | 7.8    | ACTION | MOVIE       | 12A       | true        |
     Then the response should be received with HTTP status code 200
 

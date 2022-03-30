@@ -8,7 +8,7 @@ Feature: Logged in admin user should be able to access movie records and users
     Then the response should be received with HTTP status code 200
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 2000         | 7.8    | Action | MOVIE       | 12A       | true        |
+      | First Blood | 2000         | 7.8    | ACTION | MOVIE       | 12A       | true        |
     Then the response should be received with HTTP status code 200
 
   Scenario: Authenticated admin user should be able to read the movie records for all users
@@ -16,8 +16,8 @@ Feature: Logged in admin user should be able to access movie records and users
     And a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 1990         | 7.8    | Action | MOVIE       | 12A       | true        |
-      | Die Hard    | 1980         | 8.9    | Action | MOVIE       | 15        | false       |
+      | First Blood | 1990         | 7.8    | ACTION | MOVIE       | 12A       | true        |
+      | Die Hard    | 1980         | 8.9    | ACTION | MOVIE       | 15        | false       |
     Then the response should be received with HTTP status code 200
     And the userId for the user is recorded
     And the global admin user logs into the system
@@ -25,16 +25,16 @@ Feature: Logged in admin user should be able to access movie records and users
     Then the response should be received with HTTP status code 200
     And the movie read response contains the following records
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 1990         | 7.8    | Action | MOVIE       | 12A       | true        |
-      | Die Hard    | 1980         | 8.9    | Action | MOVIE       | 15        | false       |
+      | First Blood | 1990         | 7.8    | ACTION | MOVIE       | 12A       | true        |
+      | Die Hard    | 1980         | 8.9    | ACTION | MOVIE       | 15        | false       |
 
   Scenario: Authenticated admin user should be able to delete the movie records for all users
     Given the global admin user logs into the system
     And a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 1990         | 7.8    | Action | MOVIE       | 12A       | true        |
-      | Die Hard    | 1980         | 8.9    | Action | MOVIE       | 15        | false       |
+      | First Blood | 1990         | 7.8    | ACTION | MOVIE       | 12A       | true        |
+      | Die Hard    | 1980         | 8.9    | ACTION | MOVIE       | 15        | false       |
     Then the response should be received with HTTP status code 200
     And the userId for the user is recorded
     And the global admin user logs into the system
@@ -53,24 +53,24 @@ Feature: Logged in admin user should be able to access movie records and users
     And the global admin user logs into the system
     And the authenticated user attempts to create a new movie for the regular user
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 1990         | 7.8    | Action | MOVIE       | 12A       | true        |
-      | Die Hard    | 1980         | 8.9    | Action | MOVIE       | 15        | false       |
+      | First Blood | 1990         | 7.8    | ACTION | MOVIE       | 12A       | true        |
+      | Die Hard    | 1980         | 8.9    | ACTION | MOVIE       | 15        | false       |
     Then the response should be received with HTTP status code 200
     And the regular user attempts to login again
     And the authenticated user attempts to read the movies
     Then the response should be received with HTTP status code 200
     And the movie read response contains the following records
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 1990         | 7.8    | Action | MOVIE       | 12A       | true        |
-      | Die Hard    | 1980         | 8.9    | Action | MOVIE       | 15        | false       |
+      | First Blood | 1990         | 7.8    | ACTION | MOVIE       | 12A       | true        |
+      | Die Hard    | 1980         | 8.9    | ACTION | MOVIE       | 15        | false       |
 
   Scenario: Authenticated admin user should be able to edit the movie records for other users
     Given the global admin user logs into the system
     And a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
       | name        | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | First Blood | 1990         | 7.8    | Action | MOVIE       | 12A       | true        |
-      | Die Hard    | 1980         | 8.9    | Action | MOVIE       | 15        | false       |
+      | First Blood | 1990         | 7.8    | ACTION | MOVIE       | 12A       | true        |
+      | Die Hard    | 1980         | 8.9    | ACTION | MOVIE       | 15        | false       |
     Then the response should be received with HTTP status code 200
     And the userId for the user is recorded
     And the global admin user logs into the system
@@ -78,11 +78,11 @@ Feature: Logged in admin user should be able to access movie records and users
     Then the response should be received with HTTP status code 200
     When the admin user attempts to update the movie with name: 'First Blood' to
       | name         | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | Second Blood | 2010         | 7.8    | Action | MOVIE       | 12A       | true        |
+      | Second Blood | 2010         | 7.8    | ACTION | MOVIE       | 12A       | true        |
     Then the response should be received with HTTP status code 200
     And the regular user attempts to login again
     And the authenticated user attempts to read the movies
     And the movie read response contains the following records
       | name         | yearProduced | rating | genre  | contentType | ageRating | isShareable |
-      | Second Blood | 2010         | 7.8    | Action | MOVIE       | 12A       | true        |
-      | Die Hard     | 1980         | 8.9    | Action | MOVIE       | 15        | false       |
+      | Second Blood | 2010         | 7.8    | ACTION | MOVIE       | 12A       | true        |
+      | Die Hard     | 1980         | 8.9    | ACTION | MOVIE       | 15        | false       |
