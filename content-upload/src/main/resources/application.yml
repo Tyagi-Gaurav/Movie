@@ -8,6 +8,10 @@ spring:
 server:
   port: ${SERVER_PORT:9090}
 
+toggle:
+  endpoints:
+    - ${GET_MOVIE_ENDPOINT:PUT-/api/moviexxx}
+
 management:
   server.port: ${SERVER_MGT_PORT:9091}
   endpoint:
