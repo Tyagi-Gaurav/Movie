@@ -37,6 +37,8 @@ public abstract class DatabaseTest {
                         "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", databaseName, tempFile);
                 cpds.setJdbcUrl(jdbcUrl);
                 LOG.info("Using JDBC Url: {}", jdbcUrl);
+                LOG.info("Number of connections: {}", cpds.getNumConnections());
+
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
             }
