@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -22,6 +23,7 @@ import static com.gt.scr.movie.util.MovieStreamMetaDataBuilder.aMovieStreamMetaD
 import static com.gt.scr.movie.util.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("StreamMetaDataRepositoryTest")
 @SpringBootTest(classes = StreamMetaDataRepositoryImpl.class)
 @ExtendWith(MockitoExtension.class)
 class StreamMetaDataRepositoryTest extends DatabaseTest {

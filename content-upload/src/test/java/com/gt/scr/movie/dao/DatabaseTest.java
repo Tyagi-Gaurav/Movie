@@ -33,7 +33,7 @@ public abstract class DatabaseTest {
                 String tempFile = resource.toURI().getRawPath();
                 cpds.setDriverClass("org.h2.Driver");
                 cpds.setAutoCommitOnClose(true);
-                String jdbcUrl = String.format("jdbc:h2:mem:%s;MODE=MySQL;DB_CLOSE_DELAY=-1;" +
+                String jdbcUrl = String.format("jdbc:h2:mem:%s;MODE=MySQL;" +
                         "DB_CLOSE_ON_EXIT=TRUE;INIT=RUNSCRIPT FROM '%s'", databaseName, tempFile);
                 cpds.setJdbcUrl(jdbcUrl);
                 LOG.info("Using JDBC Url: {}", jdbcUrl);
