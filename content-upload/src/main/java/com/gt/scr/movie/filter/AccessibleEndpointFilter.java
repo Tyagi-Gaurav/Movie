@@ -1,6 +1,6 @@
 package com.gt.scr.movie.filter;
 
-import com.gt.scr.movie.config.ToggleConfig;
+import com.gt.scr.movie.config.AccessibleEndpointConfig;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -9,18 +9,20 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 @Component
-public class ToggleEndpointFilter implements WebFilter {
-    private final ToggleConfig toggleConfig;
+public class AccessibleEndpointFilter implements WebFilter {
+    private final AccessibleEndpointConfig accessibleEndpointConfig;
 
-    public ToggleEndpointFilter(ToggleConfig toggleConfig) {
-        this.toggleConfig = toggleConfig;
+    public AccessibleEndpointFilter(AccessibleEndpointConfig accessibleEndpointConfig) {
+        this.accessibleEndpointConfig = accessibleEndpointConfig;
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getPath().value();
         String method = exchange.getRequest().getMethodValue();
-        if (toggleConfig.contains(method, path)) {
+
+        if (!(accessibleEndpointConfig.isEnabled(method, path)
+                || accessibleEndpointConfig.satisfiesRegex(method, path))) {
             exchange.getResponse().setStatusCode(HttpStatus.NOT_FOUND);
             return Mono.empty();
         }
