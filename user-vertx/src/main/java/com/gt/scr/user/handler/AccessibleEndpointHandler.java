@@ -5,12 +5,16 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AccessibleEndpointHandler implements Handler<RoutingContext> {
+    private static final Logger LOG = LoggerFactory.getLogger(AccessibleEndpointHandler.class);
+
     private final Map<String, Boolean> endpointsMap;
     private final Map<String, Boolean> endpointsRegexMap;
 
@@ -28,6 +32,7 @@ public class AccessibleEndpointHandler implements Handler<RoutingContext> {
         String pathToCheck = String.format("%s-%s", method, path);
 
         if (!(isEnabled(pathToCheck) || satisfiesRegex(pathToCheck))) {
+            LOG.error("Not allowed to access {}", pathToCheck);
             context.response().setStatusCode(404);
             context.response().end();
         } else {
