@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest(classes = EventMySQLRepository.class)
+@ActiveProfiles("EventMySQLRepositoryTest")
 @ExtendWith(MockitoExtension.class)
 class EventMySQLRepositoryTest extends DatabaseTest {
     private static final Logger LOG = LoggerFactory.getLogger(EventMySQLRepositoryTest.class);

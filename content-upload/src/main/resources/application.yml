@@ -8,6 +8,19 @@ spring:
 server:
   port: ${SERVER_PORT:9090}
 
+accessible:
+  endpoints:
+    "[GET-/api/status]": ${GET_STATUS:true}
+    "[POST-/api/user/movie]": ${ADD_MOVIE_FOR_USER:true}
+    "[POST-/api/user/movie/stream]": ${ADD_MOVIE_STREAM_FOR_USER:true}
+    "[GET-/api/user/movie]": ${GET_MOVIE_FOR_USER:true}
+    "[DELETE-/api/user/movie]": ${DELETE_MOVIE_FOR_USER:true}
+    "[PUT-/api/user/movie]": ${UPDATE_MOVIE_FOR_USER:true}
+    "[GET-/actuator/healthcheck]": ${GET_HEALTHCHECK:true}
+  endpointsRegex:
+    "[POST-/api/user/.*/movie]": ${ADMIN_ADD_MOVIE_FOR_USER:true}
+    "[GET-/api/user/.*/movie]": ${ADMIN_GET_MOVIE_FOR_USER:true}
+
 management:
   server.port: ${SERVER_MGT_PORT:9091}
   endpoint:
