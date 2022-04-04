@@ -22,6 +22,7 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +46,20 @@ public class UserJourneysTest {
                 .put("db.user", embeddedPostgres.getUserName())
                 .put("db.password", embeddedPostgres.getPassword())
                 .put("auth.token.key", "19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676")
-                .put("http.port", 5050);
+                .put("http.port", 5050)
+                .put("accessible",
+                        new JsonObject()
+                                .put("endpoints", new JsonObject(
+                                        Map.of(
+                                                "GET-/api/status", true,
+                                                "POST-/api/user/account/create", true,
+                                                "POST-/api/user/login", true,
+                                                "GET-/api/user", true,
+                                                "POST-/api/user/manage", true,
+                                                "GET-/api/user/manage", true,
+                                                "DELETE-/api/user/manage", true
+                                                )))
+                                .put("endpointsRegex", new JsonObject(Map.of())));
 
         String baseUrl = "http://localhost:" + 5050 + "/api/";
         WebTestClient webTestClient = WebTestClient.bindToServer().baseUrl(baseUrl).build();

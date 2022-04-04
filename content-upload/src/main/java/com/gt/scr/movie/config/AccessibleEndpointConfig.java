@@ -13,10 +13,6 @@ import java.util.regex.Pattern;
 public record AccessibleEndpointConfig(Map<String, Boolean> endpoints,
                                        Map<String, Boolean> endpointsRegex) {
 
-    public boolean isEnabled(String method, String path) {
-        return endpoints.getOrDefault(String.format("%s-%s", method, path), false);
-    }
-
     @Override
     public Map<String, Boolean> endpoints() {
         return Collections.unmodifiableMap(endpoints);
@@ -25,6 +21,10 @@ public record AccessibleEndpointConfig(Map<String, Boolean> endpoints,
     @Override
     public Map<String, Boolean> endpointsRegex() {
         return Collections.unmodifiableMap(endpointsRegex);
+    }
+
+    public boolean isEnabled(String method, String path) {
+        return endpoints.getOrDefault(String.format("%s-%s", method, path), false);
     }
 
     public boolean satisfiesRegex(String method, String path) {
