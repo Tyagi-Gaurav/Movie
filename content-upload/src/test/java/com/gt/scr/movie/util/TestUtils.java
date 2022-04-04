@@ -42,6 +42,7 @@ public class TestUtils {
         }
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+            connection.setAutoCommit(true);
             preparedStatement.setString(1, movie.id().toString());
             preparedStatement.setString(2, movie.name());
             preparedStatement.setInt(3, movie.yearProduced());
@@ -120,6 +121,7 @@ public class TestUtils {
     public static void executeQueryUpdate(DataSource dataSource, String query) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             assertThat(preparedStatement.executeUpdate())
                     .describedAs("Could not run query. {}", query)
                     .isNotNegative();
