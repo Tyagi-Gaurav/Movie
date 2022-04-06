@@ -1,10 +1,12 @@
 package com.gt.scr.user;
 
+import com.gt.scr.user.handler.ConfigPublishHandler;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.healthchecks.HealthCheckHandler;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.ResponseContentTypeHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -34,6 +36,11 @@ public class HttpServerVerticle extends AbstractVerticle {
     public void start(Promise<Void> startPromise) {
         HttpServer httpServer = vertx.createHttpServer();
         int port = config().getInteger("http.port", 6060);
+        Router privateApi = Router.router(vertx);
+
+        privateApi.get()
+                .handler(ResponseContentTypeHandler.create())
+                .handler(new ConfigPublishHandler(config()));
 
         Router mainRouter = Router.router(vertx);
         Router healthcheckApi = Router.router(vertx);
@@ -43,6 +50,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         filterRoute.mountSubRouter("/", mainRouter);
         mainRouter.mountSubRouter("/api/user", userApiRoute);
         mainRouter.mountSubRouter("/api/user/manage", adminRoute);
+        mainRouter.mountSubRouter("/private/config", privateApi);
         mainRouter.mountSubRouter("/api", healthcheckApi);
 
         httpServer.requestHandler(filterRoute).listen(port, ar -> {

@@ -17,6 +17,8 @@ accessible:
     "[DELETE-/api/user/movie]": ${DELETE_MOVIE_FOR_USER:true}
     "[PUT-/api/user/movie]": ${UPDATE_MOVIE_FOR_USER:true}
     "[GET-/actuator/healthcheck]": ${GET_HEALTHCHECK:true}
+    "[GET-/actuator/metrics]": ${GET_METRICS:true}
+    "[GET-/actuator/config]": ${GET_CONFIG:true}
   endpointsRegex:
     "[POST-/api/user/.*/movie]": ${ADMIN_ADD_MOVIE_FOR_USER:true}
     "[GET-/api/user/.*/movie]": ${ADMIN_GET_MOVIE_FOR_USER:true}
@@ -28,9 +30,10 @@ management:
       show-details: always
   endpoints:
     web:
-      exposure.include: health, mappings, metrics
+      exposure.include: health, mappings, metrics, configprops
       path-mapping:
         health: healthcheck
+        configprops: config
 
 user:
   host: ${USER_HOST:localhost}

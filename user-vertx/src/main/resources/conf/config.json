@@ -14,7 +14,8 @@
       "GET-/api/user": true,
       "DELETE-/api/user/manage": true,
       "GET-/api/user/manage": true,
-      "POST-/api/user/manage": true
+      "POST-/api/user/manage": true,
+      "GET-/private/config": true
     },
     "endpointsRegex": {}
   }
