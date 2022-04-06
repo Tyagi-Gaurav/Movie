@@ -17,6 +17,12 @@ http://localhost:9090/api/webjars/swagger-ui/index.html
 http://localhost:8080/content/upload/api/v3/api-docs
 ```
 
+# Accessing Application Config
+```
+http://localhost:8080/content/upload/actuator/config
+http://localhost:8080/user/private/config
+```
+
 ### Engineering Principles
 
 <table>

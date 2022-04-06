@@ -9,7 +9,6 @@ import reactor.core.publisher.Mono;
 
 @RestController
 public class StatusResource {
-
     @GetMapping(path = "/status",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.OK)
