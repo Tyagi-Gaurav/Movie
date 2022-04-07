@@ -10,10 +10,10 @@ repositories {
 }
 
 ext {
-    springBootVersion = '2.6.1'
+    springBootVersion = '2.6.6'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.9'
-    slf4jVersion = '2.0.0-alpha5'
+    slf4jVersion = '2.0.0-alpha7'
     jacksonVersion = '2.13.0'
     metricsInterceptor = '1.8.0'
     junitVersion = '5.8.2'
