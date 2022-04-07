@@ -39,7 +39,7 @@ http://localhost:8080/user/private/config
             <td>Clearly documented interfaces</td>
             <td>(x)</td>
             <td>(x)</td>
-            <td>#212</td>
+            <td>https://github.com/Tyagi-Gaurav/Movie/issues/212</td>
         </tr>
         <tr rowspan="2">
             <td>
@@ -51,7 +51,7 @@ http://localhost:8080/user/private/config
             </td>
             <td>(x)</td>
             <td>(x)</td>
-            <td>#194</td>
+            <td>https://github.com/Tyagi-Gaurav/Movie/issues/194</td>
         </tr>
         <tr>
             <td>Intra service communication via GRPC</td>
@@ -75,7 +75,7 @@ http://localhost:8080/user/private/config
             <td>Application should shutdown gracefully</td>
             <td>(x)</td>
             <td>(x)</td>
-            <td>#159</td>
+            <td>https://github.com/Tyagi-Gaurav/Movie/issues/159</td>
         </tr>
         <tr>
             <td>
