@@ -1,8 +1,7 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.domain.User;
-import com.gt.scr.movie.ext.user.FetchUsersByIdClient;
-import com.gt.scr.movie.ext.user.FetchUsersByNameClient;
+import com.gt.scr.ext.UpstreamClient;
 import com.gt.scr.movie.ext.user.UserDetailsResponseDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,18 +17,18 @@ import java.util.function.Function;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final FetchUsersByNameClient fetchUsersByNameClient;
-    private final FetchUsersByIdClient fetchUsersByIdClient;
+    private final UpstreamClient<String, UserDetailsResponseDTO> fetchUsersByNameClient;
+    private final UpstreamClient<UUID, UserDetailsResponseDTO> fetchUsersByIdClient;
 
-    public UserServiceImpl(FetchUsersByNameClient fetchUsersByNameClient,
-                           FetchUsersByIdClient fetchUsersByIdClient) {
+    public UserServiceImpl(UpstreamClient<String, UserDetailsResponseDTO> fetchUsersByNameClient,
+                           UpstreamClient<UUID, UserDetailsResponseDTO> fetchUsersByIdClient) {
         this.fetchUsersByNameClient = fetchUsersByNameClient;
         this.fetchUsersByIdClient = fetchUsersByIdClient;
     }
 
     @Override
     public Mono<User> findUserBy(UUID userId) {
-        return fetchUsersByIdClient.fetchUserBy(userId)
+        return fetchUsersByIdClient.execute(userId)
                 .map(UserDetailsResponseDTO::toUser)
                 .switchIfEmpty(
                         Mono.defer(() -> Mono.error(() ->
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserDetails> findByUsername(String username) throws UsernameNotFoundException {
-        return fetchUsersByNameClient.fetchUserBy(username)
+        return fetchUsersByNameClient.execute(username)
                 .map(this::toUserDetails)
                 .switchIfEmpty(
                         Mono.defer(() -> Mono.error(() ->

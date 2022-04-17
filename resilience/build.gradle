@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '5.0.4'
+    id 'pmd'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    slf4jVersion = '2.0.0-alpha7'
+}
+
+dependencies {
+    implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17

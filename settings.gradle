@@ -6,4 +6,5 @@ include 'common'
 include 'spring-common'
 include 'api-gateway'
 include 'user-vertx'
+include 'resilience'
 

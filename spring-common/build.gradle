@@ -32,6 +32,7 @@ jacoco {
 }
 
 dependencies {
+    implementation project(":resilience")
     implementation project(":common")
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
     implementation "org.apache.commons:commons-text:${commonsTextVersion}"

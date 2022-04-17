@@ -1,8 +1,8 @@
 package com.gt.scr.movie.service;
 
 import com.gt.scr.domain.User;
-import com.gt.scr.movie.ext.user.FetchUsersByIdClient;
 import com.gt.scr.movie.ext.user.FetchUsersByNameClient;
+import com.gt.scr.ext.UpstreamClient;
 import com.gt.scr.movie.ext.user.UserDetailsResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class UserServiceImplTest {
     private FetchUsersByNameClient fetchUsersByNameClient;
 
     @Mock
-    private FetchUsersByIdClient fetchUsersByIdClient;
+    private UpstreamClient<UUID, UserDetailsResponseDTO> fetchUsersByIdClient;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +44,7 @@ class UserServiceImplTest {
     void shouldFindUserByUserName() {
         String userName = "userName";
         User user = aUser().withUserName(userName).build();
-        when(fetchUsersByNameClient.fetchUserBy(userName)).thenReturn(Mono.just(
+        when(fetchUsersByNameClient.execute(userName)).thenReturn(Mono.just(
                 new UserDetailsResponseDTO(
                         user.username(),
                         user.password(),
@@ -66,13 +66,13 @@ class UserServiceImplTest {
                             Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
                 })
                 .expectComplete();
-        verify(fetchUsersByNameClient).fetchUserBy(userName);
+        verify(fetchUsersByNameClient).execute(userName);
     }
 
     @Test
     void shouldReturnErrorWhenNoUserFoundByName() {
         String userName = "userName";
-        when(fetchUsersByNameClient.fetchUserBy(userName)).thenReturn(Mono.empty());
+        when(fetchUsersByNameClient.execute(userName)).thenReturn(Mono.empty());
 
         //when
         Mono<UserDetails> byUsername = userService.findByUsername(userName);
@@ -81,14 +81,14 @@ class UserServiceImplTest {
         StepVerifier.create(byUsername)
                 .expectError(UsernameNotFoundException.class)
                 .verify();
-        verify(fetchUsersByNameClient).fetchUserBy(userName);
+        verify(fetchUsersByNameClient).execute(userName);
     }
 
     @Test
     void shouldFindUserByUserId() {
         UUID userId = UUID.randomUUID();
         User user = aUser().build();
-        when(fetchUsersByIdClient.fetchUserBy(userId)).thenReturn(Mono.just(
+        when(fetchUsersByIdClient.execute(userId)).thenReturn(Mono.just(
                 new UserDetailsResponseDTO(
                         user.username(),
                         user.password(),
@@ -101,6 +101,6 @@ class UserServiceImplTest {
         userService.findUserBy(userId);
 
         //then
-        verify(fetchUsersByIdClient).fetchUserBy(userId);
+        verify(fetchUsersByIdClient).execute(userId);
     }
 }

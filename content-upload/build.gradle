@@ -34,6 +34,15 @@ repositories {
     mavenCentral()
 }
 
+idea {
+    module {
+        sourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
+        generatedSourceDirs += compileJava.options.annotationProcessorGeneratedSourcesDirectory
+        testSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
+        generatedSourceDirs += compileTestJava.options.annotationProcessorGeneratedSourcesDirectory
+    }
+}
+
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
@@ -72,6 +81,7 @@ processResources {
 }
 
 dependencies {
+    implementation project(":resilience")
     implementation project(":common")
     implementation project(":spring-common")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
