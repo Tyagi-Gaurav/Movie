@@ -120,30 +120,31 @@ flowchart LR;
     I --> J(Resilience Test 1 - Deployment while running load test)
 ```
 
-### Functionality
+### Components Functionality/Responsibility
 
-A REST API that allows users to update movie ratings
+#### Content Upload
+* All users to upload movie, its ratings and streams associated with the movie
+* Tech Stack
+    * Java 17
+    * Spring WebFlux 
+    * MySQL
 
+#### User
 * API Users must be able to create an account and log in.
-* All API calls must be authenticated.
-* When logged in, a user can see, edit and delete movie ratings that they entered.
+* Authenticate all API calls.
+* Helps issue authentication tokens to clients and validate them.
 * There are two roles with different permission levels:
     * A regular user that can only access their own records.
     * An admin that can CRUD all users and all user records.
-* When a movie is entered, each entry has a Name, Rating of the movie, year of production.
-* The API must be able to return data in the JSON format.
+* Tech Stack
+    * Java 17
+    * Vertx 
+    * PostGres
 
-### Design & Implementation
-
-The API has been designed using [Java 11](https://docs.oracle.com/en/java/javase/11/docs/api/index.html)
-and [Spring Boot](https://spring.io/projects/spring-boot). [MySQL](https://www.mysql.com/) is used for storage of
-movies. It can either be used in embedded manner in standalone mode or as a separate entity when running using docker.
-The backend storage is accessed via a set of interfaces. It can easily be swapped out for anything else without
-affecting rest of the application.
-
-### Java Version
-
-The application current runs on Java 17.
+#### API Gateway
+* Nginx based API gateway
+* Requests to all applications are sent via this component.
+* Provides routes that are accessible via clients
 
 #### Application Security
 
@@ -283,24 +284,6 @@ The application runs on [Java 17](https://docs.oracle.com/en/java/javase/17/docs
 application in standalone mode, it would need a Java installation. The application does not do that by itself.
 
 For non-standalone mode, it just needs docker host and docker compose installations mentioned above.
-
-### Configuration
-
-| Config Variable     | Default Value     | Description | 
-| :-------------      | :----------:      | :----------:|
-|  SERVER_PORT        | 8080        | Default HTTP port for the application. |
-| SERVER_MGT_PORT     | 8081      | Default management port for the application. |
-| TOKEN_DURATION     | 1 hour      | The default duration of a valid JWT token. Upon expiry, the user will have to re-login. | 
-| SECRET     |       19CA249C582715657BDCAB1FB31E69F854443A4FE3CBAFFD215E3F3676 | The default secret for creating security tokens | 
-| MYSQL_HOST     | localhost      | The host for database |
-| MYSQL_HOST     | 3306      | The port for database |
-| MYSQL_USER     | user      | User for accessing database |
-| MYSQL_PWD     | password      | Password to access database |
-| MYSQL_DB_NAME     | 3306      | Database name to connect to  |
-| DUPLICATE_INTERVAL     | 10s      | The default interval within which if a user sends a duplicate request, that would be rejected. |
-| CONNECTION_TIMEOUT     | 10s      | Connection timeout for the database. |
-| COMMAND_TIMEOUT     | 500ms      | The default query timeout for all database queries. |
-| GracefulShutdownWaitSeconds     | 20 seconds      | The time application waits to terminate after receiving a SIGTERM signal. |
 
 ### Some Application HowTo's
 [How do I?](./HowTo.MD#How do I?)
