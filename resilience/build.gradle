@@ -11,10 +11,18 @@ repositories {
 
 ext {
     slf4jVersion = '2.0.0-alpha7'
+    resilience4jVersion = '1.7.1'
 }
 
 dependencies {
     implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+    api "io.github.resilience4j:resilience4j-all:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-circuitbreaker:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-ratelimiter:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-bulkhead:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-cache:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-timelimiter:${resilience4jVersion}"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17

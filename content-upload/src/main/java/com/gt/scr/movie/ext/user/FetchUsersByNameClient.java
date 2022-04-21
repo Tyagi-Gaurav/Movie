@@ -18,7 +18,7 @@ public class FetchUsersByNameClient implements UpstreamClient<String, UserDetail
         this.webClient = webClient;
     }
 
-    @Resilience
+    @Resilience("user")
     @Override
     public Mono<UserDetailsResponseDTO> execute(String userName) {
         try {

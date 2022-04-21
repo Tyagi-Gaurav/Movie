@@ -1,7 +1,7 @@
 package com.gt.scr.movie.system;
 
+import com.gt.scr.ext.UpstreamClient;
 import com.gt.scr.movie.ext.user.StatusResponseDTO;
-import com.gt.scr.movie.ext.user.UserStatusClient;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
@@ -10,15 +10,15 @@ import reactor.core.publisher.Mono;
 @Component("userApp")
 public class UserAppHealthCheck implements HealthIndicator {
 
-    private final UserStatusClient userStatusClient;
+    private final UpstreamClient<Void, StatusResponseDTO> userStatusClient;
 
-    public UserAppHealthCheck(UserStatusClient userStatusClient) {
+    public UserAppHealthCheck(UpstreamClient<Void, StatusResponseDTO> userStatusClient) {
         this.userStatusClient = userStatusClient;
     }
 
     @Override
     public Health health() {
-        StatusResponseDTO result = userStatusClient.status()
+        StatusResponseDTO result = userStatusClient.execute(null)
                 .onErrorResume(throwable -> Mono.just(new StatusResponseDTO(throwable.getMessage())))
                 .block();
         return result != null && "UP".equals(result.status()) ? Health.up().build() :

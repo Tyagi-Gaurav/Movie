@@ -57,3 +57,19 @@ mysql:
 filesystemcontentstore:
   contentStoreRoot: /tmp/Contentstore
 
+resilience:
+  circuitBreaker:
+    user:
+      isEnabled: true
+      failureRateThreshold: 75
+      slowCallDurationThresholdInMs: 3000
+  threadPoolBulkhead:
+    user:
+      isEnabled: true
+      coreThreadPoolSize: 5
+      maxThreadPoolSize: 5
+      queueCapacity: 10
+  timeLimit:
+    user:
+      isEnabled: true
+      timeoutDurationInMs: 3000

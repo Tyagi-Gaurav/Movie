@@ -20,7 +20,7 @@ public class FetchUsersByIdClient implements UpstreamClient<UUID, UserDetailsRes
         this.webClient = webClient;
     }
 
-    @Resilience
+    @Resilience("user")
     @Override
     public Mono<UserDetailsResponseDTO> execute(UUID uuid) {
         try {
