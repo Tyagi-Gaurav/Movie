@@ -7,11 +7,9 @@ import io.github.resilience4j.bulkhead.ThreadPoolBulkheadRegistry;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.decorators.Decorators;
-import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Supplier;
 
 @Component
@@ -32,15 +29,10 @@ public class ResilienceComponentProcessor implements BeanPostProcessor {
     private final Map<String, String> methodMap = new HashMap<>();
     private final CircuitBreakerRegistry circuitBreakerRegistry;
     private final ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry;
-    private final TimeLimiterRegistry timeLimiterRegistry;
-    private final ScheduledExecutorService executorService;
 
-    public ResilienceComponentProcessor(ResilienceConfig resilienceConfig,
-                                        @Qualifier("ResilienceTimeLimiterScheduler") ScheduledExecutorService executorService) {
+    public ResilienceComponentProcessor(ResilienceConfig resilienceConfig) {
         circuitBreakerRegistry = resilienceConfig.circuitBreakerRegistry();
         threadPoolBulkheadRegistry = resilienceConfig.threadPoolBulkHeadRegistry();
-        timeLimiterRegistry = resilienceConfig.timeLimiterRegistry();
-        this.executorService = executorService;
     }
 
     @Override
@@ -71,7 +63,7 @@ public class ResilienceComponentProcessor implements BeanPostProcessor {
                                 try {
                                     return method.invoke(bean, args);
                                 } catch (IllegalAccessException | InvocationTargetException e) {
-                                    e.printStackTrace();
+                                    LOG.error(e.getMessage(), e);
                                 }
                                 return null;
                             };

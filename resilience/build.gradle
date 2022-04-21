@@ -25,5 +25,21 @@ dependencies {
     api "io.github.resilience4j:resilience4j-timelimiter:${resilience4jVersion}"
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+        html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/gt/scr/resilience/**.class"
+            ])
+        }))
+    }
+
+    executionData.from = files('build/jacoco/test.exec')
+}

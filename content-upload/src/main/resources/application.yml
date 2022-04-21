@@ -69,7 +69,3 @@ resilience:
       coreThreadPoolSize: 5
       maxThreadPoolSize: 5
       queueCapacity: 10
-  timeLimit:
-    user:
-      isEnabled: true
-      timeoutDurationInMs: 3000

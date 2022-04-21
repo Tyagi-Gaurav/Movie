@@ -37,9 +37,7 @@ public class TestUtils {
 
     public static void addToDatabase(Movie movie, DataSource dataSource,
                                      UUID userId, String query) throws SQLException {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Adding movie with Id {}", movie.id());
-        }
+
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             connection.setAutoCommit(true);
@@ -54,6 +52,9 @@ public class TestUtils {
             preparedStatement.setString(9, movie.genre().name());
             preparedStatement.setString(10, userId.toString());
             assertThat(preparedStatement.executeUpdate()).isPositive();
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Movie added with Id {}", movie.id());
+            }
         } catch (Exception e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Exception adding movie to database {} with error {}", movie.id(), e.getMessage());

@@ -54,6 +54,14 @@ subprojects {
         }
     }
 
+    project(":resilience") {
+        sonarqube {
+            properties {
+                property "sonar.coverage.exclusions", "**/com/gt/scr/resilience/**"
+            }
+        }
+    }
+
     project(":api-gateway") {
         sonarqube {
             skipProject = true
