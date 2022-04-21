@@ -7,6 +7,7 @@ import com.google.common.net.HttpHeaders;
 import com.gt.scr.domain.User;
 import com.gt.scr.ext.UpstreamClient;
 import com.gt.scr.movie.util.UserBuilder;
+import com.gt.scr.resilience.Resilience;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -41,6 +42,15 @@ class FetchUsersByIdClientTest {
         fetchUsersByIdClient = new FetchUsersByIdClient(WebClient.builder()
                 .baseUrl(wireMockRuntimeInfo.getHttpBaseUrl())
                 .build());
+    }
+
+    @Test
+    void shouldHaveResilienceAnnotationForExternalCalls() throws NoSuchMethodException {
+        Resilience annotation = FetchUsersByIdClient.class.getMethod("execute", UUID.class)
+                .getAnnotation(Resilience.class);
+
+        assertThat(annotation).isNotNull();
+        assertThat(annotation.value()).isEqualTo("user");
     }
 
     @Test
