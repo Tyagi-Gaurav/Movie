@@ -7,13 +7,19 @@ import static io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.*;
 public record CircuitBreakerConfig(boolean isEnabled,
                                    int failureRateThreshold,
                                    int slowCallRateThreshold,
-                                   int slowCallDurationThresholdInMs) {
+                                   int slowCallDurationThresholdInMs,
+                                   int minimumNumberOfCalls) {
     public io.github.resilience4j.circuitbreaker.CircuitBreakerConfig build() {
         return io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.custom()
                 .failureRateThreshold(getFailureRateThreshold())
                 .slowCallRateThreshold(getSlowCallRateThreshold())
                 .slowCallDurationThreshold(getSlowCallDurationThreshold())
+                .minimumNumberOfCalls(getMinimumNumberOfCalls())
                 .build();
+    }
+
+    private int getMinimumNumberOfCalls() {
+        return minimumNumberOfCalls == 0 ? DEFAULT_MINIMUM_NUMBER_OF_CALLS : minimumNumberOfCalls;
     }
 
     private Duration getSlowCallDurationThreshold() {

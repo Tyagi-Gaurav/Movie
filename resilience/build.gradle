@@ -18,11 +18,9 @@ dependencies {
     implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
     api "io.github.resilience4j:resilience4j-all:${resilience4jVersion}"
     api "io.github.resilience4j:resilience4j-circuitbreaker:${resilience4jVersion}"
-    api "io.github.resilience4j:resilience4j-ratelimiter:${resilience4jVersion}"
-    api "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
     api "io.github.resilience4j:resilience4j-bulkhead:${resilience4jVersion}"
-    api "io.github.resilience4j:resilience4j-cache:${resilience4jVersion}"
     api "io.github.resilience4j:resilience4j-timelimiter:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-micrometer:${resilience4jVersion}"
 }
 
 jacocoTestReport {
