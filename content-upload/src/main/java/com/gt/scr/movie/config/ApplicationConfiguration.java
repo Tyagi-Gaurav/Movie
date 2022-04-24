@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 @Configuration
 @EnableWebFlux
-@ConfigurationPropertiesScan("com.gt.scr.movie.config")
+@ConfigurationPropertiesScan(value = {"com.gt.scr.movie.config", "com.gt.scr.spc.config"})
 public class ApplicationConfiguration implements WebFluxConfigurer {
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfiguration.class);
 

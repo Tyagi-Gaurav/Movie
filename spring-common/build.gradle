@@ -22,6 +22,7 @@ ext {
     reactorVersion = '3.4.12'
     jsonWebTokenVersion = '0.11.2'
     springSecurityCoreVersion = '5.6.2'
+    awaitilityVersion = '4.2.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -32,6 +33,7 @@ jacoco {
 }
 
 dependencies {
+    implementation project(":resilience")
     implementation project(":common")
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
     implementation "org.apache.commons:commons-text:${commonsTextVersion}"
@@ -61,6 +63,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.assertj:assertj-core:${assertJVersion}"
+    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
 }
 
@@ -68,7 +71,7 @@ pmd {
     consoleOutput = true
     toolVersion = "6.37.0"
     rulesMinimumPriority = 2
-    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+    ruleSetFiles = files("${projectDir}/gradle/pmd/pmd-rules.xml")
     reportsDir = layout.buildDirectory.dir('pmd').get().asFile
 }
 

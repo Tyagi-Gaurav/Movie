@@ -1,0 +1,43 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '5.0.4'
+    id 'pmd'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    slf4jVersion = '2.0.0-alpha7'
+    resilience4jVersion = '1.7.1'
+}
+
+dependencies {
+    implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+    api "io.github.resilience4j:resilience4j-all:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-circuitbreaker:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-bulkhead:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-timelimiter:${resilience4jVersion}"
+    api "io.github.resilience4j:resilience4j-micrometer:${resilience4jVersion}"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+        html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/gt/scr/resilience/**.class"
+            ])
+        }))
+    }
+
+    executionData.from = files('build/jacoco/test.exec')
+}

@@ -41,6 +41,7 @@ ext {
     bouncyCastleVersion = '1.70'
     scramVersion = '2.1'
     validationApiVersion = '2.0.1.Final'
+    awaitilityVersion = '4.2.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -131,6 +132,7 @@ dependencies {
     testImplementation "org.testcontainers:mysql:${testContainerVersion}"
     testImplementation "io.vertx:vertx-junit5:${vertxVersion}"
     testImplementation "com.opentable.components:otj-pg-embedded:${embeddedPostgresVersion}"
+    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
 }
 

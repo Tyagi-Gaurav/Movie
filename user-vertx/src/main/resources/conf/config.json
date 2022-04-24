@@ -18,5 +18,10 @@
       "GET-/private/config": true
     },
     "endpointsRegex": {}
-  }
+  },
+  "bus.account.create.repo.timeoutInMs" : 200,
+  "bus.user.fetch.by.userName.timeoutInMs" : 200,
+  "bus.user.fetch.by.userId.timeoutInMs" : 200,
+  "bus.user.delete.by.userId.timeoutInMs" : 200,
+  "bus.user.fetch.all.timeoutInMs" : 200
 }

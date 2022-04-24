@@ -1,7 +1,7 @@
 package com.gt.scr.movie.system;
 
+import com.gt.scr.ext.UpstreamClient;
 import com.gt.scr.movie.ext.user.StatusResponseDTO;
-import com.gt.scr.movie.ext.user.UserStatusClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 class UserAppHealthCheckTest {
 
     @Mock
-    private UserStatusClient userStatusClient;
+    private UpstreamClient<Void, StatusResponseDTO> userStatusClient;
 
     private UserAppHealthCheck userAppHealthCheck;
 
@@ -29,7 +29,7 @@ class UserAppHealthCheckTest {
     @Test
     void shouldReturnSuccessWhenHealthIsOk() {
         //given
-        when(userStatusClient.status()).thenReturn(Mono.just(new StatusResponseDTO("UP")));
+        when(userStatusClient.execute(null)).thenReturn(Mono.just(new StatusResponseDTO("UP")));
 
         //when
         Health health = userAppHealthCheck.health();
@@ -41,7 +41,7 @@ class UserAppHealthCheckTest {
     @Test
     void shouldReturnFailureWhenHealthIsNotOK() {
         //given
-        when(userStatusClient.status()).thenReturn(Mono.just(new StatusResponseDTO("DOWN")));
+        when(userStatusClient.execute(null)).thenReturn(Mono.just(new StatusResponseDTO("DOWN")));
 
         //when
         Health health = userAppHealthCheck.health();
@@ -53,7 +53,7 @@ class UserAppHealthCheckTest {
     @Test
     void shouldReturnFailureWhenClientReturnsError() {
         //given
-        when(userStatusClient.status()).thenReturn(Mono.error(new RuntimeException("error")));
+        when(userStatusClient.execute(null)).thenReturn(Mono.error(new RuntimeException("error")));
 
         //when
         Health health = userAppHealthCheck.health();

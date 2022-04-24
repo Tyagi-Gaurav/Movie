@@ -5,7 +5,9 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.google.common.net.HttpHeaders;
 import com.gt.scr.domain.User;
+import com.gt.scr.ext.UpstreamClient;
 import com.gt.scr.movie.util.UserBuilder;
+import com.gt.scr.resilience.Resilience;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -32,7 +34,7 @@ class FetchUsersByIdClientTest {
             .options(wireMockConfig().dynamicPort().dynamicHttpsPort())
             .build();
 
-    private FetchUsersByIdClient fetchUsersByIdClient;
+    private UpstreamClient fetchUsersByIdClient;
 
     @BeforeEach
     void setUp() {
@@ -40,6 +42,15 @@ class FetchUsersByIdClientTest {
         fetchUsersByIdClient = new FetchUsersByIdClient(WebClient.builder()
                 .baseUrl(wireMockRuntimeInfo.getHttpBaseUrl())
                 .build());
+    }
+
+    @Test
+    void shouldHaveResilienceAnnotationForExternalCalls() throws NoSuchMethodException {
+        Resilience annotation = FetchUsersByIdClient.class.getMethod("execute", UUID.class)
+                .getAnnotation(Resilience.class);
+
+        assertThat(annotation).isNotNull();
+        assertThat(annotation.value()).isEqualTo("user");
     }
 
     @Test
@@ -57,7 +68,7 @@ class FetchUsersByIdClientTest {
                                 expectedUser.id()))
                                 .getBody())));
 
-        Mono<UserDetailsResponseDTO> account = fetchUsersByIdClient.fetchUserBy(expectedUser.id());
+        Mono<UserDetailsResponseDTO> account = fetchUsersByIdClient.execute(expectedUser.id());
 
         StepVerifier.create(account)
                 .expectNext(
@@ -79,7 +90,7 @@ class FetchUsersByIdClientTest {
                 .withHeader(HttpHeaders.ACCEPT, equalTo("application/vnd.user.fetchByUserId.v1+json"))
                 .willReturn(aResponse().withStatus(statusCode).withBody("")));
 
-        Mono<UserDetailsResponseDTO> response = fetchUsersByIdClient.fetchUserBy(userId);
+        Mono<UserDetailsResponseDTO> response = fetchUsersByIdClient.execute(userId);
 
         StepVerifier.create(response)
                 .consumeErrorWith(throwable -> {
@@ -101,7 +112,7 @@ class FetchUsersByIdClientTest {
                         .withHeader(HttpHeaders.CONTENT_TYPE, "application/vnd.user.fetch.v1+json")
                         .withBody(malformedResponse)));
 
-        Mono<UserDetailsResponseDTO> response = fetchUsersByIdClient.fetchUserBy(userId);
+        Mono<UserDetailsResponseDTO> response = fetchUsersByIdClient.execute(userId);
 
         StepVerifier.create(response)
                 .consumeErrorWith(throwable -> {
@@ -123,7 +134,7 @@ class FetchUsersByIdClientTest {
                         .withHeader(HttpHeaders.CONTENT_TYPE, "application/vnd.user.fetchByUserId.v1+json")
                         .withBody(nullOrEmpty)));
 
-        Mono<UserDetailsResponseDTO> response = fetchUsersByIdClient.fetchUserBy(userId);
+        Mono<UserDetailsResponseDTO> response = fetchUsersByIdClient.execute(userId);
 
         StepVerifier.create(response).verifyComplete();
     }

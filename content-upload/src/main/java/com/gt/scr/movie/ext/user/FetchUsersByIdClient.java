@@ -1,7 +1,9 @@
 package com.gt.scr.movie.ext.user;
 
 import com.google.common.net.HttpHeaders;
+import com.gt.scr.ext.UpstreamClient;
 import com.gt.scr.movie.exception.UnexpectedSystemException;
+import com.gt.scr.resilience.Resilience;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -11,14 +13,16 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Component
-public class FetchUsersByIdClient {
+public class FetchUsersByIdClient implements UpstreamClient<UUID, UserDetailsResponseDTO> {
     public final WebClient webClient;
 
     public FetchUsersByIdClient(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public Mono<UserDetailsResponseDTO> fetchUserBy(UUID uuid) {
+    @Resilience("user")
+    @Override
+    public Mono<UserDetailsResponseDTO> execute(UUID uuid) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder.path("/api/user").queryParam("userId", uuid).build())
