@@ -59,7 +59,12 @@ public class UserJourneysTest {
                                                 "GET-/api/user/manage", true,
                                                 "DELETE-/api/user/manage", true
                                                 )))
-                                .put("endpointsRegex", new JsonObject(Map.of())));
+                                .put("endpointsRegex", new JsonObject(Map.of())))
+                .put("bus.account.create.repo.timeoutInMs", 200)
+                .put("bus.user.fetch.by.userName.timeoutInMs", 200)
+                .put("bus.user.fetch.by.userId.timeoutInMs", 200)
+                .put("bus.user.delete.by.userId.timeoutInMs", 200)
+                .put("bus.user.fetch.all.timeoutInMs", 200);
 
         String baseUrl = "http://localhost:" + 5050 + "/api/";
         WebTestClient webTestClient = WebTestClient.bindToServer().baseUrl(baseUrl).build();
