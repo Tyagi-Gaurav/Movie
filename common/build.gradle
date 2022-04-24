@@ -15,7 +15,7 @@ ext {
     slf4jVersion = '2.0.0-alpha7'
     jacksonVersion = '2.13.2'
     metricsInterceptor = '1.8.0'
-    junitVersion = '5.8.1'
+    junitVersion = '5.8.2'
     assertJVersion = '3.21.0'
     mockitoVersion = '4.4.0'
     reactorVersion = '3.4.12'
