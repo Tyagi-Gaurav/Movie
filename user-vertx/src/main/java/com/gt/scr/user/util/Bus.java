@@ -7,6 +7,8 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 public class Bus {
+    private Bus() {}
+
     public static Future<Message<Object>> request(Vertx vertx, String address, JsonObject jsonObject) {
         Long sendTimeout = vertx.getOrCreateContext()
                 .config()

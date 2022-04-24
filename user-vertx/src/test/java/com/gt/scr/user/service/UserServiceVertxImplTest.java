@@ -14,12 +14,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 @ExtendWith(VertxExtension.class)
 class UserServiceVertxImplTest {
@@ -69,11 +71,7 @@ class UserServiceVertxImplTest {
 
         vertx.eventBus().consumer(ACCOUNT_CREATE_ADDRESS, handler -> {
             assertThat(handler.body()).isEqualTo(JsonObject.mapFrom(user));
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            await().atLeast(Duration.ofMillis(200)).until(() -> true);
         });
 
         userServiceV2.add(user)
@@ -140,11 +138,7 @@ class UserServiceVertxImplTest {
 
         vertx.eventBus().consumer(USER_FETCH_BY_USERNAME_ADDRESS, handler -> {
             assertThat(handler.body()).isEqualTo(new JsonObject().put("userName", user.username()));
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            await().atLeast(Duration.ofMillis(200)).until(() -> true);
         });
 
         userServiceV2.findByUsername(user.username())
@@ -188,11 +182,7 @@ class UserServiceVertxImplTest {
 
         vertx.eventBus().consumer(USER_FETCH_BY_ID_ADDRESS, handler -> {
             assertThat(handler.body()).isEqualTo(new JsonObject().put("userName", user.username()));
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            await().atLeast(Duration.ofMillis(200)).until(() -> true);
         });
 
         userServiceV2.findByUserId(user.id())
@@ -235,11 +225,7 @@ class UserServiceVertxImplTest {
 
         vertx.eventBus().consumer(USER_DELETE_BY_ID_ADDRESS, handler -> {
             assertThat(handler.body()).isEqualTo(new JsonObject().put("userId", userId.toString()));
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            await().atLeast(Duration.ofMillis(200)).until(() -> true);
         });
 
         userServiceV2.delete(userId)
@@ -285,11 +271,7 @@ class UserServiceVertxImplTest {
 
         vertx.eventBus().consumer(USER_FETCH_ALL, handler -> {
             assertThat(handler.body()).isEqualTo(new JsonObject().put("userId", userId.toString()));
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            await().atLeast(Duration.ofMillis(200)).until(() -> true);
         });
 
         userServiceV2.fetchAll()
