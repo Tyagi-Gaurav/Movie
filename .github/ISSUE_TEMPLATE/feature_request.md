@@ -20,3 +20,7 @@ A clear and concise description of any alternative solutions or features you've 
 Add any other context or screenshots about the feature request here.
 
 **Task Checklist**
+
+**How should this be released (Normal, Any Special Instructions) ?**
+
+**Should this be monitored? If so, which metrics do we need?**
