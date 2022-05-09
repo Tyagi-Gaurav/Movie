@@ -15,7 +15,8 @@ val answer2 : Int = 42
 println ("Hello World $answer1")
 
 //Default Visibility: public
-class Person(val name: String, var isMarried: Boolean)
+class Person(val name: String, //Read-only property
+             var isMarried: Boolean)  //Writable field
 
 val person = Person("Bob", true)
 println (person.name)
@@ -37,7 +38,7 @@ println ("Color Mnemonic: ${getMmemonic(Color.RED)}")
 
 interface Expr
 class Num(val value: Int) : Expr
-class Sum(val left: Expr, val right: Expr) : Expr
+class Sum(val left: Expr, val right: Expr) : Exprm
 
 fun eval1(e : Expr) : Int {
     if (e is Num) { //Smart Casts
@@ -49,6 +50,7 @@ fun eval1(e : Expr) : Int {
     throw IllegalArgumentException("Unknown Expression")
 }
 
+//Kotlin doesn't distinguish between checked and unchecked exceptions.
 fun eval2(e : Expr) : Int =
     when (e) {
         is Num ->
