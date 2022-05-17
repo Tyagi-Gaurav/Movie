@@ -3,6 +3,7 @@ plugins {
     id 'jacoco'
     id 'com.github.spotbugs' version '5.0.6'
     id 'pmd'
+    id "org.gradle.test-retry" version "1.4.0"
 }
 
 ext {
@@ -151,6 +152,11 @@ scmVersion {
 project.version = "DEV"
 
 test {
+    retry {
+        maxRetries = 2
+        maxFailures = 5
+    }
+
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
@@ -230,6 +236,11 @@ tasks.register('integrationTest', Test) {
     classpath += sourceSets.integration.runtimeClasspath
 
     useJUnitPlatform()
+
+    retry {
+        maxRetries = 2
+        maxFailures = 5
+    }
 
     reports {
         html.enabled true
