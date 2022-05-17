@@ -1,0 +1,5 @@
+spring:
+  active: prod
+
+server:
+  port: ${SERVER_PORT:6060}

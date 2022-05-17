@@ -55,6 +55,13 @@ sourceSets {
     }
 }
 
+test {
+    retry {
+        maxRetries = 2
+        maxFailures = 5
+    }
+}
+
 configurations {
     integrationImplementation.extendsFrom testImplementation
     integrationRuntime.extendsFrom testImplementation
@@ -67,7 +74,7 @@ jacoco {
     toolVersion = "0.8.7"
 }
 
-bootJar {
+springBoot {
     mainClass = 'com.gt.scr.movie.Application'
 }
 

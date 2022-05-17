@@ -150,7 +150,6 @@ test {
         maxRetries = 2
         maxFailures = 5
     }
-
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
@@ -230,9 +229,14 @@ tasks.register('integrationTest', Test) {
         html.enabled true
         junitXml.enabled = true
     }
+
+    retry {
+        maxRetries = 2
+        maxFailures = 5
+    }
+
     shouldRunAfter test
     finalizedBy jacocoTestReport
 }
-
 
 check.dependsOn(integrationTest)
