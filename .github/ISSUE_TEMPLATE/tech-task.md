@@ -7,9 +7,9 @@ assignees: ''
 
 ---
 
-** What is the problem that we're trying to solve? **
+**What is the problem that we're trying to solve?**
 
-** Are there multiple approaches? If so, please document below.**
+**Are there multiple approaches? If so, please document below.**
 
 **Task Checklist**
 

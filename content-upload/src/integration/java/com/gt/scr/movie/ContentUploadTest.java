@@ -129,21 +129,32 @@ public class ContentUploadTest {
                 .expectReturnCode(500);
     }
 
+    @Test
+    void shouldAllowAccessToMovieStreamAfterUpload() {
+        MovieCreateRequestDTO movieCreateRequestDTO = MovieCreateRequestDTOBuilder.aMovieCreateRequest().build();
 
-//    @Test
-//    void uploadingMultipleByteStreamsToTheSameMovieShouldBeCreatedInSequence() {
-//
-//    }
+        MovieCreateResponseDTO movieCreateResponseDTO = scenarioExecutor.
+                noEventsExistInTheSystem().then()
+                .givenUserIsLoggedIn().when()
+                .userCreatesAMovieWith(movieCreateRequestDTO).expectReturnCode(200)
+                .returnMovieCreateResponse();
 
+        byte[] byteStream = {0, 1, 1, 1};
+        String streamName = "Test Stream";
 
-//    @Test
-//    void deletingAMovieShouldAlsoDeleteItsMetaData() {
-//
-//    }
-
-
-//    @Test
-//    void contentUploadEventShouldBeSentWhenAMovieContentDataIsUploaded() {
-//
-//    }
+        scenarioExecutor.userUploadsAByteStreamForTheMovie(
+                        movieCreateResponseDTO.movieId(),
+                        streamName,
+                        byteStream)
+                .expectReturnCode(200)
+                .thenAssertThat(byteStreamResponseDTO -> {
+                    assertThat(byteStreamResponseDTO).isNotNull();
+                    assertThat(byteStreamResponseDTO.size()).isEqualTo(byteStream.length);
+                    assertThat(byteStreamResponseDTO.streamId()).isNotNull();
+                    assertThat(byteStreamResponseDTO.streamName()).isEqualTo(streamName);
+                    assertThat(byteStreamResponseDTO.sequence()).isEqualTo(1);
+                }, ByteStreamUploadResponseDTO.class)
+                .whenMovieStreamIsAccessed(movieCreateResponseDTO.movieId());
+                //TODO .thenAllStreamsAreReturned(byteStream);
+    }
 }

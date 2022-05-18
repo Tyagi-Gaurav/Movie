@@ -7,6 +7,7 @@ import com.gt.scr.movie.audit.UserEventMessage;
 import com.gt.scr.movie.functions.ByteStreamUpload;
 import com.gt.scr.movie.functions.MovieDelete;
 import com.gt.scr.movie.functions.MovieRead;
+import com.gt.scr.movie.functions.MovieStreamAccess;
 import com.gt.scr.movie.functions.RetrieveMovieFromDatabase;
 import com.gt.scr.movie.resource.domain.ByteStreamUploadResponseDTO;
 import com.gt.scr.movie.resource.domain.MovieCreateRequestDTO;
@@ -15,6 +16,8 @@ import com.gt.scr.movie.functions.AdminMovieCreate;
 import com.gt.scr.movie.functions.DeleteEvents;
 import com.gt.scr.movie.functions.MovieCreate;
 import com.gt.scr.movie.functions.RetrieveEventsForUser;
+import com.gt.scr.movie.resource.domain.MovieStreamRequestDTO;
+import com.gt.scr.movie.resource.domain.MovieStreamResponseDTO;
 import com.gt.scr.movie.resource.domain.MoviesDTO;
 import com.gt.scr.movie.service.domain.Movie;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -168,6 +171,13 @@ public class ScenarioExecutor {
     public ScenarioExecutor thenRetrieveMovieUsingApi() {
         this.responseSpec = new MovieRead().apply(webTestClient, NORMAL_USER_TOKEN);
         this.responses.put(MoviesDTO.class, responseSpec.returnResult(MoviesDTO.class)
+                .getResponseBody().blockFirst());
+        return this;
+    }
+
+    public ScenarioExecutor whenMovieStreamIsAccessed(UUID movieId) {
+        this.responseSpec = new MovieStreamAccess().apply(movieId, webTestClient);
+        this.responses.put(MovieStreamRequestDTO.class, responseSpec.returnResult(MovieStreamResponseDTO.class)
                 .getResponseBody().blockFirst());
         return this;
     }
