@@ -45,15 +45,6 @@ jobs:
     - name: Run test suite
       run: ./gradlew remoteFunctional --info
 
-    - name: Set Success Status
-      run: >
-          gh api --method POST
-          -H "Accept: application/vnd.github.v3+json" /repos/${{github.repository}}/statuses/${{github.sha}}
-          -f state='success' -f description='The build succeeded!' -f context='github-actions'
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-
 #   Enable below only for DEBUG
 
 #    - name: Show container logs

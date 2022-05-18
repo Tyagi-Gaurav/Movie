@@ -36,10 +36,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.MOVIE_SONAR_TOKEN }}
         run: ./gradlew build sonarqube --info
-      - name: Set Success Status
-        run: >
-          gh api --method POST
-          -H "Accept: application/vnd.github.v3+json" /repos/${{github.repository}}/statuses/${{github.sha}}
-          -f state='success' -f description='The build succeeded!' -f context='github-actions'
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
