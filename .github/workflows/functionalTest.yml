@@ -8,9 +8,8 @@ on:
     types: [ opened, synchronize, reopened ]
 
 jobs:
-
   build:
-
+    name: functionalTest
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -45,6 +44,15 @@ jobs:
 
     - name: Run test suite
       run: ./gradlew remoteFunctional --info
+
+    - name: Set Success Status
+      run: >
+          gh api --method POST
+          -H "Accept: application/vnd.github.v3+json" /repos/${{github.repository}}/statuses/${{github.sha}}
+          -f state='success' -f description='The build succeeded!' -f context='github-actions'
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
 
 #   Enable below only for DEBUG
 
