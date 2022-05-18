@@ -19,7 +19,7 @@ ext {
     assertJVersion = '3.22.0'
     mockitoVersion = '4.5.1'
     reactorVersion = '3.4.16'
-    jsonWebTokenVersion = '0.11.2'
+    jsonWebTokenVersion = '0.11.5'
     bouncyCastleVersion = '1.70'
     hibernateValidatorVersion = '6.0.13.Final'
 }
