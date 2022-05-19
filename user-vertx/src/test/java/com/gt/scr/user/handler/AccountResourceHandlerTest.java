@@ -32,7 +32,7 @@ class AccountResourceHandlerTest {
     @Test
     void shouldHandleEncodingError() throws IOException {
         AccountCreateRequestDTO accountCreateRequestDTO = TestUtils.testAccountCreateRequestDTO();
-        when(routingContext.getBodyAsJson().mapTo(AccountCreateRequestDTO.class))
+        when(routingContext.body().asPojo(AccountCreateRequestDTO.class))
                 .thenReturn(accountCreateRequestDTO);
 
         when(dataEncoder.encode(anyString())).thenThrow(new IOException("Error Occurred"));

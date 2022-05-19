@@ -30,7 +30,7 @@ public class AuthenticationHandler implements Handler<RoutingContext> {
 
     @Override
     public void handle(RoutingContext routingContext) {
-        LoginRequestDTO loginRequestDTO = routingContext.getBodyAsJson().mapTo(LoginRequestDTO.class);
+        LoginRequestDTO loginRequestDTO = routingContext.body().asPojo(LoginRequestDTO.class);
         try {
             userServiceV2.findByUsername(loginRequestDTO.userName())
                     .onSuccess(event -> {

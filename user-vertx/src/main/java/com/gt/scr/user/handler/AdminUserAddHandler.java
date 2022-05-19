@@ -30,7 +30,7 @@ public class AdminUserAddHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext routingContext) {
         AccountCreateRequestDTO accountCreateRequestDTO =
-                routingContext.getBodyAsJson().mapTo(AccountCreateRequestDTO.class);
+                routingContext.body().asPojo(AccountCreateRequestDTO.class);
 
         try {
             userService.add(new User(UUID.randomUUID(),

@@ -47,11 +47,11 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         healthcheckApi.get("/status").handler(statusHandler);
 
-        filterRoute.mountSubRouter("/", mainRouter);
-        mainRouter.mountSubRouter("/api/user", userApiRoute);
-        mainRouter.mountSubRouter("/api/user/manage", adminRoute);
-        mainRouter.mountSubRouter("/private/config", privateApi);
-        mainRouter.mountSubRouter("/api", healthcheckApi);
+        filterRoute.route("/*").subRouter(mainRouter);
+        mainRouter.route("/api/user*").subRouter(userApiRoute);
+        mainRouter.route("/api/user/manage/*").subRouter(adminRoute);
+        mainRouter.route("/private/config/*").subRouter(privateApi);
+        mainRouter.route("/api/*").subRouter(healthcheckApi);
 
         httpServer.requestHandler(filterRoute).listen(port, ar -> {
             if (ar.succeeded()) {

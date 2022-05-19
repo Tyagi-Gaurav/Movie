@@ -24,7 +24,7 @@ public class ValidationHandler<T> implements Handler<RoutingContext>  {
     public void handle(RoutingContext event) {
         LOG.debug("Start validation");
         Set<ConstraintViolation<T>> validate =
-                validator.validate(event.getBody().toJsonObject().mapTo(clazz));
+                validator.validate(event.body().asPojo(clazz));
         LOG.debug("Validation Result {}", validate);
 
         if (!validate.isEmpty()) {
