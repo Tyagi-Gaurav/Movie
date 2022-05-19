@@ -37,7 +37,7 @@ class AuthenticationHandlerTest {
     @Test
     void shouldHandleEncodingError() throws IOException {
         LoginRequestDTO loginRequestDTO = TestUtils.testLoginRequest();
-        when(routingContext.getBodyAsJson().mapTo(LoginRequestDTO.class))
+        when(routingContext.body().asPojo(LoginRequestDTO.class))
                 .thenReturn(loginRequestDTO);
         when(userService.findByUsername(loginRequestDTO.userName()))
                 .thenReturn(Future.succeededFuture(JsonObject.mapFrom(TestUtils.testUser())));

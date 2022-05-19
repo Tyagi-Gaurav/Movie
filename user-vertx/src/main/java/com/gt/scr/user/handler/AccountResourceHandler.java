@@ -35,7 +35,7 @@ public class AccountResourceHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext routingContext) {
         AccountCreateRequestDTO accountCreateRequestDTO =
-                routingContext.getBodyAsJson().mapTo(AccountCreateRequestDTO.class);
+                routingContext.body().asPojo(AccountCreateRequestDTO.class);
 
         if (Role.ADMIN.toString().equals(accountCreateRequestDTO.role())) {
             routingContext.response().setStatusCode(403);
