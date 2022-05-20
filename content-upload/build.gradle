@@ -15,7 +15,7 @@ ext {
     slf4jVersion = '2.0.0-alpha7'
     jacksonVersion = '2.13.3'
     jsonWebTokenVersion = '0.11.5'
-    mysqlVersion = '8.0.28'
+    mysqlVersion = '8.0.29'
     c3p0Version = '0.9.5.5'
     liquibaseVersion = '4.10.0'
     guavaVersion = '31.1-jre'
