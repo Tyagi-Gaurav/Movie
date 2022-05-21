@@ -7,8 +7,12 @@ assignees: ''
 
 ---
 
-** What is the problem that we're trying to solve? **
+**What is the problem that we're trying to solve?**
 
-** Are there multiple approaches? **
+**Are there multiple approaches? If so, please document below.**
 
-** Checklist of Tasks to do **
+**Task Checklist**
+
+**How should this be released (Normal, Any Special Instructions) ?**
+
+**Should this be monitored? If so, which metrics do we need?**

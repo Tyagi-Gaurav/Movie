@@ -1,0 +1,47 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.2'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    integration {
+        java.srcDir "$projectDir/src/integration/kotlin"
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+ext {
+    springBootVersion = '2.6.4'
+    springVersion = '5.3.15'
+    slf4jVersion = '2.0.0-alpha7'
+    assertJVersion = '3.22.0'
+    reactorVersion = '3.4.16'
+}
+
+springBoot {
+    mainClass = 'com.gt.scr.download.Application'
+}
+
+dependencies {
+    implementation project(":spring-common")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
+        exclude group: "ch.qos.logback"
+    }
+    implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+    implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
+
+    testImplementation "io.projectreactor:reactor-test:$reactorVersion"
+    testImplementation "org.assertj:assertj-core:${assertJVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-test-autoconfigure:${springBootVersion}"
+    testImplementation "org.springframework:spring-test:${springVersion}"
+}
