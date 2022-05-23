@@ -22,7 +22,7 @@ ext {
     metricsInterceptor = '1.9.0'
     junitVersion = '5.8.2'
     assertJVersion = '3.22.0'
-    h2DbVersion = '2.1.210'
+    h2DbVersion = '2.1.212'
     testContainerVersion = '1.17.1'
     mockitoVersion = '4.5.1'
     reactorVersion = '3.4.18'
