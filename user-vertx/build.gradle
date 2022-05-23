@@ -32,7 +32,7 @@ ext {
     junitVersion = '5.8.2'
     assertJVersion = '3.22.0'
     h2DbVersion = '1.4.200'
-    testContainerVersion = '1.17.1'
+    testContainerVersion = '1.17.2'
     mockitoVersion = '4.5.1'
     reactorVersion = '3.4.12'
     vertxVersion = '4.2.6'
