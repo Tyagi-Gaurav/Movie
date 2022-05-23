@@ -36,3 +36,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+**How should this be released (Normal, Any Special Instructions) ?**
+
+**How can we monitor ensure this does not happen again? (Tests, Alarms, etc)**
