@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    reactorVersion = '3.4.18'
+    slf4jVersion = '2.0.0-alpha7'
+    assertJVersion = '3.22.0'
+}
+
+dependencies {
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
+    implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+    implementation "org.assertj:assertj-core:${assertJVersion}"
+}

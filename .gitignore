@@ -12,4 +12,5 @@ out/
 *.trc
 *.txt
 *.dmp
+*.tsv
 target/
