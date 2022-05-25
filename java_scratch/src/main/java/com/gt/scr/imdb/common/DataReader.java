@@ -1,19 +1,12 @@
 package com.gt.scr.imdb.common;
 
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
-import java.io.RandomAccessFile;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.Map;
 
-public interface DataReader {
-    Supplier<Stream<String>> readAll();
+public abstract class DataReader {
+    public abstract void load(Map<String, List<Integer>> keyMap);
 
-    Mono<String> readNext();
-
-    long currentPos();
-
-    long size();
-
-    RandomAccessFile getFileHandle();
+    public abstract Flux<String> readRowsAtLocation(List<Integer> integers);
 }

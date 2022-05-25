@@ -6,10 +6,11 @@ import reactor.core.publisher.Mono;
 
 import java.util.concurrent.CountDownLatch;
 
-public class GetAllDataClient {
+public class VerificationClient {
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         MovieService movieService = new AppInitializer().getMovieService();
+        System.out.println(movieService.getNumberOfTitles());
         movieService.getMovieBy("tt0000001")
                 .switchIfEmpty(Mono.defer(() -> {
                     countDownLatch.countDown();
@@ -22,6 +23,5 @@ public class GetAllDataClient {
                 });
 
         countDownLatch.await();
-        System.out.println(movieService.getNumberOfTitles());
     }
 }

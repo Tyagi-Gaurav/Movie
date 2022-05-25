@@ -12,7 +12,6 @@ public record AkaRow(String titleId,
                      boolean isOriginalTitle) {
 
     public static AkaRow from(String tsvRow) {
-        //System.out.println(tsvRow);
         try {
             String[] split = tsvRow.split("\t");
             String titleId = split[0];

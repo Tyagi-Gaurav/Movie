@@ -28,11 +28,13 @@ println(gigaSecond2.date)
 
 val one_value = setOf('A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T')
 
-println ("CABBAGE".asSequence()
-    .map {it -> when {
-        one_value.contains(it) -> 1
-        else -> 2
-    }}
+println("CABBAGE".asSequence()
+    .map { it ->
+        when {
+            one_value.contains(it) -> 1
+            else -> 2
+        }
+    }
     .sum())
 
 object ScrabbleScore {
@@ -66,3 +68,75 @@ object ScrabbleScore {
 }
 
 println(ScrabbleScore.scoreWord("CABBAGE"))
+
+class Matrix(private val matrixAsString: String) {
+
+    val internalList = matrixAsString.split("\n")
+        .map {
+            it.split(" ")
+                .filter { !it.equals("") }
+                .map { it.toInt() }
+        }
+
+    fun column(colNr: Int): List<Int> {
+        return internalList.map { it.get(colNr - 1) }
+    }
+
+    fun row(rowNr: Int): List<Int> {
+        return internalList.get(rowNr - 1)
+    }
+}
+
+val matrixAsString1 = """
+            1 2 3
+            4 5 6
+            7 8 9
+            8 7 6
+            """.trimIndent()
+
+val matrixAsString2 = """
+            89 1903   3
+            18    3   1
+             9    4 800
+            """.trimIndent()
+
+println(Matrix(matrixAsString1).column(1))
+println(Matrix(matrixAsString1).row(2))
+
+println(Matrix(matrixAsString2).column(1))
+println(Matrix(matrixAsString2).row(2))
+
+class Squares(val x: Int) {
+    fun sumOfSquares() = 1.rangeTo(x).map { it * it }.sum()
+
+    fun squareOfSum(): Int {
+        var sum = 1.rangeTo(x).sum()
+        return sum * sum
+    }
+
+    fun difference() = squareOfSum() - sumOfSquares()
+}
+
+println(Squares(5).sumOfSquares())
+println(Squares(5).squareOfSum())
+println(Squares(5).difference())
+
+enum class Signal {
+    WINK, DOUBLE_BLINK, CLOSE_YOUR_EYES, JUMP
+}
+
+
+object HandshakeCalculator {
+    fun calculateHandshake(number: Int): List<Signal> {
+        return with (arrayListOf<Signal>()) {
+            if (number and 1 == 1) add(Signal.WINK)
+            if (number and 2 == 2) add(Signal.DOUBLE_BLINK)
+            if (number and 4 == 4) add(Signal.CLOSE_YOUR_EYES)
+            if (number and 8 == 8) add(Signal.JUMP)
+            if (number and 16 == 16) reverse()
+            this
+        }
+    }
+}
+
+println (HandshakeCalculator.calculateHandshake(24))
