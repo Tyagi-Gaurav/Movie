@@ -23,8 +23,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TSVFileReader extends DataReader {
     private final RandomAccessFile randomAccessFile;
+    private final int totalBlockCount;
+    private final boolean blockCountProvided;
 
-    public TSVFileReader(String fileName) {
+    public TSVFileReader(String fileName, int blockCount) {
+        totalBlockCount = blockCount;
+        blockCountProvided = totalBlockCount > 0;
         InputStream resourceAsStream = TSVFileReader.class.getResourceAsStream(fileName);
         final URL resource = TSVFileReader.class.getResource(fileName);
         try {
@@ -44,7 +48,8 @@ public class TSVFileReader extends DataReader {
             final FileChannel channel = randomAccessFile.getChannel();
             final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BLOCK_SIZE);
             final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            while (channel.read(byteBuffer) > 0) {
+            int blockCount = 0;
+            while ((!blockCountProvided || blockCount < totalBlockCount) && channel.read(byteBuffer) > 0) {
                 int i = 0;
                 while (i < byteBuffer.limit()) {
                     int end = getRow(i, byteBuffer, byteArrayOutputStream, position);
@@ -69,6 +74,7 @@ public class TSVFileReader extends DataReader {
                     i = end + 1;
                 }
                 byteBuffer.clear();
+                ++blockCount;
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
