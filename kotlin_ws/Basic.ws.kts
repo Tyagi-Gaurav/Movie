@@ -76,6 +76,10 @@ fun fizzBuzz(i: Int) = when {
     else -> "$i "
 }
 
+for (i in 1 to 3) {
+    println (i)
+}
+
 for (i in 1..15) {
     print (fizzBuzz(i))
 }
