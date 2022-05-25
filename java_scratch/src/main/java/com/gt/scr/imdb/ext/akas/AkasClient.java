@@ -80,7 +80,9 @@ public class AkasClient implements AkasReader {
             tt0000001.forEach(id -> {
                 try {
                     randomAccessFile.seek(id);
-                    System.out.println(randomAccessFile.readLine());
+                    String line = randomAccessFile.readLine();
+                    String utf8 = new String(line.getBytes("ISO-8859-1"), "UTF-8");
+                    System.out.println("Line: " + utf8);
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
