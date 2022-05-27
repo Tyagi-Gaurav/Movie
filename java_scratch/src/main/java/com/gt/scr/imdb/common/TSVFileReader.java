@@ -33,6 +33,7 @@ public class TSVFileReader extends DataReader {
         final URL resource = TSVFileReader.class.getResource(fileName);
         try {
             final File file = new File(resource.toURI().getPath());
+            //Create random access file so it can be used to retrieve rows based on seek and read.
             randomAccessFile = new RandomAccessFile(file, "r");
         } catch (URISyntaxException | FileNotFoundException e) {
             throw new IllegalStateException(e);
@@ -43,16 +44,32 @@ public class TSVFileReader extends DataReader {
     @Override
     public void load(Map<String, List<Integer>> keyMap) {
         try {
-            final int BLOCK_SIZE = 2 * 1024 * 1024;
+            //Defines the size of block to be used for reading at once from file.
+            final int BLOCK_SIZE = 16 * 1024 * 1024;
+
+            /*
+                Position is used to keep track of the field within the row which will be picked up
+                while the row is being scanned. The field becomes the index into the map used for
+                grouping. At present, it always assumes the first column to be that index.
+             */
             final AtomicInteger position = new AtomicInteger();
             final FileChannel channel = randomAccessFile.getChannel();
             final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BLOCK_SIZE);
             final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            /*
+                When blockCount is 0, then read full content of all files. Use blockCount = 1 to read only BLOCK_SIZE
+                worth of data and then quit.
+             */
             int blockCount = 0;
             while ((!blockCountProvided || blockCount < totalBlockCount) && channel.read(byteBuffer) > 0) {
                 int i = 0;
                 while (i < byteBuffer.limit()) {
                     int end = getRow(i, byteBuffer, byteArrayOutputStream, position);
+
+                    /*
+                        Once the row is retrieved, here we extract the first column using the position and then
+                        update the map.
+                     */
                     if (end + 1 < byteBuffer.limit() && byteBuffer.get(end) == 10) {
                         final byte[] rowAsBytes = byteArrayOutputStream.toByteArray();
                         final String title = new String(rowAsBytes, 0, position.get(), StandardCharsets.UTF_8);
@@ -67,12 +84,17 @@ public class TSVFileReader extends DataReader {
                                 return oldValue;
                             }
                         });
+                        /*
+                        Only reset byte array stream when a full row has been loaded. It is used to keep hold of partial
+                        rows read during block reads.
+                         */
                         byteArrayOutputStream.reset();
                     } else {
                         break;
                     }
                     i = end + 1;
                 }
+                //Clear buffer for next round of reading the block.
                 byteBuffer.clear();
                 ++blockCount;
             }
@@ -101,9 +123,9 @@ public class TSVFileReader extends DataReader {
                        AtomicInteger position) {
         int i = start;
         boolean found = false;
-        while (i < bytes.limit() && bytes.get(i) != 10) {
+        while (i < bytes.limit() && bytes.get(i) != 10) { //10 is carriage return '/r'
             byteArrayOutputStream.write(bytes.get(i));
-            if (!found && bytes.get(i) == 9) {
+            if (!found && bytes.get(i) == 9) { //9 is tab character
                 position.set(i - start);
                 found = true;
             }

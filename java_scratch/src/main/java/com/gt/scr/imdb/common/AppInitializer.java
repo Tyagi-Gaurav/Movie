@@ -14,12 +14,13 @@ public class AppInitializer {
     private final MovieServiceImpl movieService;
 
     public AppInitializer() {
-        AkasClient akasClient = new AkasClient(DataSourceFactory.createTSVFactory("/title.akas.tsv", 1));
-        final PrincipalsClient principalsClient = new PrincipalsClient(DataSourceFactory.createTSVFactory("/title.principals.tsv", 1));
-        final PeoplesClient peoplesClient = new PeoplesClient(DataSourceFactory.createTSVFactory("/name.basics.tsv", 1));
-        final CrewClient crewClient = new CrewClient(DataSourceFactory.createTSVFactory("/title.crew.tsv", 1));
-        final RatingsClient ratingsClient = new RatingsClient(DataSourceFactory.createTSVFactory("/title.ratings.tsv", 1));
-        final EpisodesClient episodesClient = new EpisodesClient(DataSourceFactory.createTSVFactory("/title.episode.tsv", 1));
+        final int blockCount = 0;
+        AkasClient akasClient = new AkasClient(DataSourceFactory.createTSVFactory("/title.akas.tsv", blockCount));
+        final PrincipalsClient principalsClient = new PrincipalsClient(DataSourceFactory.createTSVFactory("/title.principals.tsv", blockCount));
+        final PeoplesClient peoplesClient = new PeoplesClient(DataSourceFactory.createTSVFactory("/name.basics.tsv", blockCount));
+        final CrewClient crewClient = new CrewClient(DataSourceFactory.createTSVFactory("/title.crew.tsv", blockCount));
+        final RatingsClient ratingsClient = new RatingsClient(DataSourceFactory.createTSVFactory("/title.ratings.tsv", blockCount));
+        final EpisodesClient episodesClient = new EpisodesClient(DataSourceFactory.createTSVFactory("/title.episode.tsv", blockCount));
         movieService = new MovieServiceImpl(akasClient,
                 principalsClient,
                 peoplesClient,
