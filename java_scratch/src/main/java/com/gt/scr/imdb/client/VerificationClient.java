@@ -11,7 +11,7 @@ public class VerificationClient {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         MovieService movieService = new AppInitializer().getMovieService();
         System.out.println(movieService.getNumberOfTitles());
-        movieService.getMovieBy("tt0000001")
+        movieService.getMovieBy("tt0000003")
                 .switchIfEmpty(Mono.defer(() -> {
                     countDownLatch.countDown();
                     System.out.println("No Elements found");

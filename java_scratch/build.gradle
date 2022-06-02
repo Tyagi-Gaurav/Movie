@@ -10,10 +10,17 @@ ext {
     reactorVersion = '3.4.18'
     slf4jVersion = '2.0.0-alpha7'
     assertJVersion = '3.22.0'
+    junitVersion = '5.8.2'
+    junitPlatformVersion = '1.8.2'
 }
 
 dependencies {
     implementation "io.projectreactor:reactor-core:$reactorVersion"
     implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
     implementation "org.assertj:assertj-core:${assertJVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation "org.junit.platform:junit-platform-commons:${junitPlatformVersion}"
+    testImplementation "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
+    testImplementation "org.junit.platform:junit-platform-suite-api:${junitPlatformVersion}"
 }
