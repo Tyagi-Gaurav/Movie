@@ -11,10 +11,6 @@ public class PeoplesClient implements PeoplesReader {
 
     public PeoplesClient(DataReader dataReader) {
         this.dataReader = dataReader;
-        final long startTime = System.currentTimeMillis();
-        System.out.println("Started loading Peoples data");
-        final long endTime = System.currentTimeMillis();
-        System.out.println("Finished loading Peoples data in " + (endTime - startTime) / 1000 + " seconds");
     }
 
     @Override

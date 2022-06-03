@@ -11,10 +11,6 @@ public class EpisodesClient implements EpisodeReader {
 
     public EpisodesClient(DataReader dataReader) {
         this.dataReader = dataReader;
-        final long startTime = System.currentTimeMillis();
-        System.out.println("Started loading Crew data");
-        final long endTime = System.currentTimeMillis();
-        System.out.println("Finished loading Crew data in " + (endTime - startTime) / 1000 + " seconds");
     }
 
     @Override

@@ -10,10 +10,6 @@ public class AkasClient implements AkasReader {
 
     public AkasClient(DataReader dataReader) {
         this.dataReader = dataReader;
-        final long startTime = System.currentTimeMillis();
-        System.out.println("Started loading Akas data");
-        final long endTime = System.currentTimeMillis();
-        System.out.println("Finished loading Akas data in " + (endTime - startTime) / 1000 + " seconds");
     }
 
     @Override

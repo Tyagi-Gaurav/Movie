@@ -12,13 +12,15 @@ import java.util.TreeSet;
 public class BoundedPriorityMap<K, V> extends AbstractMap<K, V>
         implements java.io.Serializable {
     private static final int MAX_SIZE = 20;
-    private final Map<K, V> objects;
+    private final Map<K, V> indexMap;
+    private final Map<K, Long> lastAccessTimeMap;
     private final TreeSet<WrappedType<K>> uniqueObjects;
     private final int size;
     private Entry<K, V> lastEviction;
 
     public BoundedPriorityMap(int size) {
         this.size = Math.min(size, MAX_SIZE);
+        this.lastAccessTimeMap = new HashMap<>();
 
         //Least Recently used is the one whose access time is much further in the future.
         final Comparator<WrappedType<K>> wrappedTypeComparator = (o1, o2) -> {
@@ -31,7 +33,7 @@ public class BoundedPriorityMap<K, V> extends AbstractMap<K, V>
 
             return 0;
         };
-        objects = new HashMap<>();
+        indexMap = new HashMap<>();
         uniqueObjects = new TreeSet<>(wrappedTypeComparator);
     }
 
@@ -42,16 +44,25 @@ public class BoundedPriorityMap<K, V> extends AbstractMap<K, V>
      */
     public boolean putWithEviction(K k, V v) {
         boolean isEvicted = false;
-        final WrappedType<K> wrappedKey = new WrappedType<>(k);
-        if (!uniqueObjects.contains(wrappedKey) && uniqueObjects.size() == size) {
-            //Evict LRU element. - Use pollFirst()
-            final WrappedType<K> lastEvictedKey = uniqueObjects.pollFirst();
-            lastEviction = toEntry(lastEvictedKey.getWrappedKey(), objects.remove(lastEvictedKey.getWrappedKey()));
-            isEvicted = true;
+        final WrappedType<K> wrappedKey = new WrappedType<>(k, Optional.ofNullable(lastAccessTimeMap.get(k)).orElseGet(System::nanoTime));
+
+        if (!uniqueObjects.contains(wrappedKey)) {
+            if (uniqueObjects.size() == size) {
+                //Evict LRU element. - Use pollFirst()
+                final WrappedType<K> lastEvictedKey = uniqueObjects.pollFirst();
+                lastEviction = toEntry(lastEvictedKey.getWrappedKey(), indexMap.remove(lastEvictedKey.getWrappedKey()));
+                lastAccessTimeMap.remove(lastEvictedKey.getWrappedKey());
+                isEvicted = true;
+            }
+        } else {
+            uniqueObjects.remove(wrappedKey);
+            wrappedKey.updateAccessTime();
         }
 
-        objects.put(k, v);
         uniqueObjects.add(wrappedKey);
+        lastAccessTimeMap.put(k, wrappedKey.getLastAccessTime());
+        indexMap.put(k, v);
+
         return isEvicted;
     }
 
@@ -66,20 +77,24 @@ public class BoundedPriorityMap<K, V> extends AbstractMap<K, V>
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return objects.entrySet();
+        return indexMap.entrySet();
     }
 
     private static class WrappedType<K> {
         private final K key;
-        private final long lastAccessTime;
+        private long lastAccessTime;
 
-        public WrappedType(K key) {
+        public WrappedType(K key, long lastAccessTime) {
             this.key = key;
-            lastAccessTime = System.nanoTime();
+            this.lastAccessTime = lastAccessTime;
         }
 
         public K getWrappedKey() {
             return key;
+        }
+
+        public void updateAccessTime() {
+            this.lastAccessTime = System.nanoTime();
         }
 
         public long getLastAccessTime() {

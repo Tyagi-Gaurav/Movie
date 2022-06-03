@@ -11,10 +11,6 @@ public class PrincipalsClient implements PrincipalsReader {
 
     public PrincipalsClient(DataReader dataReader) {
         this.dataReader = dataReader;
-        final long startTime = System.currentTimeMillis();
-        System.out.println("Started loading Principals data");
-        final long endTime = System.currentTimeMillis();
-        System.out.println("Finished loading Principals data in " + (endTime - startTime) / 1000 + " seconds");
     }
 
     @Override

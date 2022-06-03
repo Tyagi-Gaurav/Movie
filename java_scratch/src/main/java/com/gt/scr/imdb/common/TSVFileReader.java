@@ -43,12 +43,13 @@ public class TSVFileReader extends DataReader {
         } catch (URISyntaxException | IOException e) {
             throw new IllegalStateException(e);
         }
-        System.out.println(Runtime.getRuntime().freeMemory() / 1000);
         assertThat(resourceAsStream).describedAs("Could not find file " + fileName).isNotNull();
 
+        final long startTime = System.currentTimeMillis();
+        System.out.println("Started loading data");
         try {
             //Defines the size of block to be used for reading at once from file.
-            final int BLOCK_SIZE = 4 * 1024;
+            final int BLOCK_SIZE = 4 * 1024 * 1024;
 
             /*
                 Position is used to keep track of the field within the row which will be picked up
@@ -59,7 +60,6 @@ public class TSVFileReader extends DataReader {
             FileChannel channel = randomAccessFile.getChannel();
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BLOCK_SIZE);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            Map<String, List<Long>> indexMap = new HashMap<>(512);
             final BoundedPriorityMap<String, List<Integer>> objects = new BoundedPriorityMap<>(20);
             /*
                 When totalBlockCount is 0, then read full content of all files. Use totalBlockCount = 1 to read only BLOCK_SIZE
@@ -89,7 +89,11 @@ public class TSVFileReader extends DataReader {
 
                         if (elementEvicted) {
                             final Map.Entry<String, List<Integer>> lastEvictedElement = objects.getLastEvictedElement();
-                            writeToIndexFile(lastEvictedElement);
+                            if (lastEvictedElement.getValue() != null && !lastEvictedElement.getValue().isEmpty()) {
+                                writeToIndexFile(lastEvictedElement);
+                            } else {
+                                System.out.println("Eviction: " + lastEvictedElement);
+                            }
                         }
 
                         /*
@@ -113,6 +117,9 @@ public class TSVFileReader extends DataReader {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Finished loading data in " + (endTime - startTime) / 1000 + " seconds");
     }
 
     private void writeToIndexFile(Map.Entry<String, List<Integer>> entry) {
@@ -152,10 +159,24 @@ public class TSVFileReader extends DataReader {
                        AtomicInteger position) {
         int i = start;
         boolean found = false;
+        int oldSize = byteArrayOutputStream.size();
+        if (oldSize > 0) {
+            //In this case, it means that there is some residual bytes from previous iteration.
+            //go through the stream and find if
+            final byte[] previousArray = byteArrayOutputStream.toByteArray();
+            for (int j = 0; j < previousArray.length; j++) {
+                if (previousArray[j] == 9) {
+                    found = true;
+                    position.set(j);
+                    break;
+                }
+            }
+        }
+
         while (i < bytes.limit() && bytes.get(i) != 10) { //10 is carriage return '/r'
             byteArrayOutputStream.write(bytes.get(i));
             if (!found && bytes.get(i) == 9) { //9 is tab character
-                position.set(i - start);
+                position.set(oldSize + i - start);
                 found = true;
             }
             ++i;
