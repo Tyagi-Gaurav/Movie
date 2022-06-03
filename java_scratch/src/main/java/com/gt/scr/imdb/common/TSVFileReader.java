@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class TSVFileReader extends DataReader {
     private RandomAccessFile randomAccessFile;
@@ -37,7 +38,7 @@ public class TSVFileReader extends DataReader {
             indexFileObject = File.createTempFile(fileName, ".index");
             indexFile = new RandomAccessFile(indexFileObject, "rw");
             originalFile = new File(resource.toURI().getPath());
-            System.out.println("Index file path: " + indexFileObject.getAbsolutePath());
+            System.out.println("Started index creation at path: " + indexFileObject.getAbsolutePath());
             //Create random access file so it can be used to retrieve rows based on seek and read.
             randomAccessFile = new RandomAccessFile(originalFile, "r");
         } catch (URISyntaxException | IOException e) {
@@ -46,7 +47,6 @@ public class TSVFileReader extends DataReader {
         assertThat(resourceAsStream).describedAs("Could not find file " + fileName).isNotNull();
 
         final long startTime = System.currentTimeMillis();
-        System.out.println("Started loading data");
         try {
             //Defines the size of block to be used for reading at once from file.
             final int BLOCK_SIZE = 4 * 1024 * 1024;
@@ -92,7 +92,7 @@ public class TSVFileReader extends DataReader {
                             if (lastEvictedElement.getValue() != null && !lastEvictedElement.getValue().isEmpty()) {
                                 writeToIndexFile(lastEvictedElement);
                             } else {
-                                System.out.println("Eviction: " + lastEvictedElement);
+                                fail("This condition should not occur. Last evicted element is null");
                             }
                         }
 
@@ -119,7 +119,7 @@ public class TSVFileReader extends DataReader {
         }
 
         final long endTime = System.currentTimeMillis();
-        System.out.println("Finished loading data in " + (endTime - startTime) / 1000 + " seconds");
+        System.out.println("Finished creating index in " + (endTime - startTime) / 1000 + " seconds");
     }
 
     private void writeToIndexFile(Map.Entry<String, List<Integer>> entry) {
