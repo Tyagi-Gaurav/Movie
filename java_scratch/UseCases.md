@@ -44,8 +44,8 @@ Job
 Characters (Array)
 
 #Tasks
-* Create separate interface for each of the above files.
-  * Use Json format for data interchange for now.
+[x] Create separate interface for each of the above files. 
+* Use Json format for data interchange for now.
 * Get total number of titles
 * For a given movie, get all the data - name, characters,
 * For a given episode, get all the data - name, characters, seasons, etc. 

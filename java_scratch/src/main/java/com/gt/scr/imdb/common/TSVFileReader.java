@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 public class TSVFileReader extends DataReader {
+    private static final String INDEX_KEY_SPLITTER = "_";
     private RandomAccessFile randomAccessFile;
     private RandomAccessFile indexFile;
     private final Map<String, Long> keyMap;
@@ -111,6 +112,8 @@ public class TSVFileReader extends DataReader {
                 ++tempBlockCount;
             }
 
+            byteArrayOutputStream.close();
+            channel.close();
             objects.entrySet().forEach(this::writeToIndexFile);
             indexFile = new RandomAccessFile(indexFileObject, "rw"); //Repoen file
             randomAccessFile = new RandomAccessFile(originalFile, "rw"); //Repoen file
@@ -124,9 +127,9 @@ public class TSVFileReader extends DataReader {
 
     private void writeToIndexFile(Map.Entry<String, List<Integer>> entry) {
         try {
-            String s = entry.getKey() + "\t" + entry.getValue().stream()
+            String s = entry.getKey() + INDEX_KEY_SPLITTER + entry.getValue().stream()
                     .map(Object::toString)
-                    .collect(Collectors.joining(",")) + "\n";
+                    .collect(Collectors.joining(","));
 
             keyMap.put(entry.getKey(), indexFile.getFilePointer());
             indexFile.write(s.getBytes(StandardCharsets.UTF_8));
@@ -140,7 +143,7 @@ public class TSVFileReader extends DataReader {
         try {
             indexFile.seek(keyMap.get(titleId));
             final String allFileLocations = indexFile.readLine();
-            final String[] split = allFileLocations.split("\t");
+            final String[] split = allFileLocations.split(INDEX_KEY_SPLITTER);
             final String[] locations = split[1].split(",");
 
             for (String location : locations) {
