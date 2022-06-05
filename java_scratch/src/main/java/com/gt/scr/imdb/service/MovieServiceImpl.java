@@ -35,11 +35,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Mono<ContentData> getMovieBy(String contentId) {
         return akasReader.getTitleById(contentId)
-                .map(aka -> new ContentData(aka.titleId(), aka.title()));
-    }
-
-    @Override
-    public long getNumberOfTitles() {
-        return akasReader.getTotalNumberOfTitles();
+                .map(aka -> new ContentData(aka.titleId(), ContentData.SubContent.from(aka.subAkas())));
     }
 }

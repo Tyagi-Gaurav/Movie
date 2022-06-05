@@ -10,7 +10,6 @@ public class VerificationClient {
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         MovieService movieService = new AppInitializer().getMovieService();
-        System.out.println(movieService.getNumberOfTitles());
         movieService.getMovieBy("tt0000003")
                 .switchIfEmpty(Mono.defer(() -> {
                     countDownLatch.countDown();

@@ -20,9 +20,4 @@ public class AkasClient implements AkasReader {
                 .collectList()
                 .map(list -> new Aka(titleId, list));
     }
-
-    @Override
-    public long getTotalNumberOfTitles() {
-        return 0;
-    }
 }

@@ -12,9 +12,12 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,11 +27,14 @@ import static org.assertj.core.api.Assertions.fail;
 
 public class TSVFileReader extends DataReader {
     private static final String INDEX_KEY_SPLITTER = "_";
+    private final Set<String> interestKeys;
     private RandomAccessFile randomAccessFile;
     private RandomAccessFile indexFile;
     private final Map<String, Long> keyMap;
 
-    public TSVFileReader(String fileName, int totalBlockCount) {
+    public TSVFileReader(String fileName, int totalBlockCount,
+                         Set<String> interestKeys) {
+        this.interestKeys = interestKeys;
         boolean blockCountProvided = totalBlockCount > 0;
         keyMap = new HashMap<>();
         InputStream resourceAsStream = TSVFileReader.class.getResourceAsStream(fileName);
@@ -127,12 +133,14 @@ public class TSVFileReader extends DataReader {
 
     private void writeToIndexFile(Map.Entry<String, List<Integer>> entry) {
         try {
-            String s = entry.getKey() + INDEX_KEY_SPLITTER + entry.getValue().stream()
-                    .map(Object::toString)
-                    .collect(Collectors.joining(","));
+            if (interestKeys.contains(entry.getKey())) {
+                String s = entry.getKey() + INDEX_KEY_SPLITTER + entry.getValue().stream()
+                        .map(Object::toString)
+                        .collect(Collectors.joining(","));
 
-            keyMap.put(entry.getKey(), indexFile.getFilePointer());
-            indexFile.write(s.getBytes(StandardCharsets.UTF_8));
+                keyMap.put(entry.getKey(), indexFile.getFilePointer());
+                indexFile.write(s.getBytes(StandardCharsets.UTF_8));
+            }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -141,15 +149,17 @@ public class TSVFileReader extends DataReader {
     @Override
     public Flux<String> fetchRowUsingIndexKey(String titleId) {
         try {
-            indexFile.seek(keyMap.get(titleId));
-            final String allFileLocations = indexFile.readLine();
-            final String[] split = allFileLocations.split(INDEX_KEY_SPLITTER);
-            final String[] locations = split[1].split(",");
+            if (keyMap.containsKey(titleId)) {
+                indexFile.seek(keyMap.get(titleId));
+                final String allFileLocations = indexFile.readLine();
+                final String[] split = allFileLocations.split(INDEX_KEY_SPLITTER);
+                final String[] locations = split[1].split(",");
 
-            for (String location : locations) {
-                randomAccessFile.seek(Long.parseLong(location));
-                String line = randomAccessFile.readLine();
-                System.out.println(new String(line.getBytes("ISO-8859-1"), "UTF-8"));
+                return Flux.fromStream(Arrays.stream(locations)
+                        .map(this::retrieveRowFromOriginalFile)
+                        .filter(Objects::nonNull));
+            } else {
+                System.out.println("Key not found: " + titleId);
             }
             return Flux.empty();
         } catch (IOException e) {
@@ -186,6 +196,16 @@ public class TSVFileReader extends DataReader {
         }
 
         return i;
+    }
+
+    private String retrieveRowFromOriginalFile(String location) {
+        try {
+            randomAccessFile.seek(Long.parseLong(location));
+            return randomAccessFile.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static record DataSet<E>(String indexKey, List<E> data) {

@@ -5,6 +5,4 @@ import reactor.core.publisher.Mono;
 
 public interface MovieService {
     Mono<ContentData> getMovieBy(String contentId);
-
-    long getNumberOfTitles();
 }

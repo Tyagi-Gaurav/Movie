@@ -5,6 +5,4 @@ import reactor.core.publisher.Mono;
 
 public interface AkasReader {
     Mono<Aka> getTitleById(String titleId);
-
-    long getTotalNumberOfTitles();
 }
