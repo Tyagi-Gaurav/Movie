@@ -7,13 +7,6 @@ import java.util.List;
 public record Aka(String titleId,
                   List<SubAkas> subAkas) {
 
-    public String title() {
-        return subAkas().stream().filter(SubAkas::isOriginalTitle)
-                .findFirst()
-                .map(SubAkas::title)
-                .orElseThrow(() -> new IllegalStateException("No Original Title found."));
-    }
-
     public record SubAkas(int ordering,
                           String title,
                           String region,

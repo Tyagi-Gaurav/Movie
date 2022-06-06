@@ -1,8 +1,7 @@
 package com.gt.scr.imdb.ext.principals;
 
 import com.gt.scr.imdb.common.DataReader;
-import com.gt.scr.imdb.ext.akas.AkaRow;
-import com.gt.scr.imdb.ext.akas.domain.Aka;
+import com.gt.scr.imdb.ext.principals.domain.Principal;
 import reactor.core.publisher.Mono;
 
 public class PrincipalsClient implements PrincipalsReader {
@@ -14,11 +13,11 @@ public class PrincipalsClient implements PrincipalsReader {
     }
 
     @Override
-    public Mono<Aka> getTitleById(String titleId) {
+    public Mono<Principal> getTitleById(String titleId) {
         return dataReader.fetchRowUsingIndexKey(titleId)
-                .map(AkaRow::from)
-                .map(Aka.SubAkas::from)
+                .map(PrincipalRow::from)
+                .map(Principal.SubPrincipals::from)
                 .collectList()
-                .map(list -> new Aka(titleId, list));
+                .map(list -> new Principal(titleId, list));
     }
 }

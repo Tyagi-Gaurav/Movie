@@ -1,8 +1,8 @@
 package com.gt.scr.imdb.ext.principals;
 
-import com.gt.scr.imdb.ext.akas.domain.Aka;
+import com.gt.scr.imdb.ext.principals.domain.Principal;
 import reactor.core.publisher.Mono;
 
 public interface PrincipalsReader {
-    Mono<Aka> getTitleById(String titleId);
+    Mono<Principal> getTitleById(String titleId);
 }
