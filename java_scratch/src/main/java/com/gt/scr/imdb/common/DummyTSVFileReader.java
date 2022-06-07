@@ -19,27 +19,30 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TSVFileReader extends DataReader {
+public class DummyTSVFileReader extends DataReader {
     private static final String INDEX_KEY_SPLITTER = "\t";
     private static final String INDEX_LINE_SPLITTER = "\n";
     private final Set<String> interestKeys;
     private final RandomAccessFile randomAccessFile;
+    private final RandomAccessFile randomAccessFile2;
     private RandomAccessFile indexFile;
+    private RandomAccessFile indexFile2;
     private final Map<String, Long> keyMap;
 
-    public TSVFileReader(String fileName, int totalBlockCount,
-                         Set<String> interestKeys) {
+    public DummyTSVFileReader(String fileName, int totalBlockCount,
+                              Set<String> interestKeys) {
         super(totalBlockCount);
         this.interestKeys = interestKeys;
         boolean blockCountProvided = totalBlockCount > 0;
         keyMap = new HashMap<>();
-        InputStream resourceAsStream = TSVFileReader.class.getResourceAsStream(fileName);
-        final URL resource = TSVFileReader.class.getResource(fileName);
+        InputStream resourceAsStream = DummyTSVFileReader.class.getResourceAsStream(fileName);
+        final URL resource = DummyTSVFileReader.class.getResource(fileName);
         File originalFile;
         File indexFileObject;
         try {
             indexFileObject = File.createTempFile(fileName, ".index");
             indexFile = new RandomAccessFile(indexFileObject, "rw");
+            indexFile2 = new RandomAccessFile(indexFileObject, "rw");
             originalFile = new File(resource.toURI().getPath());
             System.out.println("Started index creation at path: " + indexFileObject.getAbsolutePath());
             //Create random access file so it can be used to retrieve rows based on seek and read.
@@ -51,6 +54,7 @@ public class TSVFileReader extends DataReader {
         final long startTime = System.currentTimeMillis();
         try {
             //Defines the size of block to be used for reading at once from file.
+            randomAccessFile2 = new RandomAccessFile(originalFile, "rw");
             doIt(originalFile, blockCountProvided, this::writeToIndexFile);
             indexFile = new RandomAccessFile(indexFileObject, "rw"); //Repoen file
             randomAccessFile = new RandomAccessFile(originalFile, "rw");
@@ -71,6 +75,7 @@ public class TSVFileReader extends DataReader {
 
                 keyMap.put(entry.getKey(), indexFile.getFilePointer());
                 indexFile.write(s.getBytes(StandardCharsets.UTF_8));
+                fetchRowUsingIndexKey(entry.getKey()).subscribe();
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -81,17 +86,14 @@ public class TSVFileReader extends DataReader {
     public Flux<String> fetchRowUsingIndexKey(String indexKey) {
         try {
             if (keyMap.containsKey(indexKey)) {
-                if (indexKey.equals("nm0721526")) {
-                    System.out.println("Found");
-                }
-                indexFile.seek(keyMap.get(indexKey));
-                final String allFileLocations = indexFile.readLine();
+                indexFile2.seek(keyMap.get(indexKey));
+                final String allFileLocations = indexFile2.readLine();
                 final String[] split = allFileLocations.split(INDEX_KEY_SPLITTER);
                 final String[] locations = split[1].split(",");
 
                 return Flux.fromStream(Arrays.stream(locations)
                         .map(this::retrieveRowFromOriginalFile)
-                                .peek(s -> System.out.println("Read: " + s + " for key: " + indexKey))
+                        .peek(s -> System.out.println("Read: " + s + " for key: " + indexKey))
                         .filter(Objects::nonNull));
             } else {
                 System.out.println("Key not found: " + indexKey);
@@ -104,11 +106,18 @@ public class TSVFileReader extends DataReader {
 
     private String retrieveRowFromOriginalFile(String location) {
         try {
-            randomAccessFile.seek(Long.parseLong(location));
-            return randomAccessFile.readLine();
+            randomAccessFile2.seek(Long.parseLong(location));
+            final String s = randomAccessFile2.readLine();
+            return s;
         } catch (IOException e) {
+            System.err.println("Error occurred: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void main(String[] args) {
+        Set<String> keys = Set.of("tt0000003", "tt0000001", "nm0721526", "nm1770680", "nm1335271", "nm5442200");
+        new DummyTSVFileReader("/name.basics.tsv", 0, keys);
     }
 }

@@ -17,10 +17,11 @@ public class AppInitializer {
 
     public AppInitializer() {
         final int blockCount = 1;
-        Set<String> keys = Set.of("tt0000003", "tt0000001");
+        final int peoplesBlockCount = 0;
+        Set<String> keys = Set.of("tt0000003", "tt0000001", "nm0721526", "nm1770680", "nm1335271", "nm5442200");
         AkasClient akasClient = new AkasClient(DataSourceFactory.createTSVFactory("/title.akas.tsv", blockCount, keys));
         final PrincipalsClient principalsClient = new PrincipalsClient(DataSourceFactory.createTSVFactory("/title.principals.tsv", blockCount, keys));
-        final PeoplesClient peoplesClient = new PeoplesClient(DataSourceFactory.createTSVFactory("/name.basics.tsv", blockCount, keys));
+        final PeoplesClient peoplesClient = new PeoplesClient(DataSourceFactory.createTSVFactory("/name.basics.tsv", peoplesBlockCount, keys));
         final CrewClient crewClient = new CrewClient(DataSourceFactory.createTSVFactory("/title.crew.tsv", blockCount, keys));
         final RatingsClient ratingsClient = new RatingsClient(DataSourceFactory.createTSVFactory("/title.ratings.tsv", blockCount, keys));
         final EpisodesClient episodesClient = new EpisodesClient(DataSourceFactory.createTSVFactory("/title.episode.tsv", blockCount, keys));

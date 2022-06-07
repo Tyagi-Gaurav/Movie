@@ -1,10 +1,13 @@
 package com.gt.scr.imdb.ext.people;
 
-import com.gt.scr.imdb.ext.akas.domain.Aka;
+import com.gt.scr.imdb.ext.people.domain.Person;
+import com.gt.scr.imdb.ext.people.domain.Persons;
 import reactor.core.publisher.Mono;
 
-public interface PeoplesReader {
-    Mono<Aka> getTitleById(String titleId);
+import java.util.List;
 
-    long getTotalNumberOfTitles();
+public interface PeoplesReader {
+    Mono<Person> getPersonBy(String personId);
+
+    Mono<Persons> getPersonBy(List<String> personId);
 }

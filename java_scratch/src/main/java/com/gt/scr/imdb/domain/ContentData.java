@@ -1,9 +1,11 @@
 package com.gt.scr.imdb.domain;
 
 import com.gt.scr.imdb.ext.akas.domain.Aka;
+import com.gt.scr.imdb.ext.people.domain.Persons;
 import com.gt.scr.imdb.ext.principals.domain.Principal;
 
 import java.util.List;
+import java.util.Map;
 
 public record ContentData(String contentId,
                           List<SubContent> subContents,
@@ -34,13 +36,28 @@ public record ContentData(String contentId,
     public record Person(String name,
                          String category,
                          String job,
-                         String characters) {
-        public static List<Person> from(List<Principal.SubPrincipals> subPrincipals) {
-            return subPrincipals.stream()
-                    .map(subPrincipal -> new Person(subPrincipal.peopleId(),
-                            subPrincipal.category(),
-                            subPrincipal.job(),
-                            subPrincipal.characters()))
+                         String characters,
+                         String birthYear,
+                         String deathYear,
+                         String primaryName,
+                         String primaryProfession,
+                         String knownForTitles) {
+        public static List<Person> from(List<Principal.SubPrincipals> principals,
+                                        Persons subPrincipals) {
+            final Map<String, com.gt.scr.imdb.ext.people.domain.Person> stringPersonMap = subPrincipals.personList();
+            return principals.stream()
+                    .map(subPrincipal -> {
+                        final com.gt.scr.imdb.ext.people.domain.Person person = stringPersonMap.get(subPrincipal.peopleId());
+                        return new Person(subPrincipal.peopleId(),
+                                subPrincipal.category(),
+                                subPrincipal.job(),
+                                subPrincipal.characters(),
+                                person.birthYear(),
+                                person.deathYear(),
+                                person.primaryName(),
+                                person.primaryProfession(),
+                                person.knownForTitles());
+                    })
                     .toList();
         }
     }
