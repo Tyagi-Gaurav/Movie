@@ -4,6 +4,7 @@ import com.gt.scr.imdb.ext.akas.domain.Aka;
 import com.gt.scr.imdb.ext.people.domain.Persons;
 import com.gt.scr.imdb.ext.principals.domain.Principal;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,24 +13,37 @@ public record ContentData(String contentId,
                           List<Person> peoples) {
 
     public record SubContent(int ordering,
-                          String title,
-                          String region,
-                          String language,
-                          String types,
-                          String attributes,
-                          boolean isOriginalTitle) {
+                             String title,
+                             String region,
+                             String language,
+                             String types,
+                             String attributes,
+                             boolean isOriginalTitle) {
 
         public static List<SubContent> from(List<Aka.SubAkas> subAkas) {
             return subAkas.stream()
                     .map(subAka ->
-                        new SubContent(subAka.ordering(),
-                                subAka.title(),
-                                subAka.region(),
-                                subAka.language(),
-                                subAka.types(),
-                                subAka.attributes(),
-                                subAka.isOriginalTitle()))
+                            new SubContent(subAka.ordering(),
+                                    subAka.title(),
+                                    subAka.region(),
+                                    subAka.language(),
+                                    subAka.types(),
+                                    subAka.attributes(),
+                                    subAka.isOriginalTitle()))
                     .toList();
+        }
+
+        @Override
+        public String toString() {
+            return "SubContent{" +
+                    "ordering=" + ordering +
+                    ", title='" + write(title) + '\'' +
+                    ", region='" + region + '\'' +
+                    ", language='" + language + '\'' +
+                    ", types='" + types + '\'' +
+                    ", attributes='" + attributes + '\'' +
+                    ", isOriginalTitle=" + isOriginalTitle +
+                    '}' + "\n";
         }
     }
 
@@ -59,6 +73,39 @@ public record ContentData(String contentId,
                                 person.knownForTitles());
                     })
                     .toList();
+        }
+
+        @Override
+        public String toString() {
+            return "Person{" +
+                    "name='" + name + '\'' +
+                    ", category='" + category + '\'' +
+                    ", job='" + job + '\'' +
+                    ", characters='" + characters + '\'' +
+                    ", birthYear='" + birthYear + '\'' +
+                    ", deathYear='" + deathYear + '\'' +
+                    ", primaryName='" + write(primaryName) + '\'' +
+                    ", primaryProfession='" + primaryProfession + '\'' +
+                    ", knownForTitles='" + knownForTitles + '\'' +
+                    '}' + "\n";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ContentData{" +
+                "contentId='" + contentId + '\'' + "\n" +
+                ", subContents=" + subContents + "\n" +
+                ", peoples=" + peoples +
+                '}';
+    }
+
+    private static String write(String value) {
+        try {
+            return new String(value.getBytes("ISO-8859-1"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return value;
         }
     }
 }
