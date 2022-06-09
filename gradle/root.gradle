@@ -68,6 +68,12 @@ subprojects {
         }
     }
 
+    project(":java_scratch") {
+        sonarqube {
+            skipProject = true
+        }
+    }
+
     jar {
         manifest {
             attributes('Build-Time-ISO-8601': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"))
