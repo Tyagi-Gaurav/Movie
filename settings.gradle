@@ -7,4 +7,5 @@ include 'spring-common'
 include 'api-gateway'
 include 'user-vertx'
 include 'resilience'
+include 'java_scratch'
 
