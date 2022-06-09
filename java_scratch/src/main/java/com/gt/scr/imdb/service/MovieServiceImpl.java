@@ -12,9 +12,6 @@ import com.gt.scr.imdb.ext.principals.domain.Principal;
 import com.gt.scr.imdb.ext.ratings.RatingsClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-
-import java.util.function.Function;
 
 public class MovieServiceImpl implements MovieService {
 

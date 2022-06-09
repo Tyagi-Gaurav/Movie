@@ -25,9 +25,4 @@ public class RatingsClient implements RatingsReader {
                 .collectList()
                 .map(list -> new Aka(titleId, list));
     }
-
-    @Override
-    public long getTotalNumberOfTitles() {
-        return 0L;
-    }
 }

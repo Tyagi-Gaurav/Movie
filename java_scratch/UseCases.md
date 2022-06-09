@@ -45,7 +45,6 @@ Characters (Array)
 
 #Tasks
 [x] Create separate interface for each of the above files. 
-* Get total number of titles
 * For a given movie, get all the data - name, characters,
 * For a given episode, get all the data - name, characters, seasons, etc. 
 * Get top 10 movies by rating of all time
@@ -55,3 +54,4 @@ Characters (Array)
 * Get all movies common between an actor and director
 * Get all common movies of a given set of actors
 * Use Json format for data interchange for now.
+* Get total number of titles
