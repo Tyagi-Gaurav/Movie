@@ -1,0 +1,4 @@
+
+# Environment setup
+ 
+* Setup GOPATH
