@@ -72,6 +72,12 @@ http://localhost:8080/user/private/config
             <td></td>
         </tr>
         <tr>
+           <td>Healthcheck, Liveness Checks & Raediness Checks</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td>https://github.com/Tyagi-Gaurav/Movie/issues/296</td>
+        </tr>
+        <tr>
             <td>Application should shutdown gracefully</td>
             <td>(x)</td>
             <td>(x)</td>
@@ -89,7 +95,7 @@ http://localhost:8080/user/private/config
                     <li>Disk Space</li>
                     <li>JVM Heap Usage</li>
                     <li>JVM GC Cycles</li>
-                    <li>Circuit breaker Stats</li>
+                    <li>Circuit breaker Stats - Queue Size</li>
                     <li>Error Count by Code</li>
                 <li>Database Call Latency</li>
             </td>
@@ -103,6 +109,13 @@ http://localhost:8080/user/private/config
             <td>(x)</td>
             <td></td>
         </tr>
+        <tr>
+            <td>SLO documented for all services</td>
+            <td>(x)</td>
+            <td>(x)</td>
+            <td>(Can do as part of load test)</td>
+        </tr>
+        
     </tbody>
 </table>
 
