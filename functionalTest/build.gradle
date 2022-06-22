@@ -27,7 +27,7 @@ ext {
     springBootVersion = '2.7.0'
     springBootSecurity = '2.6.8'
     springVersion = '5.3.21'
-    cucumberVersion = '7.3.4'
+    cucumberVersion = '7.4.0'
     junitVersion = '5.8.2'
     junitPlatformVersion = '1.8.2'
     jacksonVersion = '2.12.4'
