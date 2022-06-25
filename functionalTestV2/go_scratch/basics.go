@@ -83,11 +83,11 @@ func split(sum int) (x, y int) { //Naming return values
 func sqrt(x float64) float64 {
 	defer fmt.Println("Calculated Sqrt")
 	z := 1.0
-	println("Expected Answer: ", math.Sqrt(x))
+	//println("Expected Answer: ", math.Sqrt(x))
 	for i := 0; i < 20; i++ {
 		if math.Abs(x-z*z) > 0.0001 {
 			z -= (z*z - x) / (2 * z)
-			println("Guess: ", z)
+			//println("Guess: ", z)
 		}
 	}
 	return z

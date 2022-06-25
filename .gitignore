@@ -14,3 +14,4 @@ out/
 *.dmp
 *.tsv
 target/
+pkg/
