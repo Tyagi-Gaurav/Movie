@@ -12,30 +12,18 @@ import (
 func TestHealthCheck(t *testing.T) {
 	appConfig := config.Configs["AppA"]
 
-	var h = &ext.HealthCheck{}
+	var h = &ext.WebClient{}
 	url := fmt.Sprintf("%v://%v:%d/api/healthcheck", appConfig.Scheme, appConfig.Host, appConfig.Port)
 	log.Println("Calling url", url)
 	resp, err := h.ExecuteGet(url)
-	//resp, err := http.Get(url)
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("Error Occurred: ", err)
+	}
+
+	if resp.StatusCode != 200 {
+		log.Fatalf("Failed. expected: %d, actual: %d", 200, resp.StatusCode)
 	}
 
 	fmt.Println(resp)
-	//Invoke HTTP host:port/api/healthcheck
-	//Get Result - Check Status
-}
-
-func TestIntMinTableDriven(t *testing.T) {
-	var tests = []struct {
-		a, b int
-		want int
-	}{
-		{0, 1, 0},
-	}
-
-	for _, tt := range tests {
-		fmt.Println(tt)
-	}
 }

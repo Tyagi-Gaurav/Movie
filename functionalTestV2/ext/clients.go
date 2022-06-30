@@ -1,15 +1,23 @@
 package ext
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
-type Getter interface {
-	//TODO Add response handler and error handler
-	ExecuteGet(url string) (resp *http.Response, err error)
+type Getter[T any] interface {
+	ExecuteGet(url string) (http.Response, error)
 }
 
-type HealthCheck struct {
+type WebClient struct {
 }
 
-func (h HealthCheck) ExecuteGet(url string) (resp *http.Response, err error) {
-	return nil, nil
+func (h WebClient) ExecuteGet(url string) (*http.Response, error) {
+	resp, err := http.Get(url)
+
+	if err != nil {
+		log.Fatalln("Failure occurred: ", err)
+	}
+
+	return resp, nil
 }
