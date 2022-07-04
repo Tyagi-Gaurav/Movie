@@ -7,6 +7,7 @@ COPY ./ ./
 
 RUN go mod download &&  \
     go get github.com/Movie/functionalTest/config && \
-    go get github.com/Movie/functionalTest/ext
+    go get github.com/Movie/functionalTest/ext && \
+    go get github.com/stretchr/testify/require
 
 CMD ["CGO_ENABLED=0","go", "test"]

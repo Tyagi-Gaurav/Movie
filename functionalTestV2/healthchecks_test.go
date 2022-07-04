@@ -1,11 +1,12 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"testing"
 
 	"github.com/Movie/functionalTest/config"
 	"github.com/Movie/functionalTest/ext"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHealthCheck(t *testing.T) {
@@ -18,12 +19,10 @@ func TestHealthCheck(t *testing.T) {
 		resp, err := h.ExecuteGet(appConfig.HealthCheckUrl())
 
 		if err != nil {
-			log.Fatalln("Error Occurred: ", err)
+			t.Error("Error Occurred: ", err)
 		}
 
-		if resp.StatusCode != 200 {
-			log.Fatalf("Failed. expected: %d, actual: %d", 200, resp.StatusCode)
-		}
+		require.Equal(t, 200, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", 200, resp.StatusCode))
 	}
 }
 
@@ -37,11 +36,9 @@ func TestStatus(t *testing.T) {
 		resp, err := h.ExecuteGet(appConfig.StatusUrl())
 
 		if err != nil {
-			log.Fatalln("Error Occurred: ", err)
+			t.Error("Error Occurred: ", err)
 		}
 
-		if resp.StatusCode != 200 {
-			log.Fatalf("Failed. expected: %d, actual: %d", 200, resp.StatusCode)
-		}
+		require.Equal(t, 200, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", 200, resp.StatusCode))
 	}
 }

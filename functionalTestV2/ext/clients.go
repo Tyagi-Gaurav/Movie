@@ -13,7 +13,7 @@ type WebClient struct {
 }
 
 func (h WebClient) ExecuteGet(url string) (*http.Response, error) {
-	log.Println("URL:", url)
+	//log.Println("URL:", url)
 	resp, err := http.Get(url)
 
 	if err != nil {
