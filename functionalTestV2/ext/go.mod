@@ -1,3 +1,3 @@
-module github.com/Movie/functionalTest/ext
+module github.com/functionalTest/ext
 
 go 1.18

@@ -26,3 +26,22 @@ func TestHealthCheck(t *testing.T) {
 		}
 	}
 }
+
+func TestStatus(t *testing.T) {
+	apps := []string{"movie"}
+
+	for _, app := range apps {
+		appConfig := config.Configs[app]
+
+		var h = &ext.WebClient{}
+		resp, err := h.ExecuteGet(appConfig.StatusUrl())
+
+		if err != nil {
+			log.Fatalln("Error Occurred: ", err)
+		}
+
+		if resp.StatusCode != 200 {
+			log.Fatalf("Failed. expected: %d, actual: %d", 200, resp.StatusCode)
+		}
+	}
+}
