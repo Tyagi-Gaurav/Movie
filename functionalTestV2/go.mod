@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/Movie/functionalTest/config v0.0.0-00010101000000-000000000000
 	github.com/Movie/functionalTest/ext v0.0.0-00010101000000-000000000000
+	github.com/Movie/functionalTest/util v0.0.0-00010101000000-000000000000
 	github.com/ohler55/ojg v1.14.3
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/tour v0.1.0
@@ -19,3 +20,5 @@ require (
 replace github.com/Movie/functionalTest/ext => ./ext
 
 replace github.com/Movie/functionalTest/config => ./config
+
+replace github.com/Movie/functionalTest/util => ./util

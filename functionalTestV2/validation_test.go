@@ -52,7 +52,9 @@ func TestValidationCreateAccount(t *testing.T) {
 		if err != nil {
 			t.Error("Error Occurred: ", err)
 		}
+		expectedStatusCode := 400
 
-		require.Equal(t, 400, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", 200, resp.StatusCode))
+		require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
+			resp.StatusCode))
 	}
 }
