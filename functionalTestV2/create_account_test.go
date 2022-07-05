@@ -31,9 +31,7 @@ func TestUserShouldBeAbleToCreateNewAccount(t *testing.T) {
 
 		resp, err := h.CreateAccount(appConfig.CreateUrl("/account/create"), input)
 
-		if err != nil {
-			panic(err)
-		}
+		util.PanicOnError(err)
 		expectedStatusCode := 204
 
 		require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
@@ -58,9 +56,7 @@ func TestDuplicateUserAccountShouldReturnError(t *testing.T) {
 
 	resp, err := h.CreateAccount(appConfig.CreateUrl("/account/create"), input)
 
-	if err != nil {
-		panic(err)
-	}
+	util.PanicOnError(err)
 	expectedStatusCode := 204
 
 	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
@@ -69,9 +65,7 @@ func TestDuplicateUserAccountShouldReturnError(t *testing.T) {
 	//Creating the account again should fail with 403
 	resp, err = h.CreateAccount(appConfig.CreateUrl("/account/create"), input)
 
-	if err != nil {
-		panic(err)
-	}
+	util.PanicOnError(err)
 	expectedStatusCode = 403
 
 	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
@@ -97,10 +91,8 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 	}
 
 	resp, err := acctResource.CreateAccount(appConfig.CreateUrl("/account/create"), accountCreateRequest)
+	util.PanicOnError(err)
 
-	if err != nil {
-		panic(err)
-	}
 	expectedStatusCode := 204
 	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
 		resp.StatusCode))
@@ -111,10 +103,7 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 	}
 
 	resp, err = loginResource.Login(appConfig.CreateUrl("/login"), loginRequest)
-
-	if err != nil {
-		panic(err)
-	}
+	util.PanicOnError(err)
 
 	defer resp.Body.Close()
 
@@ -124,10 +113,46 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 
 	loginResponse := &ext.TestLoginResponseDTO{}
 	err = json.NewDecoder(resp.Body).Decode(loginResponse)
-
-	if err != nil {
-		panic(err)
-	}
+	util.PanicOnError(err)
 
 	require.True(t, len(loginResponse.Token) > 0, "Expected login response token")
+}
+
+func TestUserShouldNotBeAbleToLoginWithoutValidUserNamePassword(t *testing.T) {
+	appConfig := config.Configs["user"]
+	acctResource := &ext.TestAccountCreateResource{}
+	loginResource := &ext.TestLoginResource{}
+	userName := util.RandomString(6)
+	password := util.RandomString(6)
+
+	accountCreateRequest := ext.TestAccountCreateRequestDTO{
+		UserName:    userName,
+		Password:    password,
+		FirstName:   "bcssdf",
+		LastName:    "defdsfdf",
+		DateOfBirth: "19/03/1972",
+		Gender:      "FEMALE",
+		HomeCountry: "AUS",
+		Role:        "USER",
+	}
+
+	resp, err := acctResource.CreateAccount(appConfig.CreateUrl("/account/create"), accountCreateRequest)
+	util.PanicOnError(err)
+	expectedStatusCode := 204
+	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
+		resp.StatusCode))
+
+	loginRequest := ext.TestLoginRequestDTO{
+		UserName: userName,
+		Password: "randomPassword",
+	}
+
+	resp, err = loginResource.Login(appConfig.CreateUrl("/login"), loginRequest)
+	util.PanicOnError(err)
+
+	defer resp.Body.Close()
+
+	expectedStatusCode = 401
+	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
+		resp.StatusCode))
 }

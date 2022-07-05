@@ -6,6 +6,7 @@ import (
 
 	"github.com/Movie/functionalTest/config"
 	"github.com/Movie/functionalTest/ext"
+	"github.com/Movie/functionalTest/util"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,10 +18,7 @@ func TestHealthCheck(t *testing.T) {
 
 		var h = &ext.WebClient{}
 		resp, err := h.ExecuteGet(appConfig.HealthCheckUrl())
-
-		if err != nil {
-			t.Error("Error Occurred: ", err)
-		}
+		util.PanicOnError(err)
 
 		require.Equal(t, 200, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", 200, resp.StatusCode))
 	}
@@ -34,10 +32,7 @@ func TestStatus(t *testing.T) {
 
 		var h = &ext.WebClient{}
 		resp, err := h.ExecuteGet(appConfig.StatusUrl())
-
-		if err != nil {
-			t.Error("Error Occurred: ", err)
-		}
+		util.PanicOnError(err)
 
 		require.Equal(t, 200, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", 200, resp.StatusCode))
 	}

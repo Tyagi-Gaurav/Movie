@@ -18,3 +18,9 @@ func RandomString(minSize int) string {
 
 	return result
 }
+
+func PanicOnError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

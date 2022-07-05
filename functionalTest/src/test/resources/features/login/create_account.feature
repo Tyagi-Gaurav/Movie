@@ -1,6 +1,6 @@
+@Migrated
 Feature: Users should be able to create an account
 
-  @Migrated
   Scenario Outline: User should be able to create a new account
     Given a user attempts to create a new account with following details
       | firstName | lastName | userName | role | password | dateOfBirth | gender        | homeCountry |
@@ -11,7 +11,6 @@ Feature: Users should be able to create an account
       | FEMALE      |
       | MALE        |
 
-  @Migrated
   Scenario: User should NOT be able to create a new account when another account with same username exists
     Given a user attempts to create a new account with following details
       | firstName | lastName | userName | role | password | dateOfBirth | gender | homeCountry |
