@@ -1,3 +1,4 @@
+@Migrated
 Feature: Validating inputs
 
   Scenario Outline: Return 400 status code when input does not satisfy constraints
