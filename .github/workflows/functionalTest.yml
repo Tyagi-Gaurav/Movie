@@ -45,10 +45,12 @@ jobs:
     - name: Run test suite
       run: ./gradlew remoteFunctional --info
 
-    - name: Run Go test suite
+    - name: Install Go
       uses: actions/setup-go@v3
       with:
         go-version: '1.18.3' # The Go version to download (if necessary) and use.
+
+    - name: Run Go functional tests
       run: cd functionalTestV2 && go test -v
 
 
