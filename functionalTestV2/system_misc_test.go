@@ -11,7 +11,7 @@ import (
 )
 
 func TestRequestId(t *testing.T) {
-	appConfig := config.Configs["movie"]
+	appConfig := config.Configs["contentUpload"]
 
 	var h = &ext.WebClient{}
 	resp, err := h.ExecuteGet(appConfig.StatusUrl())
@@ -22,7 +22,7 @@ func TestRequestId(t *testing.T) {
 }
 
 func TestMetrics(t *testing.T) {
-	appConfig := config.Configs["movie"]
+	appConfig := config.Configs["contentUpload"]
 
 	var h = &ext.WebClient{}
 	resp, err := h.ExecuteGet(appConfig.MetricsUrl())

@@ -11,7 +11,7 @@ import (
 )
 
 func TestHealthCheck(t *testing.T) {
-	apps := []string{"movie"}
+	apps := []string{"contentUpload"}
 
 	for _, app := range apps {
 		appConfig := config.Configs[app]
@@ -25,7 +25,7 @@ func TestHealthCheck(t *testing.T) {
 }
 
 func TestStatus(t *testing.T) {
-	apps := []string{"movie"}
+	apps := []string{"contentUpload"}
 
 	for _, app := range apps {
 		appConfig := config.Configs[app]

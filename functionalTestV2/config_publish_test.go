@@ -15,7 +15,7 @@ import (
 )
 
 func TestConfigPublish(t *testing.T) {
-	apps := []string{"movie", "user"}
+	apps := []string{"contentUpload", "user"}
 
 	for _, app := range apps {
 		appConfig := config.Configs[app]
