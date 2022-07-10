@@ -19,12 +19,19 @@ type AppConfig struct {
 	MetricsPath  string `yaml:"metricsPath"`
 }
 
-var yamlConfig = &YamlConfig{}
-var Configs map[string]AppConfig
+type Credentials struct {
+	UserName string `yaml:"userName"`
+	Password string `yaml:"password"`
+}
 
 type YamlConfig struct {
-	Apps map[string]AppConfig `yaml:"apps"`
+	Apps             map[string]AppConfig `yaml:"apps"`
+	AdminCredentials Credentials          `yaml:"admin-credentials"`
 }
+
+var yamlConfig = &YamlConfig{}
+var Configs map[string]AppConfig
+var GlobalCredentials Credentials
 
 func init() {
 	data, err := ioutil.ReadFile("config/config.yml")
@@ -32,6 +39,7 @@ func init() {
 	err = yaml.Unmarshal(data, yamlConfig)
 	util.PanicOnError(err)
 	Configs = yamlConfig.Apps
+	GlobalCredentials = yamlConfig.AdminCredentials
 }
 
 func (a AppConfig) HealthCheckUrl() string {
@@ -50,6 +58,8 @@ func (a AppConfig) ConfigPublishUrl() string {
 	return fmt.Sprintf("%v://%v:%d%v%v", a.Scheme, a.Host, a.Port, a.ContextPath, a.ActuatorPath)
 }
 
-func (a AppConfig) CreateUrl(path string) string {
-	return fmt.Sprintf("%v://%v:%d%v%v", a.Scheme, a.Host, a.Port, a.ContextPath, path)
+func (a AppConfig) CreateUrlV2() func(string) string {
+	return func(path string) string {
+		return fmt.Sprintf("%v://%v:%d%v%v", a.Scheme, a.Host, a.Port, a.ContextPath, path)
+	}
 }

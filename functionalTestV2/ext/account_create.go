@@ -19,7 +19,10 @@ type TestAccountCreateRequestDTO struct {
 type TestAccountCreateResource struct {
 }
 
-func (testAccountRes TestAccountCreateResource) CreateAccount(url string, body TestAccountCreateRequestDTO) (*http.Response, error) {
+func (testAccountRes TestAccountCreateResource) CreateAccount(
+	pathResolver func(string) string,
+	body TestAccountCreateRequestDTO) (*http.Response, error) {
+	url := pathResolver("/account/create")
 	u, err := json.Marshal(body)
 
 	if err != nil {

@@ -47,7 +47,7 @@ func TestValidationCreateAccount(t *testing.T) {
 			Role:        test.role,
 		}
 
-		resp, err := h.CreateAccount(appConfig.CreateUrl("/account/create"), input)
+		resp, err := h.CreateAccount(appConfig.CreateUrlV2(), input)
 
 		if err != nil {
 			t.Error("Error Occurred: ", err)

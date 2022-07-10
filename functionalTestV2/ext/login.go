@@ -18,7 +18,9 @@ type TestLoginResponseDTO struct {
 type TestLoginResource struct {
 }
 
-func (testLoginRes TestLoginResource) Login(url string, body TestLoginRequestDTO) (*http.Response, error) {
+func (testLoginRes TestLoginResource) Login(pathResolver func(string) string,
+	body TestLoginRequestDTO) (*http.Response, error) {
+	url := pathResolver("/login")
 	u, err := json.Marshal(body)
 
 	if err != nil {

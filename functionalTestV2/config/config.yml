@@ -17,3 +17,7 @@ apps:
     statusPath: "/status"  
     actuatorPath: "/private/config"
     metricsPath: ""
+
+admin-credentials:
+  userName: admin
+  password: admin123

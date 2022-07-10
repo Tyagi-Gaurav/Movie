@@ -29,7 +29,7 @@ func TestUserShouldBeAbleToCreateNewAccount(t *testing.T) {
 			Role:        "USER",
 		}
 
-		resp, err := h.CreateAccount(appConfig.CreateUrl("/account/create"), input)
+		resp, err := h.CreateAccount(appConfig.CreateUrlV2(), input)
 
 		util.PanicOnError(err)
 		expectedStatusCode := 204
@@ -54,7 +54,7 @@ func TestDuplicateUserAccountShouldReturnError(t *testing.T) {
 		Role:        "USER",
 	}
 
-	resp, err := h.CreateAccount(appConfig.CreateUrl("/account/create"), input)
+	resp, err := h.CreateAccount(appConfig.CreateUrlV2(), input)
 
 	util.PanicOnError(err)
 	expectedStatusCode := 204
@@ -63,7 +63,7 @@ func TestDuplicateUserAccountShouldReturnError(t *testing.T) {
 		resp.StatusCode))
 
 	//Creating the account again should fail with 403
-	resp, err = h.CreateAccount(appConfig.CreateUrl("/account/create"), input)
+	resp, err = h.CreateAccount(appConfig.CreateUrlV2(), input)
 
 	util.PanicOnError(err)
 	expectedStatusCode = 403
@@ -90,7 +90,7 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 		Role:        "USER",
 	}
 
-	resp, err := acctResource.CreateAccount(appConfig.CreateUrl("/account/create"), accountCreateRequest)
+	resp, err := acctResource.CreateAccount(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)
 
 	expectedStatusCode := 204
@@ -102,7 +102,7 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 		Password: password,
 	}
 
-	resp, err = loginResource.Login(appConfig.CreateUrl("/login"), loginRequest)
+	resp, err = loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
 	util.PanicOnError(err)
 
 	defer resp.Body.Close()
@@ -136,7 +136,7 @@ func TestUserShouldNotBeAbleToLoginWithoutValidUserNamePassword(t *testing.T) {
 		Role:        "USER",
 	}
 
-	resp, err := acctResource.CreateAccount(appConfig.CreateUrl("/account/create"), accountCreateRequest)
+	resp, err := acctResource.CreateAccount(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)
 	expectedStatusCode := 204
 	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
@@ -147,7 +147,7 @@ func TestUserShouldNotBeAbleToLoginWithoutValidUserNamePassword(t *testing.T) {
 		Password: "randomPassword",
 	}
 
-	resp, err = loginResource.Login(appConfig.CreateUrl("/login"), loginRequest)
+	resp, err = loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
 	util.PanicOnError(err)
 
 	defer resp.Body.Close()
