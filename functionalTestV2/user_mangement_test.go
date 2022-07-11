@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"testing"
 
 	"github.com/Movie/functionalTest/config"
@@ -17,18 +15,16 @@ func TestAdminUsersShouldBeAbleToCreateOtherUsers(t *testing.T) {
 	//the global admin user logs into the system
 	resp, err := loginResource.LoginWith(t, config.GlobalCredentials.UserName, config.GlobalCredentials.Password, appConfig.CreateUrlV2())
 	util.PanicOnError(err)
-
-	bodyAsByte, _ := ioutil.ReadAll(resp.Body)
-	loginResponse := &ext.TestLoginResponseDTO{}
-	json.Unmarshal(bodyAsByte, loginResponse)
-
-	defer resp.Body.Close()
 	util.ExpectStatus(t, resp, 200)
 
-	userName, password := util.RandomString(6), util.RandomString(6)
+	globalLoginResponse := ext.ToLoginResponseDTO(resp)
+
+	defer resp.Body.Close()
+	//Initialise user management resource with token of global user
+	userMgtResource := &ext.TestUserManagementResource{Token: globalLoginResponse.Token}
 
 	//Create another user with random user name and 'USER' role
-	userMgtResource := &ext.TestUserManagementResource{Token: loginResponse.Token}
+	userName, password := util.RandomString(6), util.RandomString(6)
 	accountCreateRequest := ext.AccountCreateWith(userName, password, "MALE")
 	resp, err = userMgtResource.CreateAccountUsingAdminResource(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)
@@ -45,18 +41,16 @@ func TestAdminUsersShouldBeAbleToCreateOtherAdminUsers(t *testing.T) {
 	//the global admin user logs into the system
 	resp := loginResource.EnsureSuccessLogin(t, config.GlobalCredentials.UserName,
 		config.GlobalCredentials.Password, appConfig.CreateUrlV2())
-
-	bodyAsByte, _ := ioutil.ReadAll(resp.Body)
-	loginResponse := &ext.TestLoginResponseDTO{}
-	json.Unmarshal(bodyAsByte, loginResponse)
-
 	defer resp.Body.Close()
 	util.ExpectStatus(t, resp, 200)
 
-	userName, password := util.RandomString(6), util.RandomString(6)
+	globalLoginResponse := ext.ToLoginResponseDTO(resp)
+
+	//Initialise user management resource with token of global user
+	userMgtResource := &ext.TestUserManagementResource{Token: globalLoginResponse.Token}
 
 	//Create another user with random user name and 'ADMIN' role
-	userMgtResource := &ext.TestUserManagementResource{Token: loginResponse.Token}
+	userName, password := util.RandomString(6), util.RandomString(6)
 	accountCreateRequest := ext.AccountCreateWithRole(userName, password, "ADMIN")
 	resp, err := userMgtResource.CreateAccountUsingAdminResource(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)
@@ -65,12 +59,9 @@ func TestAdminUsersShouldBeAbleToCreateOtherAdminUsers(t *testing.T) {
 	//Login with the new Admin user
 	resp = loginResource.EnsureSuccessLogin(t, userName, password, appConfig.CreateUrlV2())
 
-	bodyAsByte, _ = ioutil.ReadAll(resp.Body)
-	loginResponse = &ext.TestLoginResponseDTO{}
-	err = json.Unmarshal(bodyAsByte, loginResponse)
-	util.PanicOnError(err)
+	loginResponseDto := ext.ToLoginResponseDTO(resp)
 
-	if loginResponse.Token == "" {
+	if loginResponseDto.Token == "" {
 		panic("Expected token back in response")
 	}
 }
@@ -82,18 +73,16 @@ func TestAdminUsersShouldBeAbleToDeleteOtherUsers(t *testing.T) {
 	//the global admin user logs into the system
 	resp, err := loginResource.LoginWith(t, config.GlobalCredentials.UserName, config.GlobalCredentials.Password, appConfig.CreateUrlV2())
 	util.PanicOnError(err)
-
-	bodyAsByte, _ := ioutil.ReadAll(resp.Body)
-	loginResponse := &ext.TestLoginResponseDTO{}
-	json.Unmarshal(bodyAsByte, loginResponse)
-
-	defer resp.Body.Close()
 	util.ExpectStatus(t, resp, 200)
+	defer resp.Body.Close()
 
-	userName1, password1 := util.RandomString(6), util.RandomString(6)
+	globalLoginResponse := ext.ToLoginResponseDTO(resp)
+
+	//Initialise user management resource with token of global user
+	userMgtResource := &ext.TestUserManagementResource{Token: globalLoginResponse.Token}
 
 	//Create another user1 with random user name and 'USER' role
-	userMgtResource := &ext.TestUserManagementResource{Token: loginResponse.Token}
+	userName1, password1 := util.RandomString(6), util.RandomString(6)
 	accountCreateRequest := ext.AccountCreateWithRole(userName1, password1, "USER")
 	resp, err = userMgtResource.CreateAccountUsingAdminResource(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)
@@ -139,9 +128,11 @@ func TestAdminUsersShouldBeAbleToViewOtherUsers(t *testing.T) {
 	defer resp.Body.Close()
 	util.ExpectStatus(t, resp, 200)
 
+	//Initialise user management resource with token of global user
+	userMgtResource := &ext.TestUserManagementResource{Token: globalLoginResponse.Token}
+
 	//Create another user1 with random user name and 'USER' role
 	userName1, password1 := util.RandomString(6), util.RandomString(6)
-	userMgtResource := &ext.TestUserManagementResource{Token: globalLoginResponse.Token}
 	accountCreateRequest := ext.AccountCreateWithRole(userName1, password1, "USER")
 	resp, err = userMgtResource.CreateAccountUsingAdminResource(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)
