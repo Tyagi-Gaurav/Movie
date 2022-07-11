@@ -19,16 +19,16 @@ func TestValidationCreateAccount(t *testing.T) {
 	}
 
 	testData := []data{
-		data{"Usr", "ddfdsffdf", "USER", "19/03/1972", "IND"},
-		data{"gdfgjszghjghsgdgsjdgj", "ddfdsffdf", "USER", "19/03/1972", "AUS"},
-		data{"user", "hfhdsfhdsfkhjhsdfkddd345345", "USER", "19/03/1972", "AUT"},
-		data{"user", "hsyy", "USER", "19/03/1972", "BWA"},
-		data{"user", "user123", "user", "19/03/1972", "BEL"},
-		data{"user", "user123", "OTHER", "19/03/1972", "CAD"},
-		data{"user", "dsfdsf", "USER", "1/03/1972", "SRI"},
-		data{"user", "eeet", "USER", "01/3/1972", "PAK"},
-		data{"user", "rtert", "USER", "01/3/66", "BAN"},
-		data{"user", "rtryy", "USER", "01/03/1966", "IN"},
+		{"Usr", "ddfdsffdf", "USER", "19/03/1972", "IND"},
+		{"gdfgjszghjghsgdgsjdgj", "ddfdsffdf", "USER", "19/03/1972", "AUS"},
+		{"user", "hfhdsfhdsfkhjhsdfkddd345345", "USER", "19/03/1972", "AUT"},
+		{"user", "hsyy", "USER", "19/03/1972", "BWA"},
+		{"user", "user123", "user", "19/03/1972", "BEL"},
+		{"user", "user123", "OTHER", "19/03/1972", "CAD"},
+		{"user", "dsfdsf", "USER", "1/03/1972", "SRI"},
+		{"user", "eeet", "USER", "01/3/1972", "PAK"},
+		{"user", "rtert", "USER", "01/3/66", "BAN"},
+		{"user", "rtryy", "USER", "01/03/1966", "IN"},
 	}
 
 	appConfig := config.Configs["user"]

@@ -58,7 +58,7 @@ func (a AppConfig) ConfigPublishUrl() string {
 	return fmt.Sprintf("%v://%v:%d%v%v", a.Scheme, a.Host, a.Port, a.ContextPath, a.ActuatorPath)
 }
 
-func (a AppConfig) CreateUrlV2() func(string) string {
+func (a AppConfig) CreateUrlV2() util.URLResolver {
 	return func(path string) string {
 		return fmt.Sprintf("%v://%v:%d%v%v", a.Scheme, a.Host, a.Port, a.ContextPath, path)
 	}
