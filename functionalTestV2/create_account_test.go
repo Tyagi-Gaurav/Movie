@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"testing"
 
 	"github.com/Movie/functionalTest/config"
@@ -58,22 +57,11 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 
 	util.ExpectStatus(t, resp, 204)
 
-	loginRequest := ext.TestLoginRequestDTO{
-		UserName: userName,
-		Password: password,
-	}
-
-	resp, err = loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
-	util.PanicOnError(err)
-
+	resp = loginResource.EnsureSuccessLogin(t, userName, password, appConfig.CreateUrlV2())
 	defer resp.Body.Close()
-	util.ExpectStatus(t, resp, 200)
 
-	loginResponse := &ext.TestLoginResponseDTO{}
-	err = json.NewDecoder(resp.Body).Decode(loginResponse)
-	util.PanicOnError(err)
-
-	require.True(t, len(loginResponse.Token) > 0, "Expected login response token")
+	loginResponseDto := ext.ToLoginResponseDTO(resp)
+	require.True(t, len(loginResponseDto.Token) > 0, "Expected login response token")
 }
 
 func TestUserShouldNotBeAbleToLoginWithoutValidUserNamePassword(t *testing.T) {
@@ -89,15 +77,8 @@ func TestUserShouldNotBeAbleToLoginWithoutValidUserNamePassword(t *testing.T) {
 	util.PanicOnError(err)
 	util.ExpectStatus(t, resp, 204)
 
-	loginRequest := ext.TestLoginRequestDTO{
-		UserName: userName,
-		Password: "randomPassword",
-	}
-
-	resp, err = loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
+	resp, err = loginResource.LoginWith(t, userName, "randomPassword", appConfig.CreateUrlV2())
 	util.PanicOnError(err)
-
 	defer resp.Body.Close()
-
 	util.ExpectStatus(t, resp, 401)
 }

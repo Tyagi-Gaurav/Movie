@@ -15,12 +15,7 @@ func TestAdminUsersShouldBeAbleToCreateOtherUsers(t *testing.T) {
 	loginResource := &ext.TestLoginResource{}
 
 	//the global admin user logs into the system
-	loginRequest := ext.TestLoginRequestDTO{
-		UserName: config.GlobalCredentials.UserName,
-		Password: config.GlobalCredentials.Password,
-	}
-
-	resp, err := loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
+	resp, err := loginResource.LoginWith(t, config.GlobalCredentials.UserName, config.GlobalCredentials.Password, appConfig.CreateUrlV2())
 	util.PanicOnError(err)
 
 	bodyAsByte, _ := ioutil.ReadAll(resp.Body)
@@ -30,8 +25,7 @@ func TestAdminUsersShouldBeAbleToCreateOtherUsers(t *testing.T) {
 	defer resp.Body.Close()
 	util.ExpectStatus(t, resp, 200)
 
-	userName := util.RandomString(6)
-	password := util.RandomString(6)
+	userName, password := util.RandomString(6), util.RandomString(6)
 
 	//Create another user with random user name and 'USER' role
 	userMgtResource := &ext.TestUserManagementResource{Token: loginResponse.Token}
@@ -59,8 +53,7 @@ func TestAdminUsersShouldBeAbleToCreateOtherAdminUsers(t *testing.T) {
 	defer resp.Body.Close()
 	util.ExpectStatus(t, resp, 200)
 
-	userName := util.RandomString(6)
-	password := util.RandomString(6)
+	userName, password := util.RandomString(6), util.RandomString(6)
 
 	//Create another user with random user name and 'ADMIN' role
 	userMgtResource := &ext.TestUserManagementResource{Token: loginResponse.Token}
@@ -87,12 +80,7 @@ func TestAdminUsersShouldBeAbleToDeleteOtherUsers(t *testing.T) {
 	loginResource := &ext.TestLoginResource{}
 
 	//the global admin user logs into the system
-	loginRequest := ext.TestLoginRequestDTO{
-		UserName: config.GlobalCredentials.UserName,
-		Password: config.GlobalCredentials.Password,
-	}
-
-	resp, err := loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
+	resp, err := loginResource.LoginWith(t, config.GlobalCredentials.UserName, config.GlobalCredentials.Password, appConfig.CreateUrlV2())
 	util.PanicOnError(err)
 
 	bodyAsByte, _ := ioutil.ReadAll(resp.Body)
@@ -102,8 +90,7 @@ func TestAdminUsersShouldBeAbleToDeleteOtherUsers(t *testing.T) {
 	defer resp.Body.Close()
 	util.ExpectStatus(t, resp, 200)
 
-	userName1 := util.RandomString(6)
-	password1 := util.RandomString(6)
+	userName1, password1 := util.RandomString(6), util.RandomString(6)
 
 	//Create another user1 with random user name and 'USER' role
 	userMgtResource := &ext.TestUserManagementResource{Token: loginResponse.Token}
@@ -117,8 +104,7 @@ func TestAdminUsersShouldBeAbleToDeleteOtherUsers(t *testing.T) {
 	defer loginResponse1.Body.Close()
 
 	//Create another user2 with random user name and 'USER' role
-	userName2 := util.RandomString(6)
-	password2 := util.RandomString(6)
+	userName2, password2 := util.RandomString(6), util.RandomString(6)
 
 	//Create another user1 with random user name and 'USER' role
 	accountCreateRequest = ext.AccountCreateWithRole(userName2, password2, "USER")

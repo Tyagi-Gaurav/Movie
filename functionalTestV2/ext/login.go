@@ -32,7 +32,7 @@ func ToLoginResponseDTO(resp *http.Response) *TestLoginResponseDTO {
 	return testLoginResponseDTO
 }
 
-func (testLoginRes TestLoginResource) Login(pathResolver func(string) string,
+func (testLoginRes TestLoginResource) login(pathResolver func(string) string,
 	body TestLoginRequestDTO) (*http.Response, error) {
 	url := pathResolver("/login")
 	u, err := json.Marshal(body)
@@ -54,7 +54,7 @@ func (testLoginRes TestLoginResource) LoginWith(t *testing.T,
 		Password: password,
 	}
 
-	return testLoginRes.Login(pathResolver, loginRequest)
+	return testLoginRes.login(pathResolver, loginRequest)
 }
 
 func (testLoginRes TestLoginResource) EnsureSuccessLogin(
@@ -66,7 +66,7 @@ func (testLoginRes TestLoginResource) EnsureSuccessLogin(
 		Password: password,
 	}
 
-	resp, err := testLoginRes.Login(pathResolver, loginRequest)
+	resp, err := testLoginRes.login(pathResolver, loginRequest)
 
 	util.PanicOnError(err)
 	util.ExpectStatus(t, resp, 200)
