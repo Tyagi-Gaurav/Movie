@@ -35,6 +35,7 @@ Feature: User management by the admin user
     And the regular user attempts to login again
     Then the response should be received with HTTP status code 401
 
+  @Migrated
   Scenario: Admin user should be able to view all other users
     Given the global admin user logs into the system
     And the authenticated admin user creates another user with user name '<random>' and role 'USER'

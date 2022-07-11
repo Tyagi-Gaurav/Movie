@@ -10,6 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type URLResolver func(string) string
+
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }

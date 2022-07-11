@@ -31,7 +31,7 @@ func (h WebClient) executePost(url string, contentType string, body string) (*ht
 	return resp, nil
 }
 
-func (h WebClient) executePostWithHeaders(url string, contentType string, body string,
+func (h WebClient) executePostWithHeaders(url string, body string,
 	headers map[string]string) (*http.Response, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", url, strings.NewReader(body))
@@ -40,7 +40,6 @@ func (h WebClient) executePostWithHeaders(url string, contentType string, body s
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
-	req.Header.Set("Content-Type", contentType)
 
 	//log.Printf("Request %v", req)
 	resp, err := client.Do(req)
@@ -49,7 +48,7 @@ func (h WebClient) executePostWithHeaders(url string, contentType string, body s
 	return resp, nil
 }
 
-func (h WebClient) executeDeleteWithHeaders(url string, contentType string,
+func (h WebClient) executeDeleteWithHeaders(url string,
 	headers map[string]string) (*http.Response, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("DELETE", url, nil)
@@ -58,7 +57,23 @@ func (h WebClient) executeDeleteWithHeaders(url string, contentType string,
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
-	req.Header.Set("Content-Type", contentType)
+
+	//log.Printf("Request %v", req)
+	resp, err := client.Do(req)
+	util.PanicOnError(err)
+
+	return resp, nil
+}
+
+func (h WebClient) executeGetWithHeaders(url string,
+	headers map[string]string) (*http.Response, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	util.PanicOnError(err)
+
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
 
 	//log.Printf("Request %v", req)
 	resp, err := client.Do(req)

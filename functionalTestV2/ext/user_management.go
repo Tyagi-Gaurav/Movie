@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/Movie/functionalTest/util"
 )
 
 var resourcePath = "/manage"
@@ -26,9 +28,10 @@ func (testAccountRes TestUserManagementResource) CreateAccountUsingAdminResource
 	headers := make(map[string]string)
 
 	headers["Authorization"] = "Bearer " + testAccountRes.Token
+	headers["Content-Type"] = "application/vnd.user.add.v1+json"
 
 	var h = &WebClient{}
-	return h.executePostWithHeaders(url, "application/vnd.user.add.v1+json", bodyAsString, headers)
+	return h.executePostWithHeaders(url, bodyAsString, headers)
 }
 
 func (testAccountRes TestUserManagementResource) DeleteUserAccount(
@@ -40,7 +43,21 @@ func (testAccountRes TestUserManagementResource) DeleteUserAccount(
 	headers := make(map[string]string)
 
 	headers["Authorization"] = "Bearer " + testAccountRes.Token
+	headers["Content-Type"] = "application/vnd.user.delete.v1+json"
 
 	var h = &WebClient{}
-	return h.executeDeleteWithHeaders(url, "application/vnd.user.delete.v1+json", headers)
+	return h.executeDeleteWithHeaders(url, headers)
+}
+
+func (testAccountRes TestUserManagementResource) RetrieveListOfAllUsers(urlResolver util.URLResolver) (*http.Response, error) {
+	fullURL := urlResolver(resourcePath)
+
+	headers := make(map[string]string)
+
+	headers["Authorization"] = "Bearer " + testAccountRes.Token
+	headers["Content-Type"] = "application/vnd.user.read.v1+json"
+	headers["Accept"] = "application/vnd.user.read.v1+json"
+
+	var h = &WebClient{}
+	return h.executeGetWithHeaders(fullURL, headers)
 }
