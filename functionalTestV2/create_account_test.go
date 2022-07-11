@@ -18,16 +18,7 @@ func TestUserShouldBeAbleToCreateNewAccount(t *testing.T) {
 	for _, data := range gender {
 		var h = &ext.TestAccountCreateResource{}
 
-		input := ext.TestAccountCreateRequestDTO{
-			UserName:    util.RandomString(6),
-			Password:    util.RandomString(6),
-			FirstName:   "bcssdf",
-			LastName:    "defdsfdf",
-			DateOfBirth: "19/03/1972",
-			Gender:      data,
-			HomeCountry: "AUS",
-			Role:        "USER",
-		}
+		input := ext.AccountCreateWith(util.RandomString(6), util.RandomString(6), data)
 
 		resp, err := h.CreateAccount(appConfig.CreateUrlV2(), input)
 
@@ -43,16 +34,7 @@ func TestDuplicateUserAccountShouldReturnError(t *testing.T) {
 	appConfig := config.Configs["user"]
 	var h = &ext.TestAccountCreateResource{}
 
-	input := ext.TestAccountCreateRequestDTO{
-		UserName:    util.RandomString(6),
-		Password:    util.RandomString(6),
-		FirstName:   "bcssdf",
-		LastName:    "defdsfdf",
-		DateOfBirth: "19/03/1972",
-		Gender:      "FEMALE",
-		HomeCountry: "AUS",
-		Role:        "USER",
-	}
+	input := ext.AccountCreateWith(util.RandomString(6), util.RandomString(6), "FEMALE")
 
 	resp, err := h.CreateAccount(appConfig.CreateUrlV2(), input)
 
@@ -79,16 +61,7 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 	userName := util.RandomString(6)
 	password := util.RandomString(6)
 
-	accountCreateRequest := ext.TestAccountCreateRequestDTO{
-		UserName:    userName,
-		Password:    password,
-		FirstName:   "bcssdf",
-		LastName:    "defdsfdf",
-		DateOfBirth: "19/03/1972",
-		Gender:      "FEMALE",
-		HomeCountry: "AUS",
-		Role:        "USER",
-	}
+	accountCreateRequest := ext.AccountCreateWith(userName, password, "FEMALE")
 
 	resp, err := acctResource.CreateAccount(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)
@@ -125,16 +98,7 @@ func TestUserShouldNotBeAbleToLoginWithoutValidUserNamePassword(t *testing.T) {
 	userName := util.RandomString(6)
 	password := util.RandomString(6)
 
-	accountCreateRequest := ext.TestAccountCreateRequestDTO{
-		UserName:    userName,
-		Password:    password,
-		FirstName:   "bcssdf",
-		LastName:    "defdsfdf",
-		DateOfBirth: "19/03/1972",
-		Gender:      "FEMALE",
-		HomeCountry: "AUS",
-		Role:        "USER",
-	}
+	accountCreateRequest := ext.AccountCreateWith(userName, password, "FEMALE")
 
 	resp, err := acctResource.CreateAccount(appConfig.CreateUrlV2(), accountCreateRequest)
 	util.PanicOnError(err)

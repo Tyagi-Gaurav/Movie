@@ -3,6 +3,8 @@ package ext
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/Movie/functionalTest/util"
 )
 
 type TestAccountCreateRequestDTO struct {
@@ -17,6 +19,19 @@ type TestAccountCreateRequestDTO struct {
 }
 
 type TestAccountCreateResource struct {
+}
+
+func AccountCreateWith(userName string, password string, gender string) TestAccountCreateRequestDTO {
+	return TestAccountCreateRequestDTO{
+		UserName:    userName,
+		Password:    password,
+		FirstName:   util.RandomString(6),
+		LastName:    util.RandomString(8),
+		DateOfBirth: "19/03/1972",
+		Gender:      gender,
+		HomeCountry: "AUS",
+		Role:        "USER",
+	}
 }
 
 func (testAccountRes TestAccountCreateResource) CreateAccount(
