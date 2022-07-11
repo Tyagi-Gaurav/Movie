@@ -2,7 +2,11 @@ package ext
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"testing"
+
+	"github.com/Movie/functionalTest/util"
 )
 
 type TestLoginRequestDTO struct {
@@ -18,6 +22,16 @@ type TestLoginResponseDTO struct {
 type TestLoginResource struct {
 }
 
+func ToLoginResponseDTO(resp *http.Response) *TestLoginResponseDTO {
+	defer resp.Body.Close()
+
+	bytes, err := ioutil.ReadAll(resp.Body)
+	util.PanicOnError(err)
+	testLoginResponseDTO := &TestLoginResponseDTO{}
+	json.Unmarshal(bytes, testLoginResponseDTO)
+	return testLoginResponseDTO
+}
+
 func (testLoginRes TestLoginResource) Login(pathResolver func(string) string,
 	body TestLoginRequestDTO) (*http.Response, error) {
 	url := pathResolver("/login")
@@ -30,4 +44,32 @@ func (testLoginRes TestLoginResource) Login(pathResolver func(string) string,
 	bodyAsString := string(u)
 	var h = &WebClient{}
 	return h.executePost(url, "application/vnd.login.v1+json", bodyAsString)
+}
+
+func (testLoginRes TestLoginResource) LoginWith(t *testing.T,
+	userName string, password string,
+	pathResolver func(string) string) (*http.Response, error) {
+	loginRequest := TestLoginRequestDTO{
+		UserName: userName,
+		Password: password,
+	}
+
+	return testLoginRes.Login(pathResolver, loginRequest)
+}
+
+func (testLoginRes TestLoginResource) EnsureSuccessLogin(
+	t *testing.T,
+	userName string, password string,
+	pathResolver func(string) string) *http.Response {
+	loginRequest := TestLoginRequestDTO{
+		UserName: userName,
+		Password: password,
+	}
+
+	resp, err := testLoginRes.Login(pathResolver, loginRequest)
+
+	util.PanicOnError(err)
+	util.ExpectStatus(t, resp, 200)
+
+	return resp
 }

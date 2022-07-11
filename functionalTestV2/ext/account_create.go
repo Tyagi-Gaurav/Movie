@@ -34,6 +34,19 @@ func AccountCreateWith(userName string, password string, gender string) TestAcco
 	}
 }
 
+func AccountCreateWithRole(userName string, password string, role string) TestAccountCreateRequestDTO {
+	return TestAccountCreateRequestDTO{
+		UserName:    userName,
+		Password:    password,
+		FirstName:   util.RandomString(6),
+		LastName:    util.RandomString(8),
+		DateOfBirth: "19/03/1972",
+		Gender:      "FEMALE",
+		HomeCountry: "AUS",
+		Role:        role,
+	}
+}
+
 func (testAccountRes TestAccountCreateResource) CreateAccount(
 	pathResolver func(string) string,
 	body TestAccountCreateRequestDTO) (*http.Response, error) {

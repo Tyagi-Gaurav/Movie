@@ -67,7 +67,6 @@ func TestLoginAfterSuccessfulAccountCreation(t *testing.T) {
 	util.PanicOnError(err)
 
 	defer resp.Body.Close()
-
 	util.ExpectStatus(t, resp, 200)
 
 	loginResponse := &ext.TestLoginResponseDTO{}
