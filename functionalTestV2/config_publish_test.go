@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -23,8 +22,8 @@ func TestConfigPublish(t *testing.T) {
 		var h = &ext.WebClient{}
 		resp, err := h.ExecuteGet(appConfig.ConfigPublishUrl())
 		util.PanicOnError(err)
+		util.ExpectStatus(t, resp, 200)
 
-		require.Equal(t, 200, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", 200, resp.StatusCode))
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		util.PanicOnError(err)
 

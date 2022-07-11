@@ -1,8 +1,13 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
+	"net/http"
+	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func init() {
@@ -23,4 +28,9 @@ func PanicOnError(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func ExpectStatus(t *testing.T, resp *http.Response, expectedStatusCode int) {
+	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
+		resp.StatusCode))
 }

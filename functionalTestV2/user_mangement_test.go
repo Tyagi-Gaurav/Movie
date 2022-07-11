@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"io/ioutil"
 	"testing"
 
 	"github.com/Movie/functionalTest/config"
 	"github.com/Movie/functionalTest/ext"
 	"github.com/Movie/functionalTest/util"
-	"github.com/stretchr/testify/require"
 )
 
 func TestAdminUsersShouldBeAbleToCreateOtherUsers(t *testing.T) {
@@ -22,24 +22,30 @@ func TestAdminUsersShouldBeAbleToCreateOtherUsers(t *testing.T) {
 	resp, err := loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
 	util.PanicOnError(err)
 
+	bodyAsByte, _ := ioutil.ReadAll(resp.Body)
+	loginResponse := &ext.TestLoginResponseDTO{}
+	json.Unmarshal(bodyAsByte, loginResponse)
+
 	defer resp.Body.Close()
+	util.ExpectStatus(t, resp, 200)
 
-	expectedStatusCode := 200
-	require.Equal(t, expectedStatusCode, resp.StatusCode, fmt.Sprintf("Failed. expected: %d, actual: %d", expectedStatusCode,
-		resp.StatusCode))
-
-	// userName := util.RandomString(6)
-	// password := util.RandomString(6)
+	userName := util.RandomString(6)
+	password := util.RandomString(6)
 
 	//Create another user with random user name and 'USER' role
-	// accountCreateRequest := ext.TestAccountCreateRequestDTO{
-	// 	UserName:    userName,
-	// 	Password:    password,
-	// 	FirstName:   "bcssdf",
-	// 	LastName:    "defdsfdf",
-	// 	DateOfBirth: "19/03/1972",
-	// 	Gender:      "FEMALE",
-	// 	HomeCountry: "AUS",
-	// 	Role:        "USER",
-	// }
+	userMgtResource := &ext.TestUserManagementResource{Token: loginResponse.Token}
+	accountCreateRequest := ext.AccountCreateWith(userName, password, "MALE")
+	resp, err = userMgtResource.CreateAccountUsingAdminResource(appConfig.CreateUrlV2(), accountCreateRequest)
+	util.PanicOnError(err)
+	util.ExpectStatus(t, resp, 204)
+
+	//Login with the new user
+	loginRequest = ext.TestLoginRequestDTO{
+		UserName: userName,
+		Password: password,
+	}
+
+	resp, err = loginResource.Login(appConfig.CreateUrlV2(), loginRequest)
+	util.PanicOnError(err)
+	util.ExpectStatus(t, resp, 200)
 }
