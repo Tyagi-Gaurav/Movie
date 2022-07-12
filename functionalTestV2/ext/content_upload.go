@@ -41,7 +41,8 @@ type TestByteStreamUploadResponseDTO struct {
 	StreamName string    `json:"streamName"`
 }
 
-func (uploadRes TestContentUploadResource) UploadMovie(urlResolver util.URLResolver) (*http.Response, error) {
+func (uploadRes TestContentUploadResource) UploadMovie(urlResolver util.URLResolver,
+	headerFilter func(map[string]string) map[string]string) (*http.Response, error) {
 	fullUrl := urlResolver("/api/user/movie")
 
 	content := TestContentUploadRequestDTO{
@@ -61,9 +62,12 @@ func (uploadRes TestContentUploadResource) UploadMovie(urlResolver util.URLResol
 
 	bodyAsString := string(u)
 	headers := make(map[string]string)
-
 	headers["Authorization"] = "Bearer " + uploadRes.Token
 	headers["Content-Type"] = "application/vnd.movie.add.v1+json"
+
+	if headerFilter != nil {
+		headers = headerFilter(headers)
+	}
 
 	var h = &WebClient{}
 	return h.executePostWithHeaders(fullUrl, bodyAsString, headers)

@@ -1,5 +1,6 @@
 Feature: Logged in users should be able to access movie records
 
+  @Migrated
   Scenario: User should NOT be able to create a new movie without proper auth header
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie without passing auth header
@@ -7,6 +8,7 @@ Feature: Logged in users should be able to access movie records
       | First Blood | 2000         | 7.8    | THRILLER | MOVIE       | 12A       | true        |
     Then the response should be received with HTTP status code 401
 
+  @Migrated
   Scenario: Authenticated user should be able to create a new movie
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
@@ -15,6 +17,7 @@ Feature: Logged in users should be able to access movie records
     Then the response should be received with HTTP status code 200
     And the response should contain a movieId in a UUID format
 
+  @Migrated
   Scenario: Authenticated user should NOT be able to create duplicate movies
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
