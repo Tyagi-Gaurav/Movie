@@ -19,7 +19,7 @@ ext {
     junitVersion = '5.8.2'
     assertJVersion = '3.23.1'
     mockitoVersion = '4.6.1'
-    reactorVersion = '3.4.19'
+    reactorVersion = '3.4.21'
     jsonWebTokenVersion = '0.11.5'
     springSecurityCoreVersion = '5.7.2'
     awaitilityVersion = '4.2.0'
