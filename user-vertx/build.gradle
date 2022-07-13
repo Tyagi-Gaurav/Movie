@@ -28,7 +28,7 @@ ext {
     c3p0Version = '0.9.5.5'
     liquibaseVersion = '4.12.0'
     guavaVersion = '31.1-jre'
-    metricsInterceptor = '1.9.1'
+    metricsInterceptor = '1.9.2'
     junitVersion = '5.8.2'
     assertJVersion = '3.23.1'
     h2DbVersion = '1.4.200'
