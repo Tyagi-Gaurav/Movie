@@ -31,7 +31,7 @@ func TestUploadNewVideoForMovie(t *testing.T) {
 	contentUploadResource := ext.TestContentUploadResource{Token: loginRespDto.Token}
 
 	//the authenticated user attempts to create a new movie
-	uploadMovieResp, err := contentUploadResource.UploadMovie(contentUploadConfig.CreateUrlV2(), nil)
+	uploadMovieResp, err := contentUploadResource.UploadMovie(ext.DefaultContent, contentUploadConfig.CreateUrlV2(), nil)
 	util.PanicOnError(err)
 	util.ExpectStatus(t, uploadMovieResp, 200)
 	uploadResponseDTO := ext.ToUploadResponseDTO(uploadMovieResp)
