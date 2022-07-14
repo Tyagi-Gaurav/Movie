@@ -62,6 +62,7 @@ Feature: Logged in users should be able to access movie records
       | Die Hard      | 1980         | 8.9    | ACTION  | MOVIE       | 12A       | true        |
       | The President | 2001         | 6.3    | ROMANCE | MOVIE       | 15        | false       |
 
+  @Migrated
   Scenario: Authenticated user should be able to update the movie records
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie
@@ -81,6 +82,7 @@ Feature: Logged in users should be able to access movie records
       | Die Hard      | 1989         | 9.2    | ACTION  | MOVIE       | 12A       | true        |
       | The President | 2001         | 6.3    | ROMANCE | MOVIE       | 15        | false       |
 
+  @Migrated
   Scenario: Authenticated user should be able to update single fields for the movie records
     Given a user creates a new account and performs login with user name '<random>' and role 'USER'
     And the authenticated user attempts to create a new movie

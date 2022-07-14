@@ -81,3 +81,20 @@ func (h WebClient) executeGetWithHeaders(url string,
 
 	return resp, nil
 }
+
+func (h WebClient) executePutWithHeaders(url string, body string,
+	headers map[string]string) (*http.Response, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("PUT", url, strings.NewReader(body))
+	util.PanicOnError(err)
+
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
+
+	//log.Printf("Request %v", req)
+	resp, err := client.Do(req)
+	util.PanicOnError(err)
+
+	return resp, nil
+}

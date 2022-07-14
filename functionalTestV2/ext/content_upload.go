@@ -156,6 +156,38 @@ func (uploadRes TestContentUploadResource) DeleteMovie(urlResolver util.URLResol
 	return h.executeDeleteWithHeaders(fullUrl, headers)
 }
 
+func (uploadRes TestContentUploadResource) UpdateMovie(urlResolver util.URLResolver, contentUpload TestContentUploadRequestDTO,
+	movieId uuid.UUID) (*http.Response, error) {
+	fullUrl := urlResolver("/api/user/movie")
+
+	movieDetail := TestMovieDetailDTO{
+		Id:           movieId,
+		Name:         contentUpload.Name,
+		YearProduced: contentUpload.YearProduced,
+		Rating:       contentUpload.Rating,
+		Genre:        contentUpload.Genre,
+		ContentType:  contentUpload.ContentType,
+		AgeRating:    contentUpload.AgeRating,
+		IsShareable:  contentUpload.IsShareable,
+	}
+
+	u, err := json.Marshal(movieDetail)
+
+	if err != nil {
+		panic(err)
+	}
+
+	bodyAsString := string(u)
+
+	headers := make(map[string]string)
+
+	headers["Authorization"] = "Bearer " + uploadRes.Token
+	headers["Content-Type"] = "application/vnd.movie.update.v1+json"
+	var h = &WebClient{}
+
+	return h.executePutWithHeaders(fullUrl, bodyAsString, headers)
+}
+
 func ToUploadResponseDTO(resp *http.Response) *TestContentUploadResponseDTO {
 	defer resp.Body.Close()
 
