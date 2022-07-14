@@ -161,6 +161,54 @@ func TestAuthenticatedUserShouldBeAbleToDeleteMovieRecords(t *testing.T) {
 	require.ElementsMatch(t, contents[1:], ToMovies(movies.Movies))
 }
 
+func TestAuthenticatedUserShouldBeAbleToUpdateeMovieRecords(t *testing.T) {
+	userConfig := config.Configs["user"]
+	contentUploadConfig := config.Configs["contentUpload"]
+	acctResource := ext.TestAccountCreateResource{}
+	loginResource := ext.TestLoginResource{}
+
+	//A user creates a new account and performs login with user name '<random>' and role 'USER'
+	userName, password := util.RandomString(6), util.RandomString(6)
+	accountCreateRequest := ext.AccountCreateWith(userName, password, "FEMALE")
+
+	resp, err := acctResource.CreateAccount(userConfig.CreateUrlV2(), accountCreateRequest)
+	util.PanicOnError(err)
+	util.ExpectStatus(t, resp, 204)
+
+	loginResponse := loginResource.EnsureSuccessLogin(t, userName, password, userConfig.CreateUrlV2())
+	defer resp.Body.Close()
+
+	loginRespDto := ext.ToLoginResponseDTO(loginResponse)
+	contentUploadResource := ext.TestContentUploadResource{Token: loginRespDto.Token}
+
+	//the authenticated user attempts to create a new movies
+	contents := []ext.TestContentUploadRequestDTO{
+		{Name: "First Blood", YearProduced: 1990, Rating: 7.8, Genre: "ACTION", ContentType: "MOVIE", AgeRating: "12A", IsShareable: true},
+		{Name: "Die Hard", YearProduced: 1980, Rating: 8.9, Genre: "ACTION", ContentType: "MOVIE", AgeRating: "12A", IsShareable: true},
+		{Name: "The President", YearProduced: 2001, Rating: 6.3, Genre: "ROMANCE", ContentType: "MOVIE", AgeRating: "15", IsShareable: false},
+	}
+
+	err = contentUploadResource.UploadMovies(contents,
+		contentUploadConfig.CreateUrlV2(), nil)
+	util.PanicOnError(err)
+
+	//the user attempts to delete the movie with name: 'First Blood' , yearProduced: '1990' and rating: '7.8'
+	movieId := getMovieWithDetails(contentUploadResource, contentUploadConfig.CreateUrlV2(), "First Blood", 1990, 7.8)
+
+	deleteMovieResp, err := contentUploadResource.DeleteMovie(contentUploadConfig.CreateUrlV2(), movieId)
+	util.PanicOnError(err)
+	util.ExpectStatus(t, deleteMovieResp, 200)
+
+	//the authenticated user attempts to read the movies
+	readMoviesResp, err := contentUploadResource.ReadMovies(contentUploadConfig.CreateUrlV2())
+	util.PanicOnError(err)
+	util.ExpectStatus(t, readMoviesResp, 200)
+
+	//Check response matches contents
+	movies := ext.ToMovieReadDTO(readMoviesResp)
+	require.ElementsMatch(t, contents[1:], ToMovies(movies.Movies))
+}
+
 func ToMovies(contents []ext.TestMovieDetailDTO) []ext.TestContentUploadRequestDTO {
 	movieRequestDetails := []ext.TestContentUploadRequestDTO{}
 	for _, content := range contents {
