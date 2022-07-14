@@ -1,3 +1,4 @@
+@Migrated
 Feature: Status functionality
 
   Scenario: Status endpoint should return success when system is running

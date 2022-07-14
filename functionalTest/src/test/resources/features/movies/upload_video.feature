@@ -1,3 +1,4 @@
+@Migrated
 Feature: User should be able to upload video against a movie
 
   Scenario: Upload new video for a movie

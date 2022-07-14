@@ -1,3 +1,4 @@
+@Migrated
 Feature: Metrics functionality
 
   Scenario: Content Upload metrics endpoint should return success when system is running

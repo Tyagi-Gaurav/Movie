@@ -1,0 +1,23 @@
+apps:
+  contentUpload:
+    scheme: "http"
+    host: "localhost"
+    port: 8080
+    contextPath: "/content/upload"
+    healthCheck: "/actuator/healthcheck"
+    statusPath: "/api/status"
+    actuatorPath: "/actuator/config"
+    metricsPath: "/actuator/metrics"
+  user:
+    scheme: "http"
+    host: "localhost"
+    port: 8080
+    contextPath: "/user"
+    healthCheck: ""
+    statusPath: "/status"  
+    actuatorPath: "/private/config"
+    metricsPath: ""
+
+admin-credentials:
+  userName: admin
+  password: admin123

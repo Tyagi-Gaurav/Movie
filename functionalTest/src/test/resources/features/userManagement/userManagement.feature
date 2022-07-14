@@ -1,3 +1,4 @@
+@Migrated
 Feature: User management by the admin user
 
   Scenario: Admin user should be able to create other regular users

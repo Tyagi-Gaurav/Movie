@@ -1,3 +1,4 @@
+@Migrated
 Feature: Should generate request Id for each request
 
   Scenario: Should generate request ID and return it in response

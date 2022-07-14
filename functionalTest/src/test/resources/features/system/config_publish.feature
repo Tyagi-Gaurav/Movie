@@ -1,3 +1,4 @@
+@Migrated
 Feature: Configuration Publish functionality
 
   Scenario: Configuration should be published from Content Upload application
