@@ -212,6 +212,61 @@ func TestAuthenticatedUserShouldBeAbleToUpdateMovieRecords(t *testing.T) {
 	require.ElementsMatch(t, append(contents[1:], updatedContents), ToMovies(movies.Movies))
 }
 
+func TestAuthenticatedUserShouldBeAbleToReadMoviesForSelf(t *testing.T) {
+	contentUploadConfig := config.Configs["contentUpload"]
+
+	//A user creates a new account and performs login with user name '<random>' and role 'USER'
+	loginResponse1 := createUserAndLogin(t)
+	contentUploadResource1 := ext.TestContentUploadResource{Token: loginResponse1.Token}
+
+	loginResponse2 := createUserAndLogin(t)
+	contentUploadResource2 := ext.TestContentUploadResource{Token: loginResponse2.Token}
+
+	//the authenticated user1 attempts to create a new movies
+	contents1 := []ext.TestContentUploadRequestDTO{
+		{Name: "Die Hard", YearProduced: 1980, Rating: 8.9, Genre: "ACTION", ContentType: "MOVIE", AgeRating: "12A", IsShareable: true},
+		{Name: "First Blood", YearProduced: 1990, Rating: 7.8, Genre: "ACTION", ContentType: "MOVIE", AgeRating: "12A", IsShareable: true},
+		{Name: "The President", YearProduced: 2001, Rating: 6.3, Genre: "ROMANCE", ContentType: "MOVIE", AgeRating: "15", IsShareable: false},
+	}
+
+	err := contentUploadResource1.UploadMovies(contents1, contentUploadConfig.CreateUrlV2(), nil)
+	util.PanicOnError(err)
+
+	contents2 := []ext.TestContentUploadRequestDTO{
+		{Name: "Die Hard", YearProduced: 1980, Rating: 8.9, Genre: "ACTION", ContentType: "MOVIE", AgeRating: "12A", IsShareable: true},
+		{Name: "Second Blood", YearProduced: 1990, Rating: 7.8, Genre: "ACTION", ContentType: "MOVIE", AgeRating: "12A", IsShareable: true},
+		{Name: "The President", YearProduced: 2001, Rating: 6.3, Genre: "ROMANCE", ContentType: "MOVIE", AgeRating: "15", IsShareable: false},
+	}
+
+	err = contentUploadResource2.UploadMovies(contents2, contentUploadConfig.CreateUrlV2(), nil)
+	util.PanicOnError(err)
+
+	readResp, err := contentUploadResource1.ReadMoviesForUser(contentUploadConfig.CreateUrlV2(), loginResponse2.Id)
+	util.PanicOnError(err)
+	util.ExpectStatus(t, readResp, 403)
+}
+
+func createUserAndLogin(t *testing.T) *ext.TestLoginResponseDTO {
+	//A user creates a new account and performs login with user name '<random>' and role 'USER'
+	acctResource := ext.TestAccountCreateResource{}
+	userConfig := config.Configs["user"]
+	loginResource := ext.TestLoginResource{}
+
+	userName1, password1 := util.RandomString(6), util.RandomString(6)
+	accountCreateRequest := ext.AccountCreateWith(userName1, password1, "FEMALE")
+
+	resp, err := acctResource.CreateAccount(userConfig.CreateUrlV2(), accountCreateRequest)
+	util.PanicOnError(err)
+	util.ExpectStatus(t, resp, 204)
+
+	loginResponse1 := loginResource.EnsureSuccessLogin(t, userName1, password1, userConfig.CreateUrlV2())
+	defer resp.Body.Close()
+
+	loginRespDto1 := ext.ToLoginResponseDTO(loginResponse1)
+
+	return loginRespDto1
+}
+
 func ToMovies(contents []ext.TestMovieDetailDTO) []ext.TestContentUploadRequestDTO {
 	movieRequestDetails := []ext.TestContentUploadRequestDTO{}
 	for _, content := range contents {

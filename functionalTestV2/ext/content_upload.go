@@ -145,6 +145,17 @@ func (uploadRes TestContentUploadResource) ReadMovies(urlResolver util.URLResolv
 	return h.executeGetWithHeaders(fullUrl, headers)
 }
 
+func (uploadRes TestContentUploadResource) ReadMoviesForUser(urlResolver util.URLResolver, userId string) (*http.Response, error) {
+	fullUrl := urlResolver(fmt.Sprintf("/api/user/%v/movie", userId))
+	headers := make(map[string]string)
+
+	headers["Authorization"] = "Bearer " + uploadRes.Token
+	headers["Content-Type"] = "application/vnd.movie.read.v1+json"
+	var h = &WebClient{}
+
+	return h.executeGetWithHeaders(fullUrl, headers)
+}
+
 func (uploadRes TestContentUploadResource) DeleteMovie(urlResolver util.URLResolver, movieId uuid.UUID) (*http.Response, error) {
 	fullUrl := urlResolver(fmt.Sprintf("/api/user/movie?id=%v", movieId.String()))
 	headers := make(map[string]string)
