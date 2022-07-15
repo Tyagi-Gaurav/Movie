@@ -24,3 +24,5 @@ dependencies {
     testImplementation "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
     testImplementation "org.junit.platform:junit-platform-suite-api:${junitPlatformVersion}"
 }
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
