@@ -63,6 +63,7 @@ func main() {
 	x, y := <-c, <-c // Receive from c
 	fmt.Println(x, y, x+y)
 
+	//In unbuffered channel there is no capacity to hold any value before it's received.
 	//Channels can be buffered. Provide a buffer length as the second argument to make to initialise a buffered channel.
 	//Sends to a buffered channel block only when the buffer is full. Receives block when the buffer is empty.
 	ch := make(chan int, 2)
