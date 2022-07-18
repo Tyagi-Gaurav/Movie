@@ -27,4 +27,5 @@ if you already have a directory like `$HOME/bin` in your shell path and you'd li
 * Installing the binary
 go install
 
-
+* Unbuffered vs Buffered Channel
+An unbuffered channel is used to perform synchronous communication between goroutines while a buffered channel is used for perform asynchronous communication. An unbuffered channel provides a guarantee that an exchange between two goroutines is performed at the instant the send and receive take place.
