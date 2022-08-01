@@ -21,7 +21,7 @@ ext {
     reactorVersion = '3.4.21'
     jsonWebTokenVersion = '0.11.5'
     bouncyCastleVersion = '1.70'
-    hibernateValidatorVersion = '6.0.13.Final'
+    hibernateValidatorVersion = '7.0.4.Final'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
