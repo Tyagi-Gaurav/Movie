@@ -25,7 +25,7 @@ ext {
     h2DbVersion = '2.1.214'
     testContainerVersion = '1.17.3'
     mockitoVersion = '4.6.1'
-    reactorVersion = '3.4.21'
+    reactorVersion = '3.4.22'
     springWebFluxSecurityVersion = '5.0.0.M5'
     wiremockVersion = '2.33.2'
     springDocOpenApiVersion = '1.6.9'
