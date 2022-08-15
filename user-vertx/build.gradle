@@ -33,7 +33,7 @@ ext {
     assertJVersion = '3.23.1'
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.17.3'
-    mockitoVersion = '4.6.1'
+    mockitoVersion = '4.7.0'
     reactorVersion = '3.4.12'
     vertxVersion = '4.2.6'
     micronautVersion = '3.6.0'
