@@ -36,7 +36,7 @@ ext {
     mockitoVersion = '4.7.0'
     reactorVersion = '3.4.12'
     vertxVersion = '4.2.6'
-    micronautVersion = '3.6.0'
+    micronautVersion = '3.6.1'
     postgresVersion = '42.4.2'
     embeddedPostgresVersion = '1.0.1'
     bouncyCastleVersion = '1.70'
