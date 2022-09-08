@@ -24,7 +24,7 @@ ext {
     assertJVersion = '3.23.1'
     h2DbVersion = '2.1.214'
     testContainerVersion = '1.17.3'
-    mockitoVersion = '4.7.0'
+    mockitoVersion = '4.8.0'
     reactorVersion = '3.4.22'
     springWebFluxSecurityVersion = '5.0.0.M5'
     wiremockVersion = '2.33.2'
