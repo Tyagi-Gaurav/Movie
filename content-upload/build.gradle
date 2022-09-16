@@ -27,7 +27,7 @@ ext {
     mockitoVersion = '4.8.0'
     reactorVersion = '3.4.23'
     springWebFluxSecurityVersion = '5.0.0.M5'
-    wiremockVersion = '2.33.2'
+    wiremockVersion = '2.34.0'
     springDocOpenApiVersion = '1.6.11'
 }
 
