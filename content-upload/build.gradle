@@ -20,7 +20,7 @@ ext {
     liquibaseVersion = '4.16.1'
     guavaVersion = '31.1-jre'
     metricsInterceptor = '1.9.4'
-    junitVersion = '5.9.0'
+    junitVersion = '5.9.1'
     assertJVersion = '3.23.1'
     h2DbVersion = '2.1.214'
     testContainerVersion = '1.17.3'
