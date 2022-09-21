@@ -29,7 +29,7 @@ ext {
     springVersion = '5.3.23'
     cucumberVersion = '7.8.0'
     junitVersion = '5.9.0'
-    junitPlatformVersion = '1.9.0'
+    junitPlatformVersion = '1.9.1'
     jacksonVersion = '2.12.4'
     assertJVersion = '3.23.1'
     mockitoVersion = '3.11.2'
