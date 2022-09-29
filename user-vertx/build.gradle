@@ -43,6 +43,7 @@ ext {
     scramVersion = '2.1'
     validationApiVersion = '2.0.1.Final'
     awaitilityVersion = '4.2.0'
+    grpcVersion = '1.49.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -82,6 +83,7 @@ configurations {
 
 dependencies {
     implementation project(":common")
+    implementation project(":grpc-schema")
     implementation "io.vertx:vertx-core:${vertxVersion}"
     implementation "io.vertx:vertx-web:${vertxVersion}"
     implementation "io.vertx:vertx-auth-jwt:${vertxVersion}"
@@ -100,6 +102,8 @@ dependencies {
     implementation "com.ongres.scram:common:${scramVersion}"
     implementation "com.ongres.scram:client:${scramVersion}"
     implementation "javax.validation:validation-api:${validationApiVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
 
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
     implementation "org.apache.commons:commons-text:${commonsTextVersion}"

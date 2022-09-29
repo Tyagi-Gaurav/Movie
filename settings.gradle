@@ -8,4 +8,5 @@ include 'api-gateway'
 include 'user-vertx'
 include 'resilience'
 include 'java_scratch'
+include 'grpc-schema'
 

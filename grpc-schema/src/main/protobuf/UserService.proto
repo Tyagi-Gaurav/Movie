@@ -1,0 +1,55 @@
+syntax = "proto3";
+package com.gt.scr.movie.grpc;
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+
+option java_outer_classname = "AccountCreateGrpc";
+
+message AccountCreateGrpcRequestDTO {
+  string userName = 1;
+  string password = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string role = 5;
+  string dateOfBirth = 6;
+  string gender = 7;
+  string homeCountry = 8;
+}
+
+enum Gender {
+  GENDER_UNSPECIFIED = 0;
+  GENDER_MALE = 1;
+  GENDER_FEMALE = 2;
+  GENDER_OTHER = 3;
+}
+
+message FetchUserDetailsByIdGrpcRequestDTO {
+  string id = 1;
+}
+
+message FetchUserDetailsByNameGrpcRequestDTO {
+  string name = 1;
+}
+
+message UserDetailsGrpcResponseDTO {
+  string userName = 1;
+  string password = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string role = 5;
+  string id = 6;
+  string dateOfBirth = 7;
+  Gender gender = 8;
+  string homeCountry = 9;
+}
+
+service FetchUserService {
+  rpc fetchUsersById(FetchUserDetailsByIdGrpcRequestDTO) returns (UserDetailsGrpcResponseDTO);
+  rpc fetchUsersByName(FetchUserDetailsByNameGrpcRequestDTO) returns (UserDetailsGrpcResponseDTO);
+}
+
+service CreateAccountService {
+  rpc createAccount(AccountCreateGrpcRequestDTO) returns (google.protobuf.Empty);
+}
