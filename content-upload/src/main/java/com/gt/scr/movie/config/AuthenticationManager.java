@@ -1,7 +1,7 @@
 package com.gt.scr.movie.config;
 
 import com.gt.scr.movie.resource.domain.UserProfile;
-import com.gt.scr.movie.service.UserService;
+import com.gt.scr.movie.service.FetchUserService;
 import com.gt.scr.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
@@ -19,10 +19,10 @@ import java.util.UUID;
 public class AuthenticationManager implements ReactiveAuthenticationManager {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationManager.class);
 
-    private final UserService userService;
+    private final FetchUserService userService;
     private final Key signingKey;
 
-    public AuthenticationManager(UserService userService, Key signingKey) {
+    public AuthenticationManager(FetchUserService userService, Key signingKey) {
         this.userService = userService;
         this.signingKey = signingKey;
     }

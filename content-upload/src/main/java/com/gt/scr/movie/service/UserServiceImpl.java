@@ -16,7 +16,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements FetchUserService {
     private final UpstreamClient<String, UserDetailsResponseDTO> fetchUsersByNameClient;
     private final UpstreamClient<UUID, UserDetailsResponseDTO> fetchUsersByIdClient;
 

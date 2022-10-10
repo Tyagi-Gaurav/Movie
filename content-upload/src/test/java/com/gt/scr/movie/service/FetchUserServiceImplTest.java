@@ -24,8 +24,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
-    private UserService userService;
+class FetchUserServiceImplTest {
+    private FetchUserService userService;
 
     @Mock
     private FetchUsersByNameClient fetchUsersByNameClient;
