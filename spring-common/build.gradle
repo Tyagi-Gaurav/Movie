@@ -15,7 +15,7 @@ ext {
     commonsTextVersion = '1.10.0'
     slf4jVersion = '2.0.3'
     jacksonVersion = '2.13.4'
-    metricsInterceptor = '1.9.4'
+    metricsInterceptor = '1.9.5'
     junitVersion = '5.9.1'
     assertJVersion = '3.23.1'
     mockitoVersion = '4.8.0'
