@@ -1,13 +1,13 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.4'
+    id 'org.springframework.boot' version '2.7.5'
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.12'
+    id 'com.github.spotbugs' version '5.0.13'
     id 'pmd'
     id "org.gradle.test-retry" version "1.4.1"
 }
 
 ext {
-    springBootVersion = '2.7.4'
+    springBootVersion = '2.7.5'
     springCloudVersion = '3.1.4'
     springVersion = '5.3.23'
     commonsLang3Version = '3.12.0'
@@ -15,20 +15,20 @@ ext {
     slf4jVersion = '2.0.3'
     jacksonVersion = '2.13.4'
     jsonWebTokenVersion = '0.11.5'
-    mysqlVersion = '8.0.30'
+    mysqlVersion = '8.0.31'
     c3p0Version = '0.9.5.5'
-    liquibaseVersion = '4.16.1'
+    liquibaseVersion = '4.17.0'
     guavaVersion = '31.1-jre'
-    metricsInterceptor = '1.9.4'
+    metricsInterceptor = '1.9.5'
     junitVersion = '5.9.1'
     assertJVersion = '3.23.1'
     h2DbVersion = '2.1.214'
-    testContainerVersion = '1.17.4'
+    testContainerVersion = '1.17.5'
     mockitoVersion = '4.8.0'
-    reactorVersion = '3.4.23'
+    reactorVersion = '3.4.24'
     springWebFluxSecurityVersion = '5.0.0.M5'
     wiremockVersion = '2.34.0'
-    springDocOpenApiVersion = '1.6.11'
+    springDocOpenApiVersion = '1.6.12'
 }
 
 repositories {

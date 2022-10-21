@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.12'
+    id 'com.github.spotbugs' version '5.0.13'
     id 'pmd'
 }
 
@@ -14,11 +14,11 @@ ext {
     commonsTextVersion = '1.10.0'
     slf4jVersion = '2.0.3'
     jacksonVersion = '2.13.4'
-    metricsInterceptor = '1.9.4'
+    metricsInterceptor = '1.9.5'
     junitVersion = '5.9.1'
     assertJVersion = '3.23.1'
     mockitoVersion = '4.8.0'
-    reactorVersion = '3.4.23'
+    reactorVersion = '3.4.24'
     jsonWebTokenVersion = '0.11.5'
     bouncyCastleVersion = '1.70'
     hibernateValidatorVersion = '6.0.13.Final'

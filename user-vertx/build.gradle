@@ -2,7 +2,7 @@ plugins {
     id 'io.vertx.vertx-plugin' version '1.3.0'
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.12'
+    id 'com.github.spotbugs' version '5.0.13'
     id 'pmd'
     id "org.gradle.test-retry" version "1.4.1"
 }
@@ -17,26 +17,26 @@ vertx {
 }
 
 ext {
-    springBootVersion = '2.7.4'
+    springBootVersion = '2.7.5'
     springVersion = '5.3.23'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.10.0'
     slf4jVersion = '2.0.3'
     jacksonVersion = '2.13.4'
     jsonWebTokenVersion = '0.11.5'
-    mysqlVersion = '8.0.30'
+    mysqlVersion = '8.0.31'
     c3p0Version = '0.9.5.5'
-    liquibaseVersion = '4.16.1'
+    liquibaseVersion = '4.17.0'
     guavaVersion = '31.1-jre'
-    metricsInterceptor = '1.9.4'
+    metricsInterceptor = '1.9.5'
     junitVersion = '5.9.1'
     assertJVersion = '3.23.1'
     h2DbVersion = '1.4.200'
-    testContainerVersion = '1.17.4'
+    testContainerVersion = '1.17.5'
     mockitoVersion = '4.8.0'
     reactorVersion = '3.4.12'
     vertxVersion = '4.2.6'
-    micronautVersion = '3.7.1'
+    micronautVersion = '3.7.2'
     postgresVersion = '42.5.0'
     embeddedPostgresVersion = '1.0.1'
     bouncyCastleVersion = '1.70'
