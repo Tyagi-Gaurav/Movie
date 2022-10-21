@@ -2,7 +2,7 @@ package com.gt.scr.movie.config;
 
 import com.gt.scr.domain.Gender;
 import com.gt.scr.domain.User;
-import com.gt.scr.movie.service.UserService;
+import com.gt.scr.movie.service.FetchUserService;
 import com.gt.scr.utils.JwtTokenUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 @ExtendWith(MockitoExtension.class)
 class AuthenticationManagerTest {
     @Mock
-    private UserService userService;
+    private FetchUserService userService;
 
     @Mock
     private PasswordEncoder passwordEncoder;

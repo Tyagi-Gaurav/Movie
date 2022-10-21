@@ -2,7 +2,7 @@ package com.gt.scr.movie.security;
 
 import com.gt.scr.movie.config.AuthenticationManager;
 import com.gt.scr.movie.config.SecurityContextRepository;
-import com.gt.scr.movie.service.UserService;
+import com.gt.scr.movie.service.FetchUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@ import java.security.Key;
 public class WebSecurityConfig {
 
     @Autowired
-    private UserService userDetailsService;
+    private FetchUserService userDetailsService;
 
     @Bean
     public UserDetailsRepositoryReactiveAuthenticationManager userDetailsRepositoryReactiveAuthenticationManager() {

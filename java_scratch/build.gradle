@@ -7,22 +7,45 @@ repositories {
 }
 
 ext {
-    reactorVersion = '3.4.18'
-    slf4jVersion = '2.0.0-alpha7'
-    assertJVersion = '3.22.0'
-    junitVersion = '5.8.2'
-    junitPlatformVersion = '1.8.2'
+    reactorVersion = '3.4.22'
+    slf4jVersion = '2.0.0'
+    assertJVersion = '3.23.1'
+    junitVersion = '5.9.0'
+    junitPlatformVersion = '1.9.0'
+    springBootVersion = '2.7.3'
+    c3p0Version = '0.9.5.5'
+    commonsLang3Version = '3.12.0'
+}
+
+sourceSets {
+    main {
+        java {
+            include "**/*.sql"
+            include "**/*.java"
+        }
+    }
 }
 
 dependencies {
     implementation "io.projectreactor:reactor-core:$reactorVersion"
     implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
     implementation "org.assertj:assertj-core:${assertJVersion}"
+
+    implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}") {
+        exclude group: "ch.qos.logback"
+    }
+    implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+    implementation "com.mchange:c3p0:${c3p0Version}"
+    implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.junit.platform:junit-platform-commons:${junitPlatformVersion}"
     testImplementation "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
     testImplementation "org.junit.platform:junit-platform-suite-api:${junitPlatformVersion}"
 }
+
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17

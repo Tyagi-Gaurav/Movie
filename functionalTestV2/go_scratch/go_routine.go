@@ -7,6 +7,7 @@ import (
 
 //goroutine -> Lightweight thread managed by Go runtime.
 //Goroutines run in the same address space, so access to shared memory must be synchronized.
+//Goroutines are multiplexed onto multiple OS threads so if one should block, others continue to run.
 
 func say(s string) {
 	for i := 0; i < 5; i++ {

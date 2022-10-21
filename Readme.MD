@@ -300,3 +300,6 @@ For non-standalone mode, it just needs docker host and docker compose installati
 
 ### Some Application HowTo's
 [How do I?](./HowTo.MD#How do I?)
+
+### Process and Architecture
+https://app.diagrams.net/#G1-Mc53tLb6Go2KNESpt4GowvgrouiGF2-

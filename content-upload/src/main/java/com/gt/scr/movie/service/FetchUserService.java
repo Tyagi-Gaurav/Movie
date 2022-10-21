@@ -7,6 +7,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface UserService extends ReactiveUserDetailsService {
+public interface FetchUserService extends ReactiveUserDetailsService {
     Mono<User> findUserBy(UUID userId);
 }
