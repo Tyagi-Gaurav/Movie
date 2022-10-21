@@ -182,7 +182,8 @@ jacocoTestReport {
         }))
     }
 
-    executionData.from = files('build/jacoco/test.exec','build/jacoco/integrationTest.exec')
+    executionData.from = files('' +
+            'build/jacoco/test.exec','build/jacoco/integrationTest.exec')
 }
 
 spotbugs {
