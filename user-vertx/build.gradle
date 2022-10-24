@@ -43,7 +43,7 @@ ext {
     scramVersion = '2.1'
     validationApiVersion = '2.0.1.Final'
     awaitilityVersion = '4.2.0'
-    grpcVersion = '1.49.0'
+    grpcVersion = '1.50.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
