@@ -4,13 +4,13 @@ variable "myvar" {
 }
 
 variable "myMap" {
-  type    = map(string)
+  type = map(string)
   default = {
     mykey = "my value"
   }
 }
 
 variable "myList" {
-  type    = list
+  type    = list(any)
   default = [1, 2, 3]
 }
