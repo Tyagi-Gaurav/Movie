@@ -13,7 +13,7 @@ repositories {
 
 vertx {
     mainVerticle = "com.gt.scr.user.ConfigVerticle"
-    vertxVersion = '4.3.4'
+    vertxVersion = '4.3.5'
 }
 
 ext {
