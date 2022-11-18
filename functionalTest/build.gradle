@@ -33,7 +33,7 @@ ext {
     jacksonVersion = '2.12.4'
     assertJVersion = '3.23.1'
     mockitoVersion = '3.11.2'
-    slf4jVersion = '2.0.3'
+    slf4jVersion = '2.0.4'
     commonsLang3Version = '3.12.0'
     jsonPathVersion = '2.7.0'
 }
