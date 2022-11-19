@@ -74,3 +74,10 @@
        * 10.0.0.0/24
          * Only 256 IP addresses
          * Subnet Mask: 255.255.255.0
+
+# EBS (Elastic Block Storage)
+  * Ephemeral Storage 
+  * EBS storage can be added to an instance
+
+# UserData
+  * Executing commands at instance launch

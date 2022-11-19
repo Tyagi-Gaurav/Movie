@@ -88,7 +88,7 @@ resource "aws_internet_gateway" "main-gw" {
 resource "aws_route_table" "main-public" {
   vpc_id = aws_vpc.main.id
   route {
-    cidr_block = "0.0.0.0/0" #All IPs
+    cidr_block = "0.0.0.0/0" #All IPs (Without this the public subnet will not be able to route traffic to internet)
     gateway_id = aws_internet_gateway.main-gw.id
   }
   tags = {
