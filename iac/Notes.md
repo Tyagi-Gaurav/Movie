@@ -81,3 +81,12 @@
 
 # UserData
   * Executing commands at instance launch
+    * Install extra software
+    * Prepare instance to join a cluster
+    * Mount Volumes
+    * Only executed when instance is created and not when instance is launched.
+
+# Route53
+  * Using hostnames
+  * Host domain name on AWS
+  * Create a zone in Route53 and a record
