@@ -28,7 +28,7 @@ ext {
     reactorVersion = '3.4.24'
     springWebFluxSecurityVersion = '5.0.0.M5'
     wiremockVersion = '2.35.0'
-    springDocOpenApiVersion = '1.6.13'
+    springDocOpenApiVersion = '1.6.14'
 }
 
 repositories {
