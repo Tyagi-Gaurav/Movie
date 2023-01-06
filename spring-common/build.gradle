@@ -17,7 +17,7 @@ ext {
     jacksonVersion = '2.14.1'
     metricsInterceptor = '1.10.2'
     junitVersion = '5.9.1'
-    assertJVersion = '3.23.1'
+    assertJVersion = '3.24.0'
     mockitoVersion = '4.11.0'
     reactorVersion = '3.4.24'
     jsonWebTokenVersion = '0.11.5'
