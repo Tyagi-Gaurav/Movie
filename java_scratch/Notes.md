@@ -117,5 +117,31 @@
     * Default methods are, however, extremely useful for providing standard method implementations when an interface is created, to ease the task of 
       implementing the interface.
   * [I-22] Use interfaces to only define types
-    * 
+  * [I-23] Prefer class hierarchies to tagged classes
+    * Tagged classes are verbose, error-prone, and inefficient
+  * [I-24] Favor static member classes over nonstatic
+    * Four kinds of Nested classes
+      * Static member classes
+        * If you omit this modifier, each instance will have a hidden extraneous reference to its enclosing instance.
+        * Storing this reference takes time and space.
+        * Eg. Many Map implementations have an internal Entry object for each key-value pair in the map.
+        * While each entry is associated with a map, the methods on an entry (getKey, getValue, and setValue) do not need access to the map.
+      * Nonstatic member classes
+        * Each instance of a nonstatic member class is implicitly associated with an enclosing instance of its containing class.
+        * If an instance of a nested class can exist in isolation from an instance of its enclosing class, then the nested class must 
+        be a static member class. 
+        * It is impossible to create an instance of a nonstatic member class without an enclosing instance.
+        * One common use of a nonstatic member class is to define an Adapter that allows an instance of the outer class to be viewed as an instance of 
+        some unrelated class
+        *  For example, implementations of the Map interface typi- cally use nonstatic member classes to implement their collection views, which are 
+        returned by Map’s keySet, entrySet, and values methods. 
+        * Similarly, implementations of the collection interfaces, such as Set and List, typically use nonstatic member classes to implement their 
+        iterators.
+      * Anonymous classes
+      * Local classes
+        *  A local class can be declared practically anywhere a local variable can be declared and obeys the same scoping rules
+    * [I-25] Limit source files to single top-level class
+    
+* Generics
+  * [I-26] Don't use raw types
     
