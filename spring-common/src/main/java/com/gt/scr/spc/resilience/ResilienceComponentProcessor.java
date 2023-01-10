@@ -103,14 +103,14 @@ public class ResilienceComponentProcessor implements BeanPostProcessor {
             String methodKey,
             String key,
             Decorators.DecorateSupplier<Object> finalObjectDecorateSupplier) {
-        ThreadPoolBulkhead threadPoolBulkhead = threadPoolBulkheadRegistry.bulkhead(methodKey + ".bulkhead", key);
+        var threadPoolBulkhead = threadPoolBulkheadRegistry.bulkhead(methodKey + ".bulkhead", key);
         Decorators.DecorateCompletionStage<Object> objectDecorateCompletionStage =
                 finalObjectDecorateSupplier.withThreadPoolBulkhead(threadPoolBulkhead);
 
-        CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(methodKey + ".circuitBreaker", key);
+        var circuitBreaker = circuitBreakerRegistry.circuitBreaker(methodKey + ".circuitBreaker", key);
         objectDecorateCompletionStage = objectDecorateCompletionStage.withCircuitBreaker(circuitBreaker);
 
-        TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter(methodKey + ".timeLimiter", key);
+        var timeLimiter = timeLimiterRegistry.timeLimiter(methodKey + ".timeLimiter", key);
         return objectDecorateCompletionStage.withTimeLimiter(timeLimiter, scheduledExecutorService);
     }
 }

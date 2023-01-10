@@ -59,4 +59,63 @@
         * Symmetric
         * Reflexive
         * Transitive
+
+* Classes and Interfaces
+  * [I-15] Minimize the accessibility of classes and members
+    * Information hiding or encapsulation
+    * Make each class or member as inaccessible as possible
+      * private/package-private/protected/public
+    * The need for protected members should be relatively rare.
+    * It is acceptable to make a private member of a public class package-private in order to test it, but it is not acceptable to raise the accessibility any higher.
+    * Classes with public mutable fields are not generally thread-safe.
+    * It is wrong for a class to have a public static final array field, or an accessor that returns such a field.
+      * You could either return a public Unmodifiable list, or
+      * Return a copy of the private array
+    * Ensure that objects referenced by public static final fields are immutable.
+  * [I-16] In public classes, use accessor methods, not public fields
+  * [I-17] Minimize mutability
+    * Make immutable objects. They are
+      * Threadsafe; No-Synchronization needed
+      * Simple
+      * Can be shared freely
+      * Provide failure atomicity
+        * Their state never changes, so there is no possibility of a temporary inconsistency.
+      * [**** IMP ****] The major disadvantage of immutable classes is that they require a separate object for each distinct value
+        * If a multistep operation requires creation of a lot of new immutable objects, then it would un-necessarily introduce a lot of objects.
+        * Instead, if we know which complex operations clients will perform then we can use primitives instead.
+        * This kind of capability can be introduced either as a package-private or a public companion class.
+        * Eg. StringBuilder for String introduces a public companion class.
+      * Some immutable classes have one or more nonfinal fields in which they cache the results of expensive computations the first time they are needed. 
+        * If the same value is requested again, the cached value is returned, saving the cost of recalculation. 
+        * This trick works precisely because the object is immutable, which guarantees that the computation would yield the same result if it were repeated.
+      * Classes should be immutable unless there’s a very good reason to make them mutable
+      * Constructors should create fully initialized objects with all of their invariants established
+  * [I-18] Favour composition over inheritance
+    * Inheritance violates encapsulation
+      * The superclass’s implementation may change from release to release, and if it does, the subclass may break, even though its code has not been touched.
+      * One caveat is that wrapper classes are not suited for use in callback frameworks, wherein objects pass self- references to other objects for 
+      subsequent invocations (“callbacks”). Because a wrapped object doesn’t know of its wrapper, it passes a reference to itself (this) and callbacks 
+      elude the wrapper. This is known as the SELF problem.
+      * Inheritance propagates any flaws in the superclass’s API, while composition lets you design a new API that hides these flaws.
+  * [I-19] Design & Document for inheritance or else prohibit it
+    *  A class may have to provide hooks into its internal workings in the form of judiciously chosen protected methods.
+    * The only way to test a class designed for inheritance is to write subclasses.
+  * [I-20] Prefer interfaces to Abstract classes
+    * If you provide default methods, be sure to document them for inheritance using the @implSpec Javadoc tag
+    * You can, however, combine the advantages of interfaces and abstract classes by providing an abstract skeletal implementation class to go with 
+      an interface. 
+      * The interface defines the type, perhaps providing some default methods, while the skeletal implementation class implements the remaining 
+      non-primitive interface methods atop the primitive interface methods. 
+      * Extending a skeletal implementation takes most of the work out of implementing an interface.
+      * Writing a skeletal implementation is a relatively simple, if somewhat tedious, process. First, study the interface and decide which methods 
+      are the primitives in terms of which the others can be implemented. These primitives will be the abstract methods in your skeletal implementation.
+      * A simple implementation is like a skeletal implementation in that it implements an interface and is designed for inheritance, but it differs in 
+      that it isn’t abstract: it is the simplest possible working implementation. You can use it as it stands or subclass it as circumstances warrant.
+  * [I-21] Design interface for posterity
+    * Using default methods to add new methods to existing interfaces should be avoided unless the need is critical, in which case 
+      you should think long and hard about whether an existing interface implementation might be broken by your default method implementation.
+    * Default methods are, however, extremely useful for providing standard method implementations when an interface is created, to ease the task of 
+      implementing the interface.
+  * [I-22] Use interfaces to only define types
+    * 
     
