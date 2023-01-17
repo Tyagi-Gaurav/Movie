@@ -30,7 +30,7 @@ ext {
     guavaVersion = '31.1-jre'
     metricsInterceptor = '1.10.3'
     junitVersion = '5.9.2'
-    assertJVersion = '3.24.1'
+    assertJVersion = '3.24.2'
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.17.6'
     mockitoVersion = '4.11.0'
