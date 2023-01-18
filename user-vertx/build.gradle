@@ -26,7 +26,7 @@ ext {
     jsonWebTokenVersion = '0.11.5'
     mysqlVersion = '8.0.31'
     c3p0Version = '0.9.5.5'
-    liquibaseVersion = '4.18.0'
+    liquibaseVersion = '4.19.0'
     guavaVersion = '31.1-jre'
     metricsInterceptor = '1.10.3'
     junitVersion = '5.9.2'
