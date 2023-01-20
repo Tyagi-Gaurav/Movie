@@ -81,3 +81,28 @@
 
 # UserData
   * Executing commands at instance launch
+    * Install extra software
+    * Prepare instance to join a cluster
+    * Mount Volumes
+    * Only executed when instance is created and not when instance is launched.
+
+# Route53
+  * Using hostnames
+  * Host domain name on AWS
+  * Create a zone in Route53 and a record
+  * To check host in namespace
+    * `host -t A server1.gt.training.academy ns-1481.awsdns-57.org`
+    * `host -t MX gt.training.academy ns-1481.awsdns-57.org`
+
+# RDS
+  * Managed Database Solution
+    * Provides replication
+    * Automated Snapshots
+    * Automated Security updates
+    * Easy instance replacement (For Vertical Scaling)
+    * Create a subnet group
+      * Specify which subnets database would be in
+    * Create a parameter group
+      * Allows you to specify parameters to change settings in the database
+    * Create security group
+      * Allows incoming traffic to the RDS instance

@@ -3,6 +3,11 @@ variable "AWS_SECRET_KEY" {}
 variable "AWS_REGION" {
   default = "eu-west-1"
 }
+
+variable "INSTANCE_DEVICE_NAME" {
+  default = "/dev/xvdh"
+}
+
 variable "AMIS" {
   type = map(string)
   default = {
