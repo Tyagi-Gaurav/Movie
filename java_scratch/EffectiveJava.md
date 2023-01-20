@@ -144,4 +144,56 @@
     
 * Generics
   * [I-26] Don't use raw types
+    * Raw types behave as if all the generic type information were erased from the type declaration.
+    * If you want to use a generic type, but you don’t know or care what the actual type parameter is, you can use a 
+    question mark (Unbounded wildcard) instead.
+      * Wildcard type is safe and the raw type isn’t.
+        * You CAN put any element into a raw type Collection
+        * You CAN'T put any element (other than null) into a Collection<?>
+    * `List.class`, `String[].class`, and `int.class` are all legal, but `List<String>.class` and `List<?>.class` are not.
+  * [I-27] Eliminate unchecked warnings
+    * If you can’t eliminate a warning, but you can prove that the code that provoked the warning is typesafe, then (and only then) suppress 
+    the warning with an `@SuppressWarnings("unchecked")` annotation.
+    * Every time you use a `@SuppressWarnings("unchecked")` annotation, add a comment saying why it is safe to do so.
+  * [I-28] Prefer list to arrays
+    * Arrays are covariant which means that if Sub is a subtype of super, then Sub[] is a subtype of array type Super[]
+    * Generics are invariant
+    * Arrays fail at runtime while generics fail at compiile time.
+    * Arrays are reifed which means they enforce their element type at compile time.
+    * It is illegal to create an array of a generic type, a parameterized type, or a type parameter.
+      * This is illegal because its not type safe.
+    * Types such as E, List<E>, and List<String> are technically known as non-reifiable types.
+    * non-reifiable type is one whose runtime representation contains less information than its compile-time representation.
+    * Because of erasure, the only parameterized types that are reifiable are unbounded wildcard types such as List<?> and Map<?,?>
+      * It is legal, though rarely useful,  to create arrays of unbounded wildcard types.
+  * [I-29] Favour generic types
+  * [I-30] Favour generic methods
+    * Generic Singleton Factory
+  * [I-31] Use bounded wildcards to increase API flexibility
+    * ? super E
+    * ? extends E
+    * For maximum flexibility, use wildcard types on input parameters that represent producers or consumers
+      * (PECS) Producers-extends Consumer-super
+    * Do not use bounded wildcard types as return types
+    * If the user of a class has to think about wildcard types, there is probably something wrong with its API.
+    * if a type parameter appears only once in a method declaration, replace it with a wildcard.
+    * What is unbounded wildcard?
+    * If it’s an unbounded type parameter, replace it with an unbounded wildcard.
+    * if it’s a bounded type parameter, replace it with a bounded wildcard.
+  * [I-32] Combine generics and varargs judiciously
+    * It is a leaky abstraction.
+    * If a method declares its varargs parameter to be of a non-reifiable type, the compiler generates a warning on the declaration.
+    * Heap pollution occurs when a variable of a parameterized type refers to an object that is not of that type.
+    * How do we know when to put @SafeArgs?
+    * If the method doesn’t store anything into the array (which would overwrite the parameters) and doesn’t allow a reference 
+    to the array to escape (which would enable untrusted code to access the array), then it’s safe.
+    * It is unsafe to give another method access to a generic varargs parameter array.
+  * [I-33] Consider typesafe heterogeneous containers
+    * When a class literal is passed among methods to communicate both compile-time and runtime type information, it is called a type token.
+  * [I-34] Use enums instead of `int` constants
+  * [I-35] Use instance fields instead of ordinals
+    * Never derive a value associated with an enum from its ordinal; store it in an instance field instead
+  * [I-36] Use `EnumSet` instead of bit fields
+  * [I-37] Use `EnumMap` instead of ordinal indexing
+    * 
     
