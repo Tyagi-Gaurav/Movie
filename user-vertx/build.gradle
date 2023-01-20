@@ -4,7 +4,7 @@ plugins {
     id 'jacoco'
     id 'com.github.spotbugs' version '5.0.13'
     id 'pmd'
-    id "org.gradle.test-retry" version "1.4.1"
+    id "org.gradle.test-retry" version "1.5.1"
 }
 
 repositories {
@@ -13,7 +13,7 @@ repositories {
 
 vertx {
     mainVerticle = "com.gt.scr.user.ConfigVerticle"
-    vertxVersion = '4.3.5'
+    vertxVersion = '4.3.7'
 }
 
 ext {
@@ -21,29 +21,29 @@ ext {
     springVersion = '5.3.23'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.10.0'
-    slf4jVersion = '2.0.5'
+    slf4jVersion = '2.0.6'
     jacksonVersion = '2.14.1'
     jsonWebTokenVersion = '0.11.5'
-    mysqlVersion = '8.0.31'
+    mysqlVersion = '8.0.32'
     c3p0Version = '0.9.5.5'
-    liquibaseVersion = '4.17.2'
+    liquibaseVersion = '4.19.0'
     guavaVersion = '31.1-jre'
-    metricsInterceptor = '1.10.2'
-    junitVersion = '5.9.1'
-    assertJVersion = '3.23.1'
+    metricsInterceptor = '1.10.3'
+    junitVersion = '5.9.2'
+    assertJVersion = '3.24.2'
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.17.6'
-    mockitoVersion = '4.9.0'
+    mockitoVersion = '4.11.0'
     reactorVersion = '3.4.12'
     vertxVersion = '4.2.6'
-    micronautVersion = '3.7.4'
+    micronautVersion = '3.8.2'
     postgresVersion = '42.5.1'
     embeddedPostgresVersion = '1.0.1'
     bouncyCastleVersion = '1.70'
     scramVersion = '2.1'
     validationApiVersion = '2.0.1.Final'
     awaitilityVersion = '4.2.0'
-    grpcVersion = '1.51.0'
+    grpcVersion = '1.52.1'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -58,8 +58,8 @@ sourceSets {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }
 
 jacoco {

@@ -3,7 +3,7 @@ plugins {
     id 'jacoco'
     id 'com.github.spotbugs' version '5.0.13'
     id 'pmd'
-    id "org.gradle.test-retry" version "1.4.1"
+    id "org.gradle.test-retry" version "1.5.0"
 }
 
 ext {
@@ -12,23 +12,23 @@ ext {
     springVersion = '5.3.23'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.10.0'
-    slf4jVersion = '2.0.5'
+    slf4jVersion = '2.0.6'
     jacksonVersion = '2.14.1'
     jsonWebTokenVersion = '0.11.5'
     mysqlVersion = '8.0.31'
     c3p0Version = '0.9.5.5'
-    liquibaseVersion = '4.17.2'
+    liquibaseVersion = '4.18.0'
     guavaVersion = '31.1-jre'
     metricsInterceptor = '1.10.2'
     junitVersion = '5.9.1'
     assertJVersion = '3.23.1'
     h2DbVersion = '2.1.214'
     testContainerVersion = '1.17.6'
-    mockitoVersion = '4.9.0'
+    mockitoVersion = '4.10.0'
     reactorVersion = '3.4.24'
     springWebFluxSecurityVersion = '5.0.0.M5'
     wiremockVersion = '2.35.0'
-    springDocOpenApiVersion = '1.6.13'
+    springDocOpenApiVersion = '1.6.14'
 }
 
 repositories {
