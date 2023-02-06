@@ -158,10 +158,10 @@
   * [I-28] Prefer list to arrays
     * Arrays are covariant which means that if Sub is a subtype of super, then Sub[] is a subtype of array type Super[]
     * Generics are invariant
-    * Arrays fail at runtime while generics fail at compiile time.
+    * Arrays fail at runtime while generics fail at compile time.
     * Arrays are reifed which means they enforce their element type at compile time.
     * It is illegal to create an array of a generic type, a parameterized type, or a type parameter.
-      * This is illegal because its not type safe.
+      * This is illegal because it's not type safe.
     * Types such as E, List<E>, and List<String> are technically known as non-reifiable types.
     * non-reifiable type is one whose runtime representation contains less information than its compile-time representation.
     * Because of erasure, the only parameterized types that are reifiable are unbounded wildcard types such as List<?> and Map<?,?>
@@ -190,10 +190,77 @@
     * It is unsafe to give another method access to a generic varargs parameter array.
   * [I-33] Consider typesafe heterogeneous containers
     * When a class literal is passed among methods to communicate both compile-time and runtime type information, it is called a type token.
+
+* Enums & Annotations 
   * [I-34] Use enums instead of `int` constants
   * [I-35] Use instance fields instead of ordinals
     * Never derive a value associated with an enum from its ordinal; store it in an instance field instead
   * [I-36] Use `EnumSet` instead of bit fields
   * [I-37] Use `EnumMap` instead of ordinal indexing
+    * There is a very fast Map implementation designed for use with enum keys, known as `java.util.EnumMap`.
+    * The reason that EnumMap is comparable in speed to an ordinal-indexed array is that EnumMap uses such an array internally, but it 
+    hides this implementation detail from the programmer, combining the richness and type safety of a Map with the speed of an array.
+    * If the relationship you are representing is multidimensional, use EnumMap<..., EnumMap<...>>. 
+  * [I-38] Emulate extensible enums with interfaces
+    * Extensibility of enums is a bad idea
+    * Enum types can implement interfaces
+    * In summary, while you cannot write an extensible enum type, you can emulate it by writing an interface to accompany a basic enum type 
+    that implements the interface.
+  * [I-39] Prefer annotations to naming patterns
+    * As of Java 8, there is another way to do multivalued annotations. 
+    * Instead of declaring an annotation type with an array parameter, you can annotate the declaration of an annotation with the `@Repeatable` 
+    meta-annotation, to indicate that the annotation may be applied repeatedly to a single element.
+    * But `isAnnotationPresent` makes it explicit that repeated annotations are not of the annotation type, but of the containing annotation type.
+    * There is simply no reason to use naming patterns when you can use annotations instead.
+  * [I-40] Consistently use the Override annotation
+  * [I-41] Use marker interfaces to define types
+    * Marker interfaces have two advantages over marker annotations
+      * Marker interfaces define a type that is implemented by instances of the marked class
+      * Marker annotations do not
+      * The existence of a marker interface type allows you to catch errors at compile time that you couldn’t catch until runtime if you 
+      used a marker annotation.
+      * Another advantage of marker interfaces over marker annotations is that they can be targeted more precisely.
+    * The chief advantage of marker annotations over marker interfaces is that they are part of the larger annotation facility.
+    * Clearly you must use an annotation if the marker applies to any program element other than a class or interface, because only classes and 
+    interfaces can be made to implement or extend an interface.
+    * If you find yourself writing a marker annotation type whose target is `ElementType.TYPE`, take the time to figure out whether it really should 
+    be an annotation type or whether a marker interface would be more appropriate
+
+* Lambdas and Streams
+  * [I-42] Prefer lambdas to anonymous classes
+    * Lambdas share with anonymous classes the property that you can’t reliably serialize and deserialize them across implementations.
+  * [I-43] Prefer method references to lambdas
+    * Where method references are shorter and clearer, use them; where they aren’t, stick with lambdas.
+  * [I-44] Favour the use of standard functional interfaces
+    * If one of the standard functional interfaces does the job, you should generally use it in preference to a purpose-built functional interface.
+    * Don’t be tempted to use basic functional interfaces with boxed primitives instead of primitive functional interfaces
+    * Always annotate your functional interfaces with the @FunctionalInterface annotation
+      * Prevents maintainers from accidentally adding abstract methods to the interface as it evolves
+      * Interface won’t compile unless it has exactly one abstract method
+  * [I-45] Use Streams Judiciously
+    * A stream pipeline consists of a source stream followed by zero or more intermediate operations and one terminal operation.
+    * Stream pipelines are evaluated lazily: evaluation doesn’t start until the terminal operation is invoked.
+    * A stream pipeline without a terminal operation is a silent no-op, so don’t forget to include one.
+    * Overusing streams makes programs hard to read and maintain.
+  * [I-46] Prefer side-effect free functions in streams
+    * A pure function is one whose output depends only on its input
+    * A `forEach` function that does nothing more than present the result of a computation performed by a stream is a bad smell.
+    * A lambda that mutates code is also a bad smell.
+    * The `forEach` should only be used to report the result of a stream operation and not perform the computation.
+  * [I-47] Prefer collection to Stream as a return type
+    * If you’re writing a method that returns a sequence of objects and you know that it will only be used in a stream pipeline, then of course 
+    you should feel free to return a stream.
+    * But if you’re writing a public API that returns a sequence, you should provide for users who want to write stream pipelines as well as 
+    those who want to write for-each statements.
+  * [I-48] Use caution when making streams parallel
+    * Parallelizing a pipeline is unlikely to increase its performance if the source is from Stream.iterate, or the intermediate operation limit is used.
+    * Do not parallelize stream pipelines indiscriminately.
+    * Performance gains from parallelism are best on streams over ArrayList, HashMap, HashSet, and ConcurrentHashMap 
+    instances; arrays; int ranges; and long ranges because these data structures can accurately be split into subranges of any desired sizes, which makes
+    it easy to divide work among parallel threads.
+    * The operations performed by Stream’s collect method, which are known as mutable reductions, are not good candidates for parallelism because 
+    the overhead of combining collections is costly.
+    * If a significant amount of work is done in the terminal operation compared to the overall work of the pipeline and that operation is inherently 
+    sequential, then parallelizing the pipeline will have limited effectiveness.
     * 
     
