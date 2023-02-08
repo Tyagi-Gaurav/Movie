@@ -262,5 +262,62 @@
     the overhead of combining collections is costly.
     * If a significant amount of work is done in the terminal operation compared to the overall work of the pipeline and that operation is inherently 
     sequential, then parallelizing the pipeline will have limited effectiveness.
-    * 
+
+* Methods
+  * [I-49] Check parameters for validity
+    * For public and protected methods, use the Javadoc `@throws` tag to document the exception that will be thrown if a restriction 
+    on parameter values is violated.
+    * Failure to validate parameters, can result in a violation of failure atomicity
+    * The `Objects.requireNonNull` method, added in Java 7, is flexible and convenient, so there’s no reason to perform null checks manually anymore.
+    * An important exception is the case in which the validity check would be expensive or impractical and the check is performed implicitly in 
+    the process of doing the computation.
+  * [I-50] Make defensive copies when needed
+    * You must program defensively, with the assumption that clients of your class will do their best to destroy its invariants.
+    * It is essential to make a defensive copy of each mutable parameter to the constructor.
+    * Defensive copies are made before checking the validity of the parameters, and the validity check is performed on the copies rather than on 
+    the originals.
+      *  It protects the class against changes to the parameters from another thread during the window of vulnerability between the time the parameters 
+      are checked and the time they are copied.
+    * Do not use the clone method to make a defensive copy of a parameter whose type is sub-classable by untrusted parties.
+    * Any time you write a method or constructor that stores a reference to a client-provided object in an internal data structure, 
+    think about whether the client-provided object is potentially mutable.
+    * There may be a performance penalty associated with defensive copying and it isn’t always justified. If a class trusts its caller not to 
+    modify an internal component, perhaps because the class and its client are both part of the same package, then it may be appropriate to 
+    dispense with defensive copying.
+  * [I-51] Design method signatures carefully
+    * Choose method names carefully
+    * Don't go overboard in providing convenience methods
+    * Avoid long parameter lists (Aim for 4 parameters or fewer)
+      * Parameters that are always passed together could be put into domain or helper class.
+      * Use Builder pattern to adapt creation of many parameters and then pass the result as the input to the method
+    * For parameter types, favor interfaces over classes
+    * Prefer two element enum types to boolean parameters
+  * [I-52] Use overloading judiciously
+    * The choice of which overloading to invoke is made at compile time.
+    * **Selection among overloaded methods is static, while selection among overridden methods is dynamic.**
+    * Avoid confusing uses of overloading
+    * **Never export overloading with same number of parameters**
+    * Do not overload methods to take different functional interfaces in the same argument position.
+  * [I-53] Use varargs judiciously
+    * Exercise care when using varargs in performance-critical situations. 
+    * Every invocation of a varargs method causes an array allocation and initialization.
+  * [I-54] Return empty collections or arrays, not nulls
+  * [I-55] Return Optionals judiciously
+    * Optionals are similar in spirit to checked exceptions, in that they force the user of an API to confront the fact that 
+    there may be no value returned.
+    * **Container types, including collections, maps, streams, arrays, and optionals should not be wrapped in optionals.**
+      * Rather than returning an empty Optional<List<T>>, you should simply return an empty List<T>
+    * You should declare a method to return Optional<T> if it might not be able to return a result and clients will have to 
+    perform special processing if no result is returned.
+    * You should never return an optional of a boxed primitive type
+    * You should never use optionals as map values.
+    * Is it ever appropriate to store an optional in an instance field? 
+      * Often it is a bad smell
+  * [I-56] Write doc comments for all exposed API elements
+    * You must precede every exported class, interface, constructor, method, and field declaration with a doc comment
+    * The doc comment for a method should describe succinctly the contract between the method and its client
+      * List preconditions
+      * List postconditions
+      * List what a method does, and not how
+      * Document any side effects
     

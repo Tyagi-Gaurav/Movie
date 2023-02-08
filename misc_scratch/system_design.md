@@ -1,4 +1,5 @@
 # System Design
+https://app.diagrams.net/#G1NIxbBfd7jkmLrj2mZa6BWrOH7v6Z10Ib
 
 ## Links
 * Latency numbers every programmer should know (https://gist.github.com/jboner/2841832)
@@ -38,3 +39,6 @@
   * Considerations to use CDNs
     * Cost: These are run by third-party providers, and you get charged for data transfers in and out of CDN. 
     * Setting appropriate cache expiry
+
+## Back of the envelope estimation
+  * 
