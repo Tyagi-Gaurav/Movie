@@ -106,3 +106,36 @@
       * Allows you to specify parameters to change settings in the database
     * Create security group
       * Allows incoming traffic to the RDS instance
+
+# IAM
+  * Groups
+  * Roles
+    * Can give users/services (temporary) access that they normally wouldn't have
+  * Users
+
+# Autoscaling
+  * Need launch configuration
+    * AMI ID
+    * Security groups
+  * Autoscaling groups
+    * Min
+    * Max
+    * VPC
+  * Create autoscaling policy
+    * Policy triggered using cloudwatch alarms
+
+# ELB
+  * Can also be used as SSL terminator
+  * Can be spread over multiple AZs
+  * 2 different types of LB
+    * Classic Load Balancer (ELB)
+      * Routes traffic based on network information
+    * ALB - Application Load Balancer
+      * Routes traffic based on application level information
+      * Eg. route based on /api
+
+# Elastic Bean Stalk
+  * Paas
+  * Similar to Heroku
+  * User is still responsible for EC2 instances
+  * There are some pre-defined platforms eg. PHP, Java SE, .Net, Nodejs. etc.

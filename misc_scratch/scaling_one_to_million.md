@@ -1,9 +1,3 @@
-# System Design
-https://app.diagrams.net/#G1NIxbBfd7jkmLrj2mZa6BWrOH7v6Z10Ib
-
-## Links
-* Latency numbers every programmer should know (https://gist.github.com/jboner/2841832)
-
 ## Scaling from Zero to Million Users
 * Separating web/mobile traffic (web tier) and database (data tier) servers allows them to be scaled independently
 * Vertical Scaling vs Horizontal Scaling
@@ -39,6 +33,3 @@ https://app.diagrams.net/#G1NIxbBfd7jkmLrj2mZa6BWrOH7v6Z10Ib
   * Considerations to use CDNs
     * Cost: These are run by third-party providers, and you get charged for data transfers in and out of CDN. 
     * Setting appropriate cache expiry
-
-## Back of the envelope estimation
-  * 

@@ -320,4 +320,83 @@
       * List postconditions
       * List what a method does, and not how
       * Document any side effects
-    
+  
+* General Programming
+  * [I-57] Minimize the scope of local variables
+    * Prefer for-loops instead of while-loop
+    * Keep methods small and focused
+  * [I-58] Prefer for-each loops to traditional for-loops
+  * [I-59] Know and use the libraries
+    * By using a standard library, you take advantage of the knowledge of the experts who wrote it and the experience of those who used it before you.
+  * [I-60] Avoid float and double if exact answers are required
+    * The float and double types are particularly ill-suited for monetary calculations
+    * Use BigDecimal, int, or long for monetary calculations
+    * BigDecimal’s String constructor is used rather than its double constructor.
+    * Or do all computation in lowest unit (like cents or pennies) and use a long
+    * Using BigDecimal has the added advantage that it gives you full control over rounding, letting you select from eight 
+    rounding modes whenever an operation that entails rounding is performed.
+    * **If the quantities don’t exceed nine decimal digits, you can use int**
+    * **If they don’t exceed eighteen digits, you can use long.** 
+    * **If the quantities might exceed eighteen digits, use BigDecimal.**
+  * [I-61] Prefer primitive types to box primitives
+    * Primitive types have only fully functional values, whereas each boxed primitive type has one nonfunctional value, which is null, 
+    in addition to all the functional values of the corresponding primitive type.
+    * When you mix primitives and boxed primitives in an operation, the boxed primitive is auto-unboxed.
+      * If a null object reference is auto-unboxed, you get a NullPointerException.
+  * [I-62] Avoid strings when other types are more appropriate
+    * Strings are poor substitutes for other value type.
+    * Strings are poor substitutes for enum types.
+    * Strings are poor substitutes for capabilities
+      * Capability is an un-forge-able key
+  * [I-63] Beware the performance of string concatenation
+    * Don’t use the string concatenation operator to combine more than a few strings
+  * [I-64] Refer to objects by their interfaces
+    * If appropriate interface types exist, then parameters, return values, variables, and fields should all be declared using interface types.
+    * If no appropriate interface exists, then use the least specific class that provides the required functionality.
+  * [I-65] Prefer interfaces to reflection
+    * Reflection is much slower compared to normal method invocation
+    * Using reflection, we also lose the benefits of compile type checking.
+  * [I-66] Use native methods judiciously
+    * Programs using native code are less portable
+    * Programs using native code could get slower as GC cannot track native memory usage.
+  * [I-67] Optimize Judiciously
+    * Strive to write good programs rather than fast ones.
+    * Implementation problems can be fixed later by optimization, but pervasive architectural flaws that limit performance can be impossible to fix
+    without rewriting the system.
+    * Measure performance before and after an optimization.
+  * [I-68] Adhere to generally accepted naming conventions
+
+* Exceptions
+  * [I-69] use exceptions for exceptional conditions
+    * Exceptions are, as their name implies, to be used only for exceptional conditions;
+      they should never be used for ordinary control flow.
+    * A well-designed API must not force its clients to use exceptions for ordinary control flow
+  * [I-70] Use checked exceptions for recoverable errors and runtime exceptions for programming errors
+    * Use checked exceptions for conditions from which the caller can reasonably be expected to recover
+    * Use runtime exceptions to indicate programming errors
+    * All of the unchecked throwables you implement should subclass RuntimeException
+    * When in doubt, throw unchecked exceptions.
+  * [I-71] Avoid unnecessary use of checked exceptions
+    * If a method throws a single checked exception, this exception is the sole reason the method must appear in a try block and can’t be used directly in streams. Under these circumstances, it pays to ask
+      yourself if there is a way to avoid the checked exception.
+    * If recovery may be possible and you want to force callers to handle exceptional conditions, first consider returning an optional.
+    * Only if this would provide insufficient information in the case of failure should you throw a checked exception.
+  * [I-72] Favour the use of Standard exceptions
+    * Do not reuse Exception, RuntimeException, Throwable, or Error directly
+  * [I-73] Throw exceptions appropriate to the abstraction
+    * Higher layers should catch lower-level exceptions and, in their place, throw exceptions that can be explained in terms of the higher-level abstraction.
+    * While exception translation is superior to mindless propagation of excep- tions from lower layers, it should not be overused.
+  * [I-74] Document all exceptions thrown by each method
+  * [I-75] Include failure-capture information in detail messages
+  * [I-76] Strive for failure atomicity
+    * Generally speaking, a failed method invocation should leave the object in the state that it was in prior to the invocation
+    * There are several ways to achieve this effect.
+      * The simplest is to design immutable objects
+      * Perform validations before starting to make modifications.
+      * Perform the operation on a temporary copy of the object and to replace the contents of the object with the temporary copy once the operation is complete.
+  * [I-77] Don't ignore exceptions
+    * An empty catch block defeats the purpose of exceptions.
+    * If you choose to ignore an exception, the catch block should contain a comment explaining why it is appropriate to do so, and the variable should be named `ignored`
+
+* Concurrency
+  * 
