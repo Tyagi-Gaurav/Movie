@@ -13,7 +13,7 @@ ext {
     springBootVersion = '2.7.5'
     commonsLang3Version = '3.12.0'
     commonsTextVersion = '1.10.0'
-    slf4jVersion = '2.0.6'
+    slf4jVersion = '2.0.7'
     jacksonVersion = '2.14.2'
     metricsInterceptor = '1.10.5'
     junitVersion = '5.9.2'
