@@ -306,8 +306,8 @@
     * Optionals are similar in spirit to checked exceptions, in that they force the user of an API to confront the fact that 
     there may be no value returned.
     * **Container types, including collections, maps, streams, arrays, and optionals should not be wrapped in optionals.**
-      * Rather than returning an empty Optional<List<T>>, you should simply return an empty List<T>
-    * You should declare a method to return Optional<T> if it might not be able to return a result and clients will have to 
+      * Rather than returning an empty `Optional<List<T>>`, you should simply return an empty List<T>
+    * You should declare a method to return `Optional<T>` if it might not be able to return a result and clients will have to 
     perform special processing if no result is returned.
     * You should never return an optional of a boxed primitive type
     * You should never use optionals as map values.
@@ -399,4 +399,78 @@
     * If you choose to ignore an exception, the catch block should contain a comment explaining why it is appropriate to do so, and the variable should be named `ignored`
 
 * Concurrency
-  * 
+  * [I-78] Synchronize access to shared mutable data
+    * Reading a variable other than a long or double is guaranteed to return a value that was stored into that variable by some thread, 
+    even if multiple threads modify the variable concurrently and without synchronization.
+    * In the absence of synchronization, there is no guarantee that one thread’s changes will be visible to another thread.
+    * Synchronization is required for reliable communication between threads as well as for mutual exclusion.
+    * Synchronization is not guaranteed to work unless both read and write operations are synchronized.
+    * While the `volatile` modifier performs no mutual exclusion, it guarantees that any thread that reads the field will see the most 
+    recently written value.
+      * `volatile` provides only the communication effects of synchronization
+    * Confine mutable data to a single thread
+  * [I-79] Avoid excessive synchronization
+    * To avoid liveness and safety failures, never cede control to the client within a synchronized method or block.
+      * Inside a `synchronized` keyword, do not invoke a method that can be overridden by a client.
+      * As a rule, you should do as little work as possible inside synchronized regions.
+      * When in doubt, do not synchronize your class, but document that it is not thread-safe.
+  * [I-80] Prefer executors, tasks & streams to threads
+    * For a small program, or a lightly loaded server, `Executors.newCachedThreadPool` is generally a good choice because it demands no 
+    configuration and generally "does the right thing."
+      * But a cached thread pool is not a good choice for a heavily loaded production server.
+      * In a cached thread pool, submitted tasks are not queued but immediately handed off to a thread for execution. 
+      * If no threads are available, a new one is created.
+  * [I-81] Prefer concurrency utilities to `wait` and `notify`
+    * For interval timing, always use `System.nanoTime` rather than `System.currentTimeMillis`. 
+      * `System.nanoTime` is both more accurate and more precise and is unaffected by adjustments to the system’s real-time clock.
+    * Always use the wait loop idiom to invoke the `wait` method; never invoke it outside of a loop.
+    * The `notifyAll` method should generally be used in preference to `notify`. 
+    * If `notify` is used, great care must be taken to ensure liveness.
+  * [I-82] Document Thread Safety
+    * The presence of the `synchronized` modifier in a method declaration is an implementation detail, not a part of its API.
+    * To enable safe concurrent use, a class must clearly document what level of thread safety it supports.
+      * Immutable
+        * Example: `String`, `Integer`
+      * Unconditionally thread-safe
+        * Instances of this class are mutable, but the class has sufficient internal synchronization that its instances can be used concurrently 
+        without the need for any external synchronization.
+        * Example: `AtomicInteger`
+      * Conditionally thread-safe
+        * Some methods require external synchronization for safe concurrent use.
+        * Example: `Collections.synchronized` wrappers
+      * Not threadsafe
+        * Instances of this class are mutable.
+        * To use them concurrently, clients must surround each method invocation with external synchronization 
+        of the clients choosing.
+        * Example: `ArrayList`, `HashMap`
+      * Thread-Hostile
+    * Lock fields should always be declared final
+  * [I-83] Use lazy initialization judiciously
+    * Under most circumstances, normal initialization is preferable to lazy initialization
+    * For instance fields, it is the `double-check` idiom
+    * If you need to use lazy initialization for performance on a `static` field, use the lazy initialization holder class idiom.
+      * ```
+        // Lazy initialization holder class idiom for static fields
+        private static class FieldHolder {
+              static final FieldType field = computeFieldValue();
+        }
+        
+        private static FieldType getField() { return FieldHolder.field; }
+        ```
+    * A typical VM will synchronize field access only to initialize the class. Once the class is initialized, 
+    the VM patches the code so that subsequent access to the field does not involve any testing 
+    or synchronization.
+  * [I-84] Don't depend on the thread scheduler
+    * Any program that relies on the thread scheduler for correctness or performance is likely to be nonportable.
+    * Threads should not run if they aren’t doing useful work.
+
+* Serialization
+  * [I-85] Prefer alternatives to Java serialization
+    * The best way to avoid serialization exploits is never to deserialize anything.
+    * Prefer whitelisting to blacklisting.
+  * [I-86] Implement Serializable with great caution
+    * A major cost of implementing Serializable is that it decreases the flexibility to change a class’s implementation once it has been released.
+    * A second cost of implementing Serializable is that it increases the likeli- hood of bugs and security holes.
+    * A third cost of implementing Serializable is that it increases the testing burden associated with releasing a new version of a class.
+  * [I-87] Consider using a custom serialized form
+    * 

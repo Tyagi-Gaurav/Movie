@@ -33,3 +33,7 @@
   * Considerations to use CDNs
     * Cost: These are run by third-party providers, and you get charged for data transfers in and out of CDN. 
     * Setting appropriate cache expiry
+
+# Diagram
+  * https://drive.google.com/file/d/1NIxbBfd7jkmLrj2mZa6BWrOH7v6Z10Ib/view?usp=sharing
+  

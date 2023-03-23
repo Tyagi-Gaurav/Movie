@@ -139,3 +139,18 @@
   * Similar to Heroku
   * User is still responsible for EC2 instances
   * There are some pre-defined platforms eg. PHP, Java SE, .Net, Nodejs. etc.
+
+# ECS 
+  * Task definition
+    * Specifies docker image
+    * Max CPU, Max memory
+    * Whether containers should be linked
+    * Environment variables
+    * Any other container specific definitions
+  * Service Definition
+    * Going to run a specific number of containers based on task definition
+    * A service is always running, if container stops, it will be restarted
+    * A service can be scaled, you can run 1 instance of a container or multiple
+    * You can put ELB in front of a service
+    * Specify the cluster
+    * IAM role (ECS service role)
