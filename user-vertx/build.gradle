@@ -2,7 +2,7 @@ plugins {
     id 'io.vertx.vertx-plugin' version '1.4.0'
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id 'jacoco'
-    id 'com.github.spotbugs' version '5.0.13'
+    id 'com.github.spotbugs' version '5.0.14'
     id 'pmd'
     id "org.gradle.test-retry" version "1.5.2"
 }
