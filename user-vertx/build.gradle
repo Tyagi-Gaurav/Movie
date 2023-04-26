@@ -29,7 +29,7 @@ ext {
     liquibaseVersion = '4.21.1'
     guavaVersion = '31.1-jre'
     metricsInterceptor = '1.10.6'
-    junitVersion = '5.9.2'
+    junitVersion = '5.9.3'
     assertJVersion = '3.24.2'
     h2DbVersion = '1.4.200'
     testContainerVersion = '1.18.0'
@@ -58,8 +58,8 @@ sourceSets {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
 }
 
 jacoco {
