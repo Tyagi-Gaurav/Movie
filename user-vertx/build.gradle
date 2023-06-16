@@ -4,7 +4,7 @@ plugins {
     id 'jacoco'
     id 'com.github.spotbugs' version '5.0.14'
     id 'pmd'
-    id "org.gradle.test-retry" version "1.5.2"
+    id "org.gradle.test-retry" version "1.5.3"
 }
 
 repositories {
