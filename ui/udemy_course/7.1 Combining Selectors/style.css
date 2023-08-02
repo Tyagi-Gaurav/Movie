@@ -1,0 +1,37 @@
+/* Write your code here: */
+
+/*
+Multiple selectors
+syntax: selector, selector
+*/
+h1, h2 {
+  color : blueviolet;
+}
+
+/*
+Child selectors
+syntax: parent selector > child selector (Only 1 level nested i.e. direct descendant)
+*/
+.box > p {
+    color: firebrick;
+}
+
+/*
+ Descendant selector
+ Can have many levels deep
+
+ syntax: selector selector
+*/
+.box li {
+    color: blue;
+}
+
+/*
+ Chaining selector
+ Apply where all selectors are true (Note: No spaces)
+ syntax: selectorselector
+*/
+
+li.done {
+    color: seagreen;
+}
