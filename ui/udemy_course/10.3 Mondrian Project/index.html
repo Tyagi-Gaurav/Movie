@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mondrian Project</title>
+  <style>
+    /* 
+    Write your CSS here 
+    Gap Colour: #000
+    White: #F0F1EC
+    Red: #E72F24
+    Black: #232629
+    Blue: #004592
+    Yellow: #F9D01E
+
+    For dimensions, see dimensions.png image.
+    HINT: Remember you can't change the properties of grid lines. But grid lines are transparent!
+    */
+    .outerBox {
+      background-color: #232629;
+      width: 748px;
+      height: 748px;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+
+    .container {
+      width: 748px;
+      height: 748px;
+      display: grid;
+      gap: 9px;
+      background-color: #232629;
+      grid-template-rows: 414px auto;
+      grid-template-columns: 320px auto;
+    }
+
+    .first {
+      background-color: #E72F24;
+    }
+
+    .second {
+      background-color: #F0F1EC;
+    }
+
+    .third {
+      background-color: #232629;
+      display: grid;
+      grid-template-rows: 295px auto;
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+
+    .third1 {
+      background-color: #F0F1EC;
+    }
+
+    .third2 {
+      background-color: #F0F1EC;
+    }
+
+    .fourth {
+      background-color: #232629;
+      display: grid;
+      grid-template-rows: 295px auto;
+      grid-template-columns: 360px auto;
+      gap: 9px;
+    }
+
+    .fourth1 {
+      background-color:  #F0F1EC;
+    }
+
+    .fourth2 {
+      background-color: #232629;
+      display: grid;
+      gap: 10px;
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: auto;
+    }
+
+    .fourth3 {
+      background-color: #232629;
+      display: grid;
+      gap: 9px;
+      grid-template-rows: auto;
+      grid-template-columns: 198px 153px;
+    }
+
+    .fourth31 {
+      background-color: #F9D01E;
+    }
+
+    .fourth32 {
+      background-color: #232629;
+    }
+
+    .fourth21 {
+      background-color: #004592;
+    }
+
+    .fourth22 {
+      background-color: #004592;
+    }
+
+    .fourth4 {
+      background-color:  #F0F1EC;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outerBox">
+    <div class="container">
+      <div class="first"></div>
+      <div class="second"></div>
+      <div class="third">
+        <div class="third1"></div>
+        <div class="third2"></div>
+    </div>
+      <div class="fourth">
+        <div class="fourth1"></div>
+        <div class="fourth2">
+          <div class="fourth21"></div>
+          <div class="fourth22"></div>
+        </div>
+        <div class="fourth3">
+          <div class="fourth31"></div>
+          <div class="fourth32"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Write your HTML here -->
+</body>
+
+</html>

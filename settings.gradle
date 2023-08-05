@@ -11,4 +11,7 @@ include 'java_scratch'
 include 'grpc-schema'
 include 'iac'
 include 'oauth2'
+include 'graphql'
+include 'redis'
+include 'ping-app'
 
