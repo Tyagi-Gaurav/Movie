@@ -27,7 +27,7 @@ ext {
     mysqlVersion = '8.0.33'
     c3p0Version = '0.9.5.5'
     liquibaseVersion = '4.21.1'
-    guavaVersion = '31.1-jre'
+    guavaVersion = '32.1.2-jre'
     metricsInterceptor = '1.11.1'
     junitVersion = '5.9.3'
     assertJVersion = '3.24.2'
