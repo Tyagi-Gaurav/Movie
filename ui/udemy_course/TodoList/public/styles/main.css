@@ -1,0 +1,40 @@
+.main-label {
+  background-color: D8B4F8;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+}
+
+.plus {
+  background-color: D8B4F8;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 45px;
+  height: 60px;
+  width: 60px;
+}
+
+.line {
+  border-top: 5px solid #11011f;
+}
+
+.todoItem {
+  font-size: 1.5em;
+}
+
+input {
+  outline: 0;
+  border-width: 0 0 5px;
+  border-color: blue;
+  width: 260px;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.box {
+  max-width: 400px;
+  margin: 2px auto;
+  background: white;
+  border-radius: 5px;
+  height: 70px;
+  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+}
